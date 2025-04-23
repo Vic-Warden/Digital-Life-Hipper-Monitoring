@@ -1,2 +1,10 @@
 nav:
     - 🏚️ Home: index.md
+    - ♟️ Learning story's: 
+        - Bryan: learning/journalBryan
+        - Darian: learning/journalDarian
+        - Indigo: learning/journalIndigo
+        - Jan: learning/journalJan
+        - Mike: learning/journalMike
+        - Richard: learning/journalRichard
+        - Victor: learning/journalVictor

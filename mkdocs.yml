@@ -4,6 +4,7 @@ theme:
     name: material
     custom_dir: mdocotion/
     sidebar_color: '#f1f5f9'
+    logo: assets/logo.svg
     favicon: assets/favicon.ico
     features:
         - navigation.sections

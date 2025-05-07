@@ -1,3 +1,5 @@
+import asyncio
+from PAM_2101 import PAM_2101
 base_uuid = "99DBXXXX-AC2D-11E3-A5E2-0800200C9A66"
 
 
@@ -10,13 +12,27 @@ class TimeDate:
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
 
 
+
+# class ActivityData:
+#     def __init__(self):
+#         self.base_uuid = base_uuid
+#         # UUID for ActivityData is 2002
+#         # Check documentation for details
+#         self.uuid_extension = "2101"
+#         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+#         asyncio.run(PAM_2101(self.uuid))
+
 class ActivityData:
     def __init__(self):
         self.base_uuid = base_uuid
-        # UUID for ActivityData is 2002
-        # Check documentation for details
-        self.uuid_extension = "2101"
+        self.uuid_extension = "2101"  # for ActivityData
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+
+        asyncio.run(self.run())
+
+    async def run(self):
+        pam = PAM_2101(self.uuid)
+        await pam.run()
 
 
 class ActivityFile:

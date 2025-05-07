@@ -1,2 +1,2 @@
 # BLE commands
-hipper ble commands documentation here
+Hipper ble commands documentation here

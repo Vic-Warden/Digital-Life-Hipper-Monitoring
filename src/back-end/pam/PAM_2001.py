@@ -4,7 +4,11 @@ import asyncio
 # Imports the BleakScanner class from the bleak module
 from bleak import BleakScanner, BleakClient
 
+# Imports datetime and timezone for timestamp
 from datetime import datetime, timezone
+
+# UUID of the BLE characteristic
+TIME_DATE_UUID = "99DB2001-AC2D-11E3-A5E2-0800200C9A66"
 
 # Returns the current UTC timestamp
 def get_current_utc_timestamp():
@@ -13,7 +17,7 @@ def get_current_utc_timestamp():
 # Main function
 async def main():
 
-    # Scann BLE device search for 5 seconds
+    # Scann BLE device for 5 seconds
     print("On standby...")
     devices = await BleakScanner.discover(timeout=5)
 
@@ -46,6 +50,9 @@ async def main():
         # Converts the timestamp to a 4 bytes
         data = timestamp.to_bytes(4, byteorder='little')
         print(f"Data to send (little-endian): {data}")
+
+        await client.write_gatt_char(TIME_DATE_UUID, data)
+        print("Synchronized date and time")
 
 # Executes the program
 if __name__ == "__main__":

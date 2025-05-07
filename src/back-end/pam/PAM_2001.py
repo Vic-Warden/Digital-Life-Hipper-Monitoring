@@ -42,6 +42,10 @@ async def main():
          # Gets and displays the current UTC timestamp
         timestamp = get_current_utc_timestamp()
         print(f"Current UTC timestamp: {timestamp}")
+        
+        # Converts the timestamp to a 4 bytes
+        data = timestamp.to_bytes(4, byteorder='little')
+        print(f"Data to send (little-endian): {data}")
 
 # Executes the program
 if __name__ == "__main__":

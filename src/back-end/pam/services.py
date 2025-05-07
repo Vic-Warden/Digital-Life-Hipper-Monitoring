@@ -11,17 +11,6 @@ class TimeDate:
         self.uuid_extension = "2001"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
 
-
-
-# class ActivityData:
-#     def __init__(self):
-#         self.base_uuid = base_uuid
-#         # UUID for ActivityData is 2002
-#         # Check documentation for details
-#         self.uuid_extension = "2101"
-#         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
-#         asyncio.run(PAM_2101(self.uuid))
-
 class ActivityData:
     def __init__(self):
         self.base_uuid = base_uuid

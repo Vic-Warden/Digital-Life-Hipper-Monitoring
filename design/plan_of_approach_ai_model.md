@@ -30,4 +30,4 @@ In order to prepare all the data for training, the data should be split up into 
 
 ### AI Model
 
-text
+#### Clustering

@@ -15,3 +15,7 @@ Byte 5  : Bit 0 = MSB of Zone 3<br>
 Byte 6  : Bits 0-3 = MSB of Zone 2<br>
           Bits 4-7 = Lower 4 bits of Zone 1 (Living)<br>
 Byte 7  : MSB of Zone 1
+
+to make use of this command the read_live_pam_data.py script is used to run the ActivityData() which is imported from the services file.
+
+the function is used for making a client that receives data every few seconds from the PAM device which gets shown as a print statement into the console

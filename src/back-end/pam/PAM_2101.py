@@ -12,11 +12,11 @@ class PAM_2101:
 
     async def run(self):
         # Start scanning and connect if a suitable device is found
-        found = await self.BluetoothScan()
+        found = await self.bluetooth_scan()
         if found:
             await self.connect()
 
-    async def BluetoothScan(self):
+    async def bluetooth_scan(self):
         # Scan for nearby BLE devices for 5 seconds
         print("Scanning for BLE devices...")
         self.devices = await BleakScanner.discover(timeout=5)

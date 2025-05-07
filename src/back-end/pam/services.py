@@ -12,7 +12,10 @@ class TimeDate:
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
 
 class ActivityData:
+    # this mode is used for making a client that receives data every few seconds from the PAM device
     def __init__(self):
+        # UUID for ActivityData is 2101
+        # Check documentation for details
         self.base_uuid = base_uuid
         self.uuid_extension = "2101"  # for ActivityData
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)

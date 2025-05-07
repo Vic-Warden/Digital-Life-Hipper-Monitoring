@@ -4,6 +4,12 @@ import asyncio
 # Imports the BleakScanner class from the bleak module
 from bleak import BleakScanner, BleakClient
 
+from datetime import datetime, timezone
+
+# Returns the current UTC timestamp
+def get_current_utc_timestamp():
+    return int(datetime.now(timezone.utc).timestamp())
+
 # Main function
 async def main():
 
@@ -32,6 +38,10 @@ async def main():
     print(f"\n Connect to {pam_device.name}...")
     async with BleakClient(pam_device.address) as client:
         print("Connected")
+
+         # Gets and displays the current UTC timestamp
+        timestamp = get_current_utc_timestamp()
+        print(f"Current UTC timestamp: {timestamp}")
 
 # Executes the program
 if __name__ == "__main__":

@@ -1,14 +1,12 @@
-# Plan of Approach for AI Model
-
 ### Dataset
 
-The dataset for this project contains the following base data:
+>The dataset for this project contains the following base data:
 
 - Timestamp: `Datetime`
 - Steps: `int`
 - PAM Score: `float32`
 
-Here is a simple example of what the data looks like:
+>Here is a simple example of what the data looks like:
 
 ```csv
 Timestamp,Steps,PAM Score
@@ -26,9 +24,9 @@ Timestamp,Steps,PAM Score
 
 ?? What is the time between every entry ??
 
-In order to prepare the data we first need to get rid of the timestamp
+>In order to prepare the data we first need to get rid of the timestamp
+>Afterwards we are left with this data:
 
-Afterwards we are left with this data:
 ```csv
 Steps,PAM Score
 0,0.0
@@ -43,11 +41,9 @@ Steps,PAM Score
 7,2.12
 ```
 
-In order to use this data accurately, we should normalize it.
-
-To normalize the data, we scale the values of each column to a range between 0 and 1.
-
-Here is the normalized dataset:
+>In order to use this data accurately, we should normalize it.
+>To normalize the data, we scale the values of each column to a range between 0 and 1.
+>Here is the normalized dataset:
 
 ```csv
 Steps,PAM Score
@@ -63,7 +59,7 @@ Steps,PAM Score
 0.41,1.00
 ```
 
-This should be the finished dataset for our model
+>This should be the finished dataset for our model
 
 ### AI Model
 

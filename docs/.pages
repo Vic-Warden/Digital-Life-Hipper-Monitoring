@@ -1,17 +1,17 @@
 nav:
     - 🏚️ Home: index.md
     - Backend:
-        - Database: 
-        - BLE Commands: 
-        - Pipeline: 
+        - Database: backend/database
+        - BLE Commands: backend/bleCommands
+        - Pipeline: backend/pipeline
     - Data:
-        - Datasets: 
-        - AI: 
+        - Datasets: data/datasets
+        - AI: data/ai
     - Design: 
-        - UX testing:
-        - Figma: 
+        - UX testing: design/figma
+        - Figma: design/uxTesting
     - Frontend:
-        - PowerBI: 
+        - PowerBI: frontend/powerBI
     - Learning story's: 
         - Bryan: learning/journalBryan
         - Darian: learning/journalDarian

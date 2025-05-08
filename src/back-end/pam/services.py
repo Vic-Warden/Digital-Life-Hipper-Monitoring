@@ -1,6 +1,3 @@
-import asyncio
-from PAM_2102 import PAM_2102
-
 base_uuid = "99DBXXXX-AC2D-11E3-A5E2-0800200C9A66"
 
 
@@ -25,14 +22,10 @@ class ActivityData:
 class ActivityFile:
     def __init__(self):
         self.base_uuid = base_uuid
+        # UUID for ActivityFile is 2003
+        # Check documentation for details
         self.uuid_extension = "2102"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
-
-        asyncio.run(self.run())
-
-    async def run(self):
-        pam = PAM_2102(self.uuid)
-        await pam.run()
 
 
 class ActivityDownload:

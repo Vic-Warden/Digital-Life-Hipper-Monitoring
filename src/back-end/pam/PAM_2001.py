@@ -1,6 +1,12 @@
 # Imports asyncio module
 import asyncio
 
+# read CSV files 
+import csv 
+
+# interact with the operating system
+import os 
+
 # Imports the BleakScanner class from the bleak module
 from bleak import BleakScanner, BleakClient
 
@@ -41,7 +47,6 @@ async def main():
     # Attempts to connect to the Pam device
     print(f"\n Connect to {pam_device.name}...")
     async with BleakClient(pam_device.address) as client:
-    #async with BleakClient("C1:08:00:01:12:33") as client:
         print("Connected")
 
          # Gets and displays the current UTC timestamp
@@ -54,7 +59,7 @@ async def main():
 
         await client.write_gatt_char(TIME_DATE_UUID, data)
         print("Synchronized date and time")
-
+        
 # Executes the program
 if __name__ == "__main__":
     asyncio.run(main())

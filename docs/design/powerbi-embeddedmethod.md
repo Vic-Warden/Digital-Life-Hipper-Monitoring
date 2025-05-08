@@ -45,3 +45,13 @@ const PowerBIEmbed = () => (
     allowFullScreen
   />
 );
+```
+
+#### References
+
+Microsoft Docs:
+
+    Publish to Web in Power BI: https://learn.microsoft.com/power-bi/collaborate-share/service-publish-to-web
+
+    Power BI Desktop: https://powerbi.microsoft.com/desktop
+

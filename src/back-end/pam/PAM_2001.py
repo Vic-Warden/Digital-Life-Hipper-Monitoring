@@ -16,6 +16,9 @@ from datetime import datetime, timezone
 # UUID of the BLE characteristic
 TIME_DATE_UUID = "99DB2001-AC2D-11E3-A5E2-0800200C9A66"
 
+# Log file
+LOG_FILE = "log.csv"
+
 # Returns the current UTC timestamp
 def get_current_utc_timestamp():
     return int(datetime.now(timezone.utc).timestamp())

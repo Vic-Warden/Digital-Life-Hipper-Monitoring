@@ -48,3 +48,21 @@ Generates a **dual-axis plot** to visualize both Steps and PAM Score on the same
 
 ---
 
+## 📝 Example Usage
+
+```python
+import pandas as pd
+from data_visualizer import DataVisualizer
+
+df = pd.read_csv("your_data.csv")
+df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+
+viz = DataVisualizer(df)
+viz.plot_pam_score_over_time()
+viz.plot_steps_over_time()
+viz.plot_dual_axis()
+```
+
+---
+
+> ✅ Make sure your data is cleaned and the 'Timestamp' column is in `datetime` format for accurate plotting.

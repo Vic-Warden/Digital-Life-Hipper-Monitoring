@@ -19,3 +19,21 @@ Byte 7  : MSB of Zone 1
 to make use of this command the read_live_pam_data.py script is used to run the ActivityData() which is imported from the services file.
 
 the function is used for making a client that receives data every few seconds from the PAM device which gets shown as a print statement into the console
+
+## 2102<br>
+
+This command is used to request the activity file from the PAM device. The command initiates the transfer of the stored activity data for a specified time period.
+
+Command Format:
+
+Byte 0: Low byte of file request command
+
+Byte 1: High byte of file request command
+
+The format of the request depends on the file being requested (e.g., day data file or 
+detailed file). The requested data will be returned in the Activity Download characteristic. 
+To start the data transfer, the Download notification must be enabled before sending the request.
+
+To use this command, the read_pam_data.py script runs the ActivityFile() function, 
+imported from the services file. This function sends the command to the device and provides 
+simple feedback on whether the request was successful.

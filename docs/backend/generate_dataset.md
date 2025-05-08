@@ -18,3 +18,11 @@ Generates a synthetic dataset simulating human activity (steps and PAM scores) o
 
 4. **Export**
    - Saves the final dataset as a CSV file: `artificial_movement_data.csv`.
+
+## Output Format
+
+| Timestamp           | Steps | PAM Score |
+|---------------------|-------|-----------|
+| 1970-02-01 18:00:00 | 0     | 0.00      |
+| 1970-02-01 18:01:00 | 5     | 1.23      |
+| ...                 | ...   | ...       |

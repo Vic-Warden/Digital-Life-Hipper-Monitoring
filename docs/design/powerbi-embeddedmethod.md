@@ -1,11 +1,9 @@
 ## 📌 Method: Publish to Web (Public Embedding)
 
 ### Overview
-"Publish to Web" is a free, no-authentication-required method that generates an `iframe` you can embed into any website or web application.
+Will be using a Publish to Web because it is a free, no-authentication-required method that generates an `iframe` you can embed into any website or web application with HTML.
 
 >please note; Not secure. Use only with test data or for non-sensitive public reports.
-
----
 
 ## Step-by-Step Instructions
 

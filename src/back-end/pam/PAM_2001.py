@@ -37,10 +37,11 @@ async def main():
     if not pam_device:
         print("Pam device not connected")
         return
-    
+
     # Attempts to connect to the Pam device
     print(f"\n Connect to {pam_device.name}...")
     async with BleakClient(pam_device.address) as client:
+    #async with BleakClient("C1:08:00:01:12:33") as client:
         print("Connected")
 
          # Gets and displays the current UTC timestamp

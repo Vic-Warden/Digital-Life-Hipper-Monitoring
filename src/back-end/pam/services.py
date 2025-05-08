@@ -47,11 +47,6 @@ class ActivityDownload:
     def __init__(self):
         # UUID for ActivityDownload is 2103
         # Check documentation for details
-<<<<<<< HEAD
-        self.uuid_extension = "2103"
-        self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
-=======
-        self.base_uuid = base_uuid
         self.uuid_extension = "2103"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
 
@@ -61,4 +56,3 @@ class ActivityDownload:
     async def run(self):
         pam = PAM_2103(self.uuid)
         await pam.run()
->>>>>>> 6df34633b69d9e437d36d742ae0d169998058432

@@ -23,6 +23,16 @@ LOG_FILE = "log.csv"
 def get_current_utc_timestamp():
     return int(datetime.now(timezone.utc).timestamp())
 
+# Logs local synchronization time
+def log_sync():
+    local_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    file_exists = os.path.isfile(LOG_FILE)
+    with open(LOG_FILE, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['Local Time'])
+        writer.writerow([local_time])
+
 # Main function
 async def main():
 
@@ -62,6 +72,9 @@ async def main():
 
         await client.write_gatt_char(TIME_DATE_UUID, data)
         print("Synchronized date and time")
+        
+        log_sync()
+        print(f"Local time logged to {LOG_FILE}")
         
 # Executes the program
 if __name__ == "__main__":

@@ -41,7 +41,10 @@ Steps,PAM Score
 
 >In order to use this data accurately, we should normalize it.
 >To normalize the data, we scale the values of each column to a range between 0 and 1.
->Here is the normalized dataset:
+>
+>Normalization ensures that the data is scaled appropriately, preventing any single feature from dominating the model due to its magnitude. This step is crucial for algorithms like Logistic Regression and K-Nearest Neighbors, which are sensitive to the scale of input features.
+>
+>The normalized dataset is shown below:
 
 ```csv
 Steps,PAM Score

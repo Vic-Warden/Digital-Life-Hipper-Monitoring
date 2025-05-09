@@ -1,3 +1,3 @@
 # Index
 
-Write content here
+Home page here

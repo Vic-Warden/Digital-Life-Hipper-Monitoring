@@ -9,7 +9,7 @@ The chosen color scheme for the app design closely mirrors the colors used on Hi
 - Font color: Black
 - The color of the shadow around the boxes: Light blue (color code: 3981C1)
 
-**References**
+### References
 - The app used for getting the color code from the website is a macOS app: Digital Color Meter.
 - Chatgpt was used to figure out how to use the shadows in figma.
 
@@ -33,3 +33,6 @@ These are to elements used on the navbar:
 2. Then you need to group all the elements used in the navbar.
 
 3. After this you can right-click the frame and choose create component or Cmd/Ctrl + Alt + K can be used as a shortcut. Now it will be a reuseable component.
+
+### References
+- Chatgpt was used to figure out how to make the reuseable component.

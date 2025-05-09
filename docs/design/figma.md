@@ -23,6 +23,8 @@ These are to elements used on the navbar:
 - Shortcuts to Homepage and Profilepage
 - Button to log out.
 
+![NavBar](../assets/Figma/NavBar.png)
+
 **Steps to make the component**
 
 1. First you have to design the navbar the way you want it to be.

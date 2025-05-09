@@ -2,11 +2,16 @@
 Hipper ble commands documentation here
 
 ## 2001<br>
-This code can do :
+This command is used for synchronizing the current UTC time with the PAM device via BLE (UUID 2001).
 
-Scan the devices arround and try to find a device with the name with " Pam " Once it's successed he's trying to connect it.
-Sends the current UTC time as a timestamp (4 bytes)
-And I just put on the code a little line to check if I can received the right dates and times.
+This code scans for a PAM device, connects via Bluetooth, and writes the current timestamp as a 4-byte payload to the device.<br>
+Structure based on PAM device BLE Interface Specification provided by Michel Oey:
+
+Payload (4 bytes):<br>
+Byte 0–3: Current UTC timestamp in seconds (uint32, little endian)
+
+To use this command, the read_live_pam_data.py script runs the PAM_2001.run() function, which internally calls set_timestamp().<br>
+The function scans for devices named "Pam", connects, and writes the time to the target characteristic. Progress is shown via console output.
 
 ## 2101<br>
 this command is used for measuring the current data of the total value that is stored on the hipper device.

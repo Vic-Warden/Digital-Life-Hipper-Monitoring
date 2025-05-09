@@ -16,7 +16,7 @@ The chosen color scheme for the app design closely mirrors the colors used on Hi
 ## Navigation Bar
 The navbar that is used in the figma design is made into a component, so the it will be reuseable on every page where it is needed. 
 
-**Elements on the navigation bar**
+### Elements on the navigation bar:
 
 These are to elements used on the navbar:
 
@@ -26,7 +26,7 @@ These are to elements used on the navbar:
 
 ![NavBar](../assets/Figma/NavBar.png)
 
-**Steps to make the component**
+### Steps to make the component:
 
 1. First you have to design the navbar the way you want it to be.
 

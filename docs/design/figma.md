@@ -10,4 +10,5 @@ The chosen color scheme for the app design closely mirrors the colors used on Hi
 - The color of the shadow around the boxes: Light blue (color code: 3981C1)
 
 **References**
-- The app used for getting the color code from the website is a macOS app: Digital Color Meter
+- The app used for getting the color code from the website is a macOS app: Digital Color Meter.
+- Chatgpt was used to figure out how to use the shadows in figma.

@@ -17,6 +17,7 @@ The chosen color scheme for the app design closely mirrors the colors used on Hi
 The navbar that is used in the figma design is made into a component, so the it will be reuseable on every page where it is needed. 
 
 **Elements on the navigation bar**
+
 These are to elements used on the navbar:
 
 - The Hipper logo (left-side)

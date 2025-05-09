@@ -1,6 +1,13 @@
 # BLE commands<br>
 Hipper ble commands documentation here
 
+## 2001<br>
+This code can do :
+
+Scan the devices arround and try to find a device with the name with " Pam " Once it's successed he's trying to connect it.
+Sends the current UTC time as a timestamp (4 bytes)
+And I just put on the code a little line to check if I can received the right dates and times.
+
 ## 2101<br>
 this command is used for measuring the current data of the total value that is stored on the hipper device.
 

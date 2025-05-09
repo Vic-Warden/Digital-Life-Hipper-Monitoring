@@ -1,51 +1,90 @@
-# This script loads a dataset from a specified file path and displays the first few rows of the dataset.
-
+import tkinter as tk
+from tkinter import ttk
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.widgets import SpanSelector
 import pandas as pd
+import numpy as np
+
+# Load your dataset
+df = pd.read_csv('artificial_1h_data.csv')
+df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+df = df.sort_values('Timestamp')
+df['Timestamp_num'] = df['Timestamp'].astype(
+    'int64') / 1e9  # Convert to numeric for plotting
+
+# Store label assignments: (label, xmin, xmax)
+assigned_regions = []
+
+# GUI Window
+root = tk.Tk()
+root.title("PAM Label Assignment Tool")
+
+# Left frame for controls
+left_frame = tk.Frame(root)
+left_frame.pack(side=tk.LEFT, padx=10, pady=10)
+
+# Label dropdown
+label_var = tk.StringVar()
+label_options = ["Walking", "Running", "Jumping", "Idle"]
+label_dropdown = ttk.Combobox(
+    left_frame, textvariable=label_var, values=label_options)
+label_dropdown.current(0)
+label_dropdown.pack(pady=5)
+
+# Assign button
 
 
-class ActivityPlotter:
-    def __init__(self, file_path):
-        self.file_path = file_path
-        self.df = None
-        self._load_data()
+def assign_label():
+    if selected_region:
+        xmin, xmax = selected_region
+        label = label_var.get()
+        assigned_regions.append((label, xmin, xmax))
 
-    def _load_data(self):
-        """Load and preprocess the CSV data."""
-        self.df = pd.read_csv(self.file_path)
-        self.df['Timestamp'] = pd.to_datetime(self.df['Timestamp'])
-        self.df = self.df.sort_values('Timestamp')
+        # Highlight region
+        ax1.axvspan(xmin, xmax, color='gray', alpha=0.3)
 
-    def plot(self):
-        """Plot Steps and PAM Score with dual Y-axes."""
-        fig, ax1 = plt.subplots(figsize=(15, 8))
+        # Add label text in the middle of the region
+        x_center = xmin + (xmax - xmin) / 2
+        y_max = df['Steps'].max()
+        ax1.text(x_center, y_max * 0.95, label, color='black', ha='center',
+                 fontsize=9, bbox=dict(facecolor='white', alpha=0.6, edgecolor='none'))
 
-        # Plot Steps (primary Y-axis)
-        ax1.plot(self.df['Timestamp'], self.df['Steps'],
-                 color='blue', label='Steps')
-        ax1.set_xlabel('Time')
-        ax1.set_ylabel('Steps', color='blue')
-        ax1.tick_params(axis='y', labelcolor='blue')
-
-        # Plot PAM Score (secondary Y-axis)
-        ax2 = ax1.twinx()
-        ax2.plot(self.df['Timestamp'], self.df['PAM Score'],
-                 color='green', label='PAM Score')
-        ax2.set_ylabel('PAM Score', color='green')
-        ax2.tick_params(axis='y', labelcolor='green')
-
-        # Title and legend
-        plt.title('Steps and PAM Score Over Time')
-        ax1.grid(True)
-
-        # Combine legends
-        lines_1, labels_1 = ax1.get_legend_handles_labels()
-        lines_2, labels_2 = ax2.get_legend_handles_labels()
-        ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='upper left')
-
-        plt.tight_layout()
-        plt.show()
+        canvas.draw()
 
 
-plotter = ActivityPlotter('artificial_1h_data.csv')
-plotter.plot()
+assign_button = tk.Button(left_frame, text="Assign", command=assign_label)
+assign_button.pack(pady=5)
+
+# Main plot area
+fig, ax1 = plt.subplots(figsize=(10, 5))
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas_widget = canvas.get_tk_widget()
+canvas_widget.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+# Plot data
+ax2 = ax1.twinx()
+ax1.plot(df['Timestamp_num'], df['Steps'], label='Steps', color='blue')
+ax2.plot(df['Timestamp_num'], df['PAM Score'],
+         label='PAM Score', color='green')
+
+# Labels and legend
+ax1.set_xlabel("Time")
+ax1.set_ylabel("Steps", color='blue')
+ax2.set_ylabel("PAM Score", color='green')
+ax1.set_title("Select a region and assign a label")
+ax1.grid(True)
+
+# SpanSelector
+selected_region = []
+
+
+def onselect(xmin, xmax):
+    selected_region.clear()
+    selected_region.extend([xmin, xmax])
+
+
+span = SpanSelector(ax1, onselect, 'horizontal', useblit=True,
+                    props=dict(alpha=0.5, facecolor='red'), interactive=True)
+
+root.mainloop()

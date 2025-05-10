@@ -14,3 +14,11 @@ The application expects a CSV file containing at least the following columns:
 - `Steps`: Numeric values representing step counts.
 - `PAM Score`: Numeric values representing PAM scores.
 
+---
+
+## 📦 Dependencies
+
+Make sure the following Python packages are installed:
+
+```bash
+pip install pandas matplotlib numpy

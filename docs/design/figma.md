@@ -15,3 +15,11 @@ The chosen color scheme for the app design closely mirrors the colors used on Hi
 
 ## Visual feedback (Hover effect)
 To ensure that users testing the Figma prototype are aware of their actions, we have decided to implement a hover effect. When interacting with buttons or elements in the navbar, the user will see a color change upon hovering, providing clear feedback that the element is being used.
+
+![Normal page](../assets/Figma/ColorScheme.png)
+
+This is an image of the normal look of the page.
+
+![Hover page](../assets/Figma/HoverEffect.png)
+
+This is an image of the look of the page with the hover effect.

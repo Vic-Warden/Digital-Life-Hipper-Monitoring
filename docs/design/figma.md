@@ -23,3 +23,24 @@ This is an image of the normal look of the page.
 ![Hover page](../assets/Figma/HoverEffect.png)
 
 This is an image of the look of the page with the hover effect.
+
+## Steps to make the hover effect:
+
+1. Create Two States:
+
+- **Normal State:** Design the button or element as it normally looks.
+- **Hover State:** Duplicate the normal state and change the color (or add effects like shadow) for when it's hovered over.
+
+2. Set The Hover Interaction:
+
+- Select the **Normal State**.
+- Go to the Prototype tab and drag the blue arrow to the **Hover State**.
+- Set the trigger to "While Hovering" and the action to "Smart Animate".
+
+3. Preview The Hover Effect:
+
+- Click Present (top-right) to see the effect in action. When you hover, the element should change color.
+
+4. Add Click Interaction:
+
+- If you want the button to navigate, select the **Normal State**, drag the blue arrow to the target frame, and set the trigger to "On Click".

@@ -18,11 +18,11 @@ To ensure that users testing the Figma prototype are aware of their actions, we 
 
 ![Normal page](../assets/Figma/ColorScheme.png)
 
-This is an image of the normal look of the page.
+**Above is an image of the normal look of the page.**
 
 ![Hover page](../assets/Figma/HoverEffect.png)
 
-This is an image of the look of the page with the hover effect.
+**Above is an image of the look of the page with the hover effect.**
 
 ### Steps to make the hover effect:
 

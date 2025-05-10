@@ -24,7 +24,7 @@ This is an image of the normal look of the page.
 
 This is an image of the look of the page with the hover effect.
 
-## Steps to make the hover effect:
+### Steps to make the hover effect:
 
 1. Create Two States:
 
@@ -44,3 +44,12 @@ This is an image of the look of the page with the hover effect.
 4. Add Click Interaction:
 
 - If you want the button to navigate, select the **Normal State**, drag the blue arrow to the target frame, and set the trigger to "On Click".
+
+### References
+- Chatgpt is used to help figure out the process of making the hover effect for buttons and the navigation bar.
+- Also some youtube video's were used to help with understanding how the make the hover effect. (These will be linked below.)
+
+This video is watched at speed 0.25:  [Navigation Hover Effect in one minute using Figma](https://www.youtube.com/watch?v=CnJIfQRur28)
+
+Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
+

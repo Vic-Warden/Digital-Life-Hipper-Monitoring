@@ -53,7 +53,8 @@ simple feedback on whether the request was successful.
 #### File duration size
 in order to get 
 What names you can use.
-these can be accesed from the list using the get function as follows this:
+these can be accesed from the list using the get function as follows this (from src/back-end/pam):
+
 ````python
 from PAM_2102 import get_detailed_request
 get_detailed_request("MAX")
@@ -91,6 +92,7 @@ these were determined by the following logic from the PAM device documentation
 
 Each two-byte command packs the number of 15-minute intervals you want (low byte + high byte’s lower 7 bits) in little-endian,
 with the high byte’s MSB set to 1 to signal a detailed-file request.
+
 
 ## 2103
 

@@ -1,8 +1,11 @@
 import asyncio
 from bleak import BleakClient, BleakScanner
+import csv
+from datetime import datetime, timedelta, UTC
 
 class PAM_2103():
-    def __init__(self, activity_file_length):
+    def __init__(self, uuid,  filename):
+        self.filename = filename
         #2102 for downloading the file on the PAM device
         self.ACTIVITY_FILE_UUID = "99DB2102-AC2D-11E3-A5E2-0800200C9A66"
         #2103 for downloading the file over BLE
@@ -45,7 +48,19 @@ class PAM_2103():
 
         print(records)
 
-        #TODO export the 'records' variable to a csv file here
+        start_date = datetime.fromtimestamp(base_date * 86400, UTC)
+
+        # Assuming `records` is already defined
+        with open('records_output.csv', mode='w', newline='') as file:
+            writer = csv.writer(file)
+            # Writing the header
+            writer.writerow(['Timestamp', 'Steps', 'PAM Score'])
+
+            # Writing each record
+            for di, ti, steps, score in records:
+                timestamp = start_date + timedelta(days=di, minutes=ti)
+                writer.writerow([timestamp, steps, score])
+
 
     #connects to PAM device, requests a file with 2102, and then downloads it with 2103
     async def run(self):

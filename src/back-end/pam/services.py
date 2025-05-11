@@ -2,7 +2,7 @@ import asyncio
 from PAM_2001 import PAM_2001
 from PAM_2101 import PAM_2101
 from PAM_2102 import PAM_2102
-# from PAM_2103 import PAM_2103
+from PAM_2103 import PAM_2103
 
 # Base UUID for Hipper BLE commands
 base_uuid = "99DBXXXX-AC2D-11E3-A5E2-0800200C9A66"
@@ -51,15 +51,15 @@ class ActivityFile:
         await pam.run()
 
 class ActivityDownload:
-    def __init__(self):
+    def __init__(self, filename = "data_records.csv"):
         # UUID for ActivityFile is 2102
         self.base_uuid = base_uuid
         self.uuid_extension = "2103"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
 
         # Run the PAM_2102 script to send the command and confirm transmission
-        asyncio.run(self.run())
+        asyncio.run(self.run(filename))
 
-    async def run(self):
-        pam = PAM_2103(self.uuid)
+    async def run(self, filename):
+        pam = PAM_2103(self.uuid, filename = filename)
         await pam.run()

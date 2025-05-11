@@ -16,3 +16,24 @@ As a student, I want to learn how to make a hover effect on buttons and the navb
 
 ### What I have learned.
 To make the prototype in figma more realistic I wanted to learn how to make the hover effect for button and the navbar in figma. To make this happen I first asked chatgpt for instructions on how to do this. This helped a bit, but some things were still unclear without seeing it done, so after asking chatgpt and knowing a bit about it I started searching for video's on youtube. The first one I found was about how to make a hover effect on a button. With this video I was finally able to make the hover effect on the button. The second video I watched was also about the hover effect, but this one was about the navbar. At last after watching these video's I was finally able to get it done.
+
+### Steps to make the hover effect:
+
+1. Create Two States:
+
+- **Normal State:** Design the button or element as it normally looks.
+- **Hover State:** Duplicate the normal state and change the color (or add effects like shadow) for when it's hovered over.
+
+2. Set The Hover Interaction:
+
+- Select the **Normal State**.
+- Go to the Prototype tab and drag the blue arrow to the **Hover State**.
+- Set the trigger to "While Hovering" and the action to "Smart Animate".
+
+3. Preview The Hover Effect:
+
+- Click Present (top-right) to see the effect in action. When you hover, the element should change color.
+
+4. Add Click Interaction:
+
+- If you want the button to navigate, select the **Normal State**, drag the blue arrow to the target frame, and set the trigger to "On Click".

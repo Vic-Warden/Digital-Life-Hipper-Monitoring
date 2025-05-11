@@ -4,12 +4,11 @@ This file contains the learning journal with the learning stories of Jan.
 ## Learning stories
 
 #111 As a student, I want to learn about clean web app implementations, so that I can use it to my advantage to come up with components/requirements for a web app.
-* ttt
-* ttt
+* The first thing I did was look at my phones health "gezondheid" app. Here I could get a good impression of how Apple did their layouts to make them look super intuitive. Together with Darian and Indigo I looked into this and together we agreed on certain components/requirements. After checking the Apple Health app I started looking on google for basic login pages, web layouts, and again together with Darian and Indigo we decided on things that looked really great. We want to go for a simplistic look that is understandable for anyone no matter the age. This PDF file has since been comitted to the repository under `design/Components_Requirements`
 
 #ttt
 * ttt
-* ttt
+
 ## Journal
 
 ### 5/7/2025

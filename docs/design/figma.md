@@ -9,7 +9,12 @@ The chosen color scheme for the app design closely mirrors the colors used on Hi
 - Font color: Black
 - The color of the shadow around the boxes: Light blue (color code: 3981C1)
 
-### References
+### Dark mode
+- Background color: dark grey (color code: 2B2B2B)
+- Font color: White (color code: FFFFFF)
+- the color of the shadow around the boxes: Light blue (color code: 3981C1)
+
+**References**
 - The app used for getting the color code from the website is a macOS app: Digital Color Meter.
 - Chatgpt was used to figure out how to use the shadows in figma.
 
@@ -77,3 +82,5 @@ This video is watched at speed 0.25:  [Navigation Hover Effect in one minute usi
 
 Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
 
+## Dark mode
+To switch to dark mode, there is a button under the profile page where settings can be changed. One of these settings is a button to switch between dark and regular themes. 

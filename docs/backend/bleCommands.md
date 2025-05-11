@@ -49,6 +49,62 @@ To start the data transfer, the Download notification must be enabled before sen
 To use this command, the read_pam_data.py script runs the ActivityFile() function, 
 imported from the services file. This function sends the command to the device and provides 
 simple feedback on whether the request was successful.
+<br>
+<br>
+<br>
+#### File duration size
+in order to get a file we need to specify of how long we want data. sometimes we want to download the last hour of data, and sometimes we want to download the last
+<br><br>
+this code will mainly be used when data needs to be collected from a specified duration of time, in which case the time simply needs to be selected and then used while making a dataset.<br>
+<br>
+for the end user this code will mean that there could be a button added which makes use of this code to specifically show how much you scored (and in what ways) during the past hour or day
+<br>
+<br>
+How to use the function:<br>
+the code exists of a list that has a bunch of different byte values for different amounts of time indicators.<br>
+<br>
+<br>
+What Identifier strings you can use:<br>
+These can be accesed from the list using the get function as follows this (from src/back-end/pam):
+````python
+from PAM_2102 import get_detailed_request
+get_detailed_request("MAX")
+````
+
+
+````
+    last 15 min
+
+    last 30 min
+
+    last 1 hour
+
+    last 3 hours
+
+    last 6 hours
+
+    last 12 hours
+
+    last 15 hours
+
+    last 24 hours
+
+    last 3 days
+
+    last 7 days
+
+    last 14 days
+
+    last 30 days
+
+    max (full buffer)
+````
+Each of these identifiers is used to give a byte array of 2 bytes;<br>
+Each two-byte command packs the number of 15-minute intervals you want (low byte + high byte’s lower 7 bits) in little-endian,
+with the high byte’s MSB set to 1 to signal a detailed-file request.
+<br>
+these bytes were determined by the following logic from the PAM device documentation provided by Michel Oey from Hipper Therapeutics
+<br><br>use this logic to add a new identifier to the list if needed
 
 ## 2103
 

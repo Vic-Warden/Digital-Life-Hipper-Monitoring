@@ -1,27 +1,27 @@
 import asyncio
 from bleak import BleakClient, BleakScanner
-from datetime import datetime, timedelta, UTC
-from enum import Enum
-from typing import ByteString
-
 
 class PAM_2103():
     def __init__(self, activity_file_length):
+        #2102 for downloading the file on the PAM device
         self.ACTIVITY_FILE_UUID = "99DB2102-AC2D-11E3-A5E2-0800200C9A66"
+        #2103 for downloading the file over BLE
         self.ACTIVITY_DOWNLOAD_UUID = "99DB2103-AC2D-11E3-A5E2-0800200C9A66"
 
-        self.REQUEST_DETAILED_LAST_15_HOURS  = bytearray([0x3C, 0x80])  # 15 hours
+        #length of activity file time
+        self.REQUEST_DETAILED_LAST_15_HOURS = bytearray([0x3C, 0x80])  # 15 hours
 
         self.REQUEST_AMOUNT_TYPE = self.REQUEST_DETAILED_LAST_15_HOURS
         self.received_blocks = {}
 
-
+    #callback for when a new block of bytes is received
     def notification_handler(self, sender, data):
         block_number = int.from_bytes(data[:2], byteorder='little')
         payload = data[2:]
         self.received_blocks[block_number] = payload
         print(f"Received block #{block_number} with {len(payload)} bytes")
 
+    #decodes the bytes of the incomming message based on the documentation from Pam_BLE_Spec_V1_8
     def parse_detailed_data_blocks(self, blocks):
         all_data = b''.join(payload for block, payload in sorted(blocks.items()) if block != 0)
         records = []
@@ -40,26 +40,14 @@ class PAM_2103():
 
         return records
 
+    #displays the records here
     def display_records(self, records, base_date):
 
-        start_date = datetime.fromtimestamp(base_date * 86400, UTC)
-
-        import csv
-        from datetime import timedelta
         print(records)
 
-        # Assuming `records` is already defined
-        with open('records_output.csv', mode='w', newline='') as file:
-            writer = csv.writer(file)
-            # Writing the header
-            writer.writerow(['Timestamp', 'Steps', 'PAM Score'])
+        #TODO export the 'records' variable to a csv file here
 
-            # Writing each record
-            for di, ti, steps, score in records:
-                timestamp = start_date + timedelta(days=di, minutes=ti)
-                writer.writerow([timestamp, steps, score])
-
-
+    #connects to PAM device, requests a file with 2102, and then downloads it with 2103
     async def run(self):
         print("Scanning for BLE devices...")
         devices = await BleakScanner.discover(timeout=5)
@@ -85,8 +73,6 @@ class PAM_2103():
             await client.write_gatt_char(self.ACTIVITY_FILE_UUID, self.REQUEST_AMOUNT_TYPE)
             print("Requested activity file...")
 
-            # await asyncio.sleep(20)
-
             await client.stop_notify(self.ACTIVITY_DOWNLOAD_UUID)
             print("Download complete. Processing data...")
 
@@ -96,8 +82,7 @@ class PAM_2103():
 
             header = self.received_blocks[0]
             base_date = int.from_bytes(header[4:6], byteorder='little')
+            print("Base date is: ", base_date)
 
             records = self.parse_detailed_data_blocks(self.received_blocks)
             self.display_records(records, base_date)
-
-

@@ -50,16 +50,24 @@ class ActivityFile:
         pam = PAM_2102(self.uuid)
         await pam.run()
 
+#used to download the activityfile into a csv file
 class ActivityDownload:
     def __init__(self, filename = "data_records.csv"):
         # UUID for ActivityFile is 2102
         self.base_uuid = base_uuid
-        self.uuid_extension = "2103"
-        self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+
+        self.file_uuid_extension = "2102"
+        self.file_uuid = self.base_uuid.replace("XXXX", self.file_uuid_extension)
+
+        self.download_uuid_extension = "2103"
+        self.download_uuid = self.base_uuid.replace("XXXX", self.download_uuid_extension)
+
 
         # Run the PAM_2102 script to send the command and confirm transmission
         asyncio.run(self.run(filename))
 
     async def run(self, filename):
-        pam = PAM_2103(self.uuid, filename = filename)
+        pam = PAM_2103(file_uuid=self.file_uuid,
+                       download_uuid=self.download_uuid,
+                       filename=filename)
         await pam.run()

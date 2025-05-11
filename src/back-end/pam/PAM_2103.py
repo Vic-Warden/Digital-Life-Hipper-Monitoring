@@ -4,12 +4,12 @@ import csv
 from datetime import datetime, timedelta, UTC
 
 class PAM_2103():
-    def __init__(self, uuid,  filename):
+    def __init__(self, file_uuid, download_uuid,  filename):
         self.filename = filename
         #2102 for downloading the file on the PAM device
-        self.ACTIVITY_FILE_UUID = "99DB2102-AC2D-11E3-A5E2-0800200C9A66"
+        self.ACTIVITY_FILE_UUID = file_uuid
         #2103 for downloading the file over BLE
-        self.ACTIVITY_DOWNLOAD_UUID = "99DB2103-AC2D-11E3-A5E2-0800200C9A66"
+        self.ACTIVITY_DOWNLOAD_UUID = download_uuid
 
         #length of activity file time
         self.REQUEST_DETAILED_LAST_15_HOURS = bytearray([0x3C, 0x80])  # 15 hours
@@ -47,11 +47,11 @@ class PAM_2103():
     def display_records(self, records, base_date):
 
         print(records)
-
-        start_date = datetime.fromtimestamp(base_date * 86400, UTC)
+        # times 86400 to account for the amount of seconds for each day
+        start_date = datetime.fromtimestamp(base_date * 86400)
 
         # Assuming `records` is already defined
-        with open('records_output.csv', mode='w', newline='') as file:
+        with open(self.filename, mode='w', newline='') as file:
             writer = csv.writer(file)
             # Writing the header
             writer.writerow(['Timestamp', 'Steps', 'PAM Score'])

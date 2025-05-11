@@ -62,3 +62,12 @@ Skips block 0 (header), joins payloads in order, splits into 4-byte records, and
      - minute index (11 bits)
      - step count (1 byte)
      - raw score (1 byte ÷ 16)
+
+#### storing as csv
+
+the date data gets converted into seconds by multiplying by 86400.
+
+the csv library is then used for writing the values into a csv file with the provided filename
+
+then it gets stored using the following csv stucture:
+Timestamp,Steps,PAM Score

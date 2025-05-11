@@ -10,3 +10,8 @@ Before I started working on the design of the app that will be made there was de
 ### References
 - First app used is named: Color Picker
 - Second app used is named: Digital Color Meter
+
+## Learning Story 108
+As a student, I want to learn how to make a hover effect on buttons and the navbar in figma, so when using this prototype it will give a more realistic feeling.
+
+### What I have learned.

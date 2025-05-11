@@ -25,3 +25,8 @@ Today I will start working on the data visualisation. I am planning on doing thi
 I started looking into the visualisations with Darian and we came up with a few decent ones that somewhat visually represent the data for a better reading experience. Whilst doing this we both also looked into a way of sharing the PowerBI file online. After a bit of back and forth we realised that the HvA no longer has the PowerBI premium/pro plan which is needed to be able to do this. It could form a potential project risk because we rely on PowerBI to represent our data in a web app. Darian and me both requested permission through some sort of panel, now we wait for a response. Later on we might end up having a call with the HvA about this if needed.
 
 Looking back on today I was able to complete my user story about easily fetching new sensor data from the same folder. It's important that we can easily import multiple .csv files when we have several hipper devices producing data, especially for the development stage. The PowerBI difficulties with not being able to share a report online remains a problem that is to be continued.
+
+### 5/11/2025
+Today I mostly reviewed some user stories and learning stories. I also started with my own learning story and one of my user stories was merged. 
+
+Tomorrow back at school I will look into the PowerBI situation again. I really hope to then be able to make use of the online version. If not I will contact one of my lecturers to discuss the problem. Darian already talked about an alternative route we could take, so that could be the last resort. 

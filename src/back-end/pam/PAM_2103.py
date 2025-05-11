@@ -1,12 +1,17 @@
 import asyncio
 from bleak import BleakClient, BleakScanner
 from datetime import datetime, timedelta, UTC
+from enum import Enum
+from typing import ByteString
+
 
 class PAM_2103():
-    def __init__(self, uuid):
+    def __init__(self, activity_file_length):
         self.ACTIVITY_FILE_UUID = "99DB2102-AC2D-11E3-A5E2-0800200C9A66"
         self.ACTIVITY_DOWNLOAD_UUID = "99DB2103-AC2D-11E3-A5E2-0800200C9A66"
-        self.REQUEST_DETAILED_LAST_15_HOURS = bytearray([0x3C, 0x80])  # 15 hours of data
+
+        self.REQUEST_DETAILED_LAST_15_HOURS  = bytearray([0x3C, 0x80])  # 15 hours
+
         self.REQUEST_AMOUNT_TYPE = self.REQUEST_DETAILED_LAST_15_HOURS
         self.received_blocks = {}
 
@@ -36,7 +41,6 @@ class PAM_2103():
         return records
 
     def display_records(self, records, base_date):
-        # start_date = datetime.utcfromtimestamp(base_date * 86400)
 
         start_date = datetime.fromtimestamp(base_date * 86400, UTC)
 
@@ -57,7 +61,7 @@ class PAM_2103():
 
 
     async def run(self):
-        print("🔍 Scanning for BLE devices...")
+        print("Scanning for BLE devices...")
         devices = await BleakScanner.discover(timeout=5)
 
         pam_device = None
@@ -68,26 +72,26 @@ class PAM_2103():
                 break
 
         if not pam_device:
-            print("❌ Pam sensor not found.")
+            print("Pam sensor not found.")
             return
 
-        print(f"\n🔗 Connecting to {pam_device.name}...")
+        print(f"\nConnecting to {pam_device.name}...")
         async with BleakClient(pam_device.address) as client:
-            print("✅ Connected!")
+            print(" Connected to PAM device!")
 
             await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)
             await asyncio.sleep(1)
 
             await client.write_gatt_char(self.ACTIVITY_FILE_UUID, self.REQUEST_AMOUNT_TYPE)
-            print("📥 Requested activity file...")
+            print("Requested activity file...")
 
             # await asyncio.sleep(20)
 
             await client.stop_notify(self.ACTIVITY_DOWNLOAD_UUID)
-            print("✅ Download complete. Processing data...")
+            print("Download complete. Processing data...")
 
             if 0 not in self.received_blocks:
-                print("❌ Missing file header.")
+                print("Download failed; Missing file header.")
                 return
 
             header = self.received_blocks[0]

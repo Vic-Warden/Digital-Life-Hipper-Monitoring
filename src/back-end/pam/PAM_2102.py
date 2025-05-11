@@ -1,5 +1,32 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
+from enum import Enum
+from typing import ByteString
+
+#enumeration class datatype for activity file lengths lengths
+
+def get_detailed_request(name: str) -> bytearray:
+    detailed_requests = {
+        "LAST_15_MIN":    bytearray([0x01, 0x80]),
+        "LAST_30_MIN":    bytearray([0x02, 0x80]),
+        "LAST_1_HOUR":    bytearray([0x04, 0x80]),
+        "LAST_3_HOURS":   bytearray([0x0C, 0x80]),
+        "LAST_6_HOURS":   bytearray([0x18, 0x80]),
+        "LAST_12_HOURS":  bytearray([0x30, 0x80]),
+        "LAST_15_HOURS":  bytearray([0x3C, 0x80]),
+        "LAST_24_HOURS":  bytearray([0x60, 0x80]),
+        "LAST_3_DAYS":    bytearray([0x20, 0x81]),
+        "LAST_7_DAYS":    bytearray([0xA0, 0x82]),
+        "LAST_14_DAYS":   bytearray([0x40, 0x85]),
+        "LAST_30_DAYS":   bytearray([0xC0, 0x8B]),
+        "MAX":            bytearray([0x00, 0x8C]),
+    }
+
+    try:
+        return detailed_requests[name.upper()]
+    except KeyError:
+        raise ValueError(f"Invalid request name '{name}'. Available options: {', '.join(detailed_requests.keys())}")
+
 
 class PAM_2102:
     def __init__(self, uuid):

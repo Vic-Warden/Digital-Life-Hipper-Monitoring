@@ -2,6 +2,7 @@ import asyncio
 from PAM_2001 import PAM_2001
 from PAM_2101 import PAM_2101
 from PAM_2102 import PAM_2102
+from PAM_2102 import get_detailed_request
 from PAM_2103 import PAM_2103
 
 # Base UUID for Hipper BLE commands
@@ -52,9 +53,11 @@ class ActivityFile:
 
 #used to download the activityfile into a csv file
 class ActivityDownload:
-    def __init__(self, filename = "data_records.csv"):
+    def __init__(self, filename, filelength):
         # UUID for ActivityFile is 2102
         self.base_uuid = base_uuid
+
+        self.filelength = filelength
 
         self.file_uuid_extension = "2102"
         self.file_uuid = self.base_uuid.replace("XXXX", self.file_uuid_extension)
@@ -69,5 +72,6 @@ class ActivityDownload:
     async def run(self, filename):
         pam = PAM_2103(file_uuid=self.file_uuid,
                        download_uuid=self.download_uuid,
-                       filename=filename)
+                       filename=filename,
+                       filelength=self.filelength)
         await pam.run()

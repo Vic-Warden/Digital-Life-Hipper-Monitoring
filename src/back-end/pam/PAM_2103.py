@@ -4,17 +4,18 @@ import csv
 from datetime import datetime, timedelta, UTC
 
 class PAM_2103():
-    def __init__(self, file_uuid, download_uuid,  filename):
+    def __init__(self, file_uuid, download_uuid,  filename, filelength):
         self.filename = filename
         #2102 for downloading the file on the PAM device
         self.ACTIVITY_FILE_UUID = file_uuid
         #2103 for downloading the file over BLE
         self.ACTIVITY_DOWNLOAD_UUID = download_uuid
 
-        #length of activity file time
-        self.REQUEST_DETAILED_LAST_15_HOURS = bytearray([0x3C, 0x80])  # 15 hours
+        # self.REQUEST_DETAILED_LAST_15_HOURS = bytearray([0x3C, 0x80])  # 15 hours
+        # print(self.REQUEST_DETAILED_LAST_15_HOURS)
 
-        self.REQUEST_AMOUNT_TYPE = self.REQUEST_DETAILED_LAST_15_HOURS
+        #length of activity file time
+        self.REQUEST_AMOUNT_TYPE = filelength
         self.received_blocks = {}
 
     #callback for when a new block of bytes is received

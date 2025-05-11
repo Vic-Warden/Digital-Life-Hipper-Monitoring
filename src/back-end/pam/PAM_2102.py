@@ -14,7 +14,7 @@ def get_detailed_request(name: str) -> bytearray:
         "LAST_6_HOURS":   bytearray([0x18, 0x80]),
         "LAST_12_HOURS":  bytearray([0x30, 0x80]),
         "LAST_15_HOURS":  bytearray([0x3C, 0x80]),
-        "LAST_24_HOURS":  bytearray([0x60, 0x80]),
+        "LAST_1_DAY":  bytearray([0x60, 0x80]),
         "LAST_3_DAYS":    bytearray([0x20, 0x81]),
         "LAST_7_DAYS":    bytearray([0xA0, 0x82]),
         "LAST_14_DAYS":   bytearray([0x40, 0x85]),

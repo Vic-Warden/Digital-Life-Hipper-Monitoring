@@ -50,6 +50,48 @@ To use this command, the read_pam_data.py script runs the ActivityFile() functio
 imported from the services file. This function sends the command to the device and provides 
 simple feedback on whether the request was successful.
 
+#### File duration size
+in order to get 
+What names you can use.
+these can be accesed from the list using the get function as follows this:
+````python
+from PAM_2102 import get_detailed_request
+get_detailed_request("MAX")
+````
+
+
+````
+    last 15 min
+
+    last 30 min
+
+    last 1 hour
+
+    last 3 hours
+
+    last 6 hours
+
+    last 12 hours
+
+    last 15 hours
+
+    last 24 hours
+
+    last 3 days
+
+    last 7 days
+
+    last 14 days
+
+    last 30 days
+
+    max (full buffer)
+````
+these were determined by the following logic from the PAM device documentation
+
+Each two-byte command packs the number of 15-minute intervals you want (low byte + high byte’s lower 7 bits) in little-endian,
+with the high byte’s MSB set to 1 to signal a detailed-file request.
+
 ## 2103
 
 this code can be used by importing the services file and using the ````ActivityDownload()```` function

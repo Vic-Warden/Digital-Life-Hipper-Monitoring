@@ -11,9 +11,6 @@ class PAM_2103():
         #2103 for downloading the file over BLE
         self.ACTIVITY_DOWNLOAD_UUID = download_uuid
 
-        # self.REQUEST_DETAILED_LAST_15_HOURS = bytearray([0x3C, 0x80])  # 15 hours
-        # print(self.REQUEST_DETAILED_LAST_15_HOURS)
-
         #length of activity file time
         self.REQUEST_AMOUNT_TYPE = filelength
         self.received_blocks = {}

@@ -49,3 +49,16 @@ To start the data transfer, the Download notification must be enabled before sen
 To use this command, the read_pam_data.py script runs the ActivityFile() function, 
 imported from the services file. This function sends the command to the device and provides 
 simple feedback on whether the request was successful.
+
+## 2103
+
+this code can be used by importing the services file and using the ````ActivityDownload()```` function
+
+it makes use of the 2102 command to request a file and then downloads it.
+the data is sent in blocks of bytes, parsed using the following logic.
+
+Skips block 0 (header), joins payloads in order, splits into 4-byte records, and extracts:
+     - day offset (5 bits)
+     - minute index (11 bits)
+     - step count (1 byte)
+     - raw score (1 byte ÷ 16)

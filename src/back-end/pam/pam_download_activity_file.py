@@ -1,3 +1,3 @@
 from services import *
 
-ActivityDownload()
+ActivityDownload(filename = "data_records.csv")

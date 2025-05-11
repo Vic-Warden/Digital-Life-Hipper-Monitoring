@@ -37,3 +37,13 @@ To make the prototype in figma more realistic I wanted to learn how to make the 
 4. Add Click Interaction:
 
 - If you want the button to navigate, select the **Normal State**, drag the blue arrow to the target frame, and set the trigger to "On Click".
+
+### References
+- Chatgpt is used to help figure out the process of making the hover effect for buttons and the navigation bar.
+- Also some youtube video's were used to help with understanding how the make the hover effect. (These will be linked below.)
+
+This video is watched at speed 0.25:  [Navigation Hover Effect in one minute using Figma](https://www.youtube.com/watch?v=CnJIfQRur28)
+
+Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
+
+Link to figma: [This is the link to figma](https://www.figma.com/design/uE1Wi3VC106f8T5ExqMtoD/School-Projects?node-id=598-2&p=f&t=kHiMl6c36qMbgXLQ-0)

@@ -45,12 +45,12 @@ class ActivityFile:
 
 class ActivityDownload:
     def __init__(self):
-        # UUID for ActivityDownload is 2103
-        # Check documentation for details
+        # UUID for ActivityFile is 2102
+        self.base_uuid = base_uuid
         self.uuid_extension = "2103"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
 
-        # Run the PAM_2103 script to receive data
+        # Run the PAM_2102 script to send the command and confirm transmission
         asyncio.run(self.run())
 
     async def run(self):

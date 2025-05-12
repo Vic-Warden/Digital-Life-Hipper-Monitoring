@@ -47,4 +47,26 @@ The applications found so far are the following:
   - Great for time-series data (e.g. Prometheus, InfluxDB)
   - Plugin and theme system
   - Alerts and real-time updates
-- **Limitations:** Not built for typical business KPIs
+- **Limitations:** Not built for typical business KPIs\
+
+###  KNIME Analytics Platform
+- **Website:** [knime.com](https://www.knime.com/)
+- **Embedding:** ❌ *Not designed for dashboard embedding*
+- **Features:**
+  - Visual programming for data science
+  - Strong Python/R integration
+  - Connectors to databases and cloud services
+- **Limitations:** No out-of-the-box support for dashboards or web embeds
+
+---
+
+##  Summary
+
+If your goal is **embedding dashboards into a web application for free**, here are the top picks:
+
+-  **Easiest Embed Option:** [Metabase](https://www.metabase.com/) *(simple setup, nice UI, public-only)*
+-  **Most Flexible and Customizable:** [Apache Superset](https://superset.apache.org/) *(full control, open-source secure embedding)*
+-  **For SQL-savvy teams:** [Redash](https://redash.io/) *(simple SQL dashboarding with public embed)*
+
+---
+

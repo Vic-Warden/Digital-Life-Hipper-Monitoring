@@ -3,7 +3,7 @@ This file contains the learning journal with the learning story's of Mike.
 
 # Learning stories:
 
-### As a student I want to learn how store a bunch of different hardcoded values and get them on demand when needed so that I can store important values separately 
+## As a student I want to learn how store a bunch of different hardcoded values and get them on demand when needed so that I can store important values separately 
 
 I managed to get this working using a python dictionary which stores all the data.<br>
 developers can easilly add new values to this by simply adding a new entry.
@@ -40,7 +40,7 @@ these values can't be changed from the end user's perspective but can easilly be
 get_detailed_request("MAX")
 ````
 
-### As a student I want to learn how to use the python bleak library so that I can make use of bluetooth communications in python code 
+## As a student I want to learn how to use the python bleak library so that I can make use of bluetooth communications in python code 
 
 I learned that in order to make use of BLE communications you always need to start by making a bluetooth connection. this can be done by first scanning all bluetooth devices for a name in order to get the address of that device,
 and from there it's easiest to just directly sent a message to the bluetooth device.

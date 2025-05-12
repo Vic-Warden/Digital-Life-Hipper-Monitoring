@@ -70,3 +70,37 @@ If your goal is **embedding** dashboards into a web application for free, here a
 
 ---
 
+## Quick overview Table
+
+this is a quick overview table for ease of use.
+
+Tool: **Metabase**
+- Open Source: Yes
+- Free Embedding: Yes (public only)
+- Best For: Simple business dashboards
+- Notes: Secure/filtered embedding requires paid Enterprise edition
+
+Tool: **Apache Superset**
+- Open Source: Yes
+- Free Embedding: Yes (full, customizable)
+- Best For: Custom analytics and frontend control
+- Notes: Embedding via iframe or custom React components; fully open-source
+
+Tool: **Redash**
+- Open Source: Yes
+- Free Embedding: Yes (public only)
+- Best For: SQL-driven dashboards
+- Notes: Simple public dashboard embedding; no secure embed in free version
+
+Tool: **Grafana**
+- Open Source: Yes
+- Free Embedding: Yes (public or private iframe)
+- Best For: Monitoring, time-series data
+- Notes: Designed more for DevOps than general BI use
+
+Tool: **KNIME**
+- Open Source: Yes
+- Free Embedding: No
+- Best For: Data science and machine learning pipelines
+- Notes: Not suitable for embedding dashboards in web apps
+

@@ -21,10 +21,30 @@ The applications found so far are the following:
 ---
 
 ###  Apache Superset
-- **Website:** source; [superset.apache.org](https://superset.apache.org/)
+- **Website:** source: [superset.apache.org](https://superset.apache.org/)
 - **Embedding:**  *Free and customizable iframe or frontend embedding*
 - **Features:**
   - Complex dashboarding capabilities
   - SQL editor, filters, slices, advanced charts
   - React plugin architecture
 - **Limitations:** More technical setup than others
+
+###  Redash
+- **Website:** source: [redash.io](https://redash.io/)
+- **Embedding:**  *Free public dashboard embedding via iframe*
+- **Features:**
+  - SQL query editor with preview
+  - Scheduled refreshes
+  - Alerting and team collaboration
+- **Limitations:** No secure embed options in open-source version
+
+---
+
+###  Grafana
+- **Website:** source: [grafana.com](https://grafana.com/)
+- **Embedding:**  *Iframe embedding supported (can be public or private)*
+- **Features:**
+  - Great for time-series data (e.g. Prometheus, InfluxDB)
+  - Plugin and theme system
+  - Alerts and real-time updates
+- **Limitations:** Not built for typical business KPIs

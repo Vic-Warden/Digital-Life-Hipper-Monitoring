@@ -16,6 +16,16 @@ Create a list of components needed for the Hipper app
 
 - Responsive design
 
+## Platforms
+
+- Mobile-first design 
+
+- Compatible desktop 
+
+## Tool for component listing
+
+- Use Figma frame OR Google Docs table 
+
 ## List interface components
 
 | Component         | Function                  | Status |

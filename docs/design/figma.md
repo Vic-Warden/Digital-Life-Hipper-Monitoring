@@ -84,3 +84,37 @@ Video on how to create hover effect on button: [Create a Button With a HOVER Fun
 
 ## Dark mode
 To switch to dark mode, there is a button under the profile page where settings can be changed. One of these settings is a button to switch between dark and regular themes. 
+
+## Interaction with the prototype
+To allow users to experience and test the flow of the app, the Prototype tab in Figma is used to link frames and create interactive elements. By connecting buttons, menus, and other components to their respective screens or actions, designers can simulate real user interactions, enabling more effective testing and feedback during the design process.
+
+![interactivePrototype](../assets/Figma/InteractivePrototype.png)
+
+### Steps to make interactive prototype
+
+1. Design Your Frames
+
+- Use Frames to represent individual screens.
+- Design components (buttons, inputs, images) on each frame.
+
+2. Switch to the Prototype Tab
+
+- Click the Prototype tab in the right-hand panel (next to "Design")
+
+3. Add Interactions
+
+- Select a UI element (like a button).
+- You’ll see a circular node (⚪) appear on the right edge.
+- Drag this node to the frame you want to navigate to.
+- Select the interaction setting you want.
+
+4. Set a Starting Frame
+
+- Click on the frame you want to start at and add Flow starting point.
+
+5. Preview Your Prototype
+
+- Click the Play button at the top-right to open the prototype in presentation mode.
+
+### References
+- Chatgpt was used to figure out the process with the starting flow.

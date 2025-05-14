@@ -39,3 +39,16 @@ Create a list of components needed for the Hipper app
 | Card user info | Show data summary | To be created |
 | More if needed...              | ... | ... |
 
+## Steps
+
+- [ ] Review UX requirements and MVP scope
+
+- [ ] Decide where to document (Figma or Doc)
+- [ ] Draft list of base components
+
+- [ ] Add descriptions and status
+
+- [ ] Review list with 1 team member for feedback
+
+- [ ] Finalize and share in project channel
+

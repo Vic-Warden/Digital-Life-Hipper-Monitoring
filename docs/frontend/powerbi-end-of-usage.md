@@ -1,0 +1,3 @@
+# PowerBI end of usage
+
+To be able to use PowerBI with the usecase we as a team had in mind, we need the functionality to publish graphs to an online environment. To initiate the search for a valid license, or an idea how to be able to still publish even though I don't have the correct license, I first looked on the internet if there was a second way. I quickly got pointed to having to request extra acess through the portal of the HvA. I did this, but got no response. a week later I checked the website again where you could request access. 

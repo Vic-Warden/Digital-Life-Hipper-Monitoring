@@ -13,3 +13,4 @@ Docker services:
 >* User Authentication
 >* Business Logic
 
+>**Apache**: Acts as a **reverse proxy** and **web server**, forwarding client requests to the Flask application via **mod_wsgi**.

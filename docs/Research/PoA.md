@@ -16,3 +16,16 @@ Create a list of components needed for the Hipper app
 
 - Responsive design
 
+## List interface components
+
+| Component         | Function                  | Status |
+| ---------------- | --------------------------- | ------- |
+| Login form | Authenticate user | To be created |
+| Graph (PAM) | Show scores | To be created |
+| Progress bar | Show progress | To be created |
+| Emoji feedback | Motivate the user | Create |
+| Goal tracker | Show % goal achieved | To be created |
+| Menu (mobile) | Navigate within the app | To be created |
+| Card user info | Show data summary | To be created |
+| More if needed...              | ... | ... |
+

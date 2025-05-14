@@ -14,3 +14,5 @@ Docker services:
 >* Business Logic
 
 >**Apache**: Acts as a **reverse proxy** and **web server**, forwarding client requests to the Flask application via **mod_wsgi**.
+
+>**MySQL**: A relational database system used to store and manage user data, movement progress records, and any other application-specific information.

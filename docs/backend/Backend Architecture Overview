@@ -1,0 +1,3 @@
+# Backend Architecture Overview
+
+>The backend of the web application is designed using a containerized approach powered by **Docker**. It integrates several key components to ensure modularity, scalability, and maintainability:

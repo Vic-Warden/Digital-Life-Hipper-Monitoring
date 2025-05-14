@@ -21,3 +21,4 @@ We choose to use **Apache** as the web server and reverse proxy mainly because i
 
 >**MySQL**: A relational database system used to store and manage user data, movement progress records, and any other application-specific information.
 
+We choose to use **Apache** as the web server and reverse proxy mainly because it’s something we know well and can count on. Since our main focus is on building the core features of the web app, we don't want to spend too much time figuring out new tools. Apache has been around for a long time, it’s reliable, and there’s plenty of documentation for it. With all the unknowns that come with developing the AI side of things, it makes sense to stick with something solid and familiar for the server setup.

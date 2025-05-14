@@ -88,6 +88,8 @@ To switch to dark mode, there is a button under the profile page where settings 
 ## Interaction with the prototype
 To allow users to experience and test the flow of the app, the Prototype tab in Figma is used to link frames and create interactive elements. By connecting buttons, menus, and other components to their respective screens or actions, designers can simulate real user interactions, enabling more effective testing and feedback during the design process.
 
+![interactivePrototype](../assets/Figma/InteractivePrototype.png)
+
 ### Steps to make interactive prototype
 
 1. Design Your Frames

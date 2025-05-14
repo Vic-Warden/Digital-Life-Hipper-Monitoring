@@ -6,3 +6,10 @@ Docker services:
 * **Flask** (Framework)
 * **Apache** (Server/Proxy)
 * **Mysql** (Database)
+
+>**Flask**: Serves as the primary backend framework. It handles:
+>* Routing
+>* API Endpoints
+>* User Authentication
+>* Business Logic
+

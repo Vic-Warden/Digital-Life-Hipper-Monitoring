@@ -113,3 +113,6 @@ To allow users to experience and test the flow of the app, the Prototype tab in 
 5. Preview Your Prototype
 
 - Click the Play button at the top-right to open the prototype in presentation mode.
+
+### References
+- Chatgpt was used to figure out the process with the starting flow.

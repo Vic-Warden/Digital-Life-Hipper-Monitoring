@@ -120,4 +120,16 @@ To allow users to experience and test the flow of the app, the Prototype tab in 
 - Chatgpt was used to figure out the process with the starting flow.
 
 ## Layout of the application
-To make sure that user with or without experience using applications like this can understand how this works. We decided to make the layout of the application as simple as possible, so users will easily understand how to use the application and where they can find the key information they need.
+To make sure that user with or without experience using applications like this can understand how this works. We decided to make the layout of the application as simple as possible, so users will easily understand how to use the application and where they can find the key information they need. 
+
+### Design choices made for the application
+
+1. The colors used in the design are the colors used for the official Hipper website. This was decided after talking with the product owner and the team about it.
+
+2. The homepage is used to display personal information in graphs, so patients can see their progress.
+
+3. On the profile, there are different settings such as dark mode, larger font size, and the option to change the site’s language, allowing users to customize their experience according to their preferences.
+
+4. The design was made as simple as possible to make the application easy to use.
+
+

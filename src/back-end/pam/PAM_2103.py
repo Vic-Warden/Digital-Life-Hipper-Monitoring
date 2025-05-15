@@ -214,3 +214,4 @@ class PAM_2103():
 
             records = self.parse_detailed_data_blocks(self.received_blocks)
             self.display_records(records, base_date)
+            print(records)

@@ -45,15 +45,15 @@ class PAM_2103():
         # bytes 2–3: base_date (days since epoch), if you need it elsewhere:
         # base_date_days = int.from_bytes(file_header[2:4], byteorder='little')
 
-        # 2) Concatenate all data payloads (skip header block)
+        # Concatenate all data payloads (skip header block)
         full_data_stream = bytearray()
         for block_number in sorted(n for n in blocks if n != 0):
             full_data_stream.extend(blocks[block_number])
 
-        # 3) Truncate the stream to the declared file size
+        # Truncate the stream to the declared file size
         full_data_stream = full_data_stream[:file_size_bytes]
 
-        # 4) Split into 4‑byte records and unpack
+        # Split into 4‑byte records and unpack
         activity_records: list[tuple[int, int, int, float]] = []
         record_size = 4
         for offset in range(0, len(full_data_stream), record_size):

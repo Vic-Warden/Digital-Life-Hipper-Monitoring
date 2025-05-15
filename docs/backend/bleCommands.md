@@ -113,11 +113,43 @@ this code can be used by importing the services file and using the ````ActivityD
 it makes use of the 2102 command to request a file and then downloads it.
 the data is sent in blocks of bytes, parsed using the following logic.
 
-Skips block 0 (header), joins payloads in order, splits into 4-byte records, and extracts:
-     - day offset (5 bits)
-     - minute index (11 bits)
-     - step count (1 byte)
-     - raw score (1 byte ÷ 16)
+the main magic of this code is parsing the data, this happens Inside 
+````python
+def parse_detailed_data_blocks(self, blocks: dict[int, bytes]) -> list[tuple[int, int, int, float]]
+````
+the function does the following tasks:<br>
+
+Header Extraction
+
+    Retrieves block 0, which contains metadata.
+
+    Extracts the total file size (in bytes) and base date (as days since Unix epoch).
+
+Data Concatenation
+
+    Combines all data blocks (excluding block 0) into one continuous byte stream.
+
+    Trims the byte stream to the exact declared file size.
+
+Record Parsing
+
+Iterates over the stream in 4-byte chunks.
+
+    Each chunk is decoded into:
+
+        day_offset: days after the base date (5 bits).
+
+        minute_offset: minutes into that day (11 bits).
+
+        step_count: number of steps.
+
+        pam_score: score scaled down by dividing by 16.
+
+Output
+
+    Returns a list of all parsed (day_offset, minute_offset, step_count, pam_score) records.
+
+    Incomplete final records (less than 4 bytes) are ignored.
 
 #### storing as csv
 

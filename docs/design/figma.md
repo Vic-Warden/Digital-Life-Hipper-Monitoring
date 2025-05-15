@@ -134,6 +134,12 @@ To make sure that user with or without experience using applications like this c
 
 4. The design was made as simple as possible to make the application easy to use.
 
+### Feedback from product owner
+- The design is boring. Try to make more fun and more engaging to use.
+- Look into how the data should be visualized (From the user point of view), so it's easy to understand for both the users and the therapist and looking at only graphs is boring. 
+- Make a page to the goal of the user, or put it on the homepage.
+- try making reminders or notifications for the client that they have or haven't reached their goal yet.
+
 ### References
 - Figma is used to make the interactive prototype.
 - Chatgpt was used to help with figuring out how to make some functionalities in figma.

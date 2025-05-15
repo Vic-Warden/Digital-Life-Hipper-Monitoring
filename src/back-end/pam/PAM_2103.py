@@ -22,45 +22,60 @@ class PAM_2103():
         self.received_blocks[block_number] = payload
         print(f"Received block #{block_number} with {len(payload)} bytes")
 
-    def parse_detailed_data_blocks(self, blocks):
+    def parse_detailed_data_blocks(self, blocks: dict[int, bytes]) -> list[tuple[int, int, int, float]]:
         """
-        blocks: dict of {block_number: payload_bytes}, where block 0 is the 4‑byte header
-        containing [fileSize (2 bytes), baseDate (2 bytes)].
-        Returns a list of tuples (di, ti, steps, score).
+        Parse the received BLE blocks of a Detailed Activity Data File into a list of records.
+
+        Args:
+            blocks: A dict mapping block_number to payload bytes. Block 0 is the file header.
+
+        Returns:
+            A list of tuples:
+            (day_offset, minute_offset, step_count, pam_score_float)
         """
-        # 1) Extract header
-        header = blocks.get(0)
-        if header is None or len(header) < 4:
-            raise ValueError("Missing or malformed file header (block 0)")
-        # fileSize: lower 15 bits of bytes[0:2]
-        raw_size = int.from_bytes(header[0:2], byteorder='little')
-        file_size = raw_size & 0x7FFF
-        # baseDate if you want to double-check here:
-        # base_date = int.from_bytes(header[2:4], byteorder='little')
+        # 1) Extract and validate the file header (block 0)
+        file_header = blocks.get(0)
+        if not file_header or len(file_header) < 4:
+            raise ValueError("Missing or malformed file header (block 0)")
 
-        # 2) Concatenate all payloads in order (skipping block 0)
-        data_bytes = bytearray()
-        for blk_num in sorted(k for k in blocks.keys() if k != 0):
-            data_bytes += blocks[blk_num]
+        # bytes 0–1: file_size (lower 15 bits), MSB indicates multi-part
+        raw_file_size = int.from_bytes(file_header[0:2], byteorder='little')
+        file_size_bytes = raw_file_size & 0x7FFF
 
-        # 3) Truncate to file_size
-        data_bytes = data_bytes[:file_size]
+        # bytes 2–3: base_date (days since epoch), if you need it elsewhere:
+        # base_date_days = int.from_bytes(file_header[2:4], byteorder='little')
 
-        # 4) Parse into 4‑byte records
-        records = []
-        for offset in range(0, len(data_bytes), 4):
-            chunk = data_bytes[offset:offset + 4]
-            if len(chunk) < 4:
-                break
-            # unpack the 16‑bit bitfield
-            raw = int.from_bytes(chunk[0:2], byteorder='little')
-            di = raw & 0x1F  # lower 5 bits
-            ti = (raw >> 5) & 0x7FF  # next 11 bits
-            steps = chunk[2]
-            score = chunk[3] / 16.0  # per spec: divide by 16 for float
-            records.append((di, ti, steps, score))
+        # 2) Concatenate all data payloads (skip header block)
+        full_data_stream = bytearray()
+        for block_number in sorted(n for n in blocks if n != 0):
+            full_data_stream.extend(blocks[block_number])
 
-        return records
+        # 3) Truncate the stream to the declared file size
+        full_data_stream = full_data_stream[:file_size_bytes]
+
+        # 4) Split into 4‑byte records and unpack
+        activity_records: list[tuple[int, int, int, float]] = []
+        record_size = 4
+        for offset in range(0, len(full_data_stream), record_size):
+            record_bytes = full_data_stream[offset: offset + record_size]
+            if len(record_bytes) < record_size:
+                break  # incomplete tail, ignore
+
+            # first two bytes: combined bitfields
+            bitfield = int.from_bytes(record_bytes[0:2], byteorder='little')
+            day_offset = bitfield & 0x1F  # lower 5 bits: days since base date
+            minute_offset = (bitfield >> 5) & 0x7FF  # next 11 bits: minutes into that day
+
+            # third byte: steps count
+            step_count = record_bytes[2]
+
+            # fourth byte: raw PAM score, must be divided by 16 for the actual value
+            raw_pam_score = record_bytes[3]
+            pam_score = raw_pam_score / 16.0
+
+            activity_records.append((day_offset, minute_offset, step_count, pam_score))
+
+        return activity_records
 
     #displays the records here
     def display_records(self, records, base_date):

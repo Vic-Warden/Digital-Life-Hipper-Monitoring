@@ -132,4 +132,13 @@ To make sure that user with or without experience using applications like this c
 
 4. The design was made as simple as possible to make the application easy to use.
 
+### References
+- Figma is used to make the interactive prototype.
+- Chatgpt was used to help with figuring out how to make some functionalities in figma.
+- also some youtube video's are used to figure out some of the functionalities.
+
+This video is watched at speed 0.25:  [Navigation Hover Effect in one minute using Figma](https://www.youtube.com/watch?v=CnJIfQRur28)
+
+Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
+
 

@@ -118,3 +118,35 @@ To allow users to experience and test the flow of the app, the Prototype tab in 
 
 ### References
 - Chatgpt was used to figure out the process with the starting flow.
+
+## Layout of the application
+To make sure that user with or without experience using applications like this can understand how this works. We decided to make the layout of the application as simple as possible, so users will easily understand how to use the application and where they can find the key information they need. 
+
+![LayoutApp](../assets/Figma/LayoutApp.png)
+
+### Design choices made for the application
+
+1. The colors used in the design are the colors used for the official Hipper website. This was decided after talking with the product owner and the team about it.
+
+2. The homepage is used to display personal information in graphs, so patients can see their progress.
+
+3. On the profile, there are different settings such as dark mode, larger font size, and the option to change the site’s language, allowing users to customize their experience according to their preferences.
+
+4. The design was made as simple as possible to make the application easy to use.
+
+### Feedback from product owner
+- The design is boring. Try to make more fun and more engaging to use.
+- Look into how the data should be visualized (From the user point of view), so it's easy to understand for both the users and the therapist and looking at only graphs is boring. 
+- Make a page to the goal of the user, or put it on the homepage.
+- try making reminders or notifications for the client that they have or haven't reached their goal yet.
+
+### References
+- Figma is used to make the interactive prototype.
+- Chatgpt was used to help with figuring out how to make some functionalities in figma.
+- also some youtube video's are used to figure out some of the functionalities.
+
+This video is watched at speed 0.25:  [Navigation Hover Effect in one minute using Figma](https://www.youtube.com/watch?v=CnJIfQRur28)
+
+Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
+
+

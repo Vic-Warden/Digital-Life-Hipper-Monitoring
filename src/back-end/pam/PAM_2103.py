@@ -22,151 +22,63 @@ class PAM_2103():
         self.received_blocks[block_number] = payload
         print(f"Received block #{block_number} with {len(payload)} bytes")
 
-    #decodes the bytes of the incomming message based on the documentation from Pam_BLE_Spec_V1_8
-    # def parse_detailed_data_blocks(self, blocks):
-    #     all_data = b''.join(payload for block, payload in sorted(blocks.items()) if block != 0)
-    #     records = []
-    #
-    #     for i in range(0, len(all_data), 4):
-    #         if i + 4 > len(all_data):
-    #             break
-    #         byte0 = all_data[i]
-    #         date_index = byte0 & 0x1F
-    #         ts_index = int.from_bytes(all_data[i+1:i+2] + bytes([byte0 >> 5]), byteorder="little") & 0x7FF
-    #         steps = all_data[i + 2]
-    #         score_raw = all_data[i + 3]
-    #         score = round(score_raw / 16.0, 2)
-    #
-    #         records.append((date_index, ts_index, steps, score))
-    #
-    #     return records
-    # def parse_detailed_data_blocks(self, blocks):
-    #     all_data = b''.join(
-    #         payload for block, payload in sorted(blocks.items()) if block != 0
-    #     )
-    #     records = []
-    #
-    #     for i in range(0, len(all_data), 4):
-    #         if i + 4 > len(all_data):
-    #             break
-    #
-    #         byte0 = all_data[i]
-    #         byte1 = all_data[i + 1]
-    #         steps = all_data[i + 2]
-    #         score_raw = all_data[i + 3]
-    #
-    #         # lower 5 bits of byte0 = date_index
-    #         date_index = byte0 & 0x1F
-    #         # upper 3 bits of byte0 as MSBs, byte1 as LSBs → 11‑bit ts_index
-    #         ts_index = ((byte0 >> 5) << 8) | byte1
-    #         # convert raw score to float
-    #         score = round(score_raw / 16.0, 2)
-    #
-    #         records.append((date_index, ts_index, steps, score))
-    #
-    #     return records
     def parse_detailed_data_blocks(self, blocks):
-        all_data = b''.join(
-            payload for block, payload in sorted(blocks.items()) if block != 0
-        )
+        """
+        blocks: dict of {block_number: payload_bytes}, where block 0 is the 4‑byte header
+        containing [fileSize (2 bytes), baseDate (2 bytes)].
+        Returns a list of tuples (di, ti, steps, score).
+        """
+        # 1) Extract header
+        header = blocks.get(0)
+        if header is None or len(header) < 4:
+            raise ValueError("Missing or malformed file header (block 0)")
+        # fileSize: lower 15 bits of bytes[0:2]
+        raw_size = int.from_bytes(header[0:2], byteorder='little')
+        file_size = raw_size & 0x7FFF
+        # baseDate if you want to double-check here:
+        # base_date = int.from_bytes(header[2:4], byteorder='little')
+
+        # 2) Concatenate all payloads in order (skipping block 0)
+        data_bytes = bytearray()
+        for blk_num in sorted(k for k in blocks.keys() if k != 0):
+            data_bytes += blocks[blk_num]
+
+        # 3) Truncate to file_size
+        data_bytes = data_bytes[:file_size]
+
+        # 4) Parse into 4‑byte records
         records = []
-
-        for i in range(0, len(all_data), 4):
-            if i + 4 > len(all_data):
+        for offset in range(0, len(data_bytes), 4):
+            chunk = data_bytes[offset:offset + 4]
+            if len(chunk) < 4:
                 break
-
-            byte0 = all_data[i]
-            byte1 = all_data[i + 1]
-            steps = all_data[i + 2]
-            score_raw = all_data[i + 3]
-
-            date_index = byte0 & 0x1F
-            ts_index   = ((byte0 >> 5) << 8) | byte1
-            score      = round(score_raw / 16.0, 2)
-
-            records.append((date_index, ts_index, steps, score))
+            # unpack the 16‑bit bitfield
+            raw = int.from_bytes(chunk[0:2], byteorder='little')
+            di = raw & 0x1F  # lower 5 bits
+            ti = (raw >> 5) & 0x7FF  # next 11 bits
+            steps = chunk[2]
+            score = chunk[3] / 16.0  # per spec: divide by 16 for float
+            records.append((di, ti, steps, score))
 
         return records
 
-    #
-    # def display_records(self, records, base_date):
-    #     # 1) sort to guarantee chronological order
-    #     # records = sorted(records, key=lambda x: (x[0], x[1]))
-    #
-    #     # 2) get the midnight UTC base date
-    #     # start_date = datetime.utcfromtimestamp(base_date * 86400)
-    #     from datetime import datetime, timedelta, timezone
-    #     start_date = datetime.fromtimestamp(base_date * 86400, tz=timezone.utc).astimezone(your_local_tz)
-    #
-    #     with open(self.filename, mode='w', newline='') as file:
-    #         writer = csv.writer(file)
-    #         writer.writerow(['Timestamp', 'Steps', 'PAM Score'])
-    #
-    #         for di, ti, steps, score in records:
-    #             # ti is minutes since midnight:
-    #             ts = start_date + timedelta(days=di, minutes=ti)
-    #             writer.writerow([ts, steps, score])
+    #displays the records here
     def display_records(self, records, base_date):
-        from datetime import datetime, timedelta, timezone
-        import csv
-        import pytz
-        # 1) sort the raw records by (day, minute)
-        records = sorted(records, key=lambda x: (x[0], x[1]))
 
-        # 2) build a map from absolute UTC-minute to (steps, score)
-        #    absolute minutes since 1970‐01‐01 00:00 UTC:
-        abs_map = {}
-        for di, ti, steps, score in records:
-            abs_min = base_date * 1440 + di * 1440 + ti
-            abs_map[abs_min] = (steps, score)
+        print(records)
+        # times 86400 to account for the amount of seconds for each day
+        start_date = datetime.fromtimestamp(base_date * 86400)
 
-        # 3) define continuous range from first to last minute
-        first_min = min(abs_map)
-        last_min = max(abs_map)
-
-        # 4) set up your timezone converter
-        utc = timezone.utc
-        local_tz = pytz.timezone('Europe/Amsterdam')
-
-        # 5) write every minute in that span to CSV
+        # Assuming `records` is already defined
         with open(self.filename, mode='w', newline='') as file:
             writer = csv.writer(file)
+            # Writing the header
             writer.writerow(['Timestamp', 'Steps', 'PAM Score'])
 
-            current = first_min
-            while current <= last_min:
-                # lookup or default
-                steps, score = abs_map.get(current, (0, 0.0))
-
-                # convert back to a datetime in UTC, then to local
-                dt_utc = datetime(1970, 1, 1, tzinfo=utc) + timedelta(minutes=current)
-                dt_local = dt_utc.astimezone(local_tz)
-
-                writer.writerow([dt_local.strftime('%Y-%m-%d %H:%M:%S'),
-                                 steps,
-                                 f'{score:.2f}'])
-                current += 1
-
-
-
-
-    # #displays the records here
-    # def display_records(self, records, base_date):
-    #
-    #     print(records)
-    #     # times 86400 to account for the amount of seconds for each day
-    #     start_date = datetime.fromtimestamp(base_date * 86400)
-    #
-    #     # Assuming `records` is already defined
-    #     with open(self.filename, mode='w', newline='') as file:
-    #         writer = csv.writer(file)
-    #         # Writing the header
-    #         writer.writerow(['Timestamp', 'Steps', 'PAM Score'])
-    #
-    #         # Writing each record
-    #         for di, ti, steps, score in records:
-    #             timestamp = start_date + timedelta(days=di, minutes=ti)
-    #             writer.writerow([timestamp, steps, score])
+            # Writing each record
+            for di, ti, steps, score in records:
+                timestamp = start_date + timedelta(days=di, minutes=ti)
+                writer.writerow([timestamp, steps, score])
 
 
     #connects to PAM device, requests a file with 2102, and then downloads it with 2103
@@ -192,14 +104,12 @@ class PAM_2103():
             await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)
             await asyncio.sleep(1)
 
-            import time
-            print("waiting")
-            time.sleep(30)
-
             await client.write_gatt_char(self.ACTIVITY_FILE_UUID, self.REQUEST_AMOUNT_TYPE)
             print("Requested activity file...")
 
-
+            import time
+            print("waiting")
+            time.sleep(30)
 
             await client.stop_notify(self.ACTIVITY_DOWNLOAD_UUID)
             print("Download complete. Processing data...")
@@ -211,7 +121,7 @@ class PAM_2103():
             header = self.received_blocks[0]
             base_date = int.from_bytes(header[4:6], byteorder='little')
             print("Base date is: ", base_date)
+            print(self.received_blocks)
 
             records = self.parse_detailed_data_blocks(self.received_blocks)
             self.display_records(records, base_date)
-            print(records)

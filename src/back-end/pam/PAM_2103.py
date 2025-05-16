@@ -22,24 +22,60 @@ class PAM_2103():
         self.received_blocks[block_number] = payload
         print(f"Received block #{block_number} with {len(payload)} bytes")
 
-    #decodes the bytes of the incomming message based on the documentation from Pam_BLE_Spec_V1_8
-    def parse_detailed_data_blocks(self, blocks):
-        all_data = b''.join(payload for block, payload in sorted(blocks.items()) if block != 0)
-        records = []
+    def parse_detailed_data_blocks(self, blocks: dict[int, bytes]) -> list[tuple[int, int, int, float]]:
+        """
+        Parse the received BLE blocks of a Detailed Activity Data File into a list of records.
 
-        for i in range(0, len(all_data), 4):
-            if i + 4 > len(all_data):
-                break
-            byte0 = all_data[i]
-            date_index = byte0 & 0x1F
-            ts_index = int.from_bytes(all_data[i+1:i+2] + bytes([byte0 >> 5]), byteorder="little") & 0x7FF
-            steps = all_data[i + 2]
-            score_raw = all_data[i + 3]
-            score = round(score_raw / 16.0, 2)
+        Args:
+            blocks: A dict mapping block_number to payload bytes. Block 0 is the file header.
 
-            records.append((date_index, ts_index, steps, score))
+        Returns:
+            A list of tuples:
+            (day_offset, minute_offset, step_count, pam_score_float)
+        """
+        # 1) Extract and validate the file header (block 0)
+        file_header = blocks.get(0)
+        if not file_header or len(file_header) < 4:
+            raise ValueError("Missing or malformed file header (block 0)")
 
-        return records
+        # bytes 0–1: file_size (lower 15 bits), MSB indicates multi-part
+        raw_file_size = int.from_bytes(file_header[0:2], byteorder='little')
+        file_size_bytes = raw_file_size & 0x7FFF
+
+        # bytes 2–3: base_date (days since epoch), if you need it elsewhere:
+        # base_date_days = int.from_bytes(file_header[2:4], byteorder='little')
+
+        # Concatenate all data payloads (skip header block)
+        full_data_stream = bytearray()
+        for block_number in sorted(n for n in blocks if n != 0):
+            full_data_stream.extend(blocks[block_number])
+
+        # Truncate the stream to the declared file size
+        full_data_stream = full_data_stream[:file_size_bytes]
+
+        # Split into 4‑byte records and unpack
+        activity_records: list[tuple[int, int, int, float]] = []
+        record_size = 4
+        for offset in range(0, len(full_data_stream), record_size):
+            record_bytes = full_data_stream[offset: offset + record_size]
+            if len(record_bytes) < record_size:
+                break  # incomplete tail, ignore
+
+            # first two bytes: combined bitfields
+            bitfield = int.from_bytes(record_bytes[0:2], byteorder='little')
+            day_offset = bitfield & 0x1F  # lower 5 bits: days since base date
+            minute_offset = (bitfield >> 5) & 0x7FF  # next 11 bits: minutes into that day
+
+            # third byte: steps count
+            step_count = record_bytes[2]
+
+            # fourth byte: raw PAM score, must be divided by 16 for the actual value
+            raw_pam_score = record_bytes[3]
+            pam_score = raw_pam_score / 16.0
+
+            activity_records.append((day_offset, minute_offset, step_count, pam_score))
+
+        return activity_records
 
     #displays the records here
     def display_records(self, records, base_date):
@@ -86,6 +122,10 @@ class PAM_2103():
             await client.write_gatt_char(self.ACTIVITY_FILE_UUID, self.REQUEST_AMOUNT_TYPE)
             print("Requested activity file...")
 
+            import time
+            print("waiting")
+            time.sleep(30)
+
             await client.stop_notify(self.ACTIVITY_DOWNLOAD_UUID)
             print("Download complete. Processing data...")
 
@@ -96,6 +136,7 @@ class PAM_2103():
             header = self.received_blocks[0]
             base_date = int.from_bytes(header[4:6], byteorder='little')
             print("Base date is: ", base_date)
+            print(self.received_blocks)
 
             records = self.parse_detailed_data_blocks(self.received_blocks)
             self.display_records(records, base_date)

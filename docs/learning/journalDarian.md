@@ -40,3 +40,10 @@ I also have a step by step guide to make these color changes in PowerBi these ar
    - Click the color box next to each category to choose a new color.
    - You can select from the palette or enter a custom HEX code.
 
+Additionally you can also use custom lines and rules to set colors for your graphs. these are the extra steps as follows:
+
+5. **Apply Conditional Formatting (Optional)**
+   - For advanced scenarios, click the **fx** button next to Data colors to set rules or gradients based on values.
+
+6. **Preview and Save**
+   - Review your changes and save your report.

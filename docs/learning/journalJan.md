@@ -7,7 +7,7 @@ This file contains the learning journal with the learning stories of Jan.
 * The first thing I did was look at my phones health "gezondheid" app. Here I could get a good impression of how Apple did their layouts to make them look super intuitive. Together with Darian and Indigo I looked into this and together we agreed on certain components/requirements. After checking the Apple Health app I started looking on google for basic login pages, web layouts, and again together with Darian and Indigo we decided on things that looked really great. We want to go for a simplistic look that is understandable for anyone no matter the age. This PDF file has since been comitted to the repository under `design/Components_Requirements`
 
 #120 As a Student, I need a PowerPoint template for the Sprint Review, so I can clearly and professionally present the completed work to the Product Owner.
-
+* As a Business IT & Management Student leaving a good impression on a client is important for further success. For this specific learning story I went ahead and looked up some templates online, and how to use the designer tool that is built-in to PowerPoint. In the year before I was in a project with an old friend of mine Miguel Schagen. In his PowerPoint's I would see that he inserted the Client's company logo in the bottom right, which is a really good idea to make it feel more personal. So, I also incorporated this into the PowerPoint template for this team. 
 
 ## Journal
 

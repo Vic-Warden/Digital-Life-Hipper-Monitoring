@@ -166,3 +166,27 @@ To make sure user can visit the website from multiple devices different tailored
 
 5. Click on the play button to see the prototype.
 
+### Working with constraints
+There is also another way to make the figma pages responsive. Working with constraints will make it possible to make your normal page responsive.
+
+### Steps for working with constraints
+
+1. Select a Frame as Your Device:
+
+- Add a new frame.
+- Choose a preset size (Desktop or Phone etc.).
+
+2. Place Your Elements Inside the Frame:
+
+- Add components to the frame.
+
+3. Set Constraints on Each Element:
+
+- Select an element inside the frame.
+- In the **right-hand panel**, find the **Constraints** section.
+- Set how the element should behave when the frame resizes.
+
+4. Resize the Frame to Test Responsiveness:
+
+- Drag the frame’s edges or change width in the right panel.
+- You’ll see how elements stretch, stick, or reposition.

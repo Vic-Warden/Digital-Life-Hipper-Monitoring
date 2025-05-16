@@ -32,4 +32,4 @@ Tomorrow back at school I will look into the PowerBI situation again. I really h
 
 ### 5/15/2025
 
-Today we as a team have the sprint review with our 
+Today as a team we have the sprint review with our Product Owner Michel Oey (from Digital Life). We prepared well as a team and plan on presenting all of the work we have done the past week. When I say past week I mean that. It's been slightly hard to really work on it when being introduced to the entire new Git system, especially for me as a bimmer. Combine that with all of the holidays, a week off, sometimes no classrooms available. It adds up to an non optimal start to the project in my opinion. 

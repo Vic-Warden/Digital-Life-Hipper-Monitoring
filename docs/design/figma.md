@@ -153,3 +153,16 @@ Video on how to create hover effect on button: [Create a Button With a HOVER Fun
 To make sure user can visit the website from multiple devices different tailored layouts for different devices were made to ensure a consistent visual experience and usability across all platforms. For this design there was decided to make a desktop version and a mobile version in figma.
 
 ![ResponsiveDesign](../assets/Figma/ResponsiveDesign.png)
+
+### Steps for making Responsive design.
+
+1. Go to the prototype tab in figma and choose for which device you want to make a prototype.
+
+2. Make a frame with the dimensions of this device.
+
+3. Change your normal design in a way it fits on the device.
+
+4. Check if both designs have a consistent visual experience.
+
+5. Click on the play button to see the prototype.
+

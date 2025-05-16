@@ -86,3 +86,45 @@ def notification_handler(self, sender, data):
 
 await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)
 ````
+
+## As a student I want to learn how to parse the bytes that come in the download of the 2103 BLE command so that I can get usefull data from the device 
+I learned that the data exists of multiple byte blocks of 100 bytes each containing 4 byte chunks for data.
+these are in the following structure:
+Each chunk is decoded into:
+
+day_offset: days after the base date (5 bits).
+
+minute_offset: minutes into that day (11 bits).
+
+step_count: number of steps.
+
+pam_score: score scaled down by dividing by 16.
+
+
+
+I integrated this into the code as follows:
+I first make one giant data package from all the blocks of 100 bytes and then I go over it in chunks of 4 and decode each as shown above.
+
+````python
+# Split into 4‑byte records and unpack
+activity_records: list[tuple[int, int, int, float]] = []
+record_size = 4
+for offset in range(0, len(full_data_stream), record_size):
+    record_bytes = full_data_stream[offset: offset + record_size]
+    if len(record_bytes) < record_size:
+        break  # incomplete tail, ignore
+
+    # first two bytes: combined bitfields
+    bitfield = int.from_bytes(record_bytes[0:2], byteorder='little')
+    day_offset = bitfield & 0x1F  # lower 5 bits: days since base date
+    minute_offset = (bitfield >> 5) & 0x7FF  # next 11 bits: minutes into that day
+
+    # third byte: steps count
+    step_count = record_bytes[2]
+
+    # fourth byte: raw PAM score, must be divided by 16 for the actual value
+    raw_pam_score = record_bytes[3]
+    pam_score = raw_pam_score / 16.0
+
+    activity_records.append((day_offset, minute_offset, step_count, pam_score))
+````

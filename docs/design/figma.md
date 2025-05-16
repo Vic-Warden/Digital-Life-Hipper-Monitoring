@@ -149,4 +149,5 @@ This video is watched at speed 0.25:  [Navigation Hover Effect in one minute usi
 
 Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
 
-
+## Responsive design
+To make sure user can visit the website from multiple devices different tailored layouts for different devices were made to ensure a consistent visual experience and usability across all platforms. For this design there was decided to make a desktop version and a mobile version in figma.

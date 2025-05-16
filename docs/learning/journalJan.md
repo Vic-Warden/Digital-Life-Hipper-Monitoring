@@ -6,8 +6,8 @@ This file contains the learning journal with the learning stories of Jan.
 #111 As a student, I want to learn about clean web app implementations, so that I can use it to my advantage to come up with components/requirements for a web app.
 * The first thing I did was look at my phones health "gezondheid" app. Here I could get a good impression of how Apple did their layouts to make them look super intuitive. Together with Darian and Indigo I looked into this and together we agreed on certain components/requirements. After checking the Apple Health app I started looking on google for basic login pages, web layouts, and again together with Darian and Indigo we decided on things that looked really great. We want to go for a simplistic look that is understandable for anyone no matter the age. This PDF file has since been comitted to the repository under `design/Components_Requirements`
 
-#ttt
-* ttt
+#120 As a Student, I need a PowerPoint template for the Sprint Review, so I can clearly and professionally present the completed work to the Product Owner.
+
 
 ## Journal
 
@@ -29,3 +29,7 @@ Looking back on today I was able to complete my user story about easily fetching
 Today I mostly reviewed some user stories and learning stories. I also started with my own learning story and one of my user stories was merged. 
 
 Tomorrow back at school I will look into the PowerBI situation again. I really hope to then be able to make use of the online version. If not I will contact one of my lecturers to discuss the problem. Darian already talked about an alternative route we could take, so that could be the last resort. 
+
+### 5/15/2025
+
+Today we as a team have the sprint review with our 

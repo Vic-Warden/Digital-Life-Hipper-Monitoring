@@ -86,3 +86,18 @@ def notification_handler(self, sender, data):
 
 await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)
 ````
+
+## As a student I want to learn how to parse the bytes that come in the download of the 2103 BLE command so that I can get usefull data from the device 
+I learned that the data exists of multiple byte blocks of 100 bytes each containing 4 byte chunks for data.
+these are in the following structure:
+Each chunk is decoded into:
+
+day_offset: days after the base date (5 bits).
+
+minute_offset: minutes into that day (11 bits).
+
+step_count: number of steps.
+
+pam_score: score scaled down by dividing by 16.
+
+

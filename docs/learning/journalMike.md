@@ -101,3 +101,30 @@ step_count: number of steps.
 pam_score: score scaled down by dividing by 16.
 
 
+
+I integrated this into the code as follows:
+I first make one giant data package from all the blocks of 100 bytes and then I go over it in chunks of 4 and decode each as shown above.
+
+````python
+# Split into 4‑byte records and unpack
+activity_records: list[tuple[int, int, int, float]] = []
+record_size = 4
+for offset in range(0, len(full_data_stream), record_size):
+    record_bytes = full_data_stream[offset: offset + record_size]
+    if len(record_bytes) < record_size:
+        break  # incomplete tail, ignore
+
+    # first two bytes: combined bitfields
+    bitfield = int.from_bytes(record_bytes[0:2], byteorder='little')
+    day_offset = bitfield & 0x1F  # lower 5 bits: days since base date
+    minute_offset = (bitfield >> 5) & 0x7FF  # next 11 bits: minutes into that day
+
+    # third byte: steps count
+    step_count = record_bytes[2]
+
+    # fourth byte: raw PAM score, must be divided by 16 for the actual value
+    raw_pam_score = record_bytes[3]
+    pam_score = raw_pam_score / 16.0
+
+    activity_records.append((day_offset, minute_offset, step_count, pam_score))
+````

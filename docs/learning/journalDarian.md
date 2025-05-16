@@ -19,3 +19,8 @@ the steps to take are found and are as follows:
 - Click `File > Embed report > Publish to web (public)`
 - Confirm and copy the iframe code or public URL.
 
+#### User story 2:
+As a student, I want to learn how I can use colors for graphs in PowerBi, so that we can keep the graphs easy to understand.
+
+#### Learned:
+by researching how to make colors useful in graphs, I found a way to do it in PowerBi. I can now use this tool to highlight for example green with a good number of steps or PAM score and the color red with a bad number/score.

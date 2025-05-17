@@ -149,4 +149,50 @@ This video is watched at speed 0.25:  [Navigation Hover Effect in one minute usi
 
 Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
 
+## Responsive design
+To make sure user can visit the website from multiple devices different tailored layouts for different devices were made to ensure a consistent visual experience and usability across all platforms. For this design there was decided to make a desktop version and a mobile version in figma.
 
+![ResponsiveDesign](../assets/Figma/ResponsiveDesign.png)
+
+### Steps for making Responsive design.
+
+1. Go to the prototype tab in figma and choose for which device you want to make a prototype.
+
+2. Make a frame with the dimensions of this device.
+
+3. Change your normal design in a way it fits on the device.
+
+4. Check if both designs have a consistent visual experience.
+
+5. Click on the play button to see the prototype.
+
+### Working with constraints
+There is also another way to make the figma pages responsive. Working with constraints will make it possible to make your normal page responsive.
+
+### Steps for working with constraints
+
+1. Select a Frame as Your Device:
+
+- Add a new frame.
+- Choose a preset size (Desktop or Phone etc.).
+
+2. Place Your Elements Inside the Frame:
+
+- Add components to the frame.
+
+3. Set Constraints on Each Element:
+
+- Select an element inside the frame.
+- In the **right-hand panel**, find the **Constraints** section.
+- Set how the element should behave when the frame resizes.
+
+4. Resize the Frame to Test Responsiveness:
+
+- Drag the frame’s edges or change width in the right panel.
+- You’ll see how elements stretch, stick, or reposition.
+
+### References
+- Chatgpt was used figuring out how to work with constraints.
+- Youtube video's were also used for helping to understand how to work with constraints.
+
+Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)

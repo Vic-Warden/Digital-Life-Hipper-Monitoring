@@ -92,3 +92,15 @@ As a student, I want to be able to make reusable components, so I can speed up m
 I want to learn how to create reusable components in Figma to make my design process faster and more consistent. This will help me avoid repeating the same work and make updates more efficient across my designs. For this design in created a reusable navbar and buttons, so I can use them on all the pages needed and easily change all the buttons used when only changing the component itself. To figure out how to make these components I first asked chatgpt for clear instructions. After following all the steps chat gave I made the components needed for the design.
 
 ![Component](../assets/Figma/ReusableComponent.png)
+
+### Steps to make component
+
+1. Design an element.
+
+2. Select the element, right-click, and choose "Create component" or press Cmd/Ctrl + Alt + K.
+
+3. Name the component.
+
+4. Use the component by dragging instances from the Assets panel or copy-pasting it across frames/pages.
+
+5. When you followed all the steps above you should be able to change all copy of this component when you only make a change to the main component.

@@ -47,3 +47,8 @@ This video is watched at speed 0.25:  [Navigation Hover Effect in one minute usi
 Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
 
 Link to figma: [This is the link to figma](https://www.figma.com/design/uE1Wi3VC106f8T5ExqMtoD/School-Projects?node-id=598-2&p=f&t=kHiMl6c36qMbgXLQ-0)
+
+## Learning Story 186
+As a student I want to learn how to work with constraints on figma, so I can make the design responsive.
+
+

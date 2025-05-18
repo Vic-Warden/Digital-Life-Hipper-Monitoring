@@ -9,6 +9,9 @@ This file contains the learning journal with the learning stories of Jan.
 #120 As a Student, I need a PowerPoint template for the Sprint Review, so I can clearly and professionally present the completed work to the Product Owner.
 * As a Business IT & Management Student leaving a good impression on a client is important for further success. For this specific learning story I went ahead and looked up some templates online, and how to use the designer tool that is built-in to PowerPoint. In the year before I was in a project with an old friend of mine Miguel Schagen. In his PowerPoint's I would see that he inserted the Client's company logo in the bottom right, which is a really good idea to make it feel more personal. So, I also incorporated this into the PowerPoint template for this team. The powerpoint file has been comitted to the repository under `docs/assets`
 
+#112 As a student, I want to learn how to easily merge common datasets together within PowerBI, so that I can correctly use the data of multiple Hipper devices.
+
+
 ## Journal
 
 ### 5/7/2025

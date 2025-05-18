@@ -53,3 +53,6 @@ As a student I want to learn how to work with constraints on figma, so I can mak
 
 ### What I have learned.
 To make the pages on figma responsive, so user can also see you visual of the app when using another device I have to learn how to work with constraints. Contraints control how the elements behave when the frame or screen they are in is resized. This is essential for making a responsive design. To learn how to do this I started learning it using youtube video's and asking some simple questions on chatgpt. After gaining some insights on how to work with constraints I started working with them on the homepage of the design in figma. After working on in for some time I finally got some on the elements to be responsive when resizing the page. The only problem was the images of the graphs on the page. I wanted them to be under eachother when resizing, but no matter what I did I couldn't get it to work. After working with the constraints I learned how to use it on the elements to make them responsive. I think the problem with the graphs was to positioning of them in the normal design. I will look into that further when I will be working on the design again. 
+
+![Responsive1](../assets/Figma/ResponsiveDesign1.png)
+![Responsive1](../assets/Figma/ResponsiveDesign2.png)

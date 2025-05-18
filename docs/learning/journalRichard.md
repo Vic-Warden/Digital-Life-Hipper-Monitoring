@@ -47,3 +47,40 @@ This video is watched at speed 0.25:  [Navigation Hover Effect in one minute usi
 Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
 
 Link to figma: [This is the link to figma](https://www.figma.com/design/uE1Wi3VC106f8T5ExqMtoD/School-Projects?node-id=598-2&p=f&t=kHiMl6c36qMbgXLQ-0)
+
+## Learning Story 186
+As a student I want to learn how to work with constraints on figma, so I can make the design responsive.
+
+### What I have learned.
+To make the pages on figma responsive, so user can also see you visual of the app when using another device I have to learn how to work with constraints. Contraints control how the elements behave when the frame or screen they are in is resized. This is essential for making a responsive design. To learn how to do this I started learning it using youtube video's and asking some simple questions on chatgpt. After gaining some insights on how to work with constraints I started working with them on the homepage of the design in figma. After working on in for some time I finally got some on the elements to be responsive when resizing the page. The only problem was the images of the graphs on the page. I wanted them to be under eachother when resizing, but no matter what I did I couldn't get it to work. After working with the constraints I learned how to use it on the elements to make them responsive. I think the problem with the graphs was to positioning of them in the normal design. I will look into that further when I will be working on the design again. 
+
+![Responsive1](../assets/Figma/ResponsiveDesign1.png)
+![Responsive1](../assets/Figma/ResponsiveDesign2.png)
+
+### Steps for work with constraints.
+
+1. Select a Frame as Your Device:
+
+- Add a new frame.
+- Choose a preset size (Desktop or Phone etc.).
+
+2. Place Your Elements Inside the Frame:
+
+- Add components to the frame.
+
+3. Set Constraints on Each Element:
+
+- Select an element inside the frame.
+- In the **right-hand panel**, find the **Constraints** section.
+- Set how the element should behave when the frame resizes.
+
+4. Resize the Frame to Test Responsiveness:
+
+- Drag the frame’s edges or change width in the right panel.
+- You’ll see how elements stretch, stick, or reposition.
+
+### References
+- Chatgpt was used figuring out how to work with constraints.
+- Youtube video's were also used for helping to understand how to work with constraints.
+
+Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)

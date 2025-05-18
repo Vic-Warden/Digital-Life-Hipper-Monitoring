@@ -104,3 +104,6 @@ I want to learn how to create reusable components in Figma to make my design pro
 4. Use the component by dragging instances from the Assets panel or copy-pasting it across frames/pages.
 
 5. When you followed all the steps above you should be able to change all copy of this component when you only make a change to the main component.
+
+### References
+- Chatgpt was used to figure out the steps on how to make components in figma.

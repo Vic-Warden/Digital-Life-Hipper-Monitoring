@@ -84,3 +84,6 @@ To make the pages on figma responsive, so user can also see you visual of the ap
 - Youtube video's were also used for helping to understand how to work with constraints.
 
 Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)
+
+## Learning Story 187
+As a student, I want to be able to make reusable components, so I can speed up my workflow and avoid repeating the same design work.

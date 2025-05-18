@@ -78,3 +78,9 @@ To make the pages on figma responsive, so user can also see you visual of the ap
 
 - Drag the frame’s edges or change width in the right panel.
 - You’ll see how elements stretch, stick, or reposition.
+
+### References
+- Chatgpt was used figuring out how to work with constraints.
+- Youtube video's were also used for helping to understand how to work with constraints.
+
+Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)

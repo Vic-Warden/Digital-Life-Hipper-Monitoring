@@ -63,13 +63,10 @@ class PAM_2001:
         async with BleakClient(pam_device.address) as client:
             print("Connected")
 
-            # Gets and displays the current UTC timestamp
-            timestamp = await self.get_current_utc_timestamp()
-            print(f"Current UTC timestamp: {timestamp}")
-            
-            # Converts the timestamp to a 4 bytes
+            timestamp = int(datetime.now(timezone.utc).timestamp())
+            print(f"Raw UTC timestamp (seconds): {timestamp}")
             data = timestamp.to_bytes(4, byteorder='little')
-            print(f"Data to send (little-endian): {data}")
+            print(f"Data to send (4 bytes): {data}")
 
             await client.write_gatt_char(self.uuid, data)
             print("Synchronized date and time")

@@ -4,7 +4,7 @@ import csv
 from datetime import datetime, timedelta, UTC
 
 class PAM_2103():
-    def __init__(self, file_uuid, download_uuid,  filename, filelength):
+    def __init__(self, file_uuid, download_uuid,  filename, filelength, label_id = None):
         self.filename = filename
         #2102 for downloading the file on the PAM device
         self.ACTIVITY_FILE_UUID = file_uuid
@@ -14,6 +14,14 @@ class PAM_2103():
         #length of activity file time
         self.REQUEST_AMOUNT_TYPE = filelength
         self.received_blocks = {}
+
+        self.directly_targetting_ID = False
+
+        if label_id is None:
+            print("No label ID was provided. manually scanning.")
+        elif label_id is not None:
+            print("Label ID provided, directly targetting ID")
+            self.directly_targetting_ID = True
 
     #callback for when a new block of bytes is received
     def notification_handler(self, sender, data):

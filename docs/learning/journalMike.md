@@ -128,3 +128,30 @@ for offset in range(0, len(full_data_stream), record_size):
 
     activity_records.append((day_offset, minute_offset, step_count, pam_score))
 ````
+## As a student I want to learn how to make a json to store adresses of pam devices so that I can easilly use them
+I stored all the values I wanted into a JSON structure:
+````json
+{
+  "label_90243": "C1:08:00:01:12:33",
+  "label_90248": "C1:08:00:01:36:3A"
+}
+````
+I learned that I can use the json library to then export this and make use of it inside a python script.<br>
+I learned that I had to include error handling in order to make sure that the code wouldn't crash if you called the wrong value
+
+````python
+
+# checks the PAM_devices.json and returns the desired mac addres if asked for
+def get_address_by_label(label_id = None, filename="PAM_devices.json"):
+    if label_id is None:
+        return None
+    label_id = "label_" + str(label_id)
+    try:
+        with open(filename, "r") as f:
+            labels = json.load(f)
+        return labels.get(label_id, "Label ID not found.")
+    except FileNotFoundError:
+        return "File not found."
+    except json.JSONDecodeError:
+        return "Error decoding JSON."
+````

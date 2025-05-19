@@ -21,3 +21,6 @@ This table is used to story all the data of the devices. Every patient will have
 
 ### Data
 This table stores all data collected by the device. It is linked to the device table via the device_id field, which identifies the source device for each data record.
+
+### References
+- Chatgpt to help with the designing of the MySQL Workbench ERD.

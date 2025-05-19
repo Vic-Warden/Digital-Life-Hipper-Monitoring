@@ -159,3 +159,33 @@ the csv library is then used for writing the values into a csv file with the pro
 
 then it gets stored using the following csv stucture:
 Timestamp,Steps,PAM Score
+
+
+### targetting specific device
+we make use of a json to directly target a specific PAM device.<br>
+this is very usefull when using multiple pam devices at the same time.<br>
+all the addresses can be called based on the label on the bottom of the pam device<br>
+
+````json
+{
+  "label_90243": "C1:08:00:01:12:33",
+  "label_90248": "C1:08:00:01:36:3A",
+````
+````python
+# checks the PAM_devices.json and returns the desired mac addres if asked for
+def get_address_by_label(label_id = None, filename="PAM_devices.json"):
+    if label_id is None:
+        return None
+    label_id = "label_" + str(label_id)
+    try:
+        with open(filename, "r") as f:
+            labels = json.load(f)
+        return labels.get(label_id, "Label ID not found.")
+    except FileNotFoundError:
+        return "File not found."
+    except json.JSONDecodeError:
+        return "Error decoding JSON."
+````
+````python
+get_address_by_label(self.label_id)
+````

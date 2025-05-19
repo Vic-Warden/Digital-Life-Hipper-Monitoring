@@ -12,3 +12,6 @@ This table stores all therapist-related data. It is linked to the patient table 
 
 ### Patient
 This table stores all patient-related data. It is linked to the therapist table through a many-to-many relationship, as each patient can have multiple therapists, and each therapist can have multiple patients.
+
+### Device
+This table is used to story all the data of the devices. Every patient will have one device. This device is labeled with a number.

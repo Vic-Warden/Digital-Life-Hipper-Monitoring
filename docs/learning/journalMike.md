@@ -128,3 +128,11 @@ for offset in range(0, len(full_data_stream), record_size):
 
     activity_records.append((day_offset, minute_offset, step_count, pam_score))
 ````
+## As a student I want to learn how to make a json to store adresses of pam devices so that I can easilly use them
+I stored all the values I wanted into a JSON structure:
+````json
+{
+  "label_90243": "C1:08:00:01:12:33",
+  "label_90248": "C1:08:00:01:36:3A"
+}
+````

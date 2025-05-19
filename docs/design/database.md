@@ -18,3 +18,6 @@ This table is used to store all the goals set for a patient. You have 3 type of 
 
 ### Device
 This table is used to story all the data of the devices. Every patient will have one device. This device is labeled with a number.
+
+### Data
+This table stores all data collected by the device. It is linked to the device table via the device_id field, which identifies the source device for each data record.

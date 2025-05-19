@@ -4,9 +4,24 @@ from PAM_2101 import PAM_2101
 from PAM_2102 import PAM_2102
 from PAM_2102 import get_detailed_request
 from PAM_2103 import PAM_2103
+import json
 
 # Base UUID for Hipper BLE commands
 base_uuid = "99DBXXXX-AC2D-11E3-A5E2-0800200C9A66"
+
+# checks the PAM_devices.json and returns the desired mac addres if asked for
+def get_address_by_label(label_id = None, filename="PAM_devices.json"):
+    if label_id is None:
+        return None
+    label_id = "label_" + str(label_id)
+    try:
+        with open(filename, "r") as f:
+            labels = json.load(f)
+        return labels.get(label_id, "Label ID not found.")
+    except FileNotFoundError:
+        return "File not found."
+    except json.JSONDecodeError:
+        return "Error decoding JSON."
 
 class TimeDate:
     def __init__(self):
@@ -53,7 +68,10 @@ class ActivityFile:
 
 #used to download the activityfile into a csv file
 class ActivityDownload:
-    def __init__(self, filename, filelength):
+    def __init__(self, filename, filelength, label_id = None):
+        self.label_id = None
+        self.label_id = label_id
+
         # UUID for ActivityFile is 2102
         self.base_uuid = base_uuid
 
@@ -73,5 +91,6 @@ class ActivityDownload:
         pam = PAM_2103(file_uuid=self.file_uuid,
                        download_uuid=self.download_uuid,
                        filename=filename,
-                       filelength=self.filelength)
+                       filelength=self.filelength,
+                       adres=get_address_by_label(self.label_id))
         await pam.run()

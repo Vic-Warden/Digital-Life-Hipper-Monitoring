@@ -4,7 +4,7 @@ import csv
 from datetime import datetime, timedelta, UTC
 
 class PAM_2103():
-    def __init__(self, file_uuid, download_uuid,  filename, filelength):
+    def __init__(self, file_uuid, download_uuid,  filename, filelength, adres = None):
         self.filename = filename
         #2102 for downloading the file on the PAM device
         self.ACTIVITY_FILE_UUID = file_uuid
@@ -14,6 +14,15 @@ class PAM_2103():
         #length of activity file time
         self.REQUEST_AMOUNT_TYPE = filelength
         self.received_blocks = {}
+
+        self.directly_targetting_ID = False
+
+        if adres is None:
+            print("No label ID was provided. manually scanning.")
+        elif adres is not None:
+            self.adres = adres
+            print(f"Label ID provided, directly targetting ID {self.adres}")
+            self.directly_targetting_ID = True
 
     #callback for when a new block of bytes is received
     def notification_handler(self, sender, data):
@@ -98,22 +107,28 @@ class PAM_2103():
 
     #connects to PAM device, requests a file with 2102, and then downloads it with 2103
     async def run(self):
-        print("Scanning for BLE devices...")
-        devices = await BleakScanner.discover(timeout=5)
+        adres = None
+        if self.directly_targetting_ID == False:
+            print("Scanning for BLE devices...")
+            devices = await BleakScanner.discover(timeout=5)
 
-        pam_device = None
-        for device in devices:
-            print(f"- {device.name} [{device.address}]")
-            if device.name and "Pam" in device.name:
-                pam_device = device
-                break
+            pam_device = None
+            for device in devices:
+                print(f"- {device.name} [{device.address}]")
+                if device.name and "Pam" in device.name:
+                    pam_device = device
+                    break
 
-        if not pam_device:
-            print("Pam sensor not found.")
-            return
+            if not pam_device:
+                print("Pam sensor not found.")
+                return
 
-        print(f"\nConnecting to {pam_device.name}...")
-        async with BleakClient(pam_device.address) as client:
+            print(f"\nConnecting to {pam_device.name}...")
+            adres = pam_device.address
+        elif self.directly_targetting_ID == True:
+            adres = self.adres
+
+        async with BleakClient(adres) as client:
             print(" Connected to PAM device!")
 
             await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)

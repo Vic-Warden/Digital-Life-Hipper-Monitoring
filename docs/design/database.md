@@ -9,3 +9,6 @@ This is the first version of the database.
 
 ### Therapist
 This table stores all therapist-related data. It is linked to the patient table through a many-to-many relationship, as each therapist can have multiple patients, and each patient can have multiple therapists.
+
+### Patient
+This table stores all patient-related data. It is linked to the therapist table through a many-to-many relationship, as each patient can have multiple therapists, and each therapist can have multiple patients.

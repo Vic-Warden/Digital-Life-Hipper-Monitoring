@@ -107,7 +107,7 @@ class PAM_2103():
 
     #connects to PAM device, requests a file with 2102, and then downloads it with 2103
     async def run(self):
-        adress = None
+        adres = None
         if self.directly_targetting_ID == False:
             print("Scanning for BLE devices...")
             devices = await BleakScanner.discover(timeout=5)
@@ -124,7 +124,7 @@ class PAM_2103():
                 return
 
             print(f"\nConnecting to {pam_device.name}...")
-            adress = pam_device.address
+            adres = pam_device.address
         elif self.directly_targetting_ID == True:
             adres = self.adres
 

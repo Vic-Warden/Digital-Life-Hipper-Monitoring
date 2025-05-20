@@ -107,3 +107,42 @@ I want to learn how to create reusable components in Figma to make my design pro
 
 ### References
 - Chatgpt was used to figure out the steps on how to make components in figma.
+
+## Learning story 195
+As a student, I want to understand and implement a many-to-many relationship in our database design so that I can correctly model real-world interactions between patients and therapists.
+
+### What I have learned
+I wanted to learn how to create a junction table to represent a many-to-many relationship, so I started by creating the patient and therapist tables in MySQL Workbench. Then, using the relationship tools from the toolbar, I created a junction table called patient_has_therapist, where I linked the primary keys from both tables and set them as a composite primary key to accurately model the relationship.
+
+![Relationship](../assets/LearningStory195.png)
+
+### Steps to create junction table (for Many-to-Many Relationship)
+
+1. Open Your EER Diagram.
+
+2. Add the Two Main Tables.
+
+- Create the tables you for the many-to-many relationship.
+
+3. Use the Relationship Tool to Create the Junction Table.
+
+- Select the “Many-to-Many Non-Identifying Relationship” tool from the vertical toolbar (dashed line with crow’s feet at both ends).
+- Click first on the first table (e.g., patient), then on the second table (e.g., therapist).
+- MySQL Workbench will automatically create a junction table (e.g., patient_has_therapist) and add the necessary foreign key relationships to both original tables.
+
+4. Edit the Junction Table.
+
+- Double-click the auto-created table.
+
+**Verify**
+
+- It has the two columns needed.
+- Both are foreign keys referencing their respective tables.
+- Both are part of the composite primary key (check the PK boxes).
+- Check if both keys are NN (Not Null).
+
+5. Save Your Work.
+
+### References
+- One of my team members helped me with understanding how to create the junction table.
+- Chatgpt was used to help created the Steps to create junction table.

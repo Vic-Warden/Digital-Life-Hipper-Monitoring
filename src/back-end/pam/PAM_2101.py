@@ -31,6 +31,10 @@ class PAM_2101:
             await self.connect()
 
     async def bluetooth_scan(self):
+        if self.directly_targetting_ID:
+            print("Using provided address")
+            return True
+        
         # Scan for nearby BLE devices for 5 seconds
         print("Scanning for BLE devices...")
         self.devices = await BleakScanner.discover(timeout=5)
@@ -43,9 +47,11 @@ class PAM_2101:
                 break
 
         if not self.pam_device:
-            print("Pam sensor not found.")
+            print("Pam sensor not found")
             return False
+
         return True
+
 
     async def connect(self):
         # Attempt to connect to the Pam device via BLE

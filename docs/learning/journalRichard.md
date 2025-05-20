@@ -107,3 +107,7 @@ I want to learn how to create reusable components in Figma to make my design pro
 
 ### References
 - Chatgpt was used to figure out the steps on how to make components in figma.
+
+## Learning story 195
+As a student, I want to understand and implement a many-to-many relationship in our database design so that I can correctly model real-world interactions between patients and therapists.
+

@@ -1,6 +1,5 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
-from services import get_address_by_label
 from datetime import datetime, timezone
 
 
@@ -15,6 +14,7 @@ class PAM_2101:
         self.directly_targetting_ID = False
         
         if label_id is not None:
+            from services import get_address_by_label
             mac = get_address_by_label(label_id)
             if mac and "not found" not in mac:
                 self.pam_device = type("device", (), {"address": mac, "name": f"Pam_{label_id}"})()

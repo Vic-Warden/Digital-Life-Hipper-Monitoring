@@ -149,7 +149,7 @@ class PAM_2103():
                 return
 
             header = self.received_blocks[0]
-            base_date = int.from_bytes(header[4:6], byteorder='little')
+            base_date = int.from_bytes(header[2:4], byteorder='little')
             print("Base date is: ", base_date)
             print(self.received_blocks)
 

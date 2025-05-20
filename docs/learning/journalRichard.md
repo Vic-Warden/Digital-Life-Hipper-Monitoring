@@ -113,3 +113,5 @@ As a student, I want to understand and implement a many-to-many relationship in 
 
 ### What I have learned
 I wanted to learn how to create a junction table to represent a many-to-many relationship, so I started by creating the patient and therapist tables in MySQL Workbench. Then, using the relationship tools from the toolbar, I created a junction table called patient_has_therapist, where I linked the primary keys from both tables and set them as a composite primary key to accurately model the relationship.
+
+![Relationship](../assets/LearningStory195.png)

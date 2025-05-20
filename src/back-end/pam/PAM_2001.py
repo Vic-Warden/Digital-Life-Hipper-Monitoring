@@ -13,8 +13,6 @@ from bleak import BleakScanner, BleakClient
 # Imports datetime and timezone for timestamp
 from datetime import datetime, timezone
 
-from services import get_address_by_label
-
 class PAM_2001:
     def __init__(self, uuid, label_id=None):
         self.uuid = uuid
@@ -23,6 +21,7 @@ class PAM_2001:
         self.directly_targetting_ID = False
         
         if label_id is not None:
+            from services import get_address_by_label
             mac = get_address_by_label(label_id)
             if mac and "not found" not in mac:
                 self.pam_device = type("device", (), {"address": mac, "name": f"Pam_{label_id}"})()

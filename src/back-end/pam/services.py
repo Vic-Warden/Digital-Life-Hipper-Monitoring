@@ -94,3 +94,15 @@ class ActivityDownload:
                        filelength=self.filelength,
                        adres=get_address_by_label(self.label_id))
         await pam.run()
+
+class SetTimestamp2101:
+    def __init__(self, label_id=None):
+        self.base_uuid = base_uuid
+        self.uuid_extension = "2101"
+        self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+
+        asyncio.run(self.run(label_id))
+
+    async def run(self, label_id):
+        pam = PAM_2101(uuid=self.uuid, label_id=label_id)
+        await pam.run()

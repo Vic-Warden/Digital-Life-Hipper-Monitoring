@@ -1,14 +1,28 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
+from services import get_address_by_label
 
 
 class PAM_2101:
-    def __init__(self, uuid):
+    def __init__(self, uuid, label_id = None):
         # UUID of the Activity Data characteristic (2101)
         self.uuid = uuid
         self.devices = None
         self.pam_device = None
         self.uuidACTIVITY_CHAR_UUID = uuid
+        self.label_id = label_id
+        self.directly_targetting_ID = False
+        
+        if label_id is not None:
+            mac = get_address_by_label(label_id)
+            if mac and "not found" not in mac:
+                self.pam_device = type("device", (), {"address": mac, "name": f"Pam_{label_id}"})()
+                self.directly_targetting_ID = True
+                print(f"Targeting PAM device with MAC: {mac}")
+            else:
+                print(f"MAC address not found for label {label_id}")
+        
+        
 
     async def run(self):
         # Start scanning and connect if a suitable device is found

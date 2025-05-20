@@ -1,6 +1,7 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
 from services import get_address_by_label
+from datetime import datetime, timezone
 
 
 class PAM_2101:
@@ -57,21 +58,18 @@ class PAM_2101:
         # Attempt to connect to the Pam device via BLE
         print(f"\nConnecting to {self.pam_device.name}...")
         async with BleakClient(self.pam_device.address) as client:
-            print("Connected!")
+            print("Connected")
+            
+            # Generate the current UTC timestamp
+            timestamp = int(datetime.now(timezone.utc).timestamp())
+            print(f"Current UTC timestamp: {timestamp}")
 
-            # Subscribe to notifications from the Activity Data characteristic
-            print(f"Subscribing to Activity Data ({self.uuidACTIVITY_CHAR_UUID})...")
-            await client.start_notify(self.uuidACTIVITY_CHAR_UUID, self.notification_handler)
-
-            print("Receiving notifications... (Press Ctrl+C to stop)")
-            try:
-                while True:
-                    # Keep the connection alive to receive notifications
-                    await asyncio.sleep(1)
-            except KeyboardInterrupt:
-                print("Stopping...")
-                # Stop notifications when interrupted
-                await client.stop_notify(self.uuidACTIVITY_CHAR_UUID)
+            data = timestamp.to_bytes(4, byteorder='little')
+            print(f"Data to send: {data}")
+            
+            # Write the timestamp to the 2101 characteristic
+            await client.write_gatt_char(self.uuidACTIVITY_CHAR_UUID, data)
+            print("Timestamp sent via 2101 command.")
 
     def notification_handler(self, sender, data):
         # Callback for handling incoming notifications

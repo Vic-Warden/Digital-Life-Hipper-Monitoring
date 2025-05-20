@@ -126,9 +126,9 @@ I wanted to learn how to create a junction table to represent a many-to-many rel
 
 3. Use the Relationship Tool to Create the Junction Table.
 
-- Select the “Many-to-Many Non-Identifying Relationship” tool from the vertical toolbar.
-- Click on the tables you want the relationship with.
-- MySQL Workbench will automatically create a junction table and link both sides with foreign keys.
+- Select the “Many-to-Many Non-Identifying Relationship” tool from the vertical toolbar (dashed line with crow’s feet at both ends).
+- Click first on the first table (e.g., patient), then on the second table (e.g., therapist).
+- MySQL Workbench will automatically create a junction table (e.g., patient_has_therapist) and add the necessary foreign key relationships to both original tables.
 
 4. Edit the Junction Table.
 

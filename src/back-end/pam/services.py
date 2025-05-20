@@ -24,12 +24,13 @@ def get_address_by_label(label_id = None, filename="PAM_devices.json"):
         return "Error decoding JSON."
 
 class TimeDate:
-    def __init__(self):
+    def __init__(self, label_id=None):
         self.base_uuid = base_uuid
         # UUID for TimeDate is 2001
         # Check documentation for details
         self.uuid_extension = "2001"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+        self.label_id = label_id
         
         asyncio.run(self.run())
         

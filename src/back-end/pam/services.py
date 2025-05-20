@@ -34,7 +34,7 @@ class TimeDate:
         asyncio.run(self.run())
         
     async def run(self):
-        pam = PAM_2001(self.uuid)
+        pam = PAM_2001(self.uuid, label_id=self.label_id)
         await pam.run()
 
 class ActivityData:

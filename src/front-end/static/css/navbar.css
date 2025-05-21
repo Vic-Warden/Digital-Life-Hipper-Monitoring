@@ -1,0 +1,96 @@
+/* Basic styling for the navbar */
+.navbar {
+    background-color: #90D4FF;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 113px;
+    display: flex;
+    justify-content: space-between; /* Align items to the left and right */
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  /* Navbar links hidden by default */
+  .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start; /* Align links to the left */
+    align-items: center;
+    position: absolute;
+    top: 60px; /* Position under the hamburger */
+    right: 0; /* Right-align the links under the hamburger */
+    display: none; /* Hidden by default */
+    flex-direction: column; /* Stack links vertically */
+    width: 100%; /* Full width */
+  }
+  
+  .nav-links li {
+    margin: 10px 0; /* Space between links */
+  }
+  
+  /* Link styling */
+  .nav-links a {
+    display: block;
+    padding: 14px 20px;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .nav-links a:hover {
+    background-color: #575757;
+  }
+  
+  /* Hamburger Menu Icon on the right */
+  .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    order: 2; /* Position the hamburger icon at the right side */
+  }
+  
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+  }
+  
+  /* Show the navbar links when the hamburger icon is clicked */
+  .nav-links.active {
+    display: flex; /* Show the links when active */
+  }
+  
+  /* For responsiveness (mobile-first) */
+  @media screen and (max-width: 768px) {
+    .menu-icon {
+      display: flex; /* Always show the hamburger icon */
+    }
+  
+    /* When the hamburger icon is clicked, the links appear */
+    .nav-links.active {
+      display: flex; /* Show the links when active */
+    }
+  
+    .nav-links li {
+      margin: 20px 0; /* Space between links */
+    }
+  
+    .dropdown-content {
+      position: static;
+      width: 100%;
+    }
+  
+    .dropdown-content a {
+      padding: 10px;
+    }
+  }
+  
+  
+  
+  

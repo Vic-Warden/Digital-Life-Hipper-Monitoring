@@ -34,6 +34,9 @@ First, the research was conducted to investigate the consistency and reliability
 
   * Jan 11: SSE = 0.90
 
+![image](../assets/PAMcomparisonPeak.png)
+Comparison in peaks between two different sensors
+
 ### Activity Level Categorization
 
 * Applied Erik’s threshold values to classify minute-level PAM into activity levels.

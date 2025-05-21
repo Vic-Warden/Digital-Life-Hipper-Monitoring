@@ -1,8 +1,7 @@
 # Plan of Approach for the Next Round of Tests
 
-Evaluate and improve the consistency, reliability, and practical classification of activity using AM500 sensors in real-world usage.
-
 ## 📋 Step-by-Step Plan
+
 ### Test Setup
 
 * Securely fix sensors in housings to prevent mechanical variance.
@@ -13,7 +12,7 @@ Evaluate and improve the consistency, reliability, and practical classification 
 
 ### Data Collection
 
-* Target duration: 7–10 continuous days per subject.
+* Target duration: Sessions of 10 minutes as discussed with Michel.
 
 * Log both raw sensor data and minute score outputs.
 

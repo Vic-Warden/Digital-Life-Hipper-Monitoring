@@ -4,7 +4,7 @@
   align-items: center;
   padding: 10px 20px;
   background-color: #90D4FF;
-  border-bottom: 	#1E5F86;
+  border-bottom: 2px solid #5db3e9;
   color: white;
   position: relative;
 }
@@ -79,6 +79,16 @@
 .dropdown-content a:hover {
   background-color: #f1f1f1;
 }
+
+/* Highlight the current page */
+/* Have to check if this works when we work on local server: extension vscode can't find the paths!*/
+.dropdown-content a.active-link {
+  background-color: #1E5F86;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
 
 .dropdown:hover .dropdown-content {
   display: block;

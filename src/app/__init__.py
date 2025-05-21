@@ -13,9 +13,9 @@ def redirect_to_home():
 def home():
     return render_template('home.html')
 
-@app.route('/')
-def redirect_to_home():
-    return redirect('/login')
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 
 if __name__ == "__main__":

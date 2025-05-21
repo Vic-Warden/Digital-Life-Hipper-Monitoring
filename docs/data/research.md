@@ -18,6 +18,8 @@ First, the research was conducted to investigate the consistency and reliability
 
 * Categorization into low, medium, and high activity.
 
+![image](../assets/PAMperDay.png)
+
 ### Analysis Highlights
 
 * PAM day values from both sources (direct sensor vs. minute score sum) aligned closely.

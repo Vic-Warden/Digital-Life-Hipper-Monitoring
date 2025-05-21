@@ -24,6 +24,5 @@ all html files are made according to the following template:<br>
 the file structure is as follows:<br>
 
 the templates folder had all the html files,<br>
-the static folder has the css and js files in their folders.<br>
-and any assests like images or fonts can be stored inside of the assets folder.<br>
+the static folder has the css and js files in their folders as well as all the assets like fonts and images.
 ![structure.png](structure.png)

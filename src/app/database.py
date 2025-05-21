@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error  # Error handling module
+from mysql.connector import MySQLConnection  # MySQL connection type
 
 
 class Database:
@@ -10,8 +11,9 @@ class Database:
         self._user = user
         self._password = password
         self._database = database
+        self._connection = self.connect()
 
-    def connect(self):
+    def connect(self) -> MySQLConnection | None:
         # Establish a connection to the MySQL database
         try:
             connection = mysql.connector.connect(
@@ -39,15 +41,39 @@ class Database:
         except Error as e:
             print("Error while connecting to MySQL:", e)
             return None
-        # At the end, close the connection if it was established
+
+    def do_query(self, query: str, params: tuple = ()) -> list[tuple] | None:
+        """
+        ### Execute a query on the database and return the result.
+
+        ### How to use: 
+        ```python
+        query = "SELECT * FROM users WHERE name = %s"
+        params = ("some_value",)
+        results = do_query(query, params)
+        ```
+
+        ### Returns:
+        - A list of tuples containing the result set.
+        - None if the query fails or if there is no connection to the database.
+        """
+        # Check if the connection is established
+        if not self._connection:
+            print("No connection to the database.")
+            return None
+        # Execute the query and fetch the results
+        try:
+            cursor = self._connection.cursor()
+            cursor.execute(query, params)
+            result = cursor.fetchall()
+            return result
+        # Handle any errors that occur during the query execution
+        except Error as e:
+            print("Error while executing query:", e)
+            return None
+        # At the end, close the cursor
         finally:
-            print("Attempting to close the connection...", end=" ")
-            if 'connection' in locals() and connection.is_connected():
-                cursor.close()
-                connection.close()
-                print("OK!")
-            else:
-                print("FAIL!, reason: no connection to close.")
+            cursor.close()
 
 
 db = Database(
@@ -58,4 +84,7 @@ db = Database(
     database="hipperdb"
 )
 
-db.connect()
+query = "SELECT * FROM %s;"
+params = ("patient",)
+result = db.do_query(query, params)
+print(result)

@@ -2,9 +2,10 @@ from flask import Flask, render_template, redirect, request
 
 app = Flask(__name__)
 
+# Temporary
 users = {
-    'user' : 'password'
-}
+            'user' : 'password'
+        }
 
 @app.route('/')
 def redirect_to_home():
@@ -14,13 +15,14 @@ def redirect_to_home():
 def home():
     return render_template('home.html')
 
+# Request the user & the password
 @app.route('/login', methods=[GET])
 def login():
     if request.method == 'GET':
         username = request.args['username']
         password = request.args['password']
         if username in users and users[username] == password:
-            return '<h1>Welcome!!!</h1>'
+            return 'Success'
         else:
             return 'Error'      
     else:      

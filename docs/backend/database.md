@@ -12,3 +12,29 @@ project-root/
 └── init.sql   # optional
 ```
 
+## docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  mysql:
+    build: .
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    # volumes:
+    #   - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+```
+
+## Dockerfile
+
+```dockerfile
+FROM mariadb:latest
+
+EXPOSE 3306
+
+# COPY ./init.sql /docker-entrypoint-initdb.d/
+```
+

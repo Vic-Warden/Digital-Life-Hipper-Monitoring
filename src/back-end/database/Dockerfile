@@ -4,4 +4,4 @@ FROM mariadb:latest
 EXPOSE 3306
 
 # Copy initialization SQL script
-# COPY ./init.sql /docker-entrypoint-initdb.d/
+COPY ./init.sql /docker-entrypoint-initdb.d/

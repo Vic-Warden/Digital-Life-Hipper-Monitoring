@@ -1,5 +1,5 @@
 # Import Flask
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 
 # Create the app Flask
 app = Flask(__name__)
@@ -33,6 +33,13 @@ def login():
               
         # Render the login.html
         return render_template('login.html')
+
+# Logout's route
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user', None)
+    # Redirection to the login 
+    return redirect('/login') 
 
 # Start the Flask application
 if __name__ == "__main__":

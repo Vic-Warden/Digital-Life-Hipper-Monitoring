@@ -4,6 +4,9 @@ from flask import Flask, render_template, redirect, request
 # Create the app Flask
 app = Flask(__name__)
 
+# Required to use sessions
+app.secret_key = 'your_secret_key_here'
+
 # Route for the home page
 @app.route('/')
 def redirect_to_home():

@@ -12,6 +12,14 @@ class Database:
         self._password = password
         self._database = database
         self._connection = self.connect()
+        self._allowed_tables = [
+            "data",
+            "device",
+            "goal",
+            "patient",
+            "patient_has_therapist",
+            "therapist"
+        ]
 
     def connect(self) -> MySQLConnection | None:
         # Establish a connection to the MySQL database
@@ -75,6 +83,12 @@ class Database:
         finally:
             cursor.close()
 
+    def check_valid_table(self, table_name: str) -> bool:
+        """
+        ### Check if the table is allowed to be queried.
+        """
+        return table_name in self._allowed_tables
+
 
 db = Database(
     host="localhost",
@@ -84,7 +98,7 @@ db = Database(
     database="hipperdb"
 )
 
-query = "SELECT * FROM %s;"
-params = ("patient",)
+query = "SELECT * FROM patient WHERE id = %s;"
+params = (0,)
 result = db.do_query(query, params)
 print(result)

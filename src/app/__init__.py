@@ -16,7 +16,10 @@ def home():
 
 @app.route('/login', methods=[GET])
 def login():
-    render_template('login.html')
+    if request.method == 'GET':
+        username = request.args['username']
+        password = request.args['password']
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=6001)

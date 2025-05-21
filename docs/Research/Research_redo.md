@@ -12,3 +12,4 @@ We did a small test taping 2 devices together and doing a small walk of around 2
 The small differences seen in the PAM scores and steps could be due to that the devices only saves the data from entire minutes. These minutes can end at different moments on the devices because they are not reset at the exact same time. This means that their could be small differences. The rest of these results look pretty promissing with the results being almost the same. 
 
 ### long term tests
+Devices reset at ~ 21-5-2025, 17:12. I can't reset all the devices at once as of right now so it was done 1 by 1. After doing this I taped the devices together like this: image here. This setup will not work perfectly because the devices are not in the exact same spot, but I did not want to risk the hardware rubbing together and breaking due to static electricity. After doing this I kept the devices on my in the same spot for a couple of hour doing various activity's. 

@@ -49,3 +49,17 @@ MYSQL_ROOT_PASSWORD=evenmoresecurepassword
 
 > Tip: Add `.env` to `.gitignore` to avoid committing sensitive data.
 
+## Usage
+
+Build and start the service:
+
+```bash
+docker-compose up --build
+```
+
+Stop the service:
+
+```bash
+docker-compose down
+```
+

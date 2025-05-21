@@ -89,6 +89,12 @@
   border-radius: 4px;
 }
 
+/* Responsive behavior */
+@media (max-width: 600px) {
+  .nav-center {
+    font-size: 2.75vw; /* adjust font size on smaller screens */
+  }
+}
 
 .dropdown:hover .dropdown-content {
   display: block;
@@ -97,8 +103,6 @@
 .dropdown:hover .dropbtn {
   background-color: #f1f1f1;
 }
-
-
 
   
   

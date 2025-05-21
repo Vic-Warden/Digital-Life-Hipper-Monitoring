@@ -14,8 +14,21 @@ from bleak import BleakScanner, BleakClient
 from datetime import datetime, timezone
 
 class PAM_2001:
-    def __init__(self, uuid):
+    def __init__(self, uuid, label_id=None):
         self.uuid = uuid
+        self.label_id = label_id
+        self.pam_device = None
+        self.directly_targetting_ID = False
+        
+        if label_id is not None:
+            from services import get_address_by_label
+            mac = get_address_by_label(label_id)
+            if mac and "not found" not in mac:
+                self.pam_device = type("device", (), {"address": mac, "name": f"Pam_{label_id}"})()
+                self.directly_targetting_ID = True
+                print(f"Targeting PAM device with MAC: {mac}")
+            else:
+                print(f"MAC address not found for label {label_id}")
     
     async def run(self):
         await self.set_timestamp()
@@ -27,40 +40,34 @@ class PAM_2001:
     # Main function
     async def set_timestamp(self):
 
-        # Scann BLE device for 5 seconds
-        print("On standby...")
+                # Scan BLE device if no target address was provided
+        if not self.directly_targetting_ID:
+            print("On standby...")
 
-        # Variable 
-        pam_device = None
-        attempts = 0
-        
-        while attempts < 5:
-            devices = await BleakScanner.discover(timeout=5)
+            attempts = 0
+            while attempts < 5:
+                devices = await BleakScanner.discover(timeout=5)
 
-            # Displays the name and MAC address of each device
-            for device in devices:
-                print(f"- {device.name} [{device.address}]")
+                for device in devices:
+                    print(f"- {device.name} [{device.address}]")
+                    if device.name and "Pam" in device.name:
+                        self.pam_device = device
+                        break
 
-                # Checks if the device name contains 'Pam'
-                if device.name and "Pam" in device.name:
-                    pam_device = device
+                if self.pam_device:
                     break
-                
-            if pam_device:
-                break
-            
-            attempts += 1
+                attempts += 1
 
-        # If no Pam device is found, print a message and stop
-        if not pam_device:
+            if not self.pam_device:
                 print("Pam device not connected")
                 return
-        
-        print(f"Pam device found: {pam_device.name} [{pam_device.address}]")
+
+        print(f"Pam device found: {self.pam_device.name} [{self.pam_device.address}]")
+
 
         # Attempts to connect to the Pam device
-        print(f"\n Connect to {pam_device.name}...")
-        async with BleakClient(pam_device.address) as client:
+        print(f"\n Connect to {self.pam_device.name}...")
+        async with BleakClient(self.pam_device.address) as client:
             print("Connected")
 
             timestamp = int(datetime.now(timezone.utc).timestamp())

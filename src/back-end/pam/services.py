@@ -24,17 +24,18 @@ def get_address_by_label(label_id = None, filename="PAM_devices.json"):
         return "Error decoding JSON."
 
 class TimeDate:
-    def __init__(self):
+    def __init__(self, label_id=None):
         self.base_uuid = base_uuid
         # UUID for TimeDate is 2001
         # Check documentation for details
         self.uuid_extension = "2001"
         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+        self.label_id = label_id
         
         asyncio.run(self.run())
         
     async def run(self):
-        pam = PAM_2001(self.uuid)
+        pam = PAM_2001(self.uuid, label_id=self.label_id)
         await pam.run()
 
 class ActivityData:
@@ -93,4 +94,16 @@ class ActivityDownload:
                        filename=filename,
                        filelength=self.filelength,
                        adres=get_address_by_label(self.label_id))
+        await pam.run()
+
+class SetTimestamp2101:
+    def __init__(self, label_id=None):
+        self.base_uuid = base_uuid
+        self.uuid_extension = "2101"
+        self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+
+        asyncio.run(self.run(label_id))
+
+    async def run(self, label_id):
+        pam = PAM_2101(uuid=self.uuid, label_id=label_id)
         await pam.run()

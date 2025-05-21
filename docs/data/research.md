@@ -45,6 +45,8 @@ Comparison in peaks between two different sensors
 
 * Simplified classification reduced discrepancies between sensors.
 
+![image](../assets/PAMthresholdValues.png)
+
 ## Second Experiment (Jan 24–30, 2025)
 
 * Sensors were better fixed in their casing.

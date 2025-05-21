@@ -16,6 +16,10 @@ This file contains the learning journal with the learning stories of Jan.
 
 * Apparently Power BI Desktop allows users to efficiently import and combine multiple data files stored in a local folder, such as .csv reports. By connecting to a folder as a data source, Power BI can automatically detect and list all files within it. Using a sample file as a template, it enables consistent transformations—like removing headers or changing column types—across all files. I researched this by looking up a few things online to do this automatically. I then tried it myself and it immediately worked without issue! The file of the tutorial can be found at: `frontend/powerbi/powerbi-importing-data.md`
 
+#201 As a student, I want to learn and look into how Hipper analyzed their device data, so that we know how to document it ourselves.
+
+* 
+
 ## Journal
 
 ### 5/7/2025

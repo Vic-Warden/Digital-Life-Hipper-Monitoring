@@ -38,10 +38,13 @@ class Database:
             print("Error while connecting to MySQL:", e)
             return None
         finally:
+            print("Attempting to close the connection...", end=" ")
             if 'connection' in locals() and connection.is_connected():
                 cursor.close()
                 connection.close()
-                print("MySQL connection is closed")
+                print("OK!")
+            else:
+                print("FAIL!, reason: no connection to close.")
 
 
 db = Database(

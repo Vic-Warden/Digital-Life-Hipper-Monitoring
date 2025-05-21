@@ -2,11 +2,11 @@ import asyncio
 from bleak import BleakClient, BleakScanner
 import struct
 
-# Replace this with your device’s BLE address (e.g., "AA:BB:CC:DD:EE:FF")
-TARGET_DEVICE_ADDRESS = "C1:08:00:01:0E:9C"
-
-# Full 128-bit UUID for the custom “Setup (Test Data)” characteristic (2002):
-SETUP_CHAR_UUID = "99DB2002-AC2D-11E3-A5E2-0800200C9A66"
+# # Replace this with your device’s BLE address (e.g., "AA:BB:CC:DD:EE:FF")
+# TARGET_DEVICE_ADDRESS = "C1:08:00:01:0E:9C"
+# 
+# # Full 128-bit UUID for the custom “Setup (Test Data)” characteristic (2002):
+# self.uuid = "99DB2002-AC2D-11E3-A5E2-0800200C9A66"
 
 class PAM_2002():
     def __init__(self,uuid, target_address):
@@ -123,7 +123,7 @@ class PAM_2002():
             print(f"Connected to {self.target_address}")
 
             # 1) Read the current Setup characteristic (8 bytes)
-            raw = await client.read_gatt_char(SETUP_CHAR_UUID)
+            raw = await client.read_gatt_char(self.uuid)
             print("Raw Setup bytes:", raw.hex())
             decoded = self.decode_setup_bytes(raw)
             print("Current Setup values:")
@@ -132,38 +132,38 @@ class PAM_2002():
             print(f"  • Deactivation time:      {decoded['deactivation_time_s']} s")
             print(f"  • Adv. interval (raw):    0x{decoded['adv_interval_encoded']:02X}")
             print(f"  • Conn. interval:         {decoded['conn_interval_ms']} ms")
-            print()
-
-            # 2) Example: change thresholds to new values
-            #    (e.g., activation → 200 mg, deactivation → 50 mg,
-            #     deactivation time → 60 s, adv interval code → 0x05, conn interval → 100 ms)
-            new_act_mg = 200
-            new_deact_mg = 50
-            new_deact_time_s = 60
-            new_adv_byte = 0x05       # encodes 5 → 546.25 ms (lower four bits = 5, multiplier=0)
-            new_conn_ms = 100.0       # will be rounded to nearest multiple of 12.5 ms (→ 8 units = 100 ms)
-
-            to_write = self.pack_setup_bytes(
-                activation_threshold_mg=new_act_mg,
-                deactivation_threshold_mg=new_deact_mg,
-                deactivation_time_s=new_deact_time_s,
-                adv_interval_byte=new_adv_byte,
-                conn_interval_ms=new_conn_ms,
-            )
-
-            print("Writing new Setup bytes:", to_write.hex())
-            await client.write_gatt_char(SETUP_CHAR_UUID, to_write, response=True)
-
-            # 3) Read back to verify
-            raw2 = await client.read_gatt_char(SETUP_CHAR_UUID)
-            print("Read back bytes:           ", raw2.hex())
-            decoded2 = self.decode_setup_bytes(raw2)
-            print("Decoded new values:")
-            print(f"  • Activation threshold:   {decoded2['activation_threshold_mg']} mg")
-            print(f"  • Deactivation threshold: {decoded2['deactivation_threshold_mg']} mg")
-            print(f"  • Deactivation time:      {decoded2['deactivation_time_s']} s")
-            print(f"  • Adv. interval (raw):    0x{decoded2['adv_interval_encoded']:02X}")
-            print(f"  • Conn. interval:         {decoded2['conn_interval_ms']} ms")
+            # print()
+            #
+            # # 2) Example: change thresholds to new values
+            # #    (e.g., activation → 200 mg, deactivation → 50 mg,
+            # #     deactivation time → 60 s, adv interval code → 0x05, conn interval → 100 ms)
+            # new_act_mg = 200
+            # new_deact_mg = 50
+            # new_deact_time_s = 60
+            # new_adv_byte = 0x05       # encodes 5 → 546.25 ms (lower four bits = 5, multiplier=0)
+            # new_conn_ms = 500.0       # will be rounded to nearest multiple of 12.5 ms (→ 8 units = 100 ms)
+            #
+            # to_write = self.pack_setup_bytes(
+            #     activation_threshold_mg=new_act_mg,
+            #     deactivation_threshold_mg=new_deact_mg,
+            #     deactivation_time_s=new_deact_time_s,
+            #     adv_interval_byte=new_adv_byte,
+            #     conn_interval_ms=new_conn_ms,
+            # )
+            #
+            # print("Writing new Setup bytes:", to_write.hex())
+            # await client.write_gatt_char(self.uuid, to_write, response=True)
+            #
+            # # 3) Read back to verify
+            # raw2 = await client.read_gatt_char(self.uuid)
+            # print("Read back bytes:           ", raw2.hex())
+            # decoded2 = self.decode_setup_bytes(raw2)
+            # print("Decoded new values:")
+            # print(f"  • Activation threshold:   {decoded2['activation_threshold_mg']} mg")
+            # print(f"  • Deactivation threshold: {decoded2['deactivation_threshold_mg']} mg")
+            # print(f"  • Deactivation time:      {decoded2['deactivation_time_s']} s")
+            # print(f"  • Adv. interval (raw):    0x{decoded2['adv_interval_encoded']:02X}")
+            # print(f"  • Conn. interval:         {decoded2['conn_interval_ms']} ms")
     async def run_write(self,
                         new_act_mg,
                         new_deact_mg,
@@ -177,8 +177,9 @@ class PAM_2002():
                 print(f"Failed to connect to {self.target_addresstarget_address}")
                 return
             print(f"Connected to {self.target_address}")
+
             # 1) Read the current Setup characteristic (8 bytes)
-            raw = await client.read_gatt_char(SETUP_CHAR_UUID)
+            raw = await client.read_gatt_char(self.uuid)
             print("Raw Setup bytes:", raw.hex())
             decoded = self.decode_setup_bytes(raw)
             print("Current Setup values:")
@@ -188,9 +189,8 @@ class PAM_2002():
             print(f"  • Adv. interval (raw):    0x{decoded['adv_interval_encoded']:02X}")
             print(f"  • Conn. interval:         {decoded['conn_interval_ms']} ms")
             print()
-            # # 2) Example: change thresholds to new values
-            # #    (e.g., activation → 200 mg, deactivation → 50 mg,
-            # #     deactivation time → 60 s, adv interval code → 0x05, conn interval → 100 ms)
+
+            # # 2) Change thresholds to new values
             to_write = self.pack_setup_bytes(
                 activation_threshold_mg=new_act_mg,
                 deactivation_threshold_mg=new_deact_mg,
@@ -200,11 +200,12 @@ class PAM_2002():
             )
 
             print("Writing new Setup bytes:", to_write.hex())
-            await client.write_gatt_char(SETUP_CHAR_UUID, to_write, response=True)
+            await client.write_gatt_char(self.uuid, to_write, response=True)
             import time
             time.sleep(3)
+
             # 3) Read back to verify
-            raw2 = await client.read_gatt_char(SETUP_CHAR_UUID)
+            raw2 = await client.read_gatt_char(self.uuid)
             print("Read back bytes:           ", raw2.hex())
             decoded2 = self.decode_setup_bytes(raw2)
             print("Decoded new values:")

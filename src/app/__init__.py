@@ -10,22 +10,27 @@ app.secret_key = 'your_secret_key_here'
 # Route for the home page
 @app.route('/')
 def redirect_to_home():
+    
     # Redirection to the home page by default
     return redirect('/home')
 
 # Home's route
 @app.route('/home')
 def home():
+    # if connected
     if 'user' in session:
+        
         # Render the home.html
         return render_template('home.html', user=session['user'])
     else:
+        # If user is not logged in, redirects to login page
         return redirect('/login')
 
 # Request the user & the password with GET and POST methods
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        
         # Retrieve email and password 
         email = request.args['email']
         password = request.args['password']
@@ -37,11 +42,14 @@ def login():
         # Render the login.html
         return render_template('login.html')
 
-# Logout's route
+# Logout's route with POST methods
 @app.route('/logout', methods=['POST'])
 def logout():
+    
+    # ends the user's session
     session.pop('user', None)
-    # Redirection to the login 
+    
+    # Redirection to the login if logout
     return redirect('/login') 
 
 # Start the Flask application

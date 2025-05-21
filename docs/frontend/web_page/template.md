@@ -42,8 +42,15 @@ The call upon the navbar in an HTML file you need to include this code:
 ```
 These lines of code will dynamically inject the navbar on page load. 
 
-### Navbar.js
+### navbar.js
 In this file you will find all the html code for the injection of the navbar and function that are used for the functionality of the navbar.
+
+### navbar.css
+In this file you will find all the code for the styling of the navbar.
 
 ### Responsive 
 The links in the navbar will always be hidden under what is called "a hamburger icon" this will stay the same on phone and on desktop. The only thing that will be different is that the text in the center of the navbar will resize when visiting the page on a different device.
+
+### References
+- W3Schools is used to figure out how to make the dropdown menu for the navbar.
+- Chatgpt is used to help figuring out some errors in the code.

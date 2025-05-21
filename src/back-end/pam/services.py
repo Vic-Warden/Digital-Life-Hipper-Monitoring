@@ -1,8 +1,8 @@
 import asyncio
 from PAM_2001 import PAM_2001
+from PAM_2002 import PAM_2002
 from PAM_2101 import PAM_2101
 from PAM_2102 import PAM_2102
-from PAM_2102 import get_detailed_request
 from PAM_2103 import PAM_2103
 import json
 
@@ -106,4 +106,20 @@ class SetTimestamp2101:
 
     async def run(self, label_id):
         pam = PAM_2101(uuid=self.uuid, label_id=label_id)
+        await pam.run()
+
+class read_write_pam_settings:
+    def __init__(self, label_id = None):
+        self.label_id = None
+        self.label_id = label_id
+        # UUID for ActivityFile is 2102
+        self.base_uuid = base_uuid
+        self.uuid_extension = "2002"
+        self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+
+        # Run the PAM_2102 script to send the command and confirm transmission
+        asyncio.run(self.run())
+
+    async def run(self):
+        pam = PAM_2002(uuid=self.uuid,target_address=get_address_by_label(self.label_id))
         await pam.run()

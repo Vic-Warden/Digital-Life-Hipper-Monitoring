@@ -125,18 +125,29 @@ class read_pam_settings:
         pam = PAM_2002(uuid=self.uuid,target_address=get_address_by_label(self.label_id))
         await pam.run_read()
 
-# class write_pam_settings:
-#     def __init__(self, label_id = None):
-#         self.label_id = None
-#         self.label_id = label_id
-#         # UUID for ActivityFile is 2102
-#         self.base_uuid = base_uuid
-#         self.uuid_extension = "2002"
-#         self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
-#
-#         # Run the PAM_2102 script to send the command and confirm transmission
-#         asyncio.run(self.run())
-#
-#     async def run(self):
-#         pam = PAM_2002(uuid=self.uuid,target_address=get_address_by_label(self.label_id))
-#         await pam.write()
+class write_pam_settings:
+    def __init__(self, label_id = None,
+                        new_act_mg = 200,
+                        new_deact_mg = 50,
+                        new_deact_time_s = 60,
+                        new_adv_byte = 0x05,       # encodes 5 → 546.25 ms (lower four bits = 5, multiplier=0)
+                        new_conn_ms = 100.0 ):
+        self.label_id = None
+        self.label_id = label_id
+        # UUID for ActivityFile is 2102
+        self.base_uuid = base_uuid
+        self.uuid_extension = "2002"
+        self.uuid = self.base_uuid.replace("XXXX", self.uuid_extension)
+
+        # Run the PAM_2102 script to send the command and confirm transmission
+        asyncio.run(self.run())
+
+    async def run(self):
+        pam = PAM_2002(uuid=self.uuid,target_address=get_address_by_label(self.label_id))
+        await pam.run_write(
+                        new_act_mg = 200,
+                        new_deact_mg = 50,
+                        new_deact_time_s = 60,
+                        new_adv_byte = 0x05,       # encodes 5 → 546.25 ms (lower four bits = 5, multiplier=0)
+                        new_conn_ms = 100.0
+        )

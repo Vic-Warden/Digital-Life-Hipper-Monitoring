@@ -40,4 +40,10 @@ The call upon the navbar in an HTML file you need to include this code:
    <script src="../static/js/navbar.js"></script>
 
 ```
-These lines of code will dynamically inject the navbar on page load.
+These lines of code will dynamically inject the navbar on page load. 
+
+### Navbar.js
+In this file you will find all the html code for the injection of the navbar and function that are used for the functionality of the navbar.
+
+### Responsive 
+The links in the navbar will always be hidden under what is called "a hamburger icon" this will stay the same on phone and on desktop. The only thing that will be different is that the text in the center of the navbar will resize when visiting the page on a different device.

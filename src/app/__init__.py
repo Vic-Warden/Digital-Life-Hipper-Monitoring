@@ -16,8 +16,11 @@ def redirect_to_home():
 # Home's route
 @app.route('/home')
 def home():
-    # Render the home.html
-    return render_template('home.html')
+    if 'user' in session:
+        # Render the home.html
+        return render_template('home.html', user=session['user'])
+    else:
+        return redirect('/login')
 
 # Request the user & the password with GET and POST methods
 @app.route('/login', methods=['GET', 'POST'])

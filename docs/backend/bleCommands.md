@@ -13,6 +13,42 @@ Byte 0–3: Current UTC timestamp in seconds (uint32, little endian)
 To use this command, the read_live_pam_data.py script runs the PAM_2001.run() function, which internally calls set_timestamp().<br>
 The function scans for devices named "Pam", connects, and writes the time to the target characteristic. Progress is shown via console output.
 
+## 2002
+this command is used for reading out the pam device settings.
+these include things like the thresholds, data intervals and deactivation time.
+
+it works by reading or sending a message to the 2002 uuid.<br>
+and this one can will either include or receive a payload with the following structure.<br>
+this is based on the Pam_BLE_Spec_V1_8 guide provided by Michel Oey.<br>
+
+````
+Byte layout:
+0: reserved
+1: act threshold
+2: deact threshold
+3: deact_time
+4: adv_interval
+5: reserved
+6: reserved
+7: conn_units
+````
+
+I used existing code to make sure we only target a specific pam device by the label here to make sure we get the correct one.<br>
+the final result is 2 functions, one to read and one to write.<br>
+````python
+
+read_pam_settings(label_id=90248)
+````
+````python
+write_pam_settings(label_id=90243,
+                    new_act_mg = 180,
+                    new_deact_mg = 70,
+                    new_deact_time_s = 120,
+                    new_adv_byte = 0x15,
+                    new_conn_ms = 50.0)
+````
+
+
 ## 2101<br>
 this command is used for measuring the current data of the total value that is stored on the hipper device.
 
@@ -189,3 +225,5 @@ def get_address_by_label(label_id = None, filename="PAM_devices.json"):
 ````python
 get_address_by_label(self.label_id)
 ````
+
+

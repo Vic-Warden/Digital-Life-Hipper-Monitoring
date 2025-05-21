@@ -28,7 +28,7 @@ def login():
         return redirect('/home')
     else:
               
-        # Render the 'login.html' template for GET requests
+        # Render the login.html
         return render_template('login.html')
 
 # Start the Flask application

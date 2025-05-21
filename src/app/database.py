@@ -3,9 +3,10 @@ from mysql.connector import Error  # Error handling module
 
 
 class Database:
-    def __init__(self, host, user, password, database):
+    def __init__(self, host, port, user, password, database):
         # Initialize the database connection parameters
         self.host = host
+        self.port = port
         self.user = user
         self.password = password
         self.database = database
@@ -15,6 +16,7 @@ class Database:
         try:
             connection = mysql.connector.connect(
                 host=self.host,
+                port=self.port,
                 user=self.user,
                 password=self.password,
                 database=self.database
@@ -40,3 +42,14 @@ class Database:
                 cursor.close()
                 connection.close()
                 print("MySQL connection is closed")
+
+
+db = Database(
+    host="localhost",
+    port=3306,
+    user="root",
+    password="superstronkrootpassword",
+    database="hipperdb"
+)
+
+db.connect()

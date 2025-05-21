@@ -33,10 +33,13 @@ class Database:
                 # Fetch the database name
                 record = cursor.fetchone()
                 print("Connected to database:", record[0])
+
             return connection
+        # Handle any errors that occur during the connection attempt
         except Error as e:
             print("Error while connecting to MySQL:", e)
             return None
+        # At the end, close the connection if it was established
         finally:
             print("Attempting to close the connection...", end=" ")
             if 'connection' in locals() and connection.is_connected():

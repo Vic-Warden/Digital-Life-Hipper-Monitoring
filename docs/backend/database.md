@@ -38,3 +38,14 @@ EXPOSE 3306
 # COPY ./init.sql /docker-entrypoint-initdb.d/
 ```
 
+## .env
+
+```env
+MYSQL_DATABASE=hipperdb
+MYSQL_USER=hipper_user
+MYSQL_PASSWORD=supersecurepassword
+MYSQL_ROOT_PASSWORD=evenmoresecurepassword
+```
+
+> Tip: Add `.env` to `.gitignore` to avoid committing sensitive data.
+

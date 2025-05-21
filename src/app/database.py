@@ -5,21 +5,21 @@ from mysql.connector import Error  # Error handling module
 class Database:
     def __init__(self, host, port, user, password, database):
         # Initialize the database connection parameters
-        self.host = host
-        self.port = port
-        self.user = user
-        self.password = password
-        self.database = database
+        self._host = host
+        self._port = port
+        self._user = user
+        self._password = password
+        self._database = database
 
     def connect(self):
         # Establish a connection to the MySQL database
         try:
             connection = mysql.connector.connect(
-                host=self.host,
-                port=self.port,
-                user=self.user,
-                password=self.password,
-                database=self.database
+                host=self._host,
+                port=self._port,
+                user=self._user,
+                password=self._password,
+                database=self._database
             )
             # Check if the connection was successful
             # and print some server information

@@ -189,3 +189,6 @@ def get_address_by_label(label_id = None, filename="PAM_devices.json"):
 ````python
 get_address_by_label(self.label_id)
 ````
+
+### Time with specific device
+When testing with setting the time for a specific device, we have found that the device itself needs a reset before we can actually get any good data from the device. If we do not reset the device before doing this, the times and date is not correcrt and will not set itself to being correct after setting the time. This is unfortunate but not a problem. The code itself for setting the time and the code used for targeting specific devices works correctly. 

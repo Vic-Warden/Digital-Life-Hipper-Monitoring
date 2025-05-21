@@ -98,7 +98,12 @@ db = Database(
     database="hipperdb"
 )
 
-query = "SELECT * FROM patient WHERE id = %s;"
-params = (0,)
+query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
+params = (1, "george", "george@gmail.com", "admin123")
+result = db.do_query(query, params)
+print(result)
+
+query = "SELECT * FROM patient"
+params = ()
 result = db.do_query(query, params)
 print(result)

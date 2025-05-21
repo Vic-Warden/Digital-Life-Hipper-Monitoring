@@ -9,3 +9,34 @@ class Database:
         self.user = user
         self.password = password
         self.database = database
+
+    def connect(self):
+        # Establish a connection to the MySQL database
+        try:
+            connection = mysql.connector.connect(
+                host=self.host,
+                user=self.user,
+                password=self.password,
+                database=self.database
+            )
+            # Check if the connection was successful
+            # and print some server information
+            if connection.is_connected():
+                # Get the server information
+                db_info = connection.get_server_info()
+                print("Connected to MySQL Server version", db_info)
+                # Get the database name
+                cursor = connection.cursor()
+                cursor.execute("SELECT DATABASE();")
+                # Fetch the database name
+                record = cursor.fetchone()
+                print("Connected to database:", record[0])
+            return connection
+        except Error as e:
+            print("Error while connecting to MySQL:", e)
+            return None
+        finally:
+            if 'connection' in locals() and connection.is_connected():
+                cursor.close()
+                connection.close()
+                print("MySQL connection is closed")

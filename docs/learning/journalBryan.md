@@ -69,4 +69,4 @@ self.ACC_RANGE_UUID = "033AFFA2-6778-4112-AC5C-15265F21ED94"
 self.RAW_DATA_UUID = "033AFFAD-6778-4112-AC5C-15265F21ED94"
 self.MEASUREMENT_PERIOD_UUID = "033AFFAE-6778-4112-AC5C-15265F21ED94"
 ```
-These are ofcourse a lot different then what we use and are able to use at this point in time, wich means that I can conclude that we need the other software that is used by the developer to be able to read out the raw sensor data. This sensor we will get somewhere this week so that we can continue testing and make use of this raw sensor data. 
+These are ofcourse a lot different then what we use and are able to use at this point in time, wich means that I can conclude that we need the other software that is used by the developer to be able to read out the raw sensor data. This sensor we will get somewhere this week so that we can continue testing and make use of the raw sensor data. 

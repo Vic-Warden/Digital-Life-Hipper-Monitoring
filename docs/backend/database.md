@@ -63,3 +63,12 @@ Stop the service:
 docker-compose down
 ```
 
+## Optional SQL Initialization
+
+To auto-run an SQL script on container startup:
+
+1. Ensure `init.sql` exists.
+2. Uncomment the `volumes` line in `docker-compose.yml`.
+3. Uncomment the `COPY` line in the Dockerfile.
+
+The script will execute once when the container is first created.

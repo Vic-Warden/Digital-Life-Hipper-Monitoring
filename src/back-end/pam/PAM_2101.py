@@ -1,14 +1,29 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
+from datetime import datetime, timezone
 
 
 class PAM_2101:
-    def __init__(self, uuid):
+    def __init__(self, uuid, label_id = None):
         # UUID of the Activity Data characteristic (2101)
         self.uuid = uuid
         self.devices = None
         self.pam_device = None
         self.uuidACTIVITY_CHAR_UUID = uuid
+        self.label_id = label_id
+        self.directly_targetting_ID = False
+        
+        if label_id is not None:
+            from services import get_address_by_label
+            mac = get_address_by_label(label_id)
+            if mac and "not found" not in mac:
+                self.pam_device = type("device", (), {"address": mac, "name": f"Pam_{label_id}"})()
+                self.directly_targetting_ID = True
+                print(f"Targeting PAM device with MAC: {mac}")
+            else:
+                print(f"MAC address not found for label {label_id}")
+        
+        
 
     async def run(self):
         # Start scanning and connect if a suitable device is found
@@ -17,6 +32,10 @@ class PAM_2101:
             await self.connect()
 
     async def bluetooth_scan(self):
+        if self.directly_targetting_ID:
+            print("Using provided address")
+            return True
+        
         # Scan for nearby BLE devices for 5 seconds
         print("Scanning for BLE devices...")
         self.devices = await BleakScanner.discover(timeout=5)
@@ -29,29 +48,28 @@ class PAM_2101:
                 break
 
         if not self.pam_device:
-            print("Pam sensor not found.")
+            print("Pam sensor not found")
             return False
+
         return True
+
 
     async def connect(self):
         # Attempt to connect to the Pam device via BLE
         print(f"\nConnecting to {self.pam_device.name}...")
         async with BleakClient(self.pam_device.address) as client:
-            print("Connected!")
+            print("Connected")
+            
+            # Generate the current UTC timestamp
+            timestamp = int(datetime.now(timezone.utc).timestamp())
+            print(f"Current UTC timestamp: {timestamp}")
 
-            # Subscribe to notifications from the Activity Data characteristic
-            print(f"Subscribing to Activity Data ({self.uuidACTIVITY_CHAR_UUID})...")
-            await client.start_notify(self.uuidACTIVITY_CHAR_UUID, self.notification_handler)
-
-            print("Receiving notifications... (Press Ctrl+C to stop)")
-            try:
-                while True:
-                    # Keep the connection alive to receive notifications
-                    await asyncio.sleep(1)
-            except KeyboardInterrupt:
-                print("Stopping...")
-                # Stop notifications when interrupted
-                await client.stop_notify(self.uuidACTIVITY_CHAR_UUID)
+            data = timestamp.to_bytes(4, byteorder='little')
+            print(f"Data to send: {data}")
+            
+            # Write the timestamp to the 2101 characteristic
+            await client.write_gatt_char(self.uuidACTIVITY_CHAR_UUID, data)
+            print("Timestamp sent via 2101 command.")
 
     def notification_handler(self, sender, data):
         # Callback for handling incoming notifications

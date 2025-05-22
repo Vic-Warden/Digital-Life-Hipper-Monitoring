@@ -18,6 +18,8 @@ First, the research was conducted to investigate the consistency and reliability
 
 * Categorization into low, medium, and high activity.
 
+![image](../assets/PAMperDay.png)
+
 ### Analysis Highlights
 
 * PAM day values from both sources (direct sensor vs. minute score sum) aligned closely.
@@ -32,6 +34,9 @@ First, the research was conducted to investigate the consistency and reliability
 
   * Jan 11: SSE = 0.90
 
+![image](../assets/PAMcomparisonPeak.png)
+Comparison in peaks between two different sensors
+
 ### Activity Level Categorization
 
 * Applied Erik’s threshold values to classify minute-level PAM into activity levels.
@@ -39,6 +44,8 @@ First, the research was conducted to investigate the consistency and reliability
 * Also tested a broader threshold (e.g., 0.002–0.4) for a simplified Active vs. Inactive classification.
 
 * Simplified classification reduced discrepancies between sensors.
+
+![image](../assets/PAMthresholdValues.png)
 
 ## Second Experiment (Jan 24–30, 2025)
 

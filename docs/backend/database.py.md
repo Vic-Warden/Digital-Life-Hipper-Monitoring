@@ -18,9 +18,17 @@ check_valid_table() # Checks if the queried table is allowed to be queried
 Queries can be executed using the `do_query()` function. In order to make a query and execute it the user should follow the following example.
 
 ```python
+db = Database(
+    host="host",
+    port=port,
+    user="user",
+    password="password",
+    database="database"
+)
+
 query = "SELECT * FROM users WHERE name = %s"
 params = ("some_value",)
-results = do_query(query, params)
+results = db.do_query(query, params)
 ```
 
 The result from this action look like this:

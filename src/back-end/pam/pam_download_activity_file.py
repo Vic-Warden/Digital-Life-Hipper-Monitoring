@@ -8,6 +8,15 @@ import asyncio
 #
 # SetTimestamp2101(label_id=90248)
 
-ActivityDownload(filename="output/data_records_LAST_14_DAYS_90248.csv",
-                 filelength=get_detailed_request("LAST_14_DAYS"),
-                 label_id=90248)
+# ActivityDownload(filename="output/body_part_experiment/chest",
+#                  filelength=get_detailed_request("LAST_1_HOUR"),
+#                  label_id=90245)
+ActivityDownload(filename="output/testw",
+                 filelength=get_detailed_request("LAST_1_HOUR"),
+                 label_id=90243)
+# ActivityDownload(filename="output/body_part_experiment/hip",
+#                  filelength=get_detailed_request("LAST_1_HOUR"),
+#                  label_id=90248)
+# ActivityDownload(filename="output/body_part_experiment/foot",
+#                  filelength=get_detailed_request("LAST_1_HOUR"),
+#                  label_id=90242)

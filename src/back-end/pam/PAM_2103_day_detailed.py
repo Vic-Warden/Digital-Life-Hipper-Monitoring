@@ -3,7 +3,7 @@ from bleak import BleakClient, BleakScanner
 import csv
 from datetime import datetime, timedelta, UTC
 
-class PAM_2103():
+class PAM_2103_Day_Detailed():
     def __init__(self, file_uuid, download_uuid,  filename, filelength, adres = None):
         self.filename = filename
         #2102 for downloading the file on the PAM device

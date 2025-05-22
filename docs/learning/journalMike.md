@@ -155,3 +155,41 @@ def get_address_by_label(label_id = None, filename="PAM_devices.json"):
     except json.JSONDecodeError:
         return "Error decoding JSON."
 ````
+
+#   As a student I want to learn how to correctly structure a front end file structure 
+
+##### Web page file template
+I learned that each web page should exist of a html, js and css file.
+In order to correctly link the css and js files to the html file I need to include them into the header using the following structure
+
+````html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blank Page</title>
+  <link rel="stylesheet" href="../static/css/home.css" />
+</head>
+<body>
+
+  <!-- Content goes here -->
+
+  <script src="../static/js/home.js"></script>
+</body>
+</html>
+
+````
+
+#####  File structures
+I learned that the file structure is as follows:<br>
+
+the templates folder had all the html files,<br>
+the static folder has the css and js files in their folders as well as all the assets like fonts and images.
+
+I learned this by asking it to my peers as well as form the following sources:
+https://www.youtube.com/watch?v=tBep6Nhq5gc 
+
+https://www.youtube.com/watch?v=aNt2s0sXltk 
+
+![structure.png](..%2Fassets%2Fstructure.png)

@@ -13,6 +13,42 @@ Byte 0–3: Current UTC timestamp in seconds (uint32, little endian)
 To use this command, the read_live_pam_data.py script runs the PAM_2001.run() function, which internally calls set_timestamp().<br>
 The function scans for devices named "Pam", connects, and writes the time to the target characteristic. Progress is shown via console output.
 
+## 2002
+this command is used for reading out the pam device settings.
+these include things like the thresholds, data intervals and deactivation time.
+
+it works by reading or sending a message to the 2002 uuid.<br>
+and this one can will either include or receive a payload with the following structure.<br>
+this is based on the Pam_BLE_Spec_V1_8 guide provided by Michel Oey.<br>
+
+````
+Byte layout:
+0: reserved
+1: act threshold
+2: deact threshold
+3: deact_time
+4: adv_interval
+5: reserved
+6: reserved
+7: conn_units
+````
+
+I used existing code to make sure we only target a specific pam device by the label here to make sure we get the correct one.<br>
+the final result is 2 functions, one to read and one to write.<br>
+````python
+
+read_pam_settings(label_id=90248)
+````
+````python
+write_pam_settings(label_id=90243,
+                    new_act_mg = 180,
+                    new_deact_mg = 70,
+                    new_deact_time_s = 120,
+                    new_adv_byte = 0x15,
+                    new_conn_ms = 50.0)
+````
+
+
 ## 2101<br>
 this command is used for measuring the current data of the total value that is stored on the hipper device.
 
@@ -167,7 +203,6 @@ this is very usefull when using multiple pam devices at the same time.<br>
 all the addresses can be called based on the label on the bottom of the pam device<br>
 
 ````json
-{
   "label_90243": "C1:08:00:01:12:33",
   "label_90248": "C1:08:00:01:36:3A",
 ````
@@ -189,3 +224,46 @@ def get_address_by_label(label_id = None, filename="PAM_devices.json"):
 ````python
 get_address_by_label(self.label_id)
 ````
+
+### Time with specific device
+When testing with setting the time for a specific device, we have found that the device itself needs a reset before we can actually get any good data from the device. If we do not reset the device before doing this, the times and date is not correcrt and will not set itself to being correct after setting the time. This is unfortunate but not a problem. The code itself for setting the time and the code used for targeting specific devices works correctly.  <br />
+Sample of incorrect data of device reset that already has data records on it:
+```csv
+2066-01-03 07:02:00,37,2.5
+2066-01-03 07:03:00,55,2.6875
+2066-01-03 07:04:00,38,2.0
+2066-01-03 07:05:00,78,3.5625
+2066-01-03 07:06:00,97,4.6875
+2066-01-03 07:07:00,101,4.5
+2066-01-03 07:08:00,104,4.5625
+2066-01-03 07:09:00,105,4.6875
+2066-01-03 07:10:00,82,4.0625
+2066-01-03 07:11:00,33,2.625
+2066-01-03 07:12:00,14,1.1875
+2066-01-03 07:13:00,1,0.0625
+2066-01-03 07:14:00,0,0.0
+2066-01-03 07:15:00,27,2.375
+2066-01-03 07:16:00,23,3.125
+2066-01-03 07:17:00,11,1.1875
+```
+Correct data sample of device that has the time set after a reset:
+```csv
+2025-05-21 12:08:00,114,8.3125
+2025-05-21 12:09:00,74,5.1875
+2025-05-21 12:10:00,116,7.9375
+2025-05-21 12:11:00,25,2.0625
+2025-05-21 12:12:00,61,2.8125
+2025-05-21 12:13:00,44,2.125
+2025-05-21 12:14:00,85,4.0
+2025-05-21 12:15:00,104,4.9375
+2025-05-21 12:16:00,98,4.5625
+2025-05-21 12:17:00,104,4.8125
+2025-05-21 12:18:00,104,4.75
+2025-05-21 12:19:00,86,4.1875
+2025-05-21 12:20:00,38,2.0625
+2025-05-21 12:21:00,8,1.0625
+2025-05-21 12:22:00,0,0.0625
+2025-05-21 12:23:00,1,0.0
+2025-05-21 12:24:00,29,2.375
+2025-05-21 12:25:00,19,2.125
+```

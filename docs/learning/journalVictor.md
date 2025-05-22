@@ -1,6 +1,10 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+22/05
+
+I don't have a great deal of Python knowledge, so when I was assigned to the user story dealing with device filtering to make sure everything worked, I was a bit skeptical about how I was going to solve the problem. I was a bit skeptical about how I was going to solve the problem, but I was lucky that Mike had already done this for his device, so I was able to learn how to do it from his code
+
 14/05
 
 Today I learned how to write a POA, even though I didn't know what it was. By doing my research, I learned how to create one

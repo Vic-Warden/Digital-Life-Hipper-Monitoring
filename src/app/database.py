@@ -71,6 +71,7 @@ class Database:
             return None
         # Execute the query and fetch the results
         try:
+            self._connection.autocommit = True
             cursor = self._connection.cursor()
             cursor.execute(query, params)
             result = cursor.fetchall()
@@ -98,10 +99,10 @@ db = Database(
     database="hipperdb"
 )
 
-query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
-params = (1, "george", "george@gmail.com", "admin123")
-result = db.do_query(query, params)
-print(result)
+# query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
+# params = (2, "hipper", "hipper@gmail.com", "admin123")
+# result = db.do_query(query, params)
+# print(result)
 
 query = "SELECT * FROM patient"
 params = ()

@@ -7,6 +7,7 @@ This is a simple Flask web application that provides the user with simple paths 
 * `/`
 * `/home`
 * `/login`  
+* `/logout` 
 
 ---
 
@@ -17,20 +18,27 @@ This is a simple Flask web application that provides the user with simple paths 
 Description :
 
 In this code, the redirect_to_home() function redirects users to the home page `/home` when they access the site root `/`
-The home() function displays the home.html page when a user accesses the `/home` URL.
+The `/home` route is protected and accessible only if a user is logged in
 
 ```python
 # Route for the home page
 @app.route('/')
 def redirect_to_home():
+    
     # Redirection to the home page by default
     return redirect('/home')
 
 # Home's route
 @app.route('/home')
 def home():
-    # Render the home.html
-    return render_template('home.html')
+    # if connected
+    if 'user' in session:
+        
+        # Render the home.html
+        return render_template('home.html', user=session['user'])
+    else:
+        # If user is not logged in, redirects to login page
+        return redirect('/login')
 ```
 
 ### 2. Request the user & password and define /login route
@@ -56,7 +64,24 @@ def login():
         # Render the login.html
         return render_template('login.html')
 ```
+
+### 2. End a User Session
+
 Description :
+
+The `/logout` route accepts only `POST` requests. It removes the user data from the session  then redirects them to the `login` page
+
+```python
+# Logout's route with POST methods
+@app.route('/logout', methods=['POST'])
+def logout():
+    
+    # ends the user's session
+    session.pop('user', None)
+    
+    # Redirection to the login if logout
+    return redirect('/login') 
+```
 
 It then gets ran on port 6001
 ```python

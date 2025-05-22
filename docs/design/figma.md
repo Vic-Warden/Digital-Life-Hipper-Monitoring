@@ -84,3 +84,115 @@ Video on how to create hover effect on button: [Create a Button With a HOVER Fun
 
 ## Dark mode
 To switch to dark mode, there is a button under the profile page where settings can be changed. One of these settings is a button to switch between dark and regular themes. 
+
+## Interaction with the prototype
+To allow users to experience and test the flow of the app, the Prototype tab in Figma is used to link frames and create interactive elements. By connecting buttons, menus, and other components to their respective screens or actions, designers can simulate real user interactions, enabling more effective testing and feedback during the design process.
+
+![interactivePrototype](../assets/Figma/InteractivePrototype.png)
+
+### Steps to make interactive prototype
+
+1. Design Your Frames
+
+- Use Frames to represent individual screens.
+- Design components (buttons, inputs, images) on each frame.
+
+2. Switch to the Prototype Tab
+
+- Click the Prototype tab in the right-hand panel (next to "Design")
+
+3. Add Interactions
+
+- Select a UI element (like a button).
+- You’ll see a circular node (⚪) appear on the right edge.
+- Drag this node to the frame you want to navigate to.
+- Select the interaction setting you want.
+
+4. Set a Starting Frame
+
+- Click on the frame you want to start at and add Flow starting point.
+
+5. Preview Your Prototype
+
+- Click the Play button at the top-right to open the prototype in presentation mode.
+
+### References
+- Chatgpt was used to figure out the process with the starting flow.
+
+## Layout of the application
+To make sure that user with or without experience using applications like this can understand how this works. We decided to make the layout of the application as simple as possible, so users will easily understand how to use the application and where they can find the key information they need. 
+
+![LayoutApp](../assets/Figma/LayoutApp.png)
+
+### Design choices made for the application
+
+1. The colors used in the design are the colors used for the official Hipper website. This was decided after talking with the product owner and the team about it.
+
+2. The homepage is used to display personal information in graphs, so patients can see their progress.
+
+3. On the profile, there are different settings such as dark mode, larger font size, and the option to change the site’s language, allowing users to customize their experience according to their preferences.
+
+4. The design was made as simple as possible to make the application easy to use.
+
+### Feedback from product owner
+- The design is boring. Try to make more fun and more engaging to use.
+- Look into how the data should be visualized (From the user point of view), so it's easy to understand for both the users and the therapist and looking at only graphs is boring. 
+- Make a page to the goal of the user, or put it on the homepage.
+- try making reminders or notifications for the client that they have or haven't reached their goal yet.
+
+### References
+- Figma is used to make the interactive prototype.
+- Chatgpt was used to help with figuring out how to make some functionalities in figma.
+- also some youtube video's are used to figure out some of the functionalities.
+
+This video is watched at speed 0.25:  [Navigation Hover Effect in one minute using Figma](https://www.youtube.com/watch?v=CnJIfQRur28)
+
+Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
+
+## Responsive design
+To make sure user can visit the website from multiple devices different tailored layouts for different devices were made to ensure a consistent visual experience and usability across all platforms. For this design there was decided to make a desktop version and a mobile version in figma.
+
+![ResponsiveDesign](../assets/Figma/ResponsiveDesign.png)
+
+### Steps for making Responsive design.
+
+1. Go to the prototype tab in figma and choose for which device you want to make a prototype.
+
+2. Make a frame with the dimensions of this device.
+
+3. Change your normal design in a way it fits on the device.
+
+4. Check if both designs have a consistent visual experience.
+
+5. Click on the play button to see the prototype.
+
+### Working with constraints
+There is also another way to make the figma pages responsive. Working with constraints will make it possible to make your normal page responsive.
+
+### Steps for working with constraints
+
+1. Select a Frame as Your Device:
+
+- Add a new frame.
+- Choose a preset size (Desktop or Phone etc.).
+
+2. Place Your Elements Inside the Frame:
+
+- Add components to the frame.
+
+3. Set Constraints on Each Element:
+
+- Select an element inside the frame.
+- In the **right-hand panel**, find the **Constraints** section.
+- Set how the element should behave when the frame resizes.
+
+4. Resize the Frame to Test Responsiveness:
+
+- Drag the frame’s edges or change width in the right panel.
+- You’ll see how elements stretch, stick, or reposition.
+
+### References
+- Chatgpt was used figuring out how to work with constraints.
+- Youtube video's were also used for helping to understand how to work with constraints.
+
+Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)

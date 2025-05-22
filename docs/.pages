@@ -12,6 +12,7 @@ nav:
         - Figma: design/uxTesting
     - Frontend:
         - PowerBI: frontend/powerBI
+        - Web Page: web_page/template
     - Learning story's: 
         - Bryan: learning/journalBryan
         - Darian: learning/journalDarian
@@ -20,4 +21,5 @@ nav:
         - Mike: learning/journalMike
         - Richard: learning/journalRichard
         - Victor: learning/journalVictor
-
+    - Research: 
+        - Old Research Redo: Research/Research_redo

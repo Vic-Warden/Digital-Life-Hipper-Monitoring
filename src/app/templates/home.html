@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blank Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/home.css" />
+  <link rel="stylesheet" href="../static/css/navbar.css" />
+</head>
+<body>
+
+  <!-- Content goes here -->
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <h1>HIPPER THERAPEUTICS</h1>
+      </div>
+      <div class="user-controls">
+        <button class="settings-btn">
+          <img src="../static/images/settings-icon.svg" alt="Settings" />
+        </button>
+        <div class="user-profile">
+          <span>Marianne Elsenbeek</span>
+          <img class="avatar" src="../static/images/profile-avatar.jpg" alt="User profile" />
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard">
+      <!-- Left Panel - Daily Stats, these include the mood, steps and activity -->
+      <section class="stats-panel">
+        <div class="mood-indicator">
+          <img src="../static/images/emoji-smile.svg" alt="Happy mood" class="mood-emoji" />
+        </div>
+        
+        <div class="stat-divider"></div>
+        
+        <div class="stat-item">
+          <div class="stat-icon steps-icon">
+            <img src="../static/images/footsteps.svg" alt="Steps" />
+          </div>
+          <div class="stat-value">
+            <span class="value">1,663</span>
+            <span class="unit">steps</span>
+          </div>
+        </div>
+        
+        <div class="stat-divider"></div>
+        
+        <div class="stat-item">
+          <div class="stat-icon activity-icon">
+            <img src="../static/images/activity.svg" alt="Activity" />
+          </div>
+          <div class="stat-value">
+            <span class="value">18</span>
+            <span class="unit">minutes</span>
+          </div>
+        </div>
+      </section>
+            <!-- Middle Panel - Weekly Score, this is a overall pie chart that will showcase the progress during the week -->
+      <section class="score-panel">
+        <h2>Weekly Movement Score</h2>
+        <div class="progress-circle">
+          <svg viewBox="0 0 36 36" class="circular-chart">
+            <path class="circle-bg" d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path class="circle-progress" stroke-dasharray="62, 100" d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <div class="progress-value">
+            <span class="current">370</span>
+            <span class="separator">/</span>
+            <span class="target">600</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel - Personal Goals, here you will a see quick overview of your goals and how close you are to reaching them -->
+      <section class="goals-panel">
+        <h2>Personal Goals</h2>
+        
+        <!-- Daily Goal -->
+        <div class="goal-item">
+          <div class="goal-header">
+            <span class="goal-title">Daily Goal</span>
+            <span class="goal-streak">3 day streak</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 47%;"></div>
+          </div>
+          <div class="goal-progress">
+            <span>40 / 85</span>
+          </div>
+        </div>
+        
+        <!-- Weekly Goal -->
+        <div class="goal-item">
+          <div class="goal-header">
+            <span class="goal-title">Weekly Goal</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 25%;"></div>
+          </div>
+          <div class="goal-progress">
+            <span>153 / 600</span>
+          </div>
+        </div>
+        
+        <!-- Monthly Goal -->
+        <div class="goal-item">
+          <div class="goal-header">
+            <span class="goal-title">Monthly Goal</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 6%;"></div>
+          </div>
+          <div class="goal-progress">
+            <span>153 / 2400</span>
+          </div>
+        </div>
+      </section>
+
+
+  <script src="../static/js/home.js"></script>
+  <script src="../static/js/navbar.js"></script>
+</body>
+</html>

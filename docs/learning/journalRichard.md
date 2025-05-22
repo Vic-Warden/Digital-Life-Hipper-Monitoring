@@ -47,3 +47,102 @@ This video is watched at speed 0.25:  [Navigation Hover Effect in one minute usi
 Video on how to create hover effect on button: [Create a Button With a HOVER Functionality in 128 SECONDS (Figma Tutorial)](https://www.youtube.com/watch?v=AHBEpMD2dZ0)
 
 Link to figma: [This is the link to figma](https://www.figma.com/design/uE1Wi3VC106f8T5ExqMtoD/School-Projects?node-id=598-2&p=f&t=kHiMl6c36qMbgXLQ-0)
+
+## Learning Story 186
+As a student I want to learn how to work with constraints on figma, so I can make the design responsive.
+
+### What I have learned.
+To make the pages on figma responsive, so user can also see you visual of the app when using another device I have to learn how to work with constraints. Contraints control how the elements behave when the frame or screen they are in is resized. This is essential for making a responsive design. To learn how to do this I started learning it using youtube video's and asking some simple questions on chatgpt. After gaining some insights on how to work with constraints I started working with them on the homepage of the design in figma. After working on in for some time I finally got some on the elements to be responsive when resizing the page. The only problem was the images of the graphs on the page. I wanted them to be under eachother when resizing, but no matter what I did I couldn't get it to work. After working with the constraints I learned how to use it on the elements to make them responsive. I think the problem with the graphs was to positioning of them in the normal design. I will look into that further when I will be working on the design again. 
+
+![Responsive1](../assets/Figma/ResponsiveDesign1.png)
+![Responsive1](../assets/Figma/ResponsiveDesign2.png)
+
+### Steps for work with constraints.
+
+1. Select a Frame as Your Device:
+
+- Add a new frame.
+- Choose a preset size (Desktop or Phone etc.).
+
+2. Place Your Elements Inside the Frame:
+
+- Add components to the frame.
+
+3. Set Constraints on Each Element:
+
+- Select an element inside the frame.
+- In the **right-hand panel**, find the **Constraints** section.
+- Set how the element should behave when the frame resizes.
+
+4. Resize the Frame to Test Responsiveness:
+
+- Drag the frame’s edges or change width in the right panel.
+- You’ll see how elements stretch, stick, or reposition.
+
+### References
+- Chatgpt was used figuring out how to work with constraints.
+- Youtube video's were also used for helping to understand how to work with constraints.
+
+Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)
+
+## Learning Story 187
+As a student, I want to be able to make reusable components, so I can speed up my workflow and avoid repeating the same design work.
+
+### What I have learned
+I want to learn how to create reusable components in Figma to make my design process faster and more consistent. This will help me avoid repeating the same work and make updates more efficient across my designs. For this design in created a reusable navbar and buttons, so I can use them on all the pages needed and easily change all the buttons used when only changing the component itself. To figure out how to make these components I first asked chatgpt for clear instructions. After following all the steps chat gave I made the components needed for the design.
+
+![Component](../assets/Figma/ReusableComponent.png)
+
+### Steps to make component
+
+1. Design an element.
+
+2. Select the element, right-click, and choose "Create component" or press Cmd/Ctrl + Alt + K.
+
+3. Name the component.
+
+4. Use the component by dragging instances from the Assets panel or copy-pasting it across frames/pages.
+
+5. When you followed all the steps above you should be able to change all copy of this component when you only make a change to the main component.
+
+### References
+- Chatgpt was used to figure out the steps on how to make components in figma.
+
+## Learning story 195
+As a student, I want to understand and implement a many-to-many relationship in our database design so that I can correctly model real-world interactions between patients and therapists.
+
+### What I have learned
+I wanted to learn how to create a junction table to represent a many-to-many relationship, so I started by creating the patient and therapist tables in MySQL Workbench. Then, using the relationship tools from the toolbar, I created a junction table called patient_has_therapist, where I linked the primary keys from both tables and set them as a composite primary key to accurately model the relationship.
+
+![Relationship](../assets/LearningStory195.png)
+
+### Steps to create junction table (for Many-to-Many Relationship)
+
+1. Open Your EER Diagram.
+
+2. Add the Two Main Tables.
+
+- Create the tables you for the many-to-many relationship.
+
+3. Use the Relationship Tool to Create the Junction Table.
+
+- Select the “Many-to-Many Non-Identifying Relationship” tool from the vertical toolbar (dashed line with crow’s feet at both ends).
+- Click first on the first table (e.g., patient), then on the second table (e.g., therapist).
+- MySQL Workbench will automatically create a junction table (e.g., patient_has_therapist) and add the necessary foreign key relationships to both original tables.
+
+4. Edit the Junction Table.
+
+- Double-click the auto-created table.
+
+**Verify**
+
+- It has the two columns needed.
+- Both are foreign keys referencing their respective tables.
+- Both are part of the composite primary key (check the PK boxes).
+- Check if both keys are NN (Not Null).
+
+5. Save Your Work.
+
+### References
+- One of my team members helped me with understanding how to create the junction table.
+- Chatgpt was used to help created the Steps to create junction table.

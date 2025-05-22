@@ -1,0 +1,24 @@
+# Backend Architecture Overview
+
+>The backend of the web application is designed using a containerized approach powered by **Docker**. It integrates several key components to ensure modularity, scalability, and maintainability:
+
+Docker services:
+* **Flask** (Framework)
+* **Apache** (Server/Proxy)
+* **Mysql** (Database)
+
+>**Flask**: Serves as the primary backend framework. It handles:
+>* Routing
+>* API Endpoints
+>* User Authentication
+>* Business Logic
+
+ The reason for its use is mainly due to priorities. Our goal for this project is to create an artificial intelligence-powered web application which displays the movement data of a person who wears the Hipper device. Incorporating AI into this project is a challenge as it has not been done before. There is no documentation and no premade dataset, therefore it will take some time to get everything prepared and ready for training. The uncertainty of the speed of our progression in this field led us to go with a familiar back-end technology, so that we can be certain that there will be enough time for us to develop a capable AI model.
+
+>**Apache**: Acts as a **reverse proxy** and **web server**, forwarding client requests to the Flask application via **mod_wsgi**.
+
+We choose to use **Apache** as the web server and reverse proxy mainly because it’s something we know well and can count on. Since our main focus is on building the core features of the web app, we don't want to spend too much time figuring out new tools. Apache has been around for a long time, it’s reliable, and there’s plenty of documentation for it. With all the unknowns that come with developing the AI side of things, it makes sense to stick with something solid and familiar for the server setup.
+
+>**MySQL**: A relational database system used to store and manage user data, movement progress records, and any other application-specific information.
+
+We went with **MySQL** for the database because it’s a solid, familiar choice that just works. It handles everything we need for storing and managing user data without adding extra complexity. Since we’re already tackling a big challenge with the AI side of the project, we don't want to experiment with new or overly complex database systems. MySQL is well-documented, easy to use, and fits right into our stack without any surprises—perfect for keeping things simple while we focus on the harder parts.

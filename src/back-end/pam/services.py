@@ -3,7 +3,9 @@ from PAM_2001 import PAM_2001
 from PAM_2002 import PAM_2002
 from PAM_2101 import PAM_2101
 from PAM_2102 import PAM_2102
-from PAM_2103 import PAM_2103
+from PAM_2103_day_detailed import PAM_2103_Day_Detailed
+from PAM_2103_day_data import PAM_2103_Day_Data
+from PAM_2102 import get_days_bytes
 import json
 from PAM_2102 import get_detailed_request
 
@@ -90,7 +92,7 @@ class ActivityDownload:
         asyncio.run(self.run(filename))
 
     async def run(self, filename):
-        pam = PAM_2103(file_uuid=self.file_uuid,
+        pam = PAM_2103_Day_Detailed(file_uuid=self.file_uuid,
                        download_uuid=self.download_uuid,
                        filename=filename,
                        filelength=self.filelength,
@@ -151,3 +153,32 @@ class write_pam_settings:
                         new_adv_byte = 0x15,       # encodes 5 → 546.25 ms (lower four bits = 5, multiplier=0)
                         new_conn_ms = 50.0
         )
+
+class DayDataDownload:
+    def __init__(self, filename, days, label_id = None):
+        self.label_id = None
+        self.label_id = label_id
+
+        # UUID for ActivityFile is 2102
+        self.base_uuid = base_uuid
+
+        self.days = get_days_bytes(days)
+        print(f"days bytes = {self.days}")
+
+        self.file_uuid_extension = "2102"
+        self.file_uuid = self.base_uuid.replace("XXXX", self.file_uuid_extension)
+
+        self.download_uuid_extension = "2103"
+        self.download_uuid = self.base_uuid.replace("XXXX", self.download_uuid_extension)
+
+
+        # Run the PAM_2102 script to send the command and confirm transmission
+        asyncio.run(self.run(filename))
+
+    async def run(self, filename):
+        pam = PAM_2103_Day_Data(file_uuid=self.file_uuid,
+                       download_uuid=self.download_uuid,
+                       filename=filename,
+                       filelength=self.days,
+                       adres=get_address_by_label(self.label_id))
+        await pam.run()

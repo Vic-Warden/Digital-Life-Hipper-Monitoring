@@ -26,58 +26,96 @@ class PAM_2103_Day_Data():
         self.received_blocks[block_number] = payload
         print(f"Received block #{block_number} with {len(payload)} bytes \n {data}")
 
+    # def parse_detailed_data_blocks(self, received_blocks):
+    #     all_bytes = b''.join(received_blocks[k] for k in sorted(received_blocks.keys()))
+    #     records = []
+    #
+    #     for i in range(0, len(all_bytes), 8):
+    #         data = all_bytes[i : i + 8]
+    #
+    #         if len(data) < 8:
+    #             break
+    #
+    #         # Steps
+    #         steps = data[1] << 8 | data[0]
+    #
+    #         # Activity Score
+    #         activity_score = data[3] << 8 | data[2]
+    #
+    #         # Zone 3 Time (sport)
+    #         zone3_low = data[4]
+    #         zone3_high = (data[5] >> 7) & 0x01
+    #         zone3_time = (zone3_high << 8) | zone3_low
+    #
+    #         # Zone 2 Time (health)
+    #         zone2_low = data[5] & 0x7F
+    #         zone2_high = (data[6] >> 4) & 0x0F
+    #         zone2_time = (zone2_high << 7) | zone2_low
+    #
+    #         # Zone 1 Time (living)
+    #         zone1_low = data[6] & 0x0F
+    #         zone1_high = data[7]
+    #         zone1_time = (zone1_high << 4) | zone1_low
+    #
+    #         records.append({
+    #             "Steps": steps,
+    #             "Activity Score": activity_score,
+    #             "Zone 3 (Sport, min)": zone3_time,
+    #             "Zone 2 (Health, min)": zone2_time,
+    #             "Zone 1 (Living, min)": zone1_time
+    #         })
+    #
+    #     return records
     def parse_detailed_data_blocks(self, received_blocks):
-        all_bytes = b''.join(received_blocks[k] for k in sorted(received_blocks.keys()))
-        records = []
+        # Exclude header block (block number 0)
+        data_blocks = {
+            k: v for k, v in received_blocks.items() if k != 0
+        }
 
+        # Concatenate in ascending block-number order
+        all_bytes = b''.join(data_blocks[k] for k in sorted(data_blocks.keys()))
+
+        # If total length isn't a multiple of 8, warn and drop trailing bytes
+        total_len = len(all_bytes)
+        if total_len % 8 != 0:
+            # You can log or print a warning here if desired
+            all_bytes = all_bytes[: (total_len // 8) * 8]
+
+        records = []
         for i in range(0, len(all_bytes), 8):
             chunk = all_bytes[i : i + 8]
 
-            if len(chunk) < 8:
-                break
+            # Steps (little-endian)
+            steps = chunk[1] << 8 | chunk[0]
 
-            steps = chunk[0] | (chunk[1] << 8)
-            score = chunk[2] | (chunk[3] << 8)
+            # Activity Score (little-endian)
+            activity_score = chunk[3] << 8 | chunk[2]
 
-            zone3_low = chunk[4]
-            zone3_high = (chunk[5] & 0x80) >> 7
-            zone3 = (zone3_high << 8) | zone3_low
+            # Zone 3 Time (sport)
+            zone3_low  = chunk[4]
+            zone3_high = (chunk[5] >> 7) & 0x01
+            zone3_time = (zone3_high << 8) | zone3_low
 
-            zone2_low = chunk[5] & 0x7F
-            zone2_high = (chunk[6] & 0xF0) >> 4
-            zone2 = (zone2_high << 7) | zone2_low
+            # Zone 2 Time (health)
+            zone2_low  = chunk[5] & 0x7F
+            zone2_high = (chunk[6] >> 4) & 0x0F
+            zone2_time = (zone2_high << 7) | zone2_low
 
-            zone1_low = chunk[6] & 0x0F
+            # Zone 1 Time (living)
+            zone1_low  = chunk[6] & 0x0F
             zone1_high = chunk[7]
-            zone1 = (zone1_high << 4) | zone1_low
-
-            # # Byte 0 and 1: step count (little endian)
-            # steps = int.from_bytes(chunk[0:2], 'little')
-            #
-            # # Byte 2 and 3: activity score (little endian)
-            # score = int.from_bytes(chunk[2:4], 'little')
-            #
-            # # Zone 3 (sport) time in minutes (9-bit value):
-            # # Byte 4 = lower 8 bits, Byte 5 (bit 0) = upper 1 bit
-            # zone3 = chunk[4] + ((chunk[5] & 0x01) << 8)
-            #
-            # # Zone 2 (health) time in minutes (11-bit value):
-            # # Byte 5 (bits 1-7) = lower 7 bits, Byte 6 (bits 0-3) = upper 4 bits
-            # zone2 = ((chunk[5] >> 1) & 0x7F) + ((chunk[6] & 0x0F) << 7)
-            #
-            # # Zone 1 (living) time in minutes (12-bit value):
-            # # Byte 6 (bits 4-7) = lower 4 bits, Byte 7 = upper 8 bits
-            # zone1 = ((chunk[6] >> 4) & 0x0F)
+            zone1_time = (zone1_high << 4) | zone1_low
 
             records.append({
                 "Steps": steps,
-                "Activity Score": score,
-                "Zone 3 (Sport, min)": zone3,
-                "Zone 2 (Health, min)": zone2,
-                "Zone 1 (Living, min)": zone1
+                "Activity Score": activity_score,
+                "Zone 3 (Sport, min)": zone3_time,
+                "Zone 2 (Health, min)": zone2_time,
+                "Zone 1 (Living, min)": zone1_time
             })
 
         return records
+
 
     def display_records(self, records, base_date):
         # Ensure base_date is a date (in case someone passes datetime)

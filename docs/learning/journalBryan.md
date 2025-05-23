@@ -1,7 +1,7 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Bryan van Riesen. 
 
-## Learning story 1
+## Learning story
 As a student I want to learn how the communication with the hipper device functions and how that can be implemented, so that I can use this information to communicate with the hipper divce 
 
 ### Learned
@@ -13,7 +13,7 @@ I implemented a part of this communication by making a BLE connection with the h
 
 This implementation shows my understanding of the BLE communication with the hipper device and that I understand how to use the device. 
 
-## Learning story 2
+## Learning story
 As a student I want to learn how I can pull raw data from the hipper monitor so that we can create datasets using the raw accelerometer data.
 
 ### Learned
@@ -70,3 +70,34 @@ self.RAW_DATA_UUID = "033AFFAD-6778-4112-AC5C-15265F21ED94"
 self.MEASUREMENT_PERIOD_UUID = "033AFFAE-6778-4112-AC5C-15265F21ED94"
 ```
 These are ofcourse a lot different then what we use and are able to use at this point in time, wich means that I can conclude that we need the other software that is used by the developer to be able to read out the raw sensor data. This sensor we will get somewhere this week so that we can continue testing and make use of the raw sensor data. 
+
+## Learning story
+As a student I want to learn how I can use jupyter to create graphs and visualise data from csv datasets so that I can easily visualise the data that we get from the Hipper devices. 
+
+### Learned
+I have learned how I can use Jupyter notebook with python to generate graphs and tables of data that can visualize these datasets. I learned the basics by making use of a tuturial made by Pryke (2025). With this I installed Jupyter and did some simple tests to get familliar with it. After that I found a video by (Robot Squirrel Productions, 2021) that explains how you can create graphs by combining the python librarie pandas with csv files, wich is the format of data that we have. With this I was able to create the following end results of graphs and tables of a comparisson of data with the different sensors. ![image](../assets/ResearchRedo/LongTermResults.png) <br />
+A code snippet of the merging and generation of the first graph visible in the picture:
+```python
+# Merge all data on Timestamp
+from functools import reduce
+merged = reduce(lambda left, right: pd.merge(left, right, on="Timestamp"), dfs.values())
+
+# Plot Steps for all sensors
+plt.figure(figsize=(14, 6))
+for name in sensor_files:
+    plt.plot(merged["Timestamp"], merged[f"Steps_{name}"], label=f"{name} Steps")
+plt.title("Steps Comparison Across Sensors")
+plt.xlabel("Time")
+plt.ylabel("Steps")
+plt.legend()
+plt.grid(True)
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+With these results I now know how to visualize csv data using jupyter notebook. 
+
+# Sources
+Pryke, B. (2025, 19 mei). How to Use Jupyter Notebook: A Beginner’s Tutorial. Dataquest. https://www.dataquest.io/blog/jupyter-notebook-tutorial/
+
+Robot Squirrel Productions. (2021, 21 december). How to Plot CSV Data in Python Using Pandas [Video]. YouTube. https://www.youtube.com/watch?v=y43_o2OnI68

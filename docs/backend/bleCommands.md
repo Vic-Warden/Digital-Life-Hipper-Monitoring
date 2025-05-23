@@ -171,7 +171,7 @@ these bytes were determined by the following logic from the PAM device documenta
 the PAM_2103_day_data code is used when we want to download the dayily zone data from a pam device instead of the detailed minute by minute data from a day.<br>
 If a therapist wants to see how much a patient was sitting around for a day then this data can show that<br>
 <br>
-for this the DayDataDownload class can be used can be used as follows:<br>
+for this the DayDataDownload class can be used as follows:<br>
 this code snippets shows how to download "10" days of daily data into file "output/dayData_90242" from the pam device with the label "90242"
 ````python
 from services import DayDataDownload

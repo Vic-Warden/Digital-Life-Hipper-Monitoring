@@ -182,8 +182,23 @@ DayDataDownload(filename="output/dayData_90242",
 ````
 this function works the same as the dat detailed download code with the only changes being the parsing of the data.<br>
 the data exists of a header and 8 bytes per day of data.<br>
-each day of data needs to be unpacked as follows:
-
+<br>
+each day of data needs to be unpacked according to the following struct:<br>
+This is detailed in the "Pam_BLE_Spec_V1_8" documentation provided by Michel Oey on page 4 and 5 in the File Request format and Activity File Format paragraphs.<br>
+<br>
+````C
+typedef struct {
+uint8 date index : 5;
+uint16 living_zone : 11;
+uint16 health_zone : 10;
+uint16 sport_zone : 9;
+uint16 pam_score : 13;
+uint16 steps;
+} pamData_t;
+````
+from top to bottom (bit 0 to 64) each of these elements from the struct takes up the amount of bits that is detailed on the right of it.<br>
+<br>
+all 8-byte chunks from the incomming data are then parsed and stored into the provided .csv file for later use
 
 ## 2103 Day Detailed Download
 

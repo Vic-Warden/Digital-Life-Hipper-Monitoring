@@ -198,7 +198,40 @@ uint16 steps;
 ````
 from top to bottom (bit 0 to 64) each of these elements from the struct takes up the amount of bits that is detailed on the right of it.<br>
 <br>
-all 8-byte chunks from the incomming data are then parsed and stored into the provided .csv file for later use
+all 8-byte chunks from the incomming data are then parsed and stored into the provided .csv file for later use<br>
+<br>
+I used ChatGPT to make my code look clean and well commented<br>
+````python
+        for i in range(0, len(all_bytes), 8):
+            chunk = all_bytes[i: i + 8]
+
+            # --- First 2 bytes: [ date_index (5 bits) | living_zone (11 bits) ] ---
+            first_word = chunk[0] | (chunk[1] << 8)
+            zone1_time = (first_word >> 5) & 0x7FF  # Living Zone (11 bits)
+
+            # --- Next 4 bytes: [ health_zone (10 bits) | sport_zone (9 bits) | pam_score (13 bits) ] ---
+            second_dword = (
+                    chunk[2]
+                    | (chunk[3] << 8)
+                    | (chunk[4] << 16)
+                    | (chunk[5] << 24)
+            )
+            zone2_time = second_dword & 0x3FF  # Health Zone (10 bits)
+            zone3_time = (second_dword >> 10) & 0x1FF  # Sport Zone (9 bits)
+            activity_score = (second_dword >> 19) & 0x1FFF  # PAM Score  (13 bits)
+
+            # --- Last 2 bytes: steps (uint16 little-endian) ---
+            steps = chunk[6] | (chunk[7] << 8)
+
+            records.append({
+                "Steps": steps,
+                "Activity Score": activity_score,
+                "Zone 3 (Sport)": zone3_time,
+                "Zone 2 (Health)": zone2_time,
+                "Zone 1 (Living)": zone1_time
+            })
+````
+
 
 ## 2103 Day Detailed Download
 

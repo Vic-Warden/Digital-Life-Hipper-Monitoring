@@ -122,7 +122,7 @@ class PAM_2103_Day_Data():
         if isinstance(base_date, datetime):
             base_date = base_date.date()
 
-        filename = f"activity_{base_date.isoformat()}.csv"
+        filename = f"{self.filename}.csv"
         with open(filename, mode='w', newline='') as csvfile:
             fieldnames = [
                 "Date",

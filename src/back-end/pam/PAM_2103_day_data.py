@@ -36,13 +36,6 @@ class PAM_2103_Day_Data():
         # Concatenate in ascending block-number order
         all_bytes = b''.join(data_blocks[k] for k in sorted(data_blocks.keys()))
 
-        # # If total length isn't a multiple of 8, warn and drop trailing bytes
-        # total_len = len(all_bytes)
-        # # if total_len % 9 != 0:
-        # #     # You can log or print a warning here if desired
-        # #     # all_bytes = all_bytes[: (total_len // 8) * 8]
-        # #     print("-------------------")
-        # #     print(len(all_bytes))
         print("-------------------real length")
         print(len(all_bytes))
 
@@ -71,9 +64,9 @@ class PAM_2103_Day_Data():
             records.append({
                 "Steps": steps,
                 "Activity Score": activity_score,
-                "Zone 3 (Sport, min)": zone3_time,
-                "Zone 2 (Health, min)": zone2_time,
-                "Zone 1 (Living, min)": zone1_time
+                "Zone 3 (Sport)": zone3_time,
+                "Zone 2 (Health)": zone2_time,
+                "Zone 1 (Living)": zone1_time
             })
 
         return records
@@ -90,30 +83,30 @@ class PAM_2103_Day_Data():
                 "Date",
                 "Steps",
                 "Activity Score",
-                "Zone 3 (Sport, min)",
-                "Zone 2 (Health, min)",
-                "Zone 1 (Living, min)"
+                "Zone 3 (Sport)",
+                "Zone 2 (Health)",
+                "Zone 1 (Living)"
             ]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
             for idx, rec in enumerate(records):
-                record_date = (base_date - timedelta(days=len(records))) + timedelta(days=idx)
+                record_date = (base_date - timedelta(days=len(records))) + timedelta(days=idx + 1)
                 row = {
                     "Date": record_date.isoformat(),
                     "Steps": rec["Steps"],
                     "Activity Score": rec["Activity Score"],
-                    "Zone 3 (Sport, min)": rec["Zone 3 (Sport, min)"],
-                    "Zone 2 (Health, min)": rec["Zone 2 (Health, min)"],
-                    "Zone 1 (Living, min)": rec["Zone 1 (Living, min)"],
+                    "Zone 3 (Sport)": rec["Zone 3 (Sport)"],
+                    "Zone 2 (Health)": rec["Zone 2 (Health)"],
+                    "Zone 1 (Living)": rec["Zone 1 (Living)"],
                 }
 
                 print(f"Record {idx+1} — Date: {record_date.isoformat()}")
                 print(f"    Steps: {rec['Steps']}")
                 print(f"    Activity Score: {rec['Activity Score']}")
-                print(f"    Zone 3 (Sport)  : {rec['Zone 3 (Sport, min)']} min")
-                print(f"    Zone 2 (Health) : {rec['Zone 2 (Health, min)']} min")
-                print(f"    Zone 1 (Living) : {rec['Zone 1 (Living, min)']} min\n")
+                print(f"    Zone 3 (Sport)  : {rec['Zone 3 (Sport)']} min")
+                print(f"    Zone 2 (Health) : {rec['Zone 2 (Health)']} min")
+                print(f"    Zone 1 (Living) : {rec['Zone 1 (Living)']} min\n")
 
                 writer.writerow(row)
 

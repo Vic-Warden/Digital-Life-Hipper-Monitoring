@@ -88,6 +88,29 @@ simple feedback on whether the request was successful.
 <br>
 <br>
 <br>
+
+### day activity file duration
+if we want to request a day activity file, the high byte needs to be 0 and the low byte needs to reflect the amount of days you want to request.<br>
+(keep in that the 'newest' data is today, so if you request 1 day, you will simply only receive the data from today)<br>
+This is detailed in the "Pam_BLE_Spec_V1_8" documentation provided by Michel Oey on page 4 and 5 in the File Request format and Activity File Format paragraphs.<br>
+<br>
+in order to request a specific amount of days you simply need to include the days as an integer into the day file request function in the days argument<br>
+````python
+from services import DayDataDownload
+
+DayDataDownload(filename="output/dayData_90242",
+                 days=10,
+                 label_id=90242)
+````
+inside of the DayDataDownload constructor the following function is used to turn the int of days into a byte array that matches the device's requirements.<br>
+````python
+def get_days_bytes(days):
+    return bytearray([np.uint16(days), 0x00])
+````
+````python
+self.days = get_days_bytes(days)
+````
+
 #### File duration size
 in order to get a file we need to specify of how long we want data. sometimes we want to download the last hour of data, and sometimes we want to download the last
 <br><br>
@@ -143,6 +166,74 @@ these bytes were determined by the following logic from the PAM device documenta
 <br><br>use this logic to add a new identifier to the list if needed
 
 ## 2103
+
+## 2103 Day Data Download
+the PAM_2103_day_data code is used when we want to download the dayily zone data from a pam device instead of the detailed minute by minute data from a day.<br>
+If a therapist wants to see how much a patient was sitting around for a day then this data can show that<br>
+<br>
+for this the DayDataDownload class can be used as follows:<br>
+this code snippets shows how to download "10" days of daily data into file "output/dayData_90242" from the pam device with the label "90242"
+````python
+from services import DayDataDownload
+
+DayDataDownload(filename="output/dayData_90242",
+                 days=10,
+                 label_id=90242)
+````
+this function works the same as the day detailed download code with the only changes being the parsing of the data.<br>
+the data exists of a header and 8 bytes per day of data.<br>
+<br>
+each day of data needs to be unpacked according to the following struct:<br>
+This is detailed in the "Pam_BLE_Spec_V1_8" documentation provided by Michel Oey on page 4 and 5 in the File Request format and Activity File Format paragraphs.<br>
+<br>
+````C
+typedef struct {
+uint8 date index : 5;
+uint16 living_zone : 11;
+uint16 health_zone : 10;
+uint16 sport_zone : 9;
+uint16 pam_score : 13;
+uint16 steps;
+} pamData_t;
+````
+from top to bottom (bit 0 to 64) each of these elements from the struct takes up the amount of bits that is detailed on the right of it.<br>
+<br>
+all 8-byte chunks from the incomming data are then parsed and stored into the provided .csv file for later use<br>
+<br>
+I used ChatGPT to make my code look clean and well commented<br>
+````python
+        for i in range(0, len(all_bytes), 8):
+            chunk = all_bytes[i: i + 8]
+
+            # --- First 2 bytes: [ date_index (5 bits) | living_zone (11 bits) ] ---
+            first_word = chunk[0] | (chunk[1] << 8)
+            zone1_time = (first_word >> 5) & 0x7FF  # Living Zone (11 bits)
+
+            # --- Next 4 bytes: [ health_zone (10 bits) | sport_zone (9 bits) | pam_score (13 bits) ] ---
+            second_dword = (
+                    chunk[2]
+                    | (chunk[3] << 8)
+                    | (chunk[4] << 16)
+                    | (chunk[5] << 24)
+            )
+            zone2_time = second_dword & 0x3FF  # Health Zone (10 bits)
+            zone3_time = (second_dword >> 10) & 0x1FF  # Sport Zone (9 bits)
+            activity_score = (second_dword >> 19) & 0x1FFF  # PAM Score  (13 bits)
+
+            # --- Last 2 bytes: steps (uint16 little-endian) ---
+            steps = chunk[6] | (chunk[7] << 8)
+
+            records.append({
+                "Steps": steps,
+                "Activity Score": activity_score,
+                "Zone 3 (Sport)": zone3_time,
+                "Zone 2 (Health)": zone2_time,
+                "Zone 1 (Living)": zone1_time
+            })
+````
+
+
+## 2103 Day Detailed Download
 
 this code can be used by importing the services file and using the ````ActivityDownload()```` function
 

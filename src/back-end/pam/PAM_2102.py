@@ -2,9 +2,12 @@ import asyncio
 from bleak import BleakScanner, BleakClient
 from enum import Enum
 from typing import ByteString
+import numpy as np
+
+def get_days_bytes(days):
+    return bytearray([np.uint16(days), 0x00])
 
 #enumeration class datatype for activity file lengths lengths
-
 def get_detailed_request(name: str) -> bytearray:
     detailed_requests = {
         "LAST_15_MIN":    bytearray([0x01, 0x80]),

@@ -90,8 +90,8 @@ simple feedback on whether the request was successful.
 <br>
 
 ### day activity file duration
-if we want to request a day activity file, the the high byte needs to be 0 and the low byte needs to reflect the amount of days you want to request.<br>
-(keep in that the 'newest' dat is today, so if you request 1 day, you will simply only receive the data from today)<br>
+if we want to request a day activity file, the high byte needs to be 0 and the low byte needs to reflect the amount of days you want to request.<br>
+(keep in that the 'newest' data is today, so if you request 1 day, you will simply only receive the data from today)<br>
 This is detailed in the "Pam_BLE_Spec_V1_8" documentation provided by Michel Oey on page 4 and 5 in the File Request format and Activity File Format paragraphs.<br>
 <br>
 in order to request a specific amount of days you simply need to include the days as an integer into the day file request function in the days argument<br>
@@ -180,7 +180,7 @@ DayDataDownload(filename="output/dayData_90242",
                  days=10,
                  label_id=90242)
 ````
-this function works the same as the dat detailed download code with the only changes being the parsing of the data.<br>
+this function works the same as the day detailed download code with the only changes being the parsing of the data.<br>
 the data exists of a header and 8 bytes per day of data.<br>
 <br>
 each day of data needs to be unpacked according to the following struct:<br>

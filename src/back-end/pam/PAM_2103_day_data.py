@@ -24,48 +24,9 @@ class PAM_2103_Day_Data():
         block_number = int.from_bytes(data[:2], byteorder='little')
         payload = data[2:]
         self.received_blocks[block_number] = payload
-        print(f"Received block #{block_number} with {len(payload)} bytes \n {data}")
+        print(f"Received block #{block_number} with {len(payload)} bytes \n {payload}")
 
-    # def parse_detailed_data_blocks(self, received_blocks):
-    #     all_bytes = b''.join(received_blocks[k] for k in sorted(received_blocks.keys()))
-    #     records = []
-    #
-    #     for i in range(0, len(all_bytes), 8):
-    #         data = all_bytes[i : i + 8]
-    #
-    #         if len(data) < 8:
-    #             break
-    #
-    #         # Steps
-    #         steps = data[1] << 8 | data[0]
-    #
-    #         # Activity Score
-    #         activity_score = data[3] << 8 | data[2]
-    #
-    #         # Zone 3 Time (sport)
-    #         zone3_low = data[4]
-    #         zone3_high = (data[5] >> 7) & 0x01
-    #         zone3_time = (zone3_high << 8) | zone3_low
-    #
-    #         # Zone 2 Time (health)
-    #         zone2_low = data[5] & 0x7F
-    #         zone2_high = (data[6] >> 4) & 0x0F
-    #         zone2_time = (zone2_high << 7) | zone2_low
-    #
-    #         # Zone 1 Time (living)
-    #         zone1_low = data[6] & 0x0F
-    #         zone1_high = data[7]
-    #         zone1_time = (zone1_high << 4) | zone1_low
-    #
-    #         records.append({
-    #             "Steps": steps,
-    #             "Activity Score": activity_score,
-    #             "Zone 3 (Sport, min)": zone3_time,
-    #             "Zone 2 (Health, min)": zone2_time,
-    #             "Zone 1 (Living, min)": zone1_time
-    #         })
-    #
-    #     return records
+
     def parse_detailed_data_blocks(self, received_blocks):
         # Exclude header block (block number 0)
         data_blocks = {
@@ -75,36 +36,37 @@ class PAM_2103_Day_Data():
         # Concatenate in ascending block-number order
         all_bytes = b''.join(data_blocks[k] for k in sorted(data_blocks.keys()))
 
-        # If total length isn't a multiple of 8, warn and drop trailing bytes
-        total_len = len(all_bytes)
-        if total_len % 8 != 0:
-            # You can log or print a warning here if desired
-            all_bytes = all_bytes[: (total_len // 8) * 8]
+        # # If total length isn't a multiple of 8, warn and drop trailing bytes
+        # total_len = len(all_bytes)
+        # # if total_len % 9 != 0:
+        # #     # You can log or print a warning here if desired
+        # #     # all_bytes = all_bytes[: (total_len // 8) * 8]
+        # #     print("-------------------")
+        # #     print(len(all_bytes))
+        print("-------------------real length")
+        print(len(all_bytes))
 
         records = []
         for i in range(0, len(all_bytes), 8):
-            chunk = all_bytes[i : i + 8]
+            chunk = all_bytes[i: i + 8]
 
-            # Steps (little-endian)
-            steps = chunk[1] << 8 | chunk[0]
+            # --- First 2 bytes: [ date_index (5 bits) | living_zone (11 bits) ] ---
+            first_word = chunk[0] | (chunk[1] << 8)
+            zone1_time = (first_word >> 5) & 0x7FF  # Living Zone (11 bits)
 
-            # Activity Score (little-endian)
-            activity_score = chunk[3] << 8 | chunk[2]
+            # --- Next 4 bytes: [ health_zone (10 bits) | sport_zone (9 bits) | pam_score (13 bits) ] ---
+            second_dword = (
+                    chunk[2]
+                    | (chunk[3] << 8)
+                    | (chunk[4] << 16)
+                    | (chunk[5] << 24)
+            )
+            zone2_time = second_dword & 0x3FF  # Health Zone (10 bits)
+            zone3_time = (second_dword >> 10) & 0x1FF  # Sport Zone (9 bits)
+            activity_score = (second_dword >> 19) & 0x1FFF  # PAM Score  (13 bits)
 
-            # Zone 3 Time (sport)
-            zone3_low  = chunk[4]
-            zone3_high = (chunk[5] >> 7) & 0x01
-            zone3_time = (zone3_high << 8) | zone3_low
-
-            # Zone 2 Time (health)
-            zone2_low  = chunk[5] & 0x7F
-            zone2_high = (chunk[6] >> 4) & 0x0F
-            zone2_time = (zone2_high << 7) | zone2_low
-
-            # Zone 1 Time (living)
-            zone1_low  = chunk[6] & 0x0F
-            zone1_high = chunk[7]
-            zone1_time = (zone1_high << 4) | zone1_low
+            # --- Last 2 bytes: steps (uint16 little-endian) ---
+            steps = chunk[6] | (chunk[7] << 8)
 
             records.append({
                 "Steps": steps,

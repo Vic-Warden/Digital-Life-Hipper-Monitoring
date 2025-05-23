@@ -36,9 +36,6 @@ class PAM_2103_Day_Data():
         # Concatenate in ascending block-number order
         all_bytes = b''.join(data_blocks[k] for k in sorted(data_blocks.keys()))
 
-        print("-------------------real length")
-        print(len(all_bytes))
-
         records = []
         for i in range(0, len(all_bytes), 8):
             chunk = all_bytes[i: i + 8]
@@ -100,13 +97,6 @@ class PAM_2103_Day_Data():
                     "Zone 2 (Health)": rec["Zone 2 (Health)"],
                     "Zone 1 (Living)": rec["Zone 1 (Living)"],
                 }
-
-                print(f"Record {idx+1} — Date: {record_date.isoformat()}")
-                print(f"    Steps: {rec['Steps']}")
-                print(f"    Activity Score: {rec['Activity Score']}")
-                print(f"    Zone 3 (Sport)  : {rec['Zone 3 (Sport)']} min")
-                print(f"    Zone 2 (Health) : {rec['Zone 2 (Health)']} min")
-                print(f"    Zone 1 (Living) : {rec['Zone 1 (Living)']} min\n")
 
                 writer.writerow(row)
 

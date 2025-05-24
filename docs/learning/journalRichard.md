@@ -166,3 +166,7 @@ Feedback Mats:
 - Reviewer heeft nog een feedback gegeven en dat via de merge request gedaan.
 
 - Nog wel de tip gegeven om het gebruik van ChatGPT los te benoemen; niet in de bronnenlijst.
+
+After getting the feedback van Mats I started refining a user story I was working on that week to get the entire vertical slice. At that moment I was working on the navigation bar for the front-end. This user story was already a bit better then the one that I showed during the expert review. The only thing in that user story that was missing was the design part, so in the user story I added another acceptence criteria that's about design of the navbar in figma.
+
+![FullUserStory](../assets/UserStorySlice.png)

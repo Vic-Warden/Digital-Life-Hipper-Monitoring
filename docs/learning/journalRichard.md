@@ -146,3 +146,6 @@ I wanted to learn how to create a junction table to represent a many-to-many rel
 ### References
 - One of my team members helped me with understanding how to create the junction table.
 - Chatgpt was used to help created the Steps to create junction table.
+
+### Learning Story 210
+as a student, I want to learn how to make a user story with a complete vertical slice, so I can get all the requirements for the expert reviews.

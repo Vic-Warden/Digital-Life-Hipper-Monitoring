@@ -184,3 +184,5 @@ After getting the feedback van Mats I started refining a user story I was workin
 5. Ensure Full Stack Coverage.
 
 6. Review with the Team. 
+
+**Chatgpt was used with doing research on the steps to make the user story with the vertical slice**

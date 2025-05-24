@@ -170,3 +170,17 @@ Feedback Mats:
 After getting the feedback van Mats I started refining a user story I was working on that week to get the entire vertical slice. At that moment I was working on the navigation bar for the front-end. This user story was already a bit better then the one that I showed during the expert review. The only thing in that user story that was missing was the design part, so in the user story I added another acceptence criteria that's about design of the navbar in figma.
 
 ![FullUserStory](../assets/UserStorySlice.png)
+
+### Steps to make user story with vertical slice
+
+1. Think about what the user needs.
+
+2. Break Down into Vertical Slices.
+
+3. Write the User Story.
+
+4. Define Acceptance Criteria.
+
+5. Ensure Full Stack Coverage.
+
+6. Review with the Team. 

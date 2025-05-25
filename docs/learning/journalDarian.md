@@ -72,4 +72,9 @@ I explored how to use **Live Preview**, a Visual Studio Code extension, to view 
 - Open your project folder or create a new `.html` file (e.g., `index.html`).
 - Make sure your HTML file has basic structure (like `<!DOCTYPE html>` etc.).
 
+### 4. Start Live Preview
+- Click on the **Go Live** button in the bottom right corner of the window.
+  - If you don’t see the button, press `Ctrl+Shift+P`, type `Live Preview: Show Preview`, and select it.
+- A new browser tab or an in-editor window will open showing a live preview of your HTML file.
+
 

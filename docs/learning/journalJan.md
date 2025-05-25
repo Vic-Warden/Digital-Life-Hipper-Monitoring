@@ -56,3 +56,7 @@ Today as a team we have the sprint review with our Product Owner Michel Oey (fro
 ### 5/21/2025
 
 Today in the daily standup we as a group discussed what still needed to be done. Since this week we have a mini sprint we are focused on making sure we have a standing dataset and that the PAM device functions like we expect it to. In the to-do list I decided to pick up and analyze the way Hipper Therapeutics tested the PAM devices. In another user story it is also up to us to performs these tests, since it will be crucial for us to know if each device reports the exact same data, or at least nearly identical. 
+
+### 5/25/2025
+
+In the weekend I made sure to finish up one learning story. The coming week I will be working on my first programming challenges. I know a fair amount now, so I'm curious what I will walk into. Likely I will have to work on the web application where I need to work on my JavaScript skills and/or HTML CSS. I hope to first implement the login part, or at least the design. The functionality will be another challenge 

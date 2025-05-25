@@ -194,3 +194,84 @@ as a student I want to learn how to make a dropdown menu for the navbar, so I ca
 I wanted to learn how to make a dropdown menu for the elements on the navbar. Before I started with this user story for this I already had knowledge on making a reusable navbar in javascript, so that's why I decided to make the navbar in js and call it in the HTML file. I first started doing research on how to make the dropdown menu. When I was working on it a team member told me I could find usefull information on this subject on W3Schools, so I started looking into it. Here I found an easy explanation on how to make the dropdown menu. I used this to make the menu in the js file. At last I injected to navbar into the HTML files.
 
 ![DropDownMenu](../assets/ActualNavbar.png)
+
+### Steps to make the dropdown menu
+
+1. Make three file for the navbar
+
+- navbar.html
+- navbar.css
+- navbar.js
+
+2. Write the code for the navbar in the JavaScript file
+
+```js
+document.addEventListener("DOMContentLoaded", () => {
+  const navbar = `
+<nav class="navbar">
+  <div class="nav-left"></div>
+
+  <div class="nav-center">------ Hipper Therapeutics ------</div>
+
+  <div class="dropdown nav-right">
+    <button class="dropbtn" aria-label="Menu Toggle" id="menu-button">
+      <div class="menu-icon">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </button>
+    <div class="dropdown-content">
+      <a href="/home.html" class="nav-link">Home</a>
+      <a href="/profile.html" class="nav-link">Profile</a>
+      <a href="/settings.html" class="nav-link">Settings</a>
+      <a href="#" class="logoutButton nav-link">Logout</a>
+    </div>
+  </div>
+</nav>
+
+  `;
+
+  // Insert the navbar HTML into the page
+  document.getElementById("navbar").innerHTML = navbar;
+
+// Highlight current page in dropdown
+// Have to check if this works when we work on local server: extension vscode can't find the paths!
+const currentPath = window.location.pathname;
+document.querySelectorAll(".nav-link").forEach(link => {
+  if (link.getAttribute("href") === currentPath) {
+    link.classList.add("active-link");
+  }
+});
+
+  
+  // Add event listener for logout button
+  const logoutButton = document.querySelector(".logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent the default link behavior
+      logout();
+    });
+  }
+
+  // Optional: Add toggle behavior if you later implement mobile nav
+  const menuButton = document.getElementById("menu-button");
+  menuButton?.addEventListener("click", () => {
+    const dropdown = document.querySelector(".dropdown-content");
+    dropdown.classList.toggle("active"); // You can style `.active` in CSS
+  });
+});
+```
+
+3. Call the navbar in the html file and link the css and js file.
+
+```HTML
+   <link rel="stylesheet" href="../static/css/navbar.css" />
+
+   <div id="navbar"></div>
+
+   <script src="../static/js/navbar.js"></script>
+
+```
+
+4. Style the navbar using css.

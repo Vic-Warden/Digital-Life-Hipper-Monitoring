@@ -186,3 +186,6 @@ After getting the feedback van Mats I started refining a user story I was workin
 6. Review with the Team. 
 
 **Chatgpt was used with doing research on the steps to make the user story with the vertical slice**
+
+## Learning Story 212
+as a student I want to learn how to make a dropdown menu for the navbar, so I can implement it in this project.

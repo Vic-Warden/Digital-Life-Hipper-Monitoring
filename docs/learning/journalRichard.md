@@ -275,3 +275,10 @@ document.querySelectorAll(".nav-link").forEach(link => {
 ```
 
 4. Style the navbar using css.
+
+### References 
+- W3Schools is used to understand how to make the dropdown menu. 
+
+[Link to explanation dropdown menu W3Schools](https://www.w3schools.com/css/css_dropdowns.asp)
+
+**Chatgpt was used to do research on dropdown menu and refining the steps to make it**

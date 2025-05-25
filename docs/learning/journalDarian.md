@@ -81,4 +81,15 @@ I explored how to use **Live Preview**, a Visual Studio Code extension, to view 
 - As you edit your HTML file in VS Code, the preview updates automatically.
 - You can also preview linked CSS or JavaScript updates.
 
+## How It Works
 
+- The **Live Preview** extension serves your HTML file through a local development server.
+- It continuously monitors changes to your file and refreshes the preview.
+- This helps you instantly visualize HTML/CSS/JavaScript without manually reloading the browser.
+
+## Summary
+
+With the **Live Preview** extension in VS Code:
+- I can easily preview my HTML code.
+- I save time by not switching between editor and browser.
+- It makes front-end development more efficient and interactive.

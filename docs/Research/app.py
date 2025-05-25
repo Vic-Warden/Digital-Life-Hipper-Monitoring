@@ -4,6 +4,9 @@ from flask import Flask, jsonify
 # Import CORS
 from flask_cors import CORS
 
+# Import JSON
+import json
+
 app = Flask(__name__)
 CORS(app)
 
@@ -12,7 +15,7 @@ CORS(app)
 def ping():
     return "pong"
 
-# List of ideas
+# List of Ideas
 ideas = [
             {
                 "title": "Fall detection",
@@ -50,7 +53,7 @@ def load_ideas():
 
 @app.route("/api/ideas", methods=["GET"])
 def get_ideas():
-    return jsonify(ideas)
+    return jsonify(load_ideas())
 
 
 if __name__ == "__main__":

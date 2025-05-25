@@ -21,6 +21,10 @@ This file contains the learning journal with the learning stories of Jan.
 * Since we as a team have been tasked to test the Hipper output data in comparison with other devices, we obviously need to do that by complying with a certain procedure. Because if we do not, then our test data could not be comparable to previous tests documented by Hipper therapeutics themselves. Here I took it on myself to investigate the Research report that our Product Owner Michel sent to us. With the help of ChatGPT I quickly analyzed what tests they were doing, and I also inspected all of the graphs they made.
 What I learned is that for us to perform a similar test we need to also take two (or more) Hipper devices and get them to stick together as close as possible. After that it is time for a series of tests, such as walking, running etc. Any and all movements are acceptable. Finally after collecting data it is time to start comparing datasets of unique Hipper devices to eachother. Do the Hipper devices give nearly similar data according to the graphs that are present in the already existing Research report? That, we will find out in another User Story. The files linked to this user story can be found at: `docs/data/research`
 
+#211 As a student, I want to learn how to make a basic login page, so that I can later incorporate that directly into the web app.
+
+* Starting with this one I had contact with Indigo and Richard on how to go about doing this. I was already expecting to have to do something with figma. I barely have any experience with it, so I got pointed to something Indigo had already made. That gave me a good base and would let me explore figma a little. After starting the first thing I did was go back to an earlier user story I did which was about the components for our web app. Then too I looked at some login pages through Google image search. After deciding on a lay-out, I went to work in Figma. I looked up a mini tutorial on YouTube: `https://www.youtube.com/watch?v=7TF2ZmtkZz0` this quickly helped me with where to find certain things. That way I constructed the login page fairly quickly. 
+
 ## Journal
 
 ### 5/7/2025
@@ -52,3 +56,7 @@ Today as a team we have the sprint review with our Product Owner Michel Oey (fro
 ### 5/21/2025
 
 Today in the daily standup we as a group discussed what still needed to be done. Since this week we have a mini sprint we are focused on making sure we have a standing dataset and that the PAM device functions like we expect it to. In the to-do list I decided to pick up and analyze the way Hipper Therapeutics tested the PAM devices. In another user story it is also up to us to performs these tests, since it will be crucial for us to know if each device reports the exact same data, or at least nearly identical. 
+
+### 5/25/2025
+
+In the weekend I made sure to finish up one learning story. The coming week I will be working on my first programming challenges. I know a fair amount now, so I'm curious what I will walk into. Likely I will have to work on the web application where I need to work on my JavaScript skills and/or HTML CSS. I hope to first implement the login part, or at least the design. The functionality will be another challenge 

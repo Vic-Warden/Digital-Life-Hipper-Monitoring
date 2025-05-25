@@ -50,7 +50,7 @@ Additionally you can also use custom lines and rules to set colors for your grap
 
 #### Learning story 3:
 
-
+As a student, I want to learn how I can view HTML code in visual studio code, so that I can get a preview on the HTML code i'm working on.
 
 ## What I Learned
 

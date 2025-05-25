@@ -146,3 +146,43 @@ I wanted to learn how to create a junction table to represent a many-to-many rel
 ### References
 - One of my team members helped me with understanding how to create the junction table.
 - Chatgpt was used to help created the Steps to create junction table.
+
+## Learning Story 210
+as a student, I want to learn how to make a user story with a complete vertical slice, so I can get all the requirements for the expert reviews.
+
+### What I have learned
+On thursday may 22th I had my first expert review with Mats. I got a lot of feedback on the user story I showed him.
+
+Feedback Mats:
+
+- Het is wat moeilijk werken met deze User Story omdat deze gericht is op het ontwerpproces in Figma waar verder geen eindgebruiker bij komt kijken. Eigenlijk valt dit onder de 'waterfall methodiek'.
+
+- Met Scrum zou je eerder uitkomen dat de user story beschrijft dan de gebruiker een inlogpagina wilt, en dat je vervolgens als onderdeel van deze user story dit formulier gaat ontwerpen in figma, bouwen met html/css/javascript/... en vervolgens testen met gebruiker(s).
+
+- Door de wat onduidelijke user story is de vertical slice niet helemaal lekker gegaan, je bent in sprint 2 hier al beter mee bezig.
+
+- Er is geen code.
+
+- Reviewer heeft nog een feedback gegeven en dat via de merge request gedaan.
+
+- Nog wel de tip gegeven om het gebruik van ChatGPT los te benoemen; niet in de bronnenlijst.
+
+After getting the feedback van Mats I started refining a user story I was working on that week to get the entire vertical slice. At that moment I was working on the navigation bar for the front-end. This user story was already a bit better then the one that I showed during the expert review. The only thing in that user story that was missing was the design part, so in the user story I added another acceptence criteria that's about design of the navbar in figma.
+
+![FullUserStory](../assets/UserStorySlice.png)
+
+### Steps to make user story with vertical slice
+
+1. Think about what the user needs.
+
+2. Break Down into Vertical Slices.
+
+3. Write the User Story.
+
+4. Define Acceptance Criteria.
+
+5. Ensure Full Stack Coverage.
+
+6. Review with the Team. 
+
+**Chatgpt was used with doing research on the steps to make the user story with the vertical slice**

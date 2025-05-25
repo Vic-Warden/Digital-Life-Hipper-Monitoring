@@ -1,7 +1,7 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Darian.
 
-#### User story: 
+#### Learning story: 
 As a student, I want to learn how powerbi can be implemented in our web application, so that I can have the knownledge to implement it into the application.
 
 #### Learned:
@@ -19,7 +19,7 @@ the steps to take are found and are as follows:
 - Click `File > Embed report > Publish to web (public)`
 - Confirm and copy the iframe code or public URL.
 
-#### User story 2:
+#### Learning story 2:
 As a student, I want to learn how I can use colors for graphs in PowerBi, so that we can keep the graphs easy to understand.
 
 #### Learned:
@@ -47,3 +47,15 @@ Additionally you can also use custom lines and rules to set colors for your grap
 
 6. **Preview and Save**
    - Review your changes and save your report.
+
+#### Learning story 3:
+
+
+
+## What I Learned
+
+I explored how to use **Live Preview**, a Visual Studio Code extension, to view my HTML code in a live browser view. Here's what I learned step by step:
+
+---
+
+## Step-by-Step Guide: Using Live Preview in VS Code

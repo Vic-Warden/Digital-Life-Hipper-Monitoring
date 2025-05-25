@@ -192,3 +192,5 @@ as a student I want to learn how to make a dropdown menu for the navbar, so I ca
 
 ### What I have learned
 I wanted to learn how to make a dropdown menu for the elements on the navbar. Before I started with this user story for this I already had knowledge on making a reusable navbar in javascript, so that's why I decided to make the navbar in js and call it in the HTML file. I first started doing research on how to make the dropdown menu. When I was working on it a team member told me I could find usefull information on this subject on W3Schools, so I started looking into it. Here I found an easy explanation on how to make the dropdown menu. I used this to make the menu in the js file. At last I injected to navbar into the HTML files.
+
+![DropDownMenu](../assets/ActualNavbar.png)

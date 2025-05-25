@@ -12,6 +12,10 @@ ideas = [
     {"title": "Fall detection", "description": "Spot sudden falls using the accelerometer"},
 ]
 
+def load_ideas():
+    with open('ideas.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 @app.route("/api/ideas", methods=["GET"])
 def get_ideas():
     return jsonify(ideas)

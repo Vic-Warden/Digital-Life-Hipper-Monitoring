@@ -68,4 +68,8 @@ I explored how to use **Live Preview**, a Visual Studio Code extension, to view 
 - Search for **Live Preview** by Microsoft.
 - Click **Install** on the extension.
 
+### 3. Open or Create an HTML File
+- Open your project folder or create a new `.html` file (e.g., `index.html`).
+- Make sure your HTML file has basic structure (like `<!DOCTYPE html>` etc.).
+
 

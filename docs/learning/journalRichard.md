@@ -193,6 +193,8 @@ as a student I want to learn how to make a dropdown menu for the navbar, so I ca
 ### What I have learned
 I wanted to learn how to make a dropdown menu for the elements on the navbar. To do this I started doing research on how to make this possible. A team member told me I could find information for this on W3Schools. When reading through the page I learned that with using simple css code you can make the content hidden by default and it will be displayed when you hover over the dropdown button.
 
+I have detailed my learnings below in the form of a step by step guide on how to make a nav bar:
+
 The css code:
 
 ```css

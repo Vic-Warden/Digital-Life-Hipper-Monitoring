@@ -15,14 +15,14 @@ This document is a simple, full-featured web application that demonstrates how t
 
 #### Description
 
-The Flask app serves an API at `/api/ideas` that returns a list of AI use cases. The data is stored in a local JSON file (`ideas.json`) to simulate persistent storage.
+The Flask application serves an API to `/api/ideas` which returns a list of AI use cases. The data is stored in a local JSON file 
 
 #### Key Features:
-- CORS enabled to allow frontend on another port ( 8000 ) to access API on port 5000
-- Reads data dynamically from `ideas.json`
-- Simple route `/ping` for test purposes
+- CORS enabled to allow the frontend on another port ( 8000 ) to access the API on port 5000
+- Reads data from `ideas.json`.
+- Simple `/ping` route for test purposes
 
-#### Code Snippet
+#### Code 
 
 ```python
 from flask import Flask, jsonify
@@ -46,13 +46,11 @@ def get_ideas():
 
 if __name__ == "__main__":
     app.run(debug=True)
-````
+```
 
----
+### 2. Data File (ideas.json)
 
-### 2. Data File (`ideas.json`)
-
-This file contains a list of ideas for how sensor data could be used in AI applications.
+This file contains a list of ideas for how sensor data could be used in AI applications
 
 Example content:
 
@@ -75,13 +73,12 @@ Example content:
 
 #### Description
 
-A static HTML page is used to display the list of ideas dynamically. It fetches the data from the `/api/ideas` endpoint and populates the page.
+A HTML page is used to display the list of ideas. It fetches the data from the `/api/ideas` endpoint
 
 #### Key Features:
 
-* Vanilla JS `fetch()` call to get JSON data
-* Dynamically generates HTML elements
-* Basic styling with inline CSS
+- Vanilla JS `fetch()` call to get JSON data
+- Basic styling with inline CSS
 
 #### Code Snippet
 

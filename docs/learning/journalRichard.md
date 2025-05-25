@@ -191,7 +191,48 @@ After getting the feedback van Mats I started refining a user story I was workin
 as a student I want to learn how to make a dropdown menu for the navbar, so I can implement it in this project.
 
 ### What I have learned
-I wanted to learn how to make a dropdown menu for the elements on the navbar. Before I started with this user story for this I already had knowledge on making a reusable navbar in javascript, so that's why I decided to make the navbar in js and call it in the HTML file. I first started doing research on how to make the dropdown menu. When I was working on it a team member told me I could find usefull information on this subject on W3Schools, so I started looking into it. Here I found an easy explanation on how to make the dropdown menu. I used this to make the menu in the js file. At last I injected to navbar into the HTML files.
+I wanted to learn how to make a dropdown menu for the elements on the navbar. To do this I started doing research on how to make this possible. A team member told me I could find information for this on W3Schools. When reading through the page I learned that with using simple css code you can make the content hidden by default and it will be displayed when you hover over the dropdown button.
+
+The css code:
+
+```css
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+```
 
 ![DropDownMenu](../assets/ActualNavbar.png)
 

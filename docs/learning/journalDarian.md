@@ -63,4 +63,9 @@ I explored how to use **Live Preview**, a Visual Studio Code extension, to view 
 ### 1. Open Visual Studio Code
 - Launch **Visual Studio Code** from your computer.
 
+### 2. Install the Live Preview Extension
+- Click on the **Extensions** icon in the sidebar (or press `Ctrl+Shift+X`).
+- Search for **Live Preview** by Microsoft.
+- Click **Install** on the extension.
+
 

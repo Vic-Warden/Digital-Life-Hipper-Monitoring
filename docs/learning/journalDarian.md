@@ -59,3 +59,8 @@ I explored how to use **Live Preview**, a Visual Studio Code extension, to view 
 ---
 
 ## Step-by-Step Guide: Using Live Preview in VS Code
+
+### 1. Open Visual Studio Code
+- Launch **Visual Studio Code** from your computer.
+
+

@@ -1,13 +1,18 @@
+# Import Flask (for API) and jsonify (to return JSON)
 from flask import Flask, jsonify
+
+# Import CORS
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
+# Test route
 @app.route("/ping")
 def ping():
     return "pong"
 
+# List of ideas
 ideas = [
             {
                 "title": "Fall detection",

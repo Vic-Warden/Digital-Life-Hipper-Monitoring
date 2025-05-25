@@ -77,4 +77,8 @@ I explored how to use **Live Preview**, a Visual Studio Code extension, to view 
   - If you don’t see the button, press `Ctrl+Shift+P`, type `Live Preview: Show Preview`, and select it.
 - A new browser tab or an in-editor window will open showing a live preview of your HTML file.
 
+### 5. View Changes in Real Time
+- As you edit your HTML file in VS Code, the preview updates automatically.
+- You can also preview linked CSS or JavaScript updates.
+
 

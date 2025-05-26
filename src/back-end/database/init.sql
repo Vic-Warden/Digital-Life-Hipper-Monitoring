@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`patient` (
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(32) NOT NULL,
   `password` VARCHAR(24) NOT NULL,
+  `cookies` VARCHAR(256) NULL,
   PRIMARY KEY (`id`));
 
 
@@ -142,7 +143,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`) VALUES (0, 'henk', 'henk@gmail.com', 'admin123');
+INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`, `cookies`) VALUES (0, 'henk', 'henk@gmail.com', 'admin123', NULL);
 
 COMMIT;
 

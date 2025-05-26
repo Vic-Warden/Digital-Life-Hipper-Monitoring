@@ -196,3 +196,17 @@ There is also another way to make the figma pages responsive. Working with const
 - Youtube video's were also used for helping to understand how to work with constraints.
 
 Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)
+
+## Login page
+Every well designed web app needs a sleek looking login page. The page designed offers a common set of interactive buttons:
+
+- Email address
+- Password
+- Remember me
+- Sign in
+- Forgot password
+
+### Design choices
+The Therapist will grant users a valid account during the first contact. Therefore no section is present where someone is able to create an account themselves. This helps to keep the login page simple. A common recommendation is that the user changes their password upon receiving the login credentials from their Therapist.
+
+![LoginPage](../assets/Figma/LoginPage.png)

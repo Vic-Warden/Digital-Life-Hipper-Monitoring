@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
+from crypto import Cookie
 
 
 class Database:
@@ -20,6 +21,7 @@ class Database:
             "patient_has_therapist",
             "therapist"
         ]
+        self.cookie = Cookie()  # Initialize the Cookie class for cookie management
 
     def connect(self) -> MySQLConnection | None:
         # Establish a connection to the MySQL database
@@ -148,6 +150,42 @@ class Database:
             return (True, "")
         return (False, "Patient not found.")
 
+    def create_cookie(self, email: str) -> tuple[bool, str]:
+        """
+        ### Create a cookie for the user based on their email.
+
+        Returns a string representing the cookie.
+        """
+        success, cookie = self.cookie.create_cookie(email)
+        if not success:
+            return (False, "Failed to create cookie.")
+
+        result = self.do_query(
+            "INSERT INTO patient (email, cookie) VALUES (%s, %s);", (email, cookie))
+
+        if result is not None and result[0][0] > 0:
+            return (True, "")
+        return (False, "Failed to insert cookie into database.")
+
+    def verify_cookie(self, cookie: str) -> tuple[bool, str]:
+        """
+        ### Verify a cookie and return the associated email if valid.
+
+        Returns a tuple (True, email) if the cookie is valid,
+        or (False, "Invalid cookie") if it is not.
+        """
+        success, value = self.cookie.verify_cookie(cookie)
+        if not success:
+            return (False, "Invalid cookie")
+
+        query = "SELECT name, email FROM patient WHERE cookie = %s;"
+        params = (value,)
+        result = self.do_query(query, params)
+
+        if result and len(result) > 0:
+            return (True, result[0])
+        return (False, "Cookie not found in database.")
+
 
 db = Database(
     host="localhost",
@@ -156,7 +194,6 @@ db = Database(
     password="superstronkrootpassword",
     database="hipperdb"
 )
-
 
 # query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
 # params = (2, "hipper", "hipper@gmail.com", "admin123")

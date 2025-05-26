@@ -4,6 +4,9 @@ import base64
 import time
 import os
 
+from dotenv import load_dotenv
+
+
 HOUR = 3600
 DAY = 24 * HOUR
 WEEK = 7 * DAY
@@ -12,7 +15,19 @@ MONTH = 30 * DAY
 
 class Cookie:
     def __init__(self):
-        self.secret_key = base64.urlsafe_b64encode(os.urandom(32)).decode()
+        """
+        Initialize the Cookie class with a secret key.
+        The secret key is loaded from environment variables.
+        """
+        load_dotenv()
+        self.secret_key = os.getenv(
+            "SECRET_KEY", "default_secret_key").encode()
+
+        if not self.secret_key:
+            raise ValueError("SECRET_KEY environment variable is not set.")
+
+        if len(self.secret_key) < 32:
+            raise ValueError("SECRET_KEY must be at least 32 bytes long.")
 
     def compute(self, data: str) -> str:
         return hashlib.sha256(data.encode()).hexdigest()

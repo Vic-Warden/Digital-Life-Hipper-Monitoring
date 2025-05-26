@@ -52,7 +52,7 @@ class Database:
             print("Error while connecting to MySQL:", e)
             return None
 
-    def do_query(self, query: str, params: tuple = ()) -> list[tuple] | None:
+    def do_query(self, query: str, params: tuple = (), fetch=True) -> list[tuple] | None:
         """
         ### Execute a query on the database and return the result.
 
@@ -76,8 +76,10 @@ class Database:
             self._connection.autocommit = True
             cursor = self._connection.cursor()
             cursor.execute(query, params)
-            result = cursor.fetchall()
-            return result
+            if fetch:
+                result = cursor.fetchall()
+                return result
+            return [("Query executed successfully",)]
         # Handle any errors that occur during the query execution
         except Error as e:
             print("Error while executing query:", e)
@@ -156,14 +158,18 @@ class Database:
 
         Returns a string representing the cookie.
         """
+        # Create a cookie
         success, cookie = self.cookie.create_cookie(email)
         if not success:
             return (False, "Failed to create cookie.")
 
-        result = self.do_query(
-            "INSERT INTO patient (email, cookie) VALUES (%s, %s);", (email, cookie))
+        # Update the database with the new cookie
+        query = "UPDATE patient SET `cookies` = %s WHERE `email` = %s;"
+        params = (cookie, email)
+        result = self.do_query(query, params, fetch=False)
 
-        if result is not None and result[0][0] > 0:
+        # Check if the cookie was successfully inserted into the database
+        if result is not None and len(result[0][0]) > 0:
             return (True, "")
         return (False, "Failed to insert cookie into database.")
 
@@ -175,16 +181,33 @@ class Database:
         or (False, "Invalid cookie") if it is not.
         """
         success, value = self.cookie.verify_cookie(cookie)
-        if not success:
-            return (False, "Invalid cookie")
+        if not success and value == "Expired cookie":
+            self.remove_cookie(cookie)
 
-        query = "SELECT name, email FROM patient WHERE cookie = %s;"
-        params = (value,)
-        result = self.do_query(query, params)
+        query = "SELECT name, email FROM patient WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
 
-        if result and len(result) > 0:
+        print(result)
+
+        if result and len(result[0][0]) > 0:
             return (True, result[0])
         return (False, "Cookie not found in database.")
+
+    def remove_cookie(self, cookie: str) -> tuple[bool, str]:
+        """
+        ### Remove the cookie associated with the given email.
+
+        Returns a tuple (True, "") if the cookie was removed successfully,
+        or (False, "Failed to remove cookie") if it was not.
+        """
+        query = "UPDATE patient SET cookies = NULL WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=False)
+
+        if result is not None and len(result[0][0]) > 0:
+            return (True, "")
+        return (False, "Failed to remove cookie.")
 
 
 db = Database(
@@ -194,15 +217,3 @@ db = Database(
     password="superstronkrootpassword",
     database="hipperdb"
 )
-
-# query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
-# params = (2, "hipper", "hipper@gmail.com", "admin123")
-# result = db.do_query(query, params)
-# print(result)
-
-db.add_patient("Jane Doe", "jane.doe@example.com", "securepassword123")
-
-query = "SELECT * FROM patient"
-params = ()
-result = db.do_query(query, params)
-print(result)

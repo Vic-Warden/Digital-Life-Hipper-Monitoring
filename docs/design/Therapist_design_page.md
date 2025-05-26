@@ -33,3 +33,14 @@ This document describes the interface and functionalities of the **Hipper Therap
   - **Blue Bars**: Daily step counts.
   - **Green Line**: PAM (Physical Activity Metric) score.
   - **Red Highlights**: Indicates inactive days.
+
+### Graph Features
+- **Daily / Weekly Toggle**: Top-right selector allows switching views.
+- **Hover Labels**: Hovering shows exact step count and PAM score for each day.
+- **X-Axis**: Dates.
+- **Y-Axis**:
+  - Left: Step count scale.
+  - Right: PAM score scale.
+
+---
+

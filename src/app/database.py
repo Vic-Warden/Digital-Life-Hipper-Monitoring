@@ -87,6 +87,8 @@ class Database:
     def check_valid_table(self, table_name: str) -> bool:
         """
         ### Check if the table is allowed to be queried.
+
+        Returns True if the table is in the allowed list, False otherwise.
         """
         return table_name in self._allowed_tables
 
@@ -99,12 +101,13 @@ db = Database(
     database="hipperdb"
 )
 
+
 # query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
 # params = (2, "hipper", "hipper@gmail.com", "admin123")
 # result = db.do_query(query, params)
 # print(result)
 
-query = "SELECT * FROM patient"
-params = ()
-result = db.do_query(query, params)
-print(result)
+# query = "SELECT * FROM patient"
+# params = ()
+# result = db.do_query(query, params)
+# print(result)

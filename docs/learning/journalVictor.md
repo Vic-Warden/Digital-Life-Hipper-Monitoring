@@ -1,6 +1,10 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+26/05
+
+I would like to know how to do a front-end easly for display my ideas, I know that make not very senses to do a front-end, back-end and a JSON file to save my ideas but I needed to do this because I needed to complete one user story with a vertical slides. I learned how to display all my ideas using some API'S. But the things I really learn it was, when I saw on the internet we can use " CORS " on my app.py's code I really didn't  know we can use it to display some ideas using this one
+
 22/05
 
 I don't have a great deal of Python knowledge, so when I was assigned to the user story dealing with device filtering to make sure everything worked, I was a bit skeptical about how I was going to solve the problem. I was a bit skeptical about how I was going to solve the problem, but I was lucky that Mike had already done this for his device, so I was able to learn how to do it from his code

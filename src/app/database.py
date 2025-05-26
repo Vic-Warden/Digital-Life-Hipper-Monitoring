@@ -118,6 +118,21 @@ class Database:
             return True
         return False
 
+    def add_patient(self, name: str, email: str, password: str) -> tuple[bool, str]:
+        """
+        ### Add a new patient to the database.
+
+        Returns:
+        - A tuple (True, "") if the patient was added successfully.
+        - A tuple (False, "Email already registered.") if the email is already in use.
+        """
+        if self.check_email(email):
+            return (False, "Email already registered.")
+        query = "INSERT INTO patient (name, email, password) VALUES (%s, %s, %s);"
+        params = (name, email, password)
+        result = self.do_query(query, params)
+        return (result is not None, "")
+
 
 db = Database(
     host="localhost",

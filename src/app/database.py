@@ -87,8 +87,23 @@ class Database:
     def check_valid_table(self, table_name: str) -> bool:
         """
         ### Check if the table is allowed to be queried.
+
+        Returns True if the table is in the allowed list, False otherwise.
         """
         return table_name in self._allowed_tables
+
+    def check_email(self, email: str) -> bool:
+        """
+        ### Check if the email is already registered in the database.
+
+        Returns True if the email exists, False otherwise.
+        """
+        query = "SELECT COUNT(*) FROM patient WHERE email = %s"
+        params = (email,)
+        result = self.do_query(query, params)
+        if result and 0 < result[0][0] < 2:
+            return True
+        return False
 
 
 db = Database(
@@ -99,12 +114,13 @@ db = Database(
     database="hipperdb"
 )
 
+
 # query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
 # params = (2, "hipper", "hipper@gmail.com", "admin123")
 # result = db.do_query(query, params)
 # print(result)
 
-query = "SELECT * FROM patient"
-params = ()
-result = db.do_query(query, params)
-print(result)
+# query = "SELECT * FROM patient"
+# params = ()
+# result = db.do_query(query, params)
+# print(result)

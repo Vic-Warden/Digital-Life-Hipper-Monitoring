@@ -133,6 +133,21 @@ class Database:
         result = self.do_query(query, params)
         return (result is not None, "")
 
+    def remove_patient(self, email: str) -> tuple[bool, str]:
+        """
+        ### Remove a patient from the database by email.
+
+        Returns:
+        - A tuple (True, "") if the patient was removed successfully.
+        - A tuple (False, "Patient not found.") if the patient does not exist.
+        """
+        query = "DELETE FROM patient WHERE email = %s;"
+        params = (email,)
+        result = self.do_query(query, params)
+        if result is not None and result[0][0] > 0:
+            return (True, "")
+        return (False, "Patient not found.")
+
 
 db = Database(
     host="localhost",

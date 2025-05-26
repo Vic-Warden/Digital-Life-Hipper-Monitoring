@@ -233,8 +233,8 @@ This document describes the interface and functionalities of the **Hipper Therap
 - **Weekly Goal**: Horizontal progress bar showing current progress (e.g., `40 / 85`).
 - **Monthly Goal**: Another bar showing monthly goal progress (e.g., `153 / 600`).
 - **Edit / Delete Options**: Icons next to each goal allow therapists to:
-  - ✏️ Edit goal values.
-  - 🗑️ Delete goals.
+  -  Edit goal values.
+  -  Delete goals.
 - **Add Client Goals**:
   -  Button allows therapists to add new custom goals for the client.
 

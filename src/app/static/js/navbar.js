@@ -54,12 +54,11 @@ document.querySelectorAll(".nav-link").forEach(link => {
   });
 });
 
-// Logout function
 function logout() {
-  if (typeof sessionStorage !== "undefined") {
-    sessionStorage.clear();
-  }
-  window.location.href = "/index.html";
+  fetch("/logout", {
+    method: "GET",  // Use GET request to log out
+    credentials: "include", // Ensure cookies are sent along with the request
+  })
 }
 
   

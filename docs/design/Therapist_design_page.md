@@ -25,3 +25,11 @@ This document describes the interface and functionalities of the **Hipper Therap
 
 ---
 
+
+## 📉 Historic Activity Graph
+
+### Description
+- A combined graph displays multiple types of client activity data:
+  - **Blue Bars**: Daily step counts.
+  - **Green Line**: PAM (Physical Activity Metric) score.
+  - **Red Highlights**: Indicates inactive days.

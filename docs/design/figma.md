@@ -206,5 +206,7 @@ Every well designed web app needs a sleek looking login page. The page designed 
 - Sign in
 - Forgot password
 
-The Therapist will grant users a valid account during the first contact. There is no section present where someone is able to create an account themselves. This helps to keep the login page simple. A common recommendation is that the user should change their password upon receiving the login credentials via mail.
+### Design choices
+The Therapist will grant users a valid account during the first contact. Therefore no section is present where someone is able to create an account themselves. This helps to keep the login page simple. A common recommendation is that the user changes their password upon receiving the login credentials from their Therapist.
 
+![LoginPage](../assets/Figma/LoginPage.png)

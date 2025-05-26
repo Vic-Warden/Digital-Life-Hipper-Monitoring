@@ -196,3 +196,13 @@ There is also another way to make the figma pages responsive. Working with const
 - Youtube video's were also used for helping to understand how to work with constraints.
 
 Video on how to make your figma design responsive: [Make Your Web Design Responsive in 10 Minutes | Figma Tutorial](https://www.youtube.com/watch?v=gwiX0oASlEw)
+
+## Login page
+To allow users to login, a sleek looking product page is needed. The page offers a common set of interactive buttons:
+
+- Email address
+- Password
+- Remember me
+- Sign in
+- Forgot password
+

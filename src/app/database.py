@@ -170,7 +170,7 @@ class Database:
 
         # Check if the cookie was successfully inserted into the database
         if result is not None and len(result[0][0]) > 0:
-            return (True, "")
+            return (True, cookie)
         return (False, "Failed to insert cookie into database.")
 
     def verify_cookie(self, cookie: str) -> tuple[bool, str]:
@@ -208,12 +208,3 @@ class Database:
         if result is not None and len(result[0][0]) > 0:
             return (True, "")
         return (False, "Failed to remove cookie.")
-
-
-db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpassword",
-    database="hipperdb"
-)

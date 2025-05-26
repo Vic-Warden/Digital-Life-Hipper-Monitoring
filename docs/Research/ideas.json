@@ -1,0 +1,30 @@
+[
+            {
+                "title": "Fall detection",
+                "description": "Spot sudden falls using the accelerometer"
+            },
+            {
+                "title": "Activity tracking",
+                "description": "Measure daily physical activity with motion sensors"
+            },
+            {
+                "title": "Sleep monitoring",
+                "description": "Analyze movement during the night to estimate sleep quality and phases"
+            },
+            {
+                "title": "Rehabilitation progress tracking",
+                "description": "Monitor patient movement patterns during physiotherapy sessions"
+            },
+            {
+                "title": "Posture detection",
+                "description": "Detect bad sitting or standing posture using orientation sensors"
+            },
+            {
+                "title": "Running vs walking detection",
+                "description": "Classify physical activity into walking, running, or idle states"
+            },
+            {
+                "title": "Cycling detection",
+                "description": "Identify when the user is cycling using periodic motion data"
+            }
+]

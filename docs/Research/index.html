@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Ideas</title>
+
+  <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        .idea { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; }
+        .idea h2 { margin: 0 0 0.5rem 0; }
+</style>
+
+</head>
+<body>
+
+  <h1>Ideas for using data</h1>
+  <div id="ideas-container">List in progress</div>
+
+  <script>
+    fetch('http://localhost:5000/api/ideas')
+      .then(response => response.json())
+      .then(data => 
+      {
+        const container = document.getElementById('ideas-container');
+        container.innerHTML = '';
+
+        data.forEach(idea => 
+        {
+          const div = document.createElement('div');
+          div.className = 'idea';
+          div.innerHTML = `<h2>${idea.title}</h2><p>${idea.description}</p>`;
+          container.appendChild(div);
+        });
+      })
+
+      .catch(err => 
+      {
+        document.getElementById('ideas-container').innerText = "Error";
+        console.error('Erreur lors du fetch :', err);
+      });
+  </script>
+
+</body>
+</html>

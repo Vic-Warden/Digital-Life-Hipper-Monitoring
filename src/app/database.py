@@ -54,7 +54,7 @@ class Database:
         """
         ### Execute a query on the database and return the result.
 
-        ### How to use: 
+        ### How to use:
         ```python
         query = "SELECT * FROM users WHERE name = %s"
         params = ("some_value",)
@@ -163,7 +163,9 @@ db = Database(
 # result = db.do_query(query, params)
 # print(result)
 
-# query = "SELECT * FROM patient"
-# params = ()
-# result = db.do_query(query, params)
-# print(result)
+db.add_patient("Jane Doe", "jane.doe@example.com", "securepassword123")
+
+query = "SELECT * FROM patient"
+params = ()
+result = db.do_query(query, params)
+print(result)

@@ -4,7 +4,7 @@ This document describes the interface and functionalities of the **Hipper Therap
 
 ---
 
-## 🧾 Dashboard Components
+##  Dashboard Components
 
 ### 1. **Client Data Panel (Left Section)**
 - **Weekly PAM Score**: Visualized with a footstep icon and progress bar. Example: `11/20`.
@@ -21,12 +21,12 @@ This document describes the interface and functionalities of the **Hipper Therap
   - ✏️ Edit goal values.
   - 🗑️ Delete goals.
 - **Add Client Goals**:
-  - ➕ Button allows therapists to add new custom goals for the client.
+  -  Button allows therapists to add new custom goals for the client.
 
 ---
 
 
-## 📉 Historic Activity Graph
+##  Historic Activity Graph
 
 ### Description
 - A combined graph displays multiple types of client activity data:
@@ -44,3 +44,11 @@ This document describes the interface and functionalities of the **Hipper Therap
 
 ---
 
+##  Therapist Additional Functionalities
+
+Therapists using this dashboard can:
+- View a comprehensive summary of the client's physical activity.
+- Monitor both **activity (steps, PAM)** and **inactivity (minutes, red days)**.
+- Track performance against **customizable weekly and monthly goals**.
+- Use visual insights (graph & dial) to guide discussions and adjust plans.
+- Add, edit, or remove goals based on progress.

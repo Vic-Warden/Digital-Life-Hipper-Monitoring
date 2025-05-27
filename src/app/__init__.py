@@ -68,6 +68,14 @@ def settings():
             message = "Names & e-mails required"
             return render_template('settings.html', user=session['user'], message=message)
         
+    # Updates data in the session 
+    session['user']['username'] = username
+    session['user']['email'] = email
+    
+    # Render the settings.html
+    return render_template('settings.html', user=session['user'], message=message)
+
+        
 
 
 # Start the Flask application

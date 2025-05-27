@@ -63,17 +63,20 @@ def settings():
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         
-    if not username or not email:
-            # If any field is empty
-            message = "Names & e-mails required"
-            return render_template('settings.html', user=session['user'], message=message)
+        if not username or not email:
+                # If any field is empty
+                message = "Names & e-mails required"
+                return render_template('settings.html', user=session['user'], message=message)
         
-    # Updates data in the session 
-    session['user']['username'] = username
-    session['user']['email'] = email
+        # Updates data in the session 
+        session['user']['username'] = username
+        session['user']['email'] = email
     
-    # Render the settings.html
-    return render_template('settings.html', user=session['user'], message=message)
+        # Render the settings.html
+        return render_template('settings.html', user=session['user'], message=message)
+
+# Render the settings.html if the method is GET
+    return render_template('settings.html', user=session['user'])
 
         
 

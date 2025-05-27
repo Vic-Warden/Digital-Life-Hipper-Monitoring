@@ -52,6 +52,14 @@ def logout():
     # Redirection to the login if logout
     return redirect('/login') 
 
+# Settings' route with GET & POST 
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if 'user' not in session:
+        return redirect('/login')
+    
+
+
 # Start the Flask application
 if __name__ == "__main__":
     app.run(debug=True, port=6001)

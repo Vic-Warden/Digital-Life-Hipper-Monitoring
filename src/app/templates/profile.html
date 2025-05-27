@@ -5,11 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blank Page</title>
   <link rel="stylesheet" href="../static/css/profile.css" />
+  <link rel="stylesheet" href="../static/css/navbar.css" />
 </head>
 <body>
 
   <!-- Content goes here -->
+   <div id="navbar"></div>
+
+     <div class="container">
+      <div class="card">
+      <h3>Profile</h3>
+      <label>Name:</label>
+      <div id="name" class="display-box"></div>
+
+      <label>Email:</label>
+      <div id="email" class="display-box"></div>
+
+      <label>Therapist:</label>
+      <div id="therapist" class="display-box"></div>
+    </div>
+    <div class="card">
+      <h3>Settings</h3>
+      <div class="setting">
+        <label>Light/Dark mode</label>
+        <div class="toggle-bar">
+          <div class="half light"></div>
+          <div class="half dark"></div>
+        </div>
+      </div>
+      <div class="setting">
+        <label>Font-Size</label>
+        <div class="toggle-bar">
+          <div class="half dark"></div>
+          <div class="half light"></div>
+        </div>
+      </div>
+      <div class="setting">
+        <label>Change language</label>
+        <div class="toggle-bar">
+          <div class="half light"></div>
+          <div class="half dark"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="../static/js/profile.js"></script>
+  <script src="../static/js/navbar.js"></script>
 </body>
 </html>

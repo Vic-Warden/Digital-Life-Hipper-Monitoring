@@ -58,14 +58,5 @@ label {
 }
 
 .dark {
-  background: #74a6d4;
-}
-
-.font-size-input {
-  border: none;
-  padding: 0;
-  margin: 0;
-  width: 50%;
-  text-align: center;
-  border-left: 1px solid #74a6d4;
+  background: #87BAE8;
 }

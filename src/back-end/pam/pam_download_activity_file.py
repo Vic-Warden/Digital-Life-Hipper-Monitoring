@@ -8,15 +8,15 @@ import asyncio
 #
 # SetTimestamp2101(label_id=90248)
 
-# ActivityDownload(filename="output/body_part_experiment/chest",
-#                  filelength=get_detailed_request("LAST_1_HOUR"),
-#                  label_id=90245)
-ActivityDownload(filename="output/testw",
-                 filelength=get_detailed_request("LAST_1_HOUR"),
+ActivityDownload(filename="output/dump/device_5.csv",
+                 filelength=get_detailed_request("MAX"),
+                 label_id=90245)
+ActivityDownload(filename="output/dump/device_3.csv",
+                 filelength=get_detailed_request("MAX"),
                  label_id=90243)
-# ActivityDownload(filename="output/body_part_experiment/hip",
-#                  filelength=get_detailed_request("LAST_1_HOUR"),
-#                  label_id=90248)
-# ActivityDownload(filename="output/body_part_experiment/foot",
-#                  filelength=get_detailed_request("LAST_1_HOUR"),
-#                  label_id=90242)
+ActivityDownload(filename="output/dump/device_8.csv",
+                 filelength=get_detailed_request("MAX"),
+                 label_id=90248)
+ActivityDownload(filename="output/dump/device_2.csv",
+                 filelength=get_detailed_request("MAX"),
+                 label_id=90242)

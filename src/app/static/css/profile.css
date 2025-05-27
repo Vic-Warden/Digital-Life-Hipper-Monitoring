@@ -46,16 +46,20 @@ label {
   border: 1px solid #74a6d4;
   border-radius: 4px;
   overflow: hidden;
-  width: 120px;
+  width: 180px;
 }
 
 .half {
   width: 50%;
   height: 100%;
+  font-family: 'Julius Sans One', sans-serif;
+  text-align: center
 }
 
 .light {
   background: white;
+  font-family: 'Julius Sans One', sans-serif;
+  text-align: center;
 }
 
 .dark {

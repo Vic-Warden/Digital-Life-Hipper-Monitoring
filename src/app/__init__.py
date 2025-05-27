@@ -58,6 +58,11 @@ def settings():
     if 'user' not in session:
         return redirect('/login')
     
+    # Retrieves sent data
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        
 
 
 # Start the Flask application

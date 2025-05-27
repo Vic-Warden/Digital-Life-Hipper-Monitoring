@@ -74,9 +74,20 @@ def settings():
     
         # Render the settings.html
         return render_template('settings.html', user=session['user'], message=message)
-
-# Render the settings.html if the method is GET
+    # Render the settings.html if the method is GET
     return render_template('settings.html', user=session['user'])
+    
+# Profile's route 
+@app.route('/profile')
+def profile():
+    if 'user' not in session:
+        # Redirect to the login if not connected
+        return redirect('/login')
+
+    # Render the profile.html
+    return render_template('profile.html', user=session['user'])
+
+
 
         
 

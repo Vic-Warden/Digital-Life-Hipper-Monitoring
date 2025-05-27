@@ -63,6 +63,11 @@ def settings():
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         
+    if not username or not email:
+            # If any field is empty
+            message = "Names & e-mails required"
+            return render_template('settings.html', user=session['user'], message=message)
+        
 
 
 # Start the Flask application

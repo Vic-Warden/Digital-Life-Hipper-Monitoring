@@ -19,6 +19,8 @@ the steps to take are found and are as follows:
 - Click `File > Embed report > Publish to web (public)`
 - Confirm and copy the iframe code or public URL.
 
+---
+
 #### Learning story 2:
 As a student, I want to learn how I can use colors for graphs in PowerBi, so that we can keep the graphs easy to understand.
 
@@ -48,6 +50,8 @@ Additionally you can also use custom lines and rules to set colors for your grap
 6. **Preview and Save**
    - Review your changes and save your report.
 
+---
+
 #### Learning story 3:
 
 As a student, I want to learn how I can view HTML code in visual studio code, so that I can get a preview on the HTML code i'm working on.
@@ -55,8 +59,6 @@ As a student, I want to learn how I can view HTML code in visual studio code, so
 ## What I Learned
 
 I explored how to use **Live Preview**, a Visual Studio Code extension, to view my HTML code in a live browser view. Here's what I learned step by step:
-
----
 
 ## Step-by-Step Guide: Using Live Preview in VS Code
 
@@ -93,3 +95,5 @@ With the **Live Preview** extension in VS Code:
 - I can easily preview my HTML code.
 - I save time by not switching between editor and browser.
 - It makes front-end development more efficient and interactive.
+
+

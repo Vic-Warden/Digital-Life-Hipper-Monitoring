@@ -7,8 +7,10 @@ from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
 LOG_FILE = "log.json"
+PAM_DEVICES_FILE = "PAM_devices.json"
 TIME_LIMIT = timedelta(hours=1)
 SCAN_INTERVAL = 10  # seconds
+DEVICE_LABEL_START = 9240 # Starting point for PAM device labels
 
 # Load or initialize the log file
 if os.path.exists(LOG_FILE):
@@ -18,16 +20,22 @@ else:
     log = {}
 
 # Load pam devices list    
-with open("PAM_devices.json", "r") as f:
-    pam_devices = json.load(f)
+if os.path.exists(PAM_DEVICES_FILE):
+    with open(PAM_DEVICES_FILE, "r") as f:
+        pam_devices = json.load(f)
+else:
+    pam_devices = {}
 
 # Invert the dictionary to map MAC -> label_id (int)
 mac_to_label = {v.upper(): int(k.replace("label_", "")) for k, v in pam_devices.items()}
 
-
 def save_log():
     with open(LOG_FILE, "w") as f:
         json.dump(log, f, indent=2)
+
+def save_pam_devices():
+    with open(PAM_DEVICES_FILE, "w") as f:
+        json.dump(pam_devices, f, indent=2)
 
 def should_pull_day_data(mac):
     today = datetime.now().date().isoformat()
@@ -49,6 +57,15 @@ def update_log(mac, activity=False, day_data=False):
         log[mac]["last_day_data_pull"] = datetime.now().date().isoformat()
     save_log()
 
+def generate_new_label():
+    existing_labels = [
+        int(label.split('_')[1])
+        for label in pam_devices.keys()
+        if label.startswith("label_") and label.split('_')[1].isdigit()
+    ]
+    next_number = max(existing_labels) + 1 if existing_labels else DEVICE_LABEL_START
+    return f"label_{next_number}"
+
 async def main_loop():
     while True:
         print("\n🔍 Scanning for devices...")
@@ -56,13 +73,18 @@ async def main_loop():
 
         for device in devices:
             if device.name and "Pam" in device.name:
-                mac = device.address
+                mac = device.address.upper()
                 print(f"✅ Found PAM device: {device.name} [{mac}]")
 
-                label_id = mac_to_label.get(mac.upper())
+                label_id = mac_to_label.get(mac)
                 if not label_id:
-                    print(f"⚠️ No label ID found for {mac}. Skipping all pulls.")
-                    continue
+                    # New device found, assign new label and update maps and file
+                    new_label = generate_new_label()
+                    print(f"🆕 New PAM device detected! Assigning new label {new_label} for MAC {mac}")
+                    pam_devices[new_label] = mac
+                    mac_to_label[mac] = int(new_label.replace("label_", ""))
+                    save_pam_devices()
+                    label_id = mac_to_label[mac]
 
                 pulled_something = False
 
@@ -70,7 +92,6 @@ async def main_loop():
                 if should_pull_day_data(mac):
                     print(f"📅 Pulling day data for {mac} (label {label_id})...")
 
-                    # Retry logic to retry pulling 3 times
                     for attempt in range(3):
                         try:
                             day_data = DayDataDownload(
@@ -81,7 +102,7 @@ async def main_loop():
                             await day_data.run()
                             update_log(mac, day_data=True)
                             pulled_something = True
-                            break  # success, break retry loop
+                            break
                         except (asyncio.TimeoutError, BleakError, Exception) as e:
                             print(f"⚠️ Error pulling day data for {mac} on attempt {attempt+1}: {e}")
                             if attempt < 2:

@@ -7,10 +7,17 @@ Under the hood it uses the `mysql.connector` library, which provides simple but 
 `database.py` contains the following functions:
 
 ```python
-__init__() # Responsible for initiating the object
-connect()  # Gets called in the __init__ function and connects to the database.
-do_query() # Runs a query on the database
-check_valid_table() # Checks if the queried table is allowed to be queried
+__init__()             # Initializes connection and configuration
+connect()              # Establishes the MySQL connection
+do_query()            # Executes parameterized queries on the database
+check_valid_table()   # Checks if a table name is allowed to be queried
+check_email()         # Checks if an email is already registered
+check_credentials()   # Verifies email and password combination
+add_patient()         # Registers a new patient in the system
+remove_patient()      # Removes a patient based on their email
+create_cookie()       # Creates a new login cookie for a user
+verify_cookie()       # Verifies a cookie's validity and retrieves the associated user
+remove_cookie()       # Deletes a cookie from the database
 ```
 
 ### How to execute queries
@@ -75,3 +82,20 @@ if not self._connection:
 
 * Prevents trying to query a disconnected or invalid database, which avoids corruption or inconsistent reads/writes.
 
+### Cookie Management
+
+The class integrates a Cookie handler from a separate module to manage login sessions.
+
+```python
+self.cookie = Cookie()
+```
+
+**Cookie Functions**
+
+`create_cookie(email: str):` Creates and stores a cookie for a given email.
+
+`verify_cookie(cookie: str):` Validates a cookie and returns associated user info.
+
+`remove_cookie(cookie: str):` Deletes the cookie from the database.
+
+These functions enable session handling for users while maintaining secure authentication flows.

@@ -1,10 +1,9 @@
 import asyncio
 import json
 import os
-import time
 from datetime import datetime, timedelta
 from bleak import BleakScanner
-# import services.py  # your BLE handler class
+from services import ActivityDownload, DayDataDownload, get_detailed_request
 
 LOG_FILE = "log.json"
 TIME_LIMIT = timedelta(hours=1)
@@ -17,17 +16,37 @@ if os.path.exists(LOG_FILE):
 else:
     log = {}
 
-def update_log(mac_address):
-    log[mac_address] = time.time()
-    with open(LOG_FILE, "w") as f:
-        json.dump(log, f)
+# Load pam devices list    
+with open("PAM_devices.json", "r") as f:
+    pam_devices = json.load(f)
 
-def should_pull(mac_address):
-    last_seen = log.get(mac_address)
-    if not last_seen:
+# Invert the dictionary to map MAC -> label_id (int)
+mac_to_label = {v.upper(): int(k.replace("label_", "")) for k, v in pam_devices.items()}
+
+
+def save_log():
+    with open(LOG_FILE, "w") as f:
+        json.dump(log, f, indent=2)
+
+def should_pull_day_data(mac):
+    today = datetime.now().date().isoformat()
+    last_date = log.get(mac, {}).get("last_day_data_pull")
+    return last_date != today  # Pull if never pulled or date is outdated
+
+def should_pull_activity(mac):
+    last_pull_ts = log.get(mac, {}).get("last_activity_pull")
+    if not last_pull_ts:
         return True
-    last_dt = datetime.fromtimestamp(last_seen)
-    return datetime.now() - last_dt > TIME_LIMIT
+    last_pull_dt = datetime.fromisoformat(last_pull_ts)
+    return datetime.now() - last_pull_dt > TIME_LIMIT
+
+def update_log(mac, activity=False, day_data=False):
+    log.setdefault(mac, {})
+    if activity:
+        log[mac]["last_activity_pull"] = datetime.now().isoformat()
+    if day_data:
+        log[mac]["last_day_data_pull"] = datetime.now().date().isoformat()
+    save_log()
 
 async def main_loop():
     while True:
@@ -39,13 +58,39 @@ async def main_loop():
                 mac = device.address
                 print(f"✅ Found PAM device: {device.name} [{mac}]")
 
-                if should_pull(mac):
-                    print(f"📥 Pulling data from {mac}...")
-                    # handler = PamHandler(mac)
-                    # await handler.run()
-                    update_log(mac)
-                else:
-                    print(f"⏱️ Skipping {mac} — already pulled in last hour.")
+                label_id = mac_to_label.get(mac.upper())
+                if not label_id:
+                    print(f"⚠️ No label ID found for {mac}. Skipping all pulls.")
+                    continue
+
+                pulled_something = False
+
+                # Pull day data if needed
+                if should_pull_day_data(mac):
+                    print(f"📅 Pulling day data for {mac} (label {label_id})...")
+                    day_data = DayDataDownload(
+                        filename=f"output/dayData_{mac.replace(':', '')}",
+                        days=10,
+                        label_id=label_id
+                    )
+                    await day_data.run()
+                    update_log(mac, day_data=True)
+                    pulled_something = True
+
+                # Pull activity data if needed
+                if should_pull_activity(mac):
+                    print(f"📥 Pulling activity data for {mac} (label {label_id})...")
+                    activity = ActivityDownload(
+                        filename=f"output/activity_{mac.replace(':', '')}",
+                        filelength=get_detailed_request("LAST_1_HOUR"),
+                        label_id=label_id
+                    )
+                    await activity.run()
+                    update_log(mac, activity=True)
+                    pulled_something = True
+
+                if not pulled_something:
+                    print(f"⏱️ Skipping {mac} — already pulled recently.")
 
         await asyncio.sleep(SCAN_INTERVAL)
 

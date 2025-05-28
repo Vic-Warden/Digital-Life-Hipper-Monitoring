@@ -97,3 +97,12 @@ With the **Live Preview** extension in VS Code:
 - It makes front-end development more efficient and interactive.
 
 
+---
+
+# Learning Journal: Figma Homepage Design for Therapist
+
+## User Story
+As a student, I want to learn how to use Figma to make the homepage design for the therapist, so that I can make the design which can be used for the web application.
+
+## Description
+I will be learning quickly how to use Figma to create the design for the homepage of the therapist. This will include a quick learning tutorial and reading about how to use basic designs for Figma. Also, I will look at the team’s previous designs and take inspiration from them and read what and how they have designed it.

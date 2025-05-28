@@ -1,39 +1,50 @@
+/* Base layout for larger screens */
 .container {
   display: flex;
-  gap: 80px;
+  gap: 40px;
   justify-content: center;
-  margin: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
   padding: 225px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
+/* Card styling */
 .card {
   border: 2px solid #74a6d4;
   border-radius: 6px;
   padding: 20px;
   width: 250px;
+  box-sizing: border-box;
+  background: white;
 }
 
 .card h3 {
   text-align: center;
   font-weight: bold;
   margin-bottom: 20px;
-  font-size: 25px;
+  font-size: 1.5em;
 }
 
 label {
   display: block;
   margin-top: 10px;
-  margin-bottom: 4px;   
+  margin-bottom: 4px;
   font-family: 'Julius Sans One', sans-serif;
+  font-size: 1em;
 }
 
 .display-box {
   border: 1px solid #74a6d4;
   border-radius: 6px;
   padding: 8px;
-  height: 30px;
+  min-height: 30px;
   background-color: #fff;
   box-sizing: border-box;
+  width: 100%;
+  font-size: 1em;
+  word-break: break-word;
 }
 
 .setting {
@@ -42,11 +53,12 @@ label {
 
 .toggle-bar {
   display: flex;
-  height: 24px;
+  height: 32px;
   border: 1px solid #74a6d4;
   border-radius: 4px;
   overflow: hidden;
-  width: 180px;
+  width: 100%;
+  max-width: 180px;
 }
 
 .half {
@@ -55,14 +67,53 @@ label {
   font-family: 'Julius Sans One', sans-serif;
   text-align: center;
   cursor: pointer;
+  line-height: 32px;
+  font-size: 1em;
 }
 
 .light {
   background: white;
-  font-family: 'Julius Sans One', sans-serif;
-  text-align: center;
 }
 
 .dark {
   background: #87BAE8;
+  color: white;
 }
+
+/* ✅ Mobile-specific styles */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .card h3 {
+    font-size: 1.25em;
+  }
+
+  .display-box {
+    font-size: 0.95em;
+    padding: 0.6em;
+  }
+
+  label {
+    font-size: 0.95em;
+  }
+
+  .toggle-bar {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .half {
+    font-size: 0.95em;
+    line-height: 32px;
+  }
+}
+

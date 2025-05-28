@@ -10,12 +10,38 @@ function setupToggleBar(toggleId) {
       const selectedValue = half.dataset.value;
       console.log(`${toggleId} selected:`, selectedValue);
 
-      // Optional: apply changes here, like theme or language
     });
   });
 }
 
-// Init toggle bars
-setupToggleBar('theme-toggle');
-setupToggleBar('font-toggle');
-setupToggleBar('language-toggle');
+function getProfile() {
+  fetch("/profile", {
+    method: "GET",
+    headers: {
+      "Accept": "application/json"
+    },
+    credentials: "include"
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById("display-name").textContent = data.name;
+    document.getElementById("display-email").textContent = data.email;
+    document.getElementById("display-therapist").textContent = data.therapist;
+  })
+  .catch(error => {
+    console.error("Error fetching profile:", error);
+  });
+}
+
+// Run all initializations after the DOM is fully loaded
+window.addEventListener("DOMContentLoaded", () => {
+  getProfile();
+  setupToggleBar('theme-toggle');
+  setupToggleBar('font-toggle');
+  setupToggleBar('language-toggle');
+});

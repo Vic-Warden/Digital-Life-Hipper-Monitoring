@@ -160,4 +160,4 @@ I reviewed previous team designs and adopted a system of reusable components and
 
 
 ## Summary
-Through focused exploration of Figma’s tools and documentation, and by studying existing team designs, I quickly developed the skills needed to create a professional homepage layout for a therapist. This experience helped me understand interface design fundamentals and prepared me to contribute to future web application projects using Figma.
+Through focused exploration of Figma’s tools and documentation, and by studying existing team designs, I quickly developed the skills needed to create a usable homepage layout for a therapist. This experience helped me understand interface design fundamentals and prepared me to contribute to future web application projects using Figma. Facing challenges such as tool unfamiliarity and trying to get familiar with the Figma layout helped me grow more to get better at learning design in Figma.

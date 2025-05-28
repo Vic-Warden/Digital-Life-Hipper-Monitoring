@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   mysql:
+    container_name: hipper-mysql
     build: 
       context: ./src/back-end/database
     ports:

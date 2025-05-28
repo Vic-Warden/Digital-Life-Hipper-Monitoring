@@ -8,7 +8,6 @@ This is a simple Flask web application that provides the user with simple paths 
 * `/home`
 * `/login`  
 * `/logout` 
-* `/settings`
 * `/profile`
 
 ---

@@ -1,6 +1,7 @@
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
+from crypto import Cookie
 
 
 class Database:
@@ -20,6 +21,7 @@ class Database:
             "patient_has_therapist",
             "therapist"
         ]
+        self.cookie = Cookie()  # Initialize the Cookie class for cookie management
 
     def connect(self) -> MySQLConnection | None:
         # Establish a connection to the MySQL database
@@ -50,11 +52,11 @@ class Database:
             print("Error while connecting to MySQL:", e)
             return None
 
-    def do_query(self, query: str, params: tuple = ()) -> list[tuple] | None:
+    def do_query(self, query: str, params: tuple = (), fetch=True) -> list[tuple] | None:
         """
         ### Execute a query on the database and return the result.
 
-        ### How to use: 
+        ### How to use:
         ```python
         query = "SELECT * FROM users WHERE name = %s"
         params = ("some_value",)
@@ -74,8 +76,10 @@ class Database:
             self._connection.autocommit = True
             cursor = self._connection.cursor()
             cursor.execute(query, params)
-            result = cursor.fetchall()
-            return result
+            if fetch:
+                result = cursor.fetchall()
+                return result
+            return [("Query executed successfully",)]
         # Handle any errors that occur during the query execution
         except Error as e:
             print("Error while executing query:", e)
@@ -92,22 +96,115 @@ class Database:
         """
         return table_name in self._allowed_tables
 
+    def check_email(self, email: str) -> bool:
+        """
+        ### Check if the email is already registered in the database.
 
-db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpassword",
-    database="hipperdb"
-)
+        Returns True if the email exists, False otherwise.
+        """
+        query = "SELECT COUNT(*) FROM patient WHERE email = %s"
+        params = (email,)
+        result = self.do_query(query, params)
+        if result and 0 < result[0][0] < 2:
+            return True
+        return False
 
+    def check_credentials(self, email: str, password: str) -> bool:
+        """
+        ### Check if the email and password match a registered user.
 
-# query = "INSERT INTO patient (`id`, `name`, `email`, `password`) VALUES (%s, %s, %s, %s);"
-# params = (2, "hipper", "hipper@gmail.com", "admin123")
-# result = db.do_query(query, params)
-# print(result)
+        Returns True if the credentials are valid, False otherwise.
+        """
+        query = "SELECT COUNT(*) FROM patient WHERE email = %s AND password = %s"
+        params = (email, password)
+        result = self.do_query(query, params)
+        if result and result[0][0] == 1:
+            return True
+        return False
 
-# query = "SELECT * FROM patient"
-# params = ()
-# result = db.do_query(query, params)
-# print(result)
+    def add_patient(self, name: str, email: str, password: str) -> tuple[bool, str]:
+        """
+        ### Add a new patient to the database.
+
+        Returns:
+        - A tuple (True, "") if the patient was added successfully.
+        - A tuple (False, "Email already registered.") if the email is already in use.
+        """
+        if self.check_email(email):
+            return (False, "Email already registered.")
+        query = "INSERT INTO patient (name, email, password) VALUES (%s, %s, %s);"
+        params = (name, email, password)
+        result = self.do_query(query, params)
+        return (result is not None, "")
+
+    def remove_patient(self, email: str) -> tuple[bool, str]:
+        """
+        ### Remove a patient from the database by email.
+
+        Returns:
+        - A tuple (True, "") if the patient was removed successfully.
+        - A tuple (False, "Patient not found.") if the patient does not exist.
+        """
+        query = "DELETE FROM patient WHERE email = %s;"
+        params = (email,)
+        result = self.do_query(query, params)
+        if result is not None and result[0][0] > 0:
+            return (True, "")
+        return (False, "Patient not found.")
+
+    def create_cookie(self, email: str) -> tuple[bool, str]:
+        """
+        ### Create a cookie for the user based on their email.
+
+        Returns a string representing the cookie.
+        """
+        # Create a cookie
+        success, cookie = self.cookie.create_cookie(email)
+        if not success:
+            return (False, "Failed to create cookie.")
+
+        # Update the database with the new cookie
+        query = "UPDATE patient SET `cookies` = %s WHERE `email` = %s;"
+        params = (cookie, email)
+        result = self.do_query(query, params, fetch=False)
+
+        # Check if the cookie was successfully inserted into the database
+        if result is not None and len(result[0][0]) > 0:
+            return (True, cookie)
+        return (False, "Failed to insert cookie into database.")
+
+    def verify_cookie(self, cookie: str) -> tuple[bool, str]:
+        """
+        ### Verify a cookie and return the associated email if valid.
+
+        Returns a tuple (True, email) if the cookie is valid,
+        or (False, "Invalid cookie") if it is not.
+        """
+        success, value = self.cookie.verify_cookie(cookie)
+        if not success and value == "Expired cookie":
+            self.remove_cookie(cookie)
+
+        query = "SELECT name, email FROM patient WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        print(result)
+
+        if result and len(result[0][0]) > 0:
+            return (True, result[0])
+        return (False, "Cookie not found in database.")
+
+    def remove_cookie(self, cookie: str) -> tuple[bool, str]:
+        """
+        ### Remove the cookie associated with the given email.
+
+        Returns a tuple (True, "") if the cookie was removed successfully,
+        or (False, "Failed to remove cookie") if it was not.
+        """
+        query = "UPDATE patient SET cookies = NULL WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=False)
+
+        if result is not None and len(result[0][0]) > 0:
+            return (True, "")
+        return (False, "Failed to remove cookie.")

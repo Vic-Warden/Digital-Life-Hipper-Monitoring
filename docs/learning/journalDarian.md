@@ -138,5 +138,14 @@ I will be learning quickly how to use Figma to create the design for the homepag
    - Created a functional and clean homepage mockup for a therapist’s website.
    - Focused on usability and clarity.
 
+## Challenges & Solutions
+
+### 1. Getting Familiar with the Interface
+The Figma interface felt overwhelming at first due to the many tools and panels.
+
+**Solution:**  
+I used Figma’s tutorials and documentation to explore the interface and practiced building simple layouts to get used to it.
+
+
 ## Summary
 Through focused exploration of Figma’s tools and documentation, and by studying existing team designs, I quickly developed the skills needed to create a professional homepage layout for a therapist. This experience helped me understand interface design fundamentals and prepared me to contribute to future web application projects using Figma.

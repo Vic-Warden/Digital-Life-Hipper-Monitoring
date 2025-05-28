@@ -79,8 +79,6 @@ def login():
         return render_template('login.html')
 
 # Logout's route with POST methods
-
-
 @app.route('/logout', methods=['POST'])
 def logout():
     # Clear the session
@@ -125,10 +123,6 @@ def profile():
 
     # Render the profile.html
     return render_template('profile.html', user=session['user'])
-
-
-
-        
 
 
 # Start the Flask application

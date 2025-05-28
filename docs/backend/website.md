@@ -8,6 +8,8 @@ This is a simple Flask web application that provides the user with simple paths 
 * `/home`
 * `/login`  
 * `/logout` 
+* `/settings`
+* `/profile`
 
 ---
 
@@ -81,6 +83,57 @@ def logout():
     
     # Redirection to the login if logout
     return redirect('/login') 
+```
+
+### 3. Settings
+
+Description :
+
+The `/settings` route accepts `POST` & `GET` requests.
+
+```python
+# Settings' route with GET & POST 
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if 'user' not in session:
+        return redirect('/login')
+    
+    # Retrieves sent data
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        
+        if not username or not email:
+                # If any field is empty
+                message = "Names & e-mails required"
+                return render_template('settings.html', user=session['user'], message=message)
+        
+        # Updates data in the session 
+        session['user']['username'] = username
+        session['user']['email'] = email
+    
+        # Render the settings.html
+        return render_template('settings.html', user=session['user'], message=message)
+    # Render the settings.html if the method is GET
+    return render_template('settings.html', user=session['user'])
+```
+
+### 3. Profile
+
+Description :
+
+The `/profile` route can be accessed to the user easily
+
+```python
+# Profile's route 
+@app.route('/profile')
+def profile():
+    if 'user' not in session:
+        # Redirect to the login if not connected
+        return redirect('/login')
+
+    # Render the profile.html
+    return render_template('profile.html', user=session['user'])
 ```
 
 It then gets ran on port 6001

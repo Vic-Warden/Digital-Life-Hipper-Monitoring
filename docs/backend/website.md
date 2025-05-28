@@ -85,15 +85,15 @@ def logout():
     return redirect('/login') 
 ```
 
-### 3. Settings
+### 3. Profile
 
 Description :
 
-The `/settings` route accepts `POST` & `GET` requests.
+The `/profile` route can be accessed to the user easily
 
 ```python
-# Settings' route with GET & POST 
-@app.route('/settings', methods=['GET', 'POST'])
+# Profile' route with GET & POST 
+@app.route('/profile', methods=['GET', 'POST'])
 def settings():
     if 'user' not in session:
         return redirect('/login')
@@ -102,38 +102,20 @@ def settings():
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
+        therapist = request.form.get('therapist', '').strip()
         
         if not username or not email:
                 # If any field is empty
-                message = "Names & e-mails required"
-                return render_template('settings.html', user=session['user'], message=message)
+                message = "Names, e-mails and the therapist is required"
+                return render_template('profile.html', user=session['user'], message=message)
         
         # Updates data in the session 
         session['user']['username'] = username
         session['user']['email'] = email
+        session['user']['therapist'] = therapist
     
         # Render the settings.html
-        return render_template('settings.html', user=session['user'], message=message)
-    # Render the settings.html if the method is GET
-    return render_template('settings.html', user=session['user'])
-```
-
-### 3. Profile
-
-Description :
-
-The `/profile` route can be accessed to the user easily
-
-```python
-# Profile's route 
-@app.route('/profile')
-def profile():
-    if 'user' not in session:
-        # Redirect to the login if not connected
-        return redirect('/login')
-
-    # Render the profile.html
-    return render_template('profile.html', user=session['user'])
+        return render_template('profile.html', user=session['user'], message=message)
 ```
 
 It then gets ran on port 6001

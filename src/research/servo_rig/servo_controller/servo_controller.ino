@@ -24,17 +24,17 @@ void loop() {
   // Use a larger step size for faster movement
   for (uint16_t microsec = USMIN; microsec < USMAX; microsec += 10) {
     pwm.writeMicroseconds(servonum, microsec);
-    delay(5);  // Optional: reduce delay further if needed
+    delay(2);  // Optional: reduce delay further if needed
   }
   Serial.println("A");
 
-  delay(500);
+  delay(300);
 
   for (uint16_t microsec = USMAX; microsec > USMIN; microsec -= 10) {
     pwm.writeMicroseconds(servonum, microsec);
-    delay(5);  // Optional: reduce delay further if needed
+    delay(2);  // Optional: reduce delay further if needed
   }
   Serial.println("B");
 
-  delay(500);
+  delay(300);
 }

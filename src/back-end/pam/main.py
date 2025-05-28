@@ -3,6 +3,7 @@ import json
 import os
 from datetime import datetime, timedelta
 from bleak import BleakScanner
+from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
 LOG_FILE = "log.json"
@@ -68,26 +69,49 @@ async def main_loop():
                 # Pull day data if needed
                 if should_pull_day_data(mac):
                     print(f"📅 Pulling day data for {mac} (label {label_id})...")
-                    day_data = DayDataDownload(
-                        filename=f"output/dayData_{mac.replace(':', '')}",
-                        days=10,
-                        label_id=label_id
-                    )
-                    await day_data.run()
-                    update_log(mac, day_data=True)
-                    pulled_something = True
+
+                    # Retry logic to retry pulling 3 times
+                    for attempt in range(3):
+                        try:
+                            day_data = DayDataDownload(
+                                filename=f"output/dayData_{mac.replace(':', '')}",
+                                days=10,
+                                label_id=label_id
+                            )
+                            await day_data.run()
+                            update_log(mac, day_data=True)
+                            pulled_something = True
+                            break  # success, break retry loop
+                        except (asyncio.TimeoutError, BleakError, Exception) as e:
+                            print(f"⚠️ Error pulling day data for {mac} on attempt {attempt+1}: {e}")
+                            if attempt < 2:
+                                print("⏳ Retrying...")
+                                await asyncio.sleep(2)
+                            else:
+                                print("❌ Giving up on day data for this cycle.")
 
                 # Pull activity data if needed
                 if should_pull_activity(mac):
                     print(f"📥 Pulling activity data for {mac} (label {label_id})...")
-                    activity = ActivityDownload(
-                        filename=f"output/activity_{mac.replace(':', '')}",
-                        filelength=get_detailed_request("LAST_1_HOUR"),
-                        label_id=label_id
-                    )
-                    await activity.run()
-                    update_log(mac, activity=True)
-                    pulled_something = True
+
+                    for attempt in range(3):
+                        try:
+                            activity = ActivityDownload(
+                                filename=f"output/activity_{mac.replace(':', '')}",
+                                filelength=get_detailed_request("LAST_1_HOUR"),
+                                label_id=label_id
+                            )
+                            await activity.run()
+                            update_log(mac, activity=True)
+                            pulled_something = True
+                            break
+                        except (asyncio.TimeoutError, BleakError, Exception) as e:
+                            print(f"⚠️ Error pulling activity data for {mac} on attempt {attempt+1}: {e}")
+                            if attempt < 2:
+                                print("⏳ Retrying...")
+                                await asyncio.sleep(2)
+                            else:
+                                print("❌ Giving up on activity data for this cycle.")
 
                 if not pulled_something:
                     print(f"⏱️ Skipping {mac} — already pulled recently.")

@@ -126,4 +126,14 @@ I will be learning quickly how to use Figma to create the design for the homepag
    - Used frames to create the layout of the homepage.
    - Applied a grid to align elements properly.
 
-   
+3. **Created components:**
+   - Built reusable buttons and navigation bars.
+   - Learned how to update components globally.
+
+4. **Studied previous team designs:**
+   - Analyzed layout, typography, and component usage.
+   - Noted what design patterns were followed for consistency.
+
+5. **Finalized homepage design:**
+   - Created a functional and clean homepage mockup for a therapist’s website.
+   - Focused on usability and clarity.

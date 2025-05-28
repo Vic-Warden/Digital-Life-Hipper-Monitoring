@@ -1,6 +1,10 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+28/05 
+
+When I showed my work at Richard he told me to fix some issues because I didn't know wich things he done, I learned to be more careful about that because we can make really basic mistakes like that
+
 26/05
 
 I would like to know how to do a front-end easly for display my ideas, I know that make not very senses to do a front-end, back-end and a JSON file to save my ideas but I needed to do this because I needed to complete one user story with a vertical slides. I learned how to display all my ideas using some API'S. But the things I really learn it was, when I saw on the internet we can use " CORS " on my app.py's code I really didn't  know we can use it to display some ideas using this one

@@ -106,3 +106,14 @@ As a student, I want to learn how to use Figma to make the homepage design for t
 
 ## Description
 I will be learning quickly how to use Figma to create the design for the homepage of the therapist. This will include a quick learning tutorial and reading about how to use basic designs for Figma. Also, I will look at the team’s previous designs and take inspiration from them and read what and how they have designed it.
+
+## Learning Source
+- [Figma Help Center - Learn design with Figma](https://help.figma.com/hc/en-us/sections/30880632542743)
+
+## What I Have Learned
+- How to navigate the Figma interface including the toolbar, layers panel, and properties panel.
+- How to create frames and use layout grids to organize design structure.
+- How to use basic shape tools and text tools to build the visual structure of a webpage.
+- The importance of components and how to reuse them for consistency.
+- How to import images and use plugins to speed up the workflow.
+- How to collaborate and leave comments within Figma.

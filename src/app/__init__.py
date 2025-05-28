@@ -18,8 +18,6 @@ db = Database(
 )
 
 # Route for the home page
-
-
 @app.route('/')
 def redirect_to_home():
 
@@ -27,8 +25,6 @@ def redirect_to_home():
     return redirect('/home')
 
 # Home's route
-
-
 @app.route('/home')
 def home():
     # if connected
@@ -41,13 +37,11 @@ def home():
         return redirect('/login')
 
 # Request the user & the password with GET and POST methods
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
 
-        # Retrieve email and password
+        # Retrieve email password & the therapist
         email = request.form.get('email')
         password = request.form.get('password')
 
@@ -79,8 +73,6 @@ def login():
         return render_template('login.html')
 
 # Logout's route with POST methods
-
-
 @app.route('/logout', methods=['POST'])
 def logout():
     # Clear the session
@@ -89,6 +81,31 @@ def logout():
 
     # Redirection to the login if logout
     return redirect('/login')
+
+# Profile' route with GET & POST 
+@app.route('/profile', methods=['GET', 'POST'])
+def settings():
+    if 'user' not in session:
+        return redirect('/login')
+    
+    # Retrieves sent data
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        therapist = request.form.get('therapist', '').strip()
+        
+        if not username or not email:
+                # If any field is empty
+                message = "Names, e-mails and the therapist is required"
+                return render_template('profile.html', user=session['user'], message=message)
+        
+        # Updates data in the session 
+        session['user']['username'] = username
+        session['user']['email'] = email
+        session['user']['therapist'] = therapist
+    
+        # Render the settings.html
+        return render_template('profile.html', user=session['user'], message=message)
 
 
 # Start the Flask application

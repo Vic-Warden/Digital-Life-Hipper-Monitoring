@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  mysql:
+    build: 
+      context: ./src/back-end/database
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./src/back-end/database/.env
+    # volumes:
+    #   - ./init.sql:/docker-entrypoint-initdb.d/init.sql

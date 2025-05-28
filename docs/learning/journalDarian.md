@@ -117,3 +117,13 @@ I will be learning quickly how to use Figma to create the design for the homepag
 - The importance of components and how to reuse them for consistency.
 - How to import images and use plugins to speed up the workflow.
 - How to collaborate and leave comments within Figma.
+
+## Steps I Took
+1. **Explored the Figma interface:**
+   - Got familiar with where to find tools and how to organize files and pages.
+
+2. **Learned to create a wireframe:**
+   - Used frames to create the layout of the homepage.
+   - Applied a grid to align elements properly.
+
+   

@@ -146,6 +146,18 @@ The Figma interface felt overwhelming at first due to the many tools and panels.
 **Solution:**  
 I used Figma’s tutorials and documentation to explore the interface and practiced building simple layouts to get used to it.
 
+### 2. Understanding Frames vs Groups
+I initially confused frames with groups, which led to alignment issues.
+
+**Solution:**  
+After reading the documentation and experimenting in Figma, I learned the distinct purpose of each and started using them correctly.
+
+### 3. Creating Consistent Components
+Maintaining consistency in buttons, typography, and spacing was challenging.
+
+**Solution:**  
+I reviewed previous team designs and adopted a system of reusable components and layout grids to keep the design uniform.
+
 
 ## Summary
 Through focused exploration of Figma’s tools and documentation, and by studying existing team designs, I quickly developed the skills needed to create a professional homepage layout for a therapist. This experience helped me understand interface design fundamentals and prepared me to contribute to future web application projects using Figma.

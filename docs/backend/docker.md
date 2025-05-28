@@ -1,6 +1,6 @@
 # Docker Compose Overview
 
-This setup defines a MySQL database and an Nginx web server using Docker Compose for local development.
+This setup defines a MySQL database and an Nginx web server using Docker Compose for local development. It is also extremely useful to show progress to anyone involved such as the Product Owner.
 
 ## Services
 
@@ -30,3 +30,14 @@ docker-compose up --build
 # Stop services
 docker-compose down
 ```
+
+## Access
+
+- Web: http://localhost:8080
+
+- MySQL: localhost:3306 (credentials found in src/back-end/database.env)
+
+## Sources used
+
+- ChatGPT to help with script
+- Indigo's first sql docker file

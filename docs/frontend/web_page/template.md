@@ -127,3 +127,9 @@ function setupToggleBar(toggleId) {
 For the responsive design there is decided that placing the boxes vertical would be better for the user experience. This is done with media queries in css.
 
 ![ResponsiveProfilePage](/docs/assets/Figma/responsiveProfilePage.png)
+
+### References 
+- Figma is used to help with making the design for the website
+- W3Schools is used for helping with some problems in the css.
+
+**Chatgpt was used to clean up the written code**

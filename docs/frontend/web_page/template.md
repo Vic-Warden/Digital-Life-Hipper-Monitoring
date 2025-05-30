@@ -63,3 +63,6 @@ The links in the navbar will always be hidden under what is called "a hamburger 
 ### References
 - W3Schools is used to figure out how to make the dropdown menu for the navbar.
 - Chatgpt is used to help figuring out some errors in the code.
+
+## Profile page
+The profile page is used for patient to view there personal information and they are able to change some setting to their own preferences. Before starting to make the code for this page a design on figma was made and with this design the profile page was made. There is some difference in the visual experience between phone and desktop. On the phone the boxes are vertical instead of horizontally placed for a better user experience.

@@ -2,7 +2,7 @@
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
 
-# Import 
+# Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
 # Create the app Flask
@@ -117,8 +117,33 @@ def settings():
 @app.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
-        pass
+        
+        # Retrieve form
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        
+        # Every field is full
+        if not email or not new_password or not confirm_password:
+            return render_template('reset_password.html', error="Error")
+        
+        # Verify that passwords
+        if new_password != confirm_password:
+            return render_template('reset_password.html', error="Password's Error")
+        
+        # Verify the user
+        user_exists = db.check_user_exists(email)
+        if not user_exists:
+            return render_template('reset_password.html', error="User not found.")
 
+        # Hash the new password
+        hashed_password = generate_password_hash(new_password)
+        
+        # Update the new password
+        db.update_user_password(email, hashed_password)
+        
+        return redirect('/login')
+        
     # rentder the reset_password.html
     return render_template('reset_password.html')
 

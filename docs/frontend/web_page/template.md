@@ -72,3 +72,53 @@ The profile page is used for patient to view there personal information and they
 
 ### profile.css
 In the css file used to style the profile page you will find all the code that is used to style the page
+
+### profile.js
+In this file you will find the function used for the profile page.
+
+**Function getProfile is used to fetch the /profile endpoint that sends the patients personal information.**
+
+```js
+function getProfile() {
+  fetch("/profile", {
+    method: "GET",
+    headers: {
+      "Accept": "application/json"
+    },
+    credentials: "include"
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById("display-name").textContent = data.name;
+    document.getElementById("display-email").textContent = data.email;
+    document.getElementById("display-therapist").textContent = data.therapist;
+  })
+  .catch(error => {
+    console.error("Error fetching profile:", error);
+  });
+}
+```
+**function setupToggleBar(toggleId) sets up a toggle bar UI component that allows a user to choose between two options.**
+
+```js
+function setupToggleBar(toggleId) {
+  const toggleBar = document.getElementById(toggleId);
+  const halves = toggleBar.querySelectorAll('.half');
+
+  halves.forEach(half => {
+    half.addEventListener('click', () => {
+      halves.forEach(h => h.classList.remove('selected'));
+      half.classList.add('selected');
+      
+      const selectedValue = half.dataset.value;
+      console.log(`${toggleId} selected:`, selectedValue);
+
+    });
+  });
+}
+```

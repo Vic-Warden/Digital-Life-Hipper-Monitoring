@@ -1,5 +1,5 @@
 from services import DayDataDownload
 
-DayDataDownload(filename="output/dayData_90242",
-                 days=10,
-                 label_id=90242)
+DayDataDownload(filename="output/dayData_90245_1",
+                days=1,
+                label_id=90245)

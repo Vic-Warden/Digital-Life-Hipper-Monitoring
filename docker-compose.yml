@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    container_name: hipper-mysql
+    build: 
+      context: ./src/back-end/database
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./src/back-end/database/.env
+    volumes:
+      - ./src/back-end/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  nginx:
+    image: nginx:alpine
+    container_name: hipper-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src/app/templates:/usr/share/nginx/html:ro
+      - ./src/app/config/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro

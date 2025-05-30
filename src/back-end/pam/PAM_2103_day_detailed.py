@@ -1,17 +1,18 @@
 import asyncio
 from bleak import BleakClient, BleakScanner
 import csv
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
+
 
 class PAM_2103_Day_Detailed():
-    def __init__(self, file_uuid, download_uuid,  filename, filelength, adres = None):
+    def __init__(self, file_uuid, download_uuid,  filename, filelength, adres=None):
         self.filename = filename
-        #2102 for downloading the file on the PAM device
+        # 2102 for downloading the file on the PAM device
         self.ACTIVITY_FILE_UUID = file_uuid
-        #2103 for downloading the file over BLE
+        # 2103 for downloading the file over BLE
         self.ACTIVITY_DOWNLOAD_UUID = download_uuid
 
-        #length of activity file time
+        # length of activity file time
         self.REQUEST_AMOUNT_TYPE = filelength
         self.received_blocks = {}
 
@@ -24,7 +25,7 @@ class PAM_2103_Day_Detailed():
             print(f"Label ID provided, directly targetting ID {self.adres}")
             self.directly_targetting_ID = True
 
-    #callback for when a new block of bytes is received
+    # callback for when a new block of bytes is received
     def notification_handler(self, sender, data):
         block_number = int.from_bytes(data[:2], byteorder='little')
         payload = data[2:]
@@ -73,7 +74,8 @@ class PAM_2103_Day_Detailed():
             # first two bytes: combined bitfields
             bitfield = int.from_bytes(record_bytes[0:2], byteorder='little')
             day_offset = bitfield & 0x1F  # lower 5 bits: days since base date
-            minute_offset = (bitfield >> 5) & 0x7FF  # next 11 bits: minutes into that day
+            # next 11 bits: minutes into that day
+            minute_offset = (bitfield >> 5) & 0x7FF
 
             # third byte: steps count
             step_count = record_bytes[2]
@@ -82,11 +84,12 @@ class PAM_2103_Day_Detailed():
             raw_pam_score = record_bytes[3]
             pam_score = raw_pam_score / 16.0
 
-            activity_records.append((day_offset, minute_offset, step_count, pam_score))
+            activity_records.append(
+                (day_offset, minute_offset, step_count, pam_score))
 
         return activity_records
 
-    #displays the records here
+    # displays the records here
     def display_records(self, records, base_date):
 
         print(records)
@@ -104,8 +107,8 @@ class PAM_2103_Day_Detailed():
                 timestamp = start_date + timedelta(days=di, minutes=ti)
                 writer.writerow([timestamp, steps, score])
 
+    # connects to PAM device, requests a file with 2102, and then downloads it with 2103
 
-    #connects to PAM device, requests a file with 2102, and then downloads it with 2103
     async def run(self):
         adres = None
         if self.directly_targetting_ID == False:

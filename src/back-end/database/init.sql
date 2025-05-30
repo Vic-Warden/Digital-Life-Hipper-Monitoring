@@ -17,8 +17,10 @@ USE `hipperdb` ;
 -- -----------------------------------------------------
 -- Table `hipperdb`.`therapist`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`therapist` ;
+
 CREATE TABLE IF NOT EXISTS `hipperdb`.`therapist` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(32) NOT NULL,
@@ -28,19 +30,24 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`therapist` (
 -- -----------------------------------------------------
 -- Table `hipperdb`.`patient`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`patient` ;
+
 CREATE TABLE IF NOT EXISTS `hipperdb`.`patient` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(32) NOT NULL,
   `password` VARCHAR(24) NOT NULL,
+  `cookies` VARCHAR(256) NULL,
   PRIMARY KEY (`id`));
 
 
 -- -----------------------------------------------------
 -- Table `hipperdb`.`goal`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`goal` ;
+
 CREATE TABLE IF NOT EXISTS `hipperdb`.`goal` (
-  `id` INT NOT NULL,
+  `id` INT ZEROFILL NOT NULL,
   `patient_id_goal` INT NOT NULL,
   `patient_goal` INT NOT NULL,
   `type` ENUM('daily', 'weekly', 'monthly') NOT NULL,
@@ -57,6 +64,8 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`goal` (
 -- -----------------------------------------------------
 -- Table `hipperdb`.`device`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`device` ;
+
 CREATE TABLE IF NOT EXISTS `hipperdb`.`device` (
   `id` INT NOT NULL,
   `patient_id_device` INT NOT NULL,
@@ -73,8 +82,10 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`device` (
 -- -----------------------------------------------------
 -- Table `hipperdb`.`data`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`data` ;
+
 CREATE TABLE IF NOT EXISTS `hipperdb`.`data` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `device_id` INT NOT NULL,
   `timestamp` DATETIME NULL,
   `steps` INT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -93,6 +104,8 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`data` (
 -- -----------------------------------------------------
 -- Table `hipperdb`.`patient_has_therapist`
 -- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`patient_has_therapist` ;
+
 CREATE TABLE IF NOT EXISTS `hipperdb`.`patient_has_therapist` (
   `patient_id` INT NOT NULL,
   `therapist_id` INT NOT NULL,
@@ -130,7 +143,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`) VALUES (0, 'henk', 'henk@gmail.com', 'admin123');
+INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`, `cookies`) VALUES (0, 'henk', 'henk@gmail.com', 'admin123', NULL);
 
 COMMIT;
 

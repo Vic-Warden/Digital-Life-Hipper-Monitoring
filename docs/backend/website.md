@@ -8,6 +8,7 @@ This is a simple Flask web application that provides the user with simple paths 
 * `/home`
 * `/login`  
 * `/logout` 
+* `/profile`
 
 ---
 
@@ -81,6 +82,39 @@ def logout():
     
     # Redirection to the login if logout
     return redirect('/login') 
+```
+
+### 3. Profile
+
+Description :
+
+The `/profile` route can be accessed to the user easily
+
+```python
+# Profile' route with GET & POST 
+@app.route('/profile', methods=['GET', 'POST'])
+def settings():
+    if 'user' not in session:
+        return redirect('/login')
+    
+    # Retrieves sent data
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        therapist = request.form.get('therapist', '').strip()
+        
+        if not username or not email:
+                # If any field is empty
+                message = "Names, e-mails and the therapist is required"
+                return render_template('profile.html', user=session['user'], message=message)
+        
+        # Updates data in the session 
+        session['user']['username'] = username
+        session['user']['email'] = email
+        session['user']['therapist'] = therapist
+    
+        # Render the settings.html
+        return render_template('profile.html', user=session['user'], message=message)
 ```
 
 It then gets ran on port 6001

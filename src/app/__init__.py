@@ -2,6 +2,9 @@
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
 
+# Import 
+from werkzeug.security import generate_password_hash
+
 # Create the app Flask
 app = Flask(__name__)
 
@@ -109,6 +112,15 @@ def settings():
     
         # Render the settings.html
         return render_template('profile.html', user=session['user'], message=message)
+    
+# Reset-password's route with GET & POST 
+@app.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'POST':
+        pass
+
+    # rentder the reset_password.html
+    return render_template('reset_password.html')
 
 
 # Start the Flask application

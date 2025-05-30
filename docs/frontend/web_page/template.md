@@ -122,3 +122,8 @@ function setupToggleBar(toggleId) {
   });
 }
 ```
+
+### Responsive
+For the responsive design there is decided that placing the boxes vertical would be better for the user experience. This is done with media queries in css.
+
+![ResponsiveProfilePage](/docs/assets/Figma/responsiveProfilePage.png)

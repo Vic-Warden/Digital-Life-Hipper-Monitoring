@@ -66,3 +66,9 @@ The links in the navbar will always be hidden under what is called "a hamburger 
 
 ## Profile page
 The profile page is used for patient to view there personal information and they are able to change some setting to their own preferences. Before starting to make the code for this page a design on figma was made and with this design the profile page was made. There is some difference in the visual experience between phone and desktop. On the phone the boxes are vertical instead of horizontally placed for a better user experience.
+
+**Figma design Profile page**
+![FigmaProfile](/docs/assets/Figma/ProfilePageDesign.png)
+
+### profile.css
+In the css file used to style the profile page you will find all the code that is used to style the page

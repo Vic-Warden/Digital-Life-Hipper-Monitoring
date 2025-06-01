@@ -27,6 +27,8 @@ What I learned is that for us to perform a similar test we need to also take two
 
 #223 As a student, I want to learn more about docker, so that I can setup a script which will run the web app locally.
 
+* Having already heard about docker many times throughout my IT life it always came across as a little scary. Especially for me as a BIMmer it always seemed like something only diehard developers would get in touch with. In my recent years I taught myself to have a mentality that I can learn anything as long as I truly set my mind to it. Then when first searching on google for some sample scripts, I noticed that for the things we needed as a group it really was not that scary after all.
+
 
 ## Journal
 

@@ -63,3 +63,7 @@ Today in the daily standup we as a group discussed what still needed to be done.
 ### 5/25/2025
 
 In the weekend I made sure to finish up one learning story. The coming week I will be working on my first programming challenges. I know a fair amount now, so I'm curious what I will walk into. Likely I will have to work on the web application where I need to work on my JavaScript skills and/or HTML CSS. I hope to first implement the login part, or at least the design. The functionality will be another challenge 
+
+### 6/1/2025
+
+Today I finished my learning story about docker. This was actually way easier than I thought in hindsight. My goal now is to work on the front end. Working on web stuff is probably my least favorite thing, but I will do what makes the group move forward. 

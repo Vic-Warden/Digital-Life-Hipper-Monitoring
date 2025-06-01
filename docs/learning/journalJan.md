@@ -30,6 +30,8 @@ What I learned is that for us to perform a similar test we need to also take two
 * Having already heard about docker many times throughout my IT life it always came across as a little scary. Especially for me as a BIMmer it always seemed like something only diehard developers would get in touch with. In my recent years I taught myself to have a mentality that I can learn anything as long as I truly set my mind to it. Then when first searching on google for some sample scripts, I noticed that for the things we needed as a group it really was not that scary after all.
 
 * So, my first goal was to re-implement the docker script Indigo had already created for the mysql database. I talked to him about how we wanted to do this, because again, I have 0 docker experience. He explained to me that the `docker-compose.yml` file would need to be in the main folder structure. Then we could leave all of the specific files in their respective folders where they belong. So after some more research and prompting `ChatGPT`, I now know what he ment with that.
+So using common sense I was able to switch over his SQL docker file to the main `docker-compose.yml`. After that implementing a simple nginx script to launch our web app turned out to not be difficult too. Again with some help from `ChatGPT` I had successfully done that. Of course I needed to adjust the file structures and where it had to search for certain things myself, but with my common sense it worked out perfectly.
+
 
 
 ## Journal

@@ -325,3 +325,6 @@ document.querySelectorAll(".nav-link").forEach(link => {
 [Link to explanation dropdown menu W3Schools](https://www.w3schools.com/css/css_dropdowns.asp)
 
 **Chatgpt was used to do research on dropdown menu and refining the steps to make it**
+
+## Learning Story 222
+As a student I want to learn how to work in Jupyter Notebook, so I understand the way to work with it when using it in this project

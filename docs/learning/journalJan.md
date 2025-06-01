@@ -25,6 +25,9 @@ What I learned is that for us to perform a similar test we need to also take two
 
 * Starting with this one I had contact with Indigo and Richard on how to go about doing this. I was already expecting to have to do something with figma. I barely have any experience with it, so I got pointed to something Indigo had already made. That gave me a good base and would let me explore figma a little. After starting the first thing I did was go back to an earlier user story I did which was about the components for our web app. Then too I looked at some login pages through Google image search. After deciding on a lay-out, I went to work in Figma. I looked up a mini tutorial on YouTube: `https://www.youtube.com/watch?v=7TF2ZmtkZz0` this quickly helped me with where to find certain things. That way I constructed the login page fairly quickly. 
 
+#223 As a student, I want to learn more about docker, so that I can setup a script which will run the web app locally.
+
+
 ## Journal
 
 ### 5/7/2025

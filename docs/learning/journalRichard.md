@@ -331,3 +331,16 @@ As a student I want to learn how to work in Jupyter Notebook, so I understand th
 
 ### What I have learned
 Before starting this project, I had never used Jupyter Notebook and didn’t know how it worked. After doing some research, I learned how to navigate and use it effectively. Jupyter Notebook makes it easy to write and run code in separate blocks, which is great for testing and debugging. You can run one cell at a time to check specific parts of your code, or run all cells at once to see the full program in action. It also allows you to add text cells using Markdown to explain your code, document your thought process, or provide important information for other developers. One feature I found especially helpful is the ability to visualize data directly in the notebook using libraries like Matplotlib or Pandas. This makes it much easier to interpret results and spot trends while working with data.
+
+### Steps I used to learn how to work with jupyter notebook
+
+1. Install the exstensions needed.
+
+- Jupyter
+- Python
+
+2. Watch a youtube video on how to work with jupyter notebook.
+
+3. At last I started looking into the notebook files made by team members.
+
+4. Start working on your on notebook file.

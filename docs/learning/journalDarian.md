@@ -19,6 +19,8 @@ the steps to take are found and are as follows:
 - Click `File > Embed report > Publish to web (public)`
 - Confirm and copy the iframe code or public URL.
 
+---
+
 #### Learning story 2:
 As a student, I want to learn how I can use colors for graphs in PowerBi, so that we can keep the graphs easy to understand.
 
@@ -48,6 +50,8 @@ Additionally you can also use custom lines and rules to set colors for your grap
 6. **Preview and Save**
    - Review your changes and save your report.
 
+---
+
 #### Learning story 3:
 
 As a student, I want to learn how I can view HTML code in visual studio code, so that I can get a preview on the HTML code i'm working on.
@@ -55,8 +59,6 @@ As a student, I want to learn how I can view HTML code in visual studio code, so
 ## What I Learned
 
 I explored how to use **Live Preview**, a Visual Studio Code extension, to view my HTML code in a live browser view. Here's what I learned step by step:
-
----
 
 ## Step-by-Step Guide: Using Live Preview in VS Code
 
@@ -93,3 +95,69 @@ With the **Live Preview** extension in VS Code:
 - I can easily preview my HTML code.
 - I save time by not switching between editor and browser.
 - It makes front-end development more efficient and interactive.
+
+
+---
+
+# Learning Journal: Figma Homepage Design for Therapist
+
+## User Story
+As a student, I want to learn how to use Figma to make the homepage design for the therapist, so that I can make the design which can be used for the web application.
+
+## Description
+I will be learning quickly how to use Figma to create the design for the homepage of the therapist. This will include a quick learning tutorial and reading about how to use basic designs for Figma. Also, I will look at the team’s previous designs and take inspiration from them and read what and how they have designed it.
+
+## Learning Source
+- [Figma Help Center - Learn design with Figma](https://help.figma.com/hc/en-us/sections/30880632542743)
+
+## What I Have Learned
+- How to navigate the Figma interface including the toolbar, layers panel, and properties panel.
+- How to create frames and use layout grids to organize design structure.
+- How to use basic shape tools and text tools to build the visual structure of a webpage.
+- The importance of components and how to reuse them for consistency.
+- How to import images and use plugins to speed up the workflow.
+- How to collaborate and leave comments within Figma.
+
+## Steps I Took
+1. **Explored the Figma interface:**
+   - Got familiar with where to find tools and how to organize files and pages.
+
+2. **Learned to create a wireframe:**
+   - Used frames to create the layout of the homepage.
+   - Applied a grid to align elements properly.
+
+3. **Created components:**
+   - Built reusable buttons and navigation bars.
+   - Learned how to update components globally.
+
+4. **Studied previous team designs:**
+   - Analyzed layout, typography, and component usage.
+   - Noted what design patterns were followed for consistency.
+
+5. **Finalized homepage design:**
+   - Created a functional and clean homepage mockup for a therapist’s website.
+   - Focused on usability and clarity.
+
+## Challenges & Solutions
+
+### 1. Getting Familiar with the Interface
+The Figma interface felt overwhelming at first due to the many tools and panels.
+
+**Solution:**  
+I used Figma’s tutorials and documentation to explore the interface and practiced building simple layouts to get used to it.
+
+### 2. Understanding Frames vs Groups
+I initially confused frames with groups, which led to alignment issues.
+
+**Solution:**  
+After reading the documentation and experimenting in Figma, I learned the distinct purpose of each and started using them correctly.
+
+### 3. Creating Consistent Components
+Maintaining consistency in buttons, typography, and spacing was challenging.
+
+**Solution:**  
+I reviewed previous team designs and adopted a system of reusable components and layout grids to keep the design uniform.
+
+
+## Summary
+Through focused exploration of Figma’s tools and documentation, and by studying existing team designs, I quickly developed the skills needed to create a usable homepage layout for a therapist. This experience helped me understand interface design fundamentals and prepared me to contribute to future web application projects using Figma. Facing challenges such as tool unfamiliarity and trying to get familiar with the Figma layout helped me grow more to get better at learning design in Figma.

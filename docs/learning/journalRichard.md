@@ -344,3 +344,8 @@ Before starting this project, I had never used Jupyter Notebook and didn’t kno
 3. At last I started looking into the notebook files made by team members.
 
 4. Start working on your on notebook file.
+
+### References
+- I used a youtube video to understand the basics of jupyter notebook. [Link to video](https://www.youtube.com/watch?v=suAkMeWJ1yE)
+
+**Chatgpt was used to help understand some of the features from notebook**

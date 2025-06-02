@@ -137,6 +137,41 @@ def admin_login():
         # If user is not logged in, redirects to login page
         return redirect('/admin/login')
 
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login_page():
+    if request.method == 'POST':
+        # Retrieve email password & the therapist
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if db.check_admin_credentials(email, password):
+            # Create secure cookie
+            success, cookie_value = db.create_cookie(email)
+
+            print(f"Cookie created: {cookie_value}")
+
+            if not success:
+                return "Failed to create cookie", 500
+
+            # Create response and set cookie
+            response = make_response(redirect('/admin/home'))
+            response.set_cookie(
+                'auth_cookie',            # Cookie name
+                cookie_value,             # Cookie value
+                max_age=60*60*24*7,       # 1 week
+                httponly=True,            # Prevent JS access (XSS)
+                secure=True,              # Only over HTTPS
+                samesite='Lax'            # Protect from CSRF somewhat
+            )
+
+            # Redirect to home after form submission
+            return response
+        return render_template('admin_login.html', error="Invalid credentials. Please try again.")
+    else:
+        # Render the admin_login.html
+        return render_template('admin_login.html')
+
 # Reset-password's route with GET & POST
 
 

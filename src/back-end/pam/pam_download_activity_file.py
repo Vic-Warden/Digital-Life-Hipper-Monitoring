@@ -15,9 +15,9 @@ import asyncio
 #
 # SetTimestamp2101(label_id=2)
 #
-ActivityDownload(filename="../../research/data/device__8__3.csv",
+ActivityDownload(filename="../datasets/reserach_attempt_2/data/device__8__3.csv",
                  filelength=get_detailed_request("MAX"),
                  label_id=90248)
-ActivityDownload(filename="../../research/data/device__2__3.csv",
+ActivityDownload(filename="../datasets/reserach_attempt_2/data/device__2__3.csv",
                  filelength=get_detailed_request("MAX"),
                  label_id=90242)

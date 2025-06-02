@@ -15,7 +15,7 @@ function setupToggleBar(toggleId) {
 }
 
 function getProfile() {
-  fetch("/profile", {
+  fetch("/settings", {
     method: "GET",
     headers: {
       "Accept": "application/json"

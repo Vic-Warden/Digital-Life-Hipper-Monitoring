@@ -137,6 +137,44 @@ def admin_login():
         # If user is not logged in, redirects to login page
         return redirect('/admin/login')
 
+
+@app.route('/admin/patients', methods=['GET'])
+def admin_patient_details(patient_id):
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Fetch patient details from the database
+    patient_details = db.get_patients(patient_id)
+
+    if not patient_details:
+        return "Patients not found", 404
+
+    # Render the patient details page
+    return render_template('admin_patients.html', patient=patient_details)
+
+
+@app.route('/admin/patients/<patient_id>', methods=['GET'])
+def admin_patient_details(patient_id):
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Fetch patient details from the database
+    patient_details = db.get_patient_details(patient_id)
+
+    if not patient_details:
+        return "Patient not found", 404
+
+    # Render the patient details page
+    return render_template('admin_patient_details.html', patient=patient_details)
+
 # Reset-password's route with GET & POST
 
 

@@ -1,0 +1,15 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #a8d8f0 0%, #e6f3ff 100%);
+  min-height: 100vh;
+  color: #333;
+}
+
+/* Header */

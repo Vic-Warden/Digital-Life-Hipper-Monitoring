@@ -235,11 +235,30 @@ def change_email():
     return render_template('profile.html', user=session['user'], message="Email updated successfully.")
 
 
+@app.route('/api/get-patients', methods=['GET'])
+def get_patients():
+    """
+    API endpoint to retrieve all patients.
+    Returns a JSON response with patient data and status code.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    patients = db.get_patients()
+    if not patients:
+        return {"error": "No patients found"}, 404
+
+    return {"patients": patients}, 200
+
+
 @app.route('/api/get-patient-data', methods=['GET'])
 def get_patient_data():
     """
     API endpoint to retrieve patient data.
-    Returns a JSON response with patient data.
+    Returns a JSON response with patient data and status code.
     """
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
@@ -255,12 +274,7 @@ def get_patient_data():
     if not patient_data:
         return {"error": "Patient not found"}, 404
 
-    return {
-        "patient_id": patient_data['id'],
-        "name": patient_data['name'],
-        "email": patient_data['email'],
-        "therapist": patient_data['therapist']
-    }, 200
+    return patient_data, 200
 
 
 # Start the Flask application

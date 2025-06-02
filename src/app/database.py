@@ -309,4 +309,5 @@ db = Database(
     database="hipperdb"
 )
 
-print(db.get_patient_details(1))
+# Example usage to get patients for therapist with ID 1
+print(db.get_patients(1))

@@ -96,7 +96,7 @@ def logout():
 # Profile' route with GET & POST
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)

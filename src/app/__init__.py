@@ -124,23 +124,16 @@ def settings():
         return render_template('profile.html', user=session['user'], message=message)
 
 
-@app.route('/admin/login', methods=['GET', 'POST'])
+@app.route('/admin/home', methods=['GET', 'POST'])
 def admin_login():
-    if request.method == 'POST':
-        # Retrieve admin credentials
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        # Check admin credentials
-        if username == 'admin' and password == 'admin123':
-            # Set session variable for admin
-            session['admin'] = True
-            return redirect('/admin/dashboard')
-        else:
-            return render_template('admin_login.html', error="Invalid admin credentials.")
-
-    # Render the admin login page
-    return render_template('admin_login.html')
+    # if connected
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+        # Render the home.html
+        return render_template('admin_home.html')
+    else:
+        # If user is not logged in, redirects to login page
+        return redirect('/admin/login')
 
 # Reset-password's route with GET & POST
 

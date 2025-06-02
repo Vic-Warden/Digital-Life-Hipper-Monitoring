@@ -10,6 +10,7 @@ This is a simple Flask web application that provides the user with simple paths 
 * `/logout` 
 * `/profile`
 * `/reset-password`
+* `/admin/home`
 
 ---
 

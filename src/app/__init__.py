@@ -197,6 +197,25 @@ def change_email():
     return render_template('profile.html', user=session['user'], message="Email updated successfully.")
 
 
+@app.route('/api/get-patient-data', methods=['GET'])
+def get_patient_data():
+    """
+    API endpoint to retrieve patient data.
+    Returns a JSON response with patient data.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    # Assuming user_data contains the necessary patient information
+    return {
+        "status": "success",
+        "data": user_data
+    }, 200
+
+
 # Start the Flask application
 if __name__ == "__main__":
     app.run(debug=True, port=6001)

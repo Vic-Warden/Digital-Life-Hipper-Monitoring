@@ -123,6 +123,20 @@ def settings():
         # Render the settings.html
         return render_template('profile.html', user=session['user'], message=message)
 
+# Handle the admin login page
+
+
+@app.route('/admin/home', methods=['GET', 'POST'])
+def admin_login():
+    # if connected
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+        # Render the home.html
+        return render_template('admin_home.html')
+    else:
+        # If user is not logged in, redirects to login page
+        return redirect('/admin/login')
+
 # Reset-password's route with GET & POST
 
 
@@ -137,11 +151,11 @@ def reset_password():
 
         # Every field is full
         if not email or not new_password or not confirm_password:
-            return render_template('reset_password.html', error="Error")
+            return render_template('reset_password.html', error="Please fill in all the fields.")
 
         # Verify that passwords
         if new_password != confirm_password:
-            return render_template('reset_password.html', error="Password's Error")
+            return render_template('reset_password.html', error="Passwords do not match.")
 
         # Verify the user
         user_exists = db.check_user_exists(email)

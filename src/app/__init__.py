@@ -21,6 +21,8 @@ db = Database(
 )
 
 # Route for the home page
+
+
 @app.route('/')
 def redirect_to_home():
 
@@ -28,6 +30,8 @@ def redirect_to_home():
     return redirect('/home')
 
 # Home's route
+
+
 @app.route('/home')
 def home():
     # if connected
@@ -40,6 +44,8 @@ def home():
         return redirect('/login')
 
 # Request the user & the password with GET and POST methods
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -76,6 +82,8 @@ def login():
         return render_template('login.html')
 
 # Logout's route with POST methods
+
+
 @app.route('/logout', methods=['POST'])
 def logout():
     # Clear the session
@@ -85,52 +93,75 @@ def logout():
     # Redirection to the login if logout
     return redirect('/login')
 
-# Profile' route with GET & POST 
+# Profile' route with GET & POST
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
-    
+
     if 'user' not in session:
         return redirect('/login')
-    
+
     # Retrieves sent data
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         therapist = request.form.get('therapist', '').strip()
-        
+
         if not username or not email:
-                # If any field is empty
-                message = "Names, e-mails and the therapist is required"
-                return render_template('profile.html', user=session['user'], message=message)
-        
-        # Updates data in the session 
+            # If any field is empty
+            message = "Names, e-mails and the therapist is required"
+            return render_template('profile.html', user=session['user'], message=message)
+
+        # Updates data in the session
         session['user']['username'] = username
         session['user']['email'] = email
         session['user']['therapist'] = therapist
-    
+
         # Render the settings.html
         return render_template('profile.html', user=session['user'], message=message)
-    
-# Reset-password's route with GET & POST 
+
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        # Retrieve admin credentials
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Check admin credentials
+        if username == 'admin' and password == 'admin123':
+            # Set session variable for admin
+            session['admin'] = True
+            return redirect('/admin/dashboard')
+        else:
+            return render_template('admin_login.html', error="Invalid admin credentials.")
+
+    # Render the admin login page
+    return render_template('admin_login.html')
+
+# Reset-password's route with GET & POST
+
+
 @app.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
-        
+
         # Retrieve form
         email = request.form.get('email')
         new_password = request.form.get('new_password')
         confirm_password = request.form.get('confirm_password')
-        
+
         # Every field is full
         if not email or not new_password or not confirm_password:
-            return render_template('reset_password.html', error="Error")
-        
+            return render_template('reset_password.html', error="Please fill in all the fields.")
+
         # Verify that passwords
         if new_password != confirm_password:
-            return render_template('reset_password.html', error="Password's Error")
-        
+            return render_template('reset_password.html', error="Passwords do not match.")
+
         # Verify the user
         user_exists = db.check_user_exists(email)
         if not user_exists:
@@ -138,12 +169,12 @@ def reset_password():
 
         # Hash the new password
         hashed_password = generate_password_hash(new_password)
-        
+
         # Update the new password
         db.update_user_password(email, hashed_password)
-        
+
         return redirect('/login')
-        
+
     # rentder the reset_password.html
     return render_template('reset_password.html')
 

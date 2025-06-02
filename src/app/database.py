@@ -225,7 +225,25 @@ class Database:
         return (False, "Failed to change email.")
 
     def get_patient_details(self, patient_id: int) -> dict | None:
-        pass
+        """
+        ### Get details of a patient by their ID.
+
+        Returns a dictionary containing patient details or None if not found.
+        """
+        query = """
+            SELECT * FROM data
+        """
+        params = (patient_id,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result:
+            row = result[0]
+            return {
+                "id": row[0],
+                "name": row[1],
+                "email": row[2],
+                "therapist": row[3]
+            }
 
     def get_patients(self, therapeut_id: int) -> list[dict] | None:
         """

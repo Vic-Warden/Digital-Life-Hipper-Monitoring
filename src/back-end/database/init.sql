@@ -47,18 +47,18 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`patient` (
 DROP TABLE IF EXISTS `hipperdb`.`goal` ;
 
 CREATE TABLE IF NOT EXISTS `hipperdb`.`goal` (
-  `id` INT ZEROFILL NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `patient_id_goal` INT NOT NULL,
   `patient_goal` INT NOT NULL,
   `type` ENUM('daily', 'weekly', 'monthly') NOT NULL,
   `reached` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  INDEX `patient_id_idx` (`patient_id_goal` ASC) VISIBLE,
+  INDEX `patient_id_goal_idx` (`patient_id_goal` ASC) VISIBLE,
   CONSTRAINT `patient_id_goal`
     FOREIGN KEY (`patient_id_goal`)
     REFERENCES `hipperdb`.`patient` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 
 -- -----------------------------------------------------
@@ -67,9 +67,10 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`goal` (
 DROP TABLE IF EXISTS `hipperdb`.`device` ;
 
 CREATE TABLE IF NOT EXISTS `hipperdb`.`device` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `patient_id_device` INT NOT NULL,
-  `device_label` INT NOT NULL,
+  `device_label` VARCHAR(10) NOT NULL,
+  `device_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `patient_id_idx` (`patient_id_device` ASC) VISIBLE,
   CONSTRAINT `patient_id_device`
@@ -133,7 +134,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`therapist` (`id`, `name`, `email`, `password`) VALUES (0, 'hans', 'hans@gmail.com', 'admin123');
+INSERT INTO `hipperdb`.`therapist` (`id`, `name`, `email`, `password`) VALUES (1, 'hans', 'hans@gmail.com', 'admin123');
 
 COMMIT;
 
@@ -143,7 +144,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`, `cookies`) VALUES (0, 'henk', 'henk@gmail.com', 'admin123', NULL);
+INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`, `cookies`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL);
 
 COMMIT;
 
@@ -153,7 +154,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) VALUES (0, 0, 150, 'daily', 0);
+INSERT INTO `hipperdb`.`goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) VALUES (1, 1, 150, 'daily', 0);
 
 COMMIT;
 
@@ -163,7 +164,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`device` (`id`, `patient_id_device`, `device_label`) VALUES (0 , 0, 09234);
+INSERT INTO `hipperdb`.`device` (`id`, `patient_id_device`, `device_label`, `device_id`) VALUES (1, 1, '09234', 1);
 
 COMMIT;
 
@@ -173,7 +174,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`data` (`id`, `device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`) VALUES (0, 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `hipperdb`.`data` (`id`, `device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`) VALUES (1, 1, '2025-06-02 14:30:00', 145, 73.4, 2, 'testlabel');
 
 COMMIT;
 
@@ -183,7 +184,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`patient_has_therapist` (`patient_id`, `therapist_id`) VALUES (0, 0);
+INSERT INTO `hipperdb`.`patient_has_therapist` (`patient_id`, `therapist_id`) VALUES (1, 1);
 
 COMMIT;
 

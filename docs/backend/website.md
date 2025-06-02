@@ -165,3 +165,20 @@ It then gets ran on port 6001
 if __name__ == "__main__":
     app.run(debug=True, port=6001)
 ```
+
+### 5. Admin Home
+
+The admin/therapeut can view their homepage using the /admin/home route. If they are not authenticated, they will be sent to the /admin/login route.
+
+```python
+@app.route('/admin/home', methods=['GET', 'POST'])
+def admin_login():
+    # if connected
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+        # Render the home.html
+        return render_template('admin_home.html')
+    else:
+        # If user is not logged in, redirects to login page
+        return redirect('/admin/login')
+```

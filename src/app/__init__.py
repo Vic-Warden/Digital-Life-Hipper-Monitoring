@@ -123,6 +123,8 @@ def settings():
         # Render the settings.html
         return render_template('profile.html', user=session['user'], message=message)
 
+# Handle the admin login page
+
 
 @app.route('/admin/home', methods=['GET', 'POST'])
 def admin_login():

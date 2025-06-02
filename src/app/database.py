@@ -223,3 +223,36 @@ class Database:
         if result is not None and len(result[0][0]) > 0:
             return (True, "")
         return (False, "Failed to change email.")
+
+    def get_patient_details(self, patient_id: int) -> dict | None:
+        pass
+
+    def get_patients(self, therapeut_id: int) -> list[dict] | None:
+        """
+        ### Get a list of patients associated with a therapist.
+
+        Returns a list of dictionaries containing patient details.
+        """
+        query = """
+            SELECT p.id, p.name, p.email
+            FROM patient AS p
+            JOIN patient_has_therapist AS pt ON p.id = pt.patient_id
+            WHERE pt.therapist_id = %s;
+        """
+        params = (therapeut_id,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result:
+            return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
+        return None
+
+
+db = Database(
+    host="localhost",
+    port=3306,
+    user="root",
+    password="superstronkrootpassword",
+    database="hipperdb"
+)
+
+print(db.get_patients(1))

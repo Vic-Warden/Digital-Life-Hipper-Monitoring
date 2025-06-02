@@ -247,10 +247,19 @@ def get_patient_data():
     if not valid:
         return {"error": "Invalid or expired cookie"}, 401
 
-    # Assuming user_data contains the necessary patient information
+    patient = request.args.get('patient_id')
+    if not patient:
+        return {"error": "Patient ID is required"}, 400
+
+    patient_data = db.get_patient_details(patient)
+    if not patient_data:
+        return {"error": "Patient not found"}, 404
+
     return {
-        "status": "success",
-        "data": user_data
+        "patient_id": patient_data['id'],
+        "name": patient_data['name'],
+        "email": patient_data['email'],
+        "therapist": patient_data['therapist']
     }, 200
 
 

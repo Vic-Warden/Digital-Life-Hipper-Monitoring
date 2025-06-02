@@ -21,6 +21,8 @@ db = Database(
 )
 
 # Route for the home page
+
+
 @app.route('/')
 def redirect_to_home():
 
@@ -28,6 +30,8 @@ def redirect_to_home():
     return redirect('/home')
 
 # Home's route
+
+
 @app.route('/home')
 def home():
     # if connected
@@ -40,6 +44,8 @@ def home():
         return redirect('/login')
 
 # Request the user & the password with GET and POST methods
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -76,6 +82,8 @@ def login():
         return render_template('login.html')
 
 # Logout's route with POST methods
+
+
 @app.route('/logout', methods=['POST'])
 def logout():
     # Clear the session
@@ -85,52 +93,56 @@ def logout():
     # Redirection to the login if logout
     return redirect('/login')
 
-# Profile' route with GET & POST 
-@app.route('/profile', methods=['GET', 'POST'])
+# Profile' route with GET & POST
+
+
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
-    
+
     if 'user' not in session:
         return redirect('/login')
-    
+
     # Retrieves sent data
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         therapist = request.form.get('therapist', '').strip()
-        
+
         if not username or not email:
-                # If any field is empty
-                message = "Names, e-mails and the therapist is required"
-                return render_template('profile.html', user=session['user'], message=message)
-        
-        # Updates data in the session 
+            # If any field is empty
+            message = "Names, e-mails and the therapist is required"
+            return render_template('profile.html', user=session['user'], message=message)
+
+        # Updates data in the session
         session['user']['username'] = username
         session['user']['email'] = email
         session['user']['therapist'] = therapist
-    
+
         # Render the settings.html
         return render_template('profile.html', user=session['user'], message=message)
-    
-# Reset-password's route with GET & POST 
+
+# Reset-password's route with GET & POST
+
+
 @app.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == 'POST':
-        
+
         # Retrieve form
         email = request.form.get('email')
         new_password = request.form.get('new_password')
         confirm_password = request.form.get('confirm_password')
-        
+
         # Every field is full
         if not email or not new_password or not confirm_password:
             return render_template('reset_password.html', error="Error")
-        
+
         # Verify that passwords
         if new_password != confirm_password:
             return render_template('reset_password.html', error="Password's Error")
-        
+
         # Verify the user
         user_exists = db.check_user_exists(email)
         if not user_exists:
@@ -138,14 +150,37 @@ def reset_password():
 
         # Hash the new password
         hashed_password = generate_password_hash(new_password)
-        
+
         # Update the new password
         db.update_user_password(email, hashed_password)
-        
+
         return redirect('/login')
-        
+
     # rentder the reset_password.html
     return render_template('reset_password.html')
+
+
+@app.route('/change-email', methods=['POST'])
+def change_email():
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/login')
+
+    # Retrieve the new email from the form
+    new_email = request.form.get('new_email', '').strip()
+
+    if not new_email:
+        return render_template('profile.html', user=session['user'], message="Email cannot be empty.")
+
+    # Update the user's email in the database
+    db.update_user_email(cookie, new_email)
+
+    # Update the session data
+    session['user']['email'] = new_email
+
+    return render_template('profile.html', user=session['user'], message="Email updated successfully.")
 
 
 # Start the Flask application

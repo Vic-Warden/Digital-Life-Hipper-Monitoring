@@ -208,3 +208,18 @@ class Database:
         if result is not None and len(result[0][0]) > 0:
             return (True, "")
         return (False, "Failed to remove cookie.")
+
+    def change_user_email(self, token: str, new_email: str) -> tuple[bool, str]:
+        """
+        ### Change the email of a user based on their token.
+
+        Returns a tuple (True, "") if the email was changed successfully,
+        or (False, "Failed to change email") if it was not.
+        """
+        query = "UPDATE patient SET email = %s WHERE cookies = %s;"
+        params = (new_email, token)
+        result = self.do_query(query, params, fetch=False)
+
+        if result is not None and len(result[0][0]) > 0:
+            return (True, "")
+        return (False, "Failed to change email.")

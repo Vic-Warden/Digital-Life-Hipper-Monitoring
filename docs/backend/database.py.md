@@ -18,6 +18,7 @@ remove_patient()      # Removes a patient based on their email
 create_cookie()       # Creates a new login cookie for a user
 verify_cookie()       # Verifies a cookie's validity and retrieves the associated user
 remove_cookie()       # Deletes a cookie from the database
+change_user_email()   # Changes the users email based on session token
 ```
 
 ### How to execute queries
@@ -99,3 +100,9 @@ self.cookie = Cookie()
 `remove_cookie(cookie: str):` Deletes the cookie from the database.
 
 These functions enable session handling for users while maintaining secure authentication flows.
+
+### Account Management
+
+**Account Functions**
+
+`change_user_email(token: str, new_email: str):` Changes the users email based on the session token.

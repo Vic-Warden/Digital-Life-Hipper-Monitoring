@@ -96,7 +96,7 @@ def logout():
 # Profile' route with GET & POST
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
@@ -172,6 +172,29 @@ def reset_password():
 
     # rentder the reset_password.html
     return render_template('reset_password.html')
+
+
+@app.route('/change-email', methods=['POST'])
+def change_email():
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/login')
+
+    # Retrieve the new email from the form
+    new_email = request.form.get('new_email', '').strip()
+
+    if not new_email:
+        return render_template('profile.html', user=session['user'], message="Email cannot be empty.")
+
+    # Update the user's email in the database
+    db.update_user_email(cookie, new_email)
+
+    # Update the session data
+    session['user']['email'] = new_email
+
+    return render_template('profile.html', user=session['user'], message="Email updated successfully.")
 
 
 # Start the Flask application

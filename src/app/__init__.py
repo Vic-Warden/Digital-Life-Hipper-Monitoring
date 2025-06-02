@@ -84,7 +84,7 @@ def login():
 # Logout's route with POST methods
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET'])
 def logout():
     # Clear the session
     cookie = request.cookies.get('auth_cookie')

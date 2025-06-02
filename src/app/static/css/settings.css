@@ -1,3 +1,7 @@
+.card, .card * {
+  font-family: Arial, sans-serif;
+}
+
 /* Base layout for larger screens */
 .container {
   display: flex;

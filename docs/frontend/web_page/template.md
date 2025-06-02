@@ -63,3 +63,73 @@ The links in the navbar will always be hidden under what is called "a hamburger 
 ### References
 - W3Schools is used to figure out how to make the dropdown menu for the navbar.
 - Chatgpt is used to help figuring out some errors in the code.
+
+## Profile page
+The profile page is used for patient to view there personal information and they are able to change some setting to their own preferences. Before starting to make the code for this page a design on figma was made and with this design the profile page was made. There is some difference in the visual experience between phone and desktop. On the phone the boxes are vertical instead of horizontally placed for a better user experience.
+
+**Figma design Profile page**
+![FigmaProfile](/docs/assets/Figma/ProfilePageDesign.png)
+
+### profile.css
+In the css file used to style the profile page you will find all the code that is used to style the page
+
+### profile.js
+In this file you will find the function used for the profile page.
+
+**Function getProfile is used to fetch the /profile endpoint that sends the patients personal information.**
+
+```js
+function getProfile() {
+  fetch("/profile", {
+    method: "GET",
+    headers: {
+      "Accept": "application/json"
+    },
+    credentials: "include"
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Failed to fetch profile");
+    }
+    return response.json();
+  })
+  .then(data => {
+    document.getElementById("display-name").textContent = data.name;
+    document.getElementById("display-email").textContent = data.email;
+    document.getElementById("display-therapist").textContent = data.therapist;
+  })
+  .catch(error => {
+    console.error("Error fetching profile:", error);
+  });
+}
+```
+**function setupToggleBar(toggleId) sets up a toggle bar UI component that allows a user to choose between two options.**
+
+```js
+function setupToggleBar(toggleId) {
+  const toggleBar = document.getElementById(toggleId);
+  const halves = toggleBar.querySelectorAll('.half');
+
+  halves.forEach(half => {
+    half.addEventListener('click', () => {
+      halves.forEach(h => h.classList.remove('selected'));
+      half.classList.add('selected');
+      
+      const selectedValue = half.dataset.value;
+      console.log(`${toggleId} selected:`, selectedValue);
+
+    });
+  });
+}
+```
+
+### Responsive
+For the responsive design there is decided that placing the boxes vertical would be better for the user experience. This is done with media queries in css.
+
+![ResponsiveProfilePage](/docs/assets/Figma/responsiveProfilePage.png)
+
+### References 
+- Figma is used to help with making the design for the website
+- W3Schools is used for helping with some problems in the css.
+
+**Chatgpt was used to clean up the written code**

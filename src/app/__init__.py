@@ -175,7 +175,7 @@ def change_email():
         return render_template('profile.html', user=session['user'], message="Email cannot be empty.")
 
     # Update the user's email in the database
-    db.update_user_email(cookie, new_email)
+    db.change_user_email(cookie, new_email)
 
     # Update the session data
     session['user']['email'] = new_email

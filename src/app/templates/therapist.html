@@ -7,8 +7,64 @@
   <link rel="stylesheet" href="../static/css/therapist.css" />
 </head>
 <body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1 class="logo">HIPPER THERAPEUTICS</h1>
+      <div class="header-right">
+        <button class="settings-btn">⚙️</button>
+        <div class="user-profile">
+          <span class="user-name">Marianne Elsenbeek</span>
+          <div class="user-avatar"></div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <!-- Content goes here -->
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Left Panel - Client Data -->
+    <section class="client-data-panel">
+      <h2>Client Data</h2>
+      
+      <!-- Weekly PAM -->
+      <div class="metric-card">
+        <div class="metric-icon steps-icon">👣</div>
+        <div class="metric-info">
+          <div class="metric-value">11/20</div>
+          <div class="metric-label">Weekly Pam</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 55%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inactive Minutes -->
+      <div class="metric-card">
+        <div class="metric-icon inactive-icon">🏃‍♂️</div>
+        <div class="metric-info">
+          <div class="metric-value">180</div>
+          <div class="metric-label">Inactive Minutes</div>
+        </div>
+      </div>
+
+      <!-- Overall Monthly Score -->
+      <div class="score-card">
+        <h3>Overall Monthly Score</h3>
+        <div class="circular-progress">
+          <svg class="progress-ring" width="200" height="200">
+            <circle class="progress-ring-background" cx="100" cy="100" r="90" stroke="#e0e0e0" stroke-width="20" fill="none"></circle>
+            <circle class="progress-ring-fill" cx="100" cy="100" r="90" stroke="#b8e986" stroke-width="20" fill="none" stroke-dasharray="565.48" stroke-dashoffset="188.16"></circle>
+          </svg>
+          <div class="score-text">
+            <div class="score-current">370</div>
+            <div class="score-total">/ 600</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
 
   <script src="../static/js/therapist.js"></script>
 </body>

@@ -15,8 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     </button>
     <div class="dropdown-content">
       <a href="/home.html" class="nav-link">Home</a>
-      <a href="/profile.html" class="nav-link">Profile</a>
-      <a href="/settings.html" class="nav-link">Settings</a>
+      <a href="/settings" class="nav-link">Settings</a>
       <a href="#" class="logoutButton nav-link">Logout</a>
     </div>
   </div>

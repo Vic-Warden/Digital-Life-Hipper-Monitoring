@@ -14,11 +14,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
-    font-weight: bold;
-    letter-spacing: 2px;
-    font-size: 16px;
-    gap: 10px;
+    padding: 10px;
+    font-family: 'Julius Sans One', sans-serif;
   }
   
   .header-content hr {
@@ -29,10 +26,11 @@ body {
   .container {
     display: flex;
     height: calc(100vh - 60px);
+    width: 100%;
   }
   
   .login-box {
-    flex: 1;
+    flex: 0.75;
     background: linear-gradient(to bottom right, #e4ecd3, #c2c7aa);
     padding: 60px;
   }
@@ -41,6 +39,8 @@ body {
     font-size: 28px;
     margin-bottom: 30px;
     color: #000;
+    font-family: Arial, sans-serif;
+    text-align: center;
   }
   
   form {
@@ -51,15 +51,17 @@ body {
   form label {
     margin-bottom: 5px;
     font-weight: bold;
+    font-family: Arial, sans-serif;
   }
   
   form input[type="email"],
   form input[type="password"] {
     padding: 10px;
     margin-bottom: 20px;
-    border: 2px solid #c1d4ed;
-    border-radius: 5px;
+    border: 2px solid #74a6d4;
+    border-radius: 6px;
     font-size: 16px;
+    width: 450px;
   }
   
   .remember {
@@ -75,10 +77,11 @@ body {
   button {
     padding: 10px;
     background-color: white;
-    border: 2px solid #c1d4ed;
-    border-radius: 5px;
+    border: 2px solid #74a6d4;
+    border-radius: 6px;
     font-size: 18px;
     cursor: pointer;
+    width: 475px;
   }
   
   .forgot {
@@ -90,7 +93,7 @@ body {
   
   .image-box {
     flex: 1;
-    background-image: url('your-background-image.jpg'); /* Replace with your actual image */
+    background-image: url('../assets/loginImage.jpg'); /* Replace with your actual image */
     background-size: cover;
     background-position: center;
     display: flex;
@@ -103,3 +106,21 @@ body {
     max-width: 400px;
   }
   
+  .header-line {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    letter-spacing: 2px;
+    width: 50%;
+    max-width: 600px;
+  }
+  
+  .header-line::before,
+  .header-line::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid black;
+    margin: 0 10px;
+  }

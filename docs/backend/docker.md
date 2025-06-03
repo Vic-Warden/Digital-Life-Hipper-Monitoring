@@ -22,6 +22,10 @@ This setup defines a MySQL database and an Nginx web server using Docker Compose
 
 **Purpose**: Serves as the application backend using Flask, with support for MySQL and dotenv for configuration.
 
+## Important
+
+The flask service is built from a `Dockerfile` which is present in the root folder of this project.
+
 ## Usage
 
 ```bash

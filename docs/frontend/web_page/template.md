@@ -188,3 +188,7 @@ In the html file for the login page you will find the code for the login form an
 ### login css
 In this file you will find all the css code that is used to style is page.
 
+### References 
+- Figma is used to help with making the design for the website.
+
+**Chatgpt was used to clean up the written code**

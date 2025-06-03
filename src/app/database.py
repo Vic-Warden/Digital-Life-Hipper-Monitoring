@@ -221,3 +221,91 @@ class Database:
         if result is not None and len(result[0][0]) > 0:
             return (True, "")
         return (False, "Failed to change email.")
+
+    def get_patient_details(self, patient_id: int) -> dict | None:
+        """
+        ### Get details of a patient by their ID.
+        Returns a dictionary containing patient details or None if not found.
+        """
+
+        # --- Get all data records for this patient ---
+        query_data = """
+            SELECT
+                data.id AS data_id,
+                data.device_id,
+                data.timestamp,
+                data.steps,
+                data.PAM_score,
+                data.zone,
+                data.data_label
+            FROM data
+            INNER JOIN device ON data.device_id = device.id
+            WHERE device.patient_id_device = %s;
+        """
+        data = self.do_query(query_data, (patient_id,), fetch=True)
+
+        # --- Get all devices for this patient ---
+        query_device = """
+            SELECT
+                id AS 
+                patient_id_device AS patient_id,
+                device_label,
+                device_id AS external_device_id
+            FROM device
+            WHERE patient_id_device = %s;
+        """
+        devices = self.do_query(query_device, (patient_id,), fetch=True)
+
+        # --- Get all goals for this patient ---
+        query_goal = """
+            SELECT
+                id AS goal_id,
+                patient_id_goal,
+                patient_goal,
+                type AS goal_type,
+                reached
+            FROM goal
+            WHERE patient_id_goal = %s;
+        """
+        goals = self.do_query(query_goal, (patient_id,), fetch=True)
+
+        if not data and not devices and not goals:
+            return None
+
+        return {
+            "patient_id": patient_id,
+            "data": data,
+            "devices": devices,
+            "goals": goals
+        }
+
+    def get_patients(self, therapeut_id: int) -> list[dict] | None:
+        """
+        ### Get a list of patients associated with a therapist.
+
+        Returns a list of dictionaries containing patient details.
+        """
+        query = """
+            SELECT p.id, p.name, p.email
+            FROM patient AS p
+            JOIN patient_has_therapist AS pt ON p.id = pt.patient_id
+            WHERE pt.therapist_id = %s;
+        """
+        params = (therapeut_id,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result:
+            return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
+        return None
+
+
+db = Database(
+    host="localhost",
+    port=3306,
+    user="root",
+    password="superstronkrootpw",
+    database="hipperdb"
+)
+
+# Example usage to get patients for therapist with ID 1
+print(db.get_patients(1))

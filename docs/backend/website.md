@@ -229,7 +229,59 @@ def admin_login():
         return redirect('/admin/login')
 ```
 
-## 10. Running the App
+## 10. Patients
+
+`get_patients(therapist_id: int)` returns a list of all the patients connected to a therapist.
+
+```python
+@app.route('/api/get-patients', methods=['GET'])
+def get_patients():
+    """
+    API endpoint to retrieve all patients.
+    Returns a JSON response with patient data and status code.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    patients = db.get_patients()
+    if not patients:
+        return {"error": "No patients found"}, 404
+
+    return {"patients": patients}, 200
+```
+
+## 11. Patient Data
+
+`get_patient_details(patient_id: int)` returns the details from a single patient.
+
+```python
+@app.route('/api/get-patient-data', methods=['GET'])
+def get_patient_data():
+    """
+    API endpoint to retrieve patient data.
+    Returns a JSON response with patient data and status code.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    patient = request.args.get('patient_id')
+    if not patient:
+        return {"error": "Patient ID is required"}, 400
+
+    patient_data = db.get_patient_details(patient)
+    if not patient_data:
+        return {"error": "Patient not found"}, 404
+
+    return patient_data, 200
+```
+
+## 12. Running the App
 
 ```python
 if __name__ == "__main__":

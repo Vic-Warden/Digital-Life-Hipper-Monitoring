@@ -84,7 +84,7 @@ def login():
 # Logout's route with POST methods
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET'])
 def logout():
     # Clear the session
     cookie = request.cookies.get('auth_cookie')
@@ -99,30 +99,18 @@ def logout():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
+    if db.verify_cookie(cookie)[0]:
 
-    if 'user' not in session:
-        return redirect('/login')
+        if request.method == "POST":
+            # TODO: Add logic for handling settings updates
+                #  - Change email
+                #  - Change password etc...
+            pass
 
-    # Retrieves sent data
-    if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        therapist = request.form.get('therapist', '').strip()
-
-        if not username or not email:
-            # If any field is empty
-            message = "Names, e-mails and the therapist is required"
-            return render_template('profile.html', user=session['user'], message=message)
-
-        # Updates data in the session
-        session['user']['username'] = username
-        session['user']['email'] = email
-        session['user']['therapist'] = therapist
-
-        # Render the settings.html
-        return render_template('profile.html', user=session['user'], message=message)
-
+        return render_template("settings.html")
+    
+    return redirect("/login")
+    
 # Handle the admin login page
 
 

@@ -8,9 +8,6 @@ from werkzeug.security import generate_password_hash
 # Create the app Flask
 app = Flask(__name__)
 
-# Required to use sessions
-app.secret_key = 'your_secret_key_here'
-
 # Database instance
 db = Database(
     host="localhost",
@@ -103,14 +100,14 @@ def settings():
 
         if request.method == "POST":
             # TODO: Add logic for handling settings updates
-                #  - Change email
-                #  - Change password etc...
+            #  - Change email
+            #  - Change password etc...
             pass
 
         return render_template("settings.html")
-    
+
     return redirect("/login")
-    
+
 # Handle the admin login page
 
 
@@ -136,6 +133,7 @@ def admin_patient_list():
         return redirect('/admin/login')
 
     # Fetch patient details from the database
+    # TODO: Fix database
     # patient_details = db.get_patients()
 
     patient_details = {

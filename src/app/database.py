@@ -137,6 +137,10 @@ class Database:
         result = self.do_query(query, params)
         return (result is not None, "")
 
+    def assign_patient_to_therapist(self, patient_id: int, therapist_id: int) -> bool:
+        print("HAS YET TO BE IMPLEMENTED")
+        return False
+
     def remove_patient(self, email: str) -> tuple[bool, str]:
         """
         ### Remove a patient from the database by email.

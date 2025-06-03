@@ -14,10 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     </button>
     <div class="dropdown-content">
-      <a href="/home.html" class="nav-link">Home</a>
-      <a href="/profile.html" class="nav-link">Profile</a>
-      <a href="/settings.html" class="nav-link">Settings</a>
-      <a href="#" class="logoutButton nav-link">Logout</a>
+      <a href="/home" class="nav-link">Home</a>
+      <a href="/settings" class="nav-link">Settings</a>
+      <a href="/logout" class="nav-link">Logout</a>
     </div>
   </div>
 </nav>
@@ -36,16 +35,6 @@ document.querySelectorAll(".nav-link").forEach(link => {
   }
 });
 
-  
-  // Add event listener for logout button
-  const logoutButton = document.querySelector(".logoutButton");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", (event) => {
-      event.preventDefault(); // Prevent the default link behavior
-      logout();
-    });
-  }
-
   // Optional: Add toggle behavior if you later implement mobile nav
   const menuButton = document.getElementById("menu-button");
   menuButton?.addEventListener("click", () => {
@@ -54,12 +43,6 @@ document.querySelectorAll(".nav-link").forEach(link => {
   });
 });
 
-function logout() {
-  fetch("/logout", {
-    method: "GET",  // Use GET request to log out
-    credentials: "include", // Ensure cookies are sent along with the request
-  })
-}
 
   
   

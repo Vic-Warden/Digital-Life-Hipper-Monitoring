@@ -124,3 +124,76 @@ body {
     border-bottom: 1px solid black;
     margin: 0 10px;
   }
+
+  @media (max-width: 768px) {
+    /* Stack layout vertically */
+    .container {
+      flex-direction: column;
+      height: auto;
+    }
+  
+    /* Adjust login box */
+    .login-box {
+      width: 100%;
+      padding: 30px 20px;
+    }
+  
+    .login-box h2 {
+      font-size: 22px;
+      text-align: center;
+    }
+  
+    /* Form fields and button to full width */
+    form input[type="email"],
+    form input[type="password"],
+    button {
+      width: 415px;
+      font-size: 16px;
+    }
+  
+    /* Reduce padding for checkbox and remember me */
+    .remember {
+      flex-wrap: wrap;
+    }
+  
+    /* Header layout tweaks */
+    .header-content {
+      flex-direction: column;
+      padding: 8px;
+      gap: 4px;
+    }
+  
+    .header-line {
+      width: 100%;
+      font-size: 14px;
+    }
+  
+    .header-line::before,
+    .header-line::after {
+      margin: 0 6px;
+    }
+  
+    /* Adjust image box */
+    .image-box {
+      width: 100%;
+      height: 200px;
+      background-position: center;
+      background-size: cover;
+    }
+  
+    .logo img {
+      width: 90%;
+      max-width: 300px;
+      display: none;
+    }
+  
+    /* Forgot password link adjustment */
+    .forgot {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: right;
+    }
+  }
+  
+  

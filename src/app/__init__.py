@@ -8,9 +8,6 @@ from werkzeug.security import generate_password_hash
 # Create the app Flask
 app = Flask(__name__)
 
-# Required to use sessions
-app.secret_key = 'your_secret_key_here'
-
 # Database instance
 db = Database(
     host="localhost",

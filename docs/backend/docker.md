@@ -34,7 +34,7 @@ docker-compose down
 
 ## Access
 
-- Web: http://localhost:8080
+- Web: http://localhost:5000
 
 - MySQL: localhost:3306 (credentials found in src/back-end/database.env)
 

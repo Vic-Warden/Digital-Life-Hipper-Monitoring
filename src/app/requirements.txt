@@ -1,4 +1,5 @@
 flask
 Jinja2==3.1.0
 dotenv
+pymsql
 mysql-connector-python

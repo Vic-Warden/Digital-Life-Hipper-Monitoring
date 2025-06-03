@@ -36,7 +36,7 @@ docker-compose down
 
 - Web: http://localhost:5000
 
-- MySQL: localhost:3306 (credentials found in src/back-end/database.env)
+- MySQL: localhost:3306 (credentials found in src/back-end/database/database.env)
 
 ## Sources used
 

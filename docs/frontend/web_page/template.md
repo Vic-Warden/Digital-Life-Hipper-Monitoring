@@ -133,3 +133,6 @@ For the responsive design there is decided that placing the boxes vertical would
 - W3Schools is used for helping with some problems in the css.
 
 **Chatgpt was used to clean up the written code**
+
+## Login Page
+The login page allows patients to securely access their accounts and view their personal progress. Before coding began, a design was created in Figma to ensure the layout, colors, and user flow were clear and user-friendly. This helped guide development and maintain consistency with the overall app design.

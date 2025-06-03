@@ -127,7 +127,7 @@ def admin_login():
 
 
 @app.route('/admin/patients', methods=['GET'])
-def admin_patient_details(patient_id):
+def admin_patient_list():
     # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
@@ -136,7 +136,12 @@ def admin_patient_details(patient_id):
         return redirect('/admin/login')
 
     # Fetch patient details from the database
-    patient_details = db.get_patients(patient_id)
+    # patient_details = db.get_patients()
+
+    patient_details = {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+    }
 
     if not patient_details:
         return "Patients not found", 404

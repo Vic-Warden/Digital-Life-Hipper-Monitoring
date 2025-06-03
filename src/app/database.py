@@ -188,8 +188,6 @@ class Database:
         params = (cookie,)
         result = self.do_query(query, params, fetch=True)
 
-        print(result)
-
         if result and len(result[0][0]) > 0:
             return (True, result[0])
         return (False, "Cookie not found in database.")

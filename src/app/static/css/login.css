@@ -1,0 +1,199 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f5e0;
+  }
+  
+  header {
+    background-color: #add8f6;
+    padding: 10px 0;
+    text-align: center;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-family: 'Julius Sans One', sans-serif;
+  }
+  
+  .header-content hr {
+    width: 100px;
+    border: 0.5px solid #333;
+  }
+  
+  .container {
+    display: flex;
+    height: calc(100vh - 60px);
+    width: 100%;
+  }
+  
+  .login-box {
+    flex: 0.75;
+    background: linear-gradient(to bottom right, #e4ecd3, #c2c7aa);
+    padding: 60px;
+  }
+  
+  .login-box h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #000;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  
+  form input[type="email"],
+  form input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #74a6d4;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 450px;
+  }
+  
+  .remember {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .remember input {
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: white;
+    border: 2px solid #74a6d4;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 475px;
+  }
+  
+  .forgot {
+    margin-top: 15px;
+    color: #1a3f9b;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .image-box {
+    flex: 1;
+    background-image: url('../assets/loginImage.jpg'); /* Replace with your actual image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo img {
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  .header-line {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    letter-spacing: 2px;
+    width: 30%;
+    max-width: 600px;
+  }
+  
+  .header-line::before,
+  .header-line::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid black;
+    margin: 0 10px;
+  }
+
+  @media (max-width: 768px) {
+    /* Stack layout vertically */
+    .container {
+      flex-direction: column;
+      height: auto;
+    }
+  
+    /* Adjust login box */
+    .login-box {
+      width: 100%;
+      padding: 30px 20px;
+    }
+  
+    .login-box h2 {
+      font-size: 22px;
+      text-align: center;
+    }
+  
+    /* Form fields and button to full width */
+    form input[type="email"],
+    form input[type="password"],
+    button {
+      width: 415px;
+      font-size: 16px;
+    }
+  
+    /* Reduce padding for checkbox and remember me */
+    .remember {
+      flex-wrap: wrap;
+    }
+  
+    /* Header layout tweaks */
+    .header-content {
+      flex-direction: column;
+      padding: 8px;
+      gap: 4px;
+    }
+  
+    .header-line {
+      width: 100%;
+      font-size: 14px;
+    }
+  
+    .header-line::before,
+    .header-line::after {
+      margin: 0 6px;
+    }
+  
+    /* Adjust image box */
+    .image-box {
+      width: 100%;
+      height: 200px;
+      background-position: center;
+      background-size: cover;
+    }
+  
+    .logo img {
+      width: 90%;
+      max-width: 300px;
+      display: none;
+    }
+  
+    /* Forgot password link adjustment */
+    .forgot {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: right;
+    }
+  }
+  
+  

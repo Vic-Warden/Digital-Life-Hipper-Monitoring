@@ -281,7 +281,7 @@ class Database:
                 patient_goal,
                 type AS goal_type,
                 reached
-            FROM goal
+            FROM Goal
             WHERE patient_id_goal = %s;
         """
         goals = self.do_query(query_goal, (patient_id,), fetch=True)

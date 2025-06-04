@@ -1,10 +1,9 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
-04/06
+## 04/06 As a student I want to learn when I need to use the avarage and the median so that I can correctly analyze and interpret data for my user stories
 
-When I wanted to do my user story, I see I'll meet a problem, a math's problem to be exact because I need to be sure wich mesures I can use, when I need to use the average, median, quartiles, mode... 
-I did some research about the average, median...
+When I started writing my user story, I realized I would encounter a math problem, to be exact. I need to be sure which measures I can use and when I should use the average, median, quartiles...
 
 [Average](https://en.wikipedia.org/wiki/Average)
 [Median](https://en.wikipedia.org/wiki/Median)
@@ -12,13 +11,21 @@ I did some research about the average, median...
 [Mode](https://www.cuemath.com/data/mode/)
 [Trimmed mean](https://www.investopedia.com/terms/t/trimmed_mean.asp)
 
-I was thinking if I could use all of them to be more accurate but I know there are some differents between them.
-For exemple, for the average if I have just one value very high it can disturb the result, for the median can counter it. 
-For the mode, I can have only the value who is very recurrent but it doesn't allow me to calculate the average for exemple but he is useless if I don't have duplicate value. 
-For the trimmed mean, it's a good compromise beetween the average and the median but I can do only one cut and I prefer to have some differents cut to the 
-For the quartiles, is the hardest things to implement but it can allow me to create some groups Q1, Q2, Q3 and Q4. 
+I was thinking about using all of them to make my analysis more accurate, but I know there are differences between these measures.
 
-I know about all of this due to my Math's courses, but I learned than I can mixed all of this to be sure my user story can be done accuratly and can be reused
+For example :
+
+- For the average if I have just one value very high it can disturb the result.
+
+- The median can counter this problem because it is less sensitive to outlier
+
+- The mode, I can have only the value who is very recurrent but it doesn't allow me to calculate the average for exemple but he is useless if I don't have duplicate value.
+
+- The trimmed mean, is a good compromise between the average and the median because it removes a certain percentage of the highest and lowest values. However, it only allows for a single cut, and I would prefer multiple cuts.
+
+- The quartiles are a bit more complicated to implement, but they allow me to divide the data into four groups (Q1, Q2, Q3, and Q4) giving a better sense of distribution 
+
+I learned all of this in my math courses. I also learned that combining these measures can help ensure my user story is both accurate and reusable.
 
 04/06
 

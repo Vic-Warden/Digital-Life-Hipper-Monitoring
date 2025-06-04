@@ -26,3 +26,38 @@ function initializeChart() {
   
   drawChart(ctx, rect.width, rect.height);
 }
+
+// Draw the complete chart
+function drawChart(ctx, width, height) {
+  const padding = 60;
+  const chartWidth = width - padding * 2;
+  const chartHeight = height - padding * 2;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, width, height);
+  
+  // Draw inactive day backgrounds (red highlights)
+  drawInactiveDayBackgrounds(ctx, padding, chartWidth, chartHeight);
+  
+  // Draw step bars (blue)
+  drawStepBars(ctx, padding, chartWidth, chartHeight);
+  
+  // Draw PAM score line (green)
+  drawPamScoreLine(ctx, padding, chartWidth, chartHeight);
+  
+  // Draw axes and labels
+  drawAxesAndLabels(ctx, padding, chartWidth, chartHeight, width, height);
+}
+
+// Draw red background for inactive days
+function drawInactiveDayBackgrounds(ctx, padding, chartWidth, chartHeight) {
+  const barWidth = chartWidth / chartData.dates.length;
+  
+  chartData.inactiveDays.forEach(dayIndex => {
+    const x = padding + dayIndex * barWidth;
+    
+    ctx.fillStyle = 'rgba(255, 182, 193, 0.3)'; // Light red
+    ctx.fillRect(x, padding, barWidth, chartHeight);
+  });
+}
+

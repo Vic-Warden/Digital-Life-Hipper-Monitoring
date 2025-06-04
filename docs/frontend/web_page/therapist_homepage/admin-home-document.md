@@ -146,6 +146,9 @@ const chartData = {
 ###  Color Theory
 - [What is Color Theory? - Figma](https://www.figma.com/resource-library/what-is-color-theory/)
 
+### Design and readability
+- [Typography for Health Information](https://www.nngroup.com/articles/medical-usability/)
+
 ###  Web Development
 - [MDN Web Docs - HTML Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 

@@ -24,7 +24,7 @@ from the graphs below you can see that there is no difference in data between th
 
 so there is a high difference on all days.<br>
 while some of the difference of the first day could be explained away by the taping together of the pam devices, there is no way that this could account for such a big difference.<br>
-on the 2nd day the only thing that was touched on the setup was the so there is no outsite source of interferance on day 2 I can't explain the difference in valies.<br>
+on the 2nd day the only thing that was touched on the setup was the so there is no outside source of interference on day 2 I can't explain the difference in valies.<br>
 on day 3 there is a small amount of difference, these can be accounted for because I touched the setup in order to check why it wasn't working anymore.<br>
 
 # conclusions

@@ -97,7 +97,65 @@ plt.show()
 ```
 With these results I now know how to visualize csv data using jupyter notebook. 
 
+## Learning story
+As a student I want to learn how I can read and write to json files using python, so that I can create log files for monitoring hipper monitors. 
+
+Description: When creating the basestation for pulling data from hipper monitors, I need to be able to create a log file. I need this to ensure that data is only pulled once every hour or other set time, instead of every loop. For this I need to know how I can read and write to json files using python.
+
+### Learned
+To achieve this learning story, I made use of python's built in json library. I worked on a python file located at src/back-end/pam/main.py. Within this file, Before the scanning loop starts, I check if a log file already exists. If it does, I load the data using json.load():
+```python
+if os.path.exists(LOG_FILE):
+    with open(LOG_FILE, "r") as log_file:
+        log_data = json.load(log_file)
+else:
+    log_data = {}
+```
+I found this method from GeeksforGeeks (2025). 
+
+After succesfully pulling data from a hipper device, I write the time and date from when I did this to a log.json file. 
+```python
+def update_log(mac_address, activity=False, day_data=False):
+    if mac_address not in log_data:
+        log_data[mac_address] = {}
+    if activity:
+        log_data[mac_address]["last_activity_pull"] = datetime.now().isoformat()
+    if day_data:
+        log_data[mac_address]["last_day_data_pull"] = datetime.now().date().isoformat()
+    
+    with open(LOG_FILE, "w") as log_file:
+        json.dump(log_data, log_file, indent=2)
+```
+This helps me control how often the data is pulled from the devices. The output of this log looks like this:
+```
+{
+  "AA:BB:CC:DD:EE:FF": {
+    "last_activity_pull": "2025-06-04T13:00:00",
+    "last_day_data_pull": "2025-06-04"
+  }
+}
+```
+I found this method of writing data when reading a page written by Liu (2024). Here an example is shown where they also make use of the same methods. 
+
+What I learned:
+By working with JSON files, I learned how to:
+
+    Check for the existence of a file using os.path.exists()
+
+    Load structured data from a file using json.load()
+
+    Update in-memory data and write it back using json.dump()
+
+    Manage time-based conditions using Python's datetime module
+
+This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently without overloading the devices or network.
+
+
 # Sources
+GeeksforGeeks. (2025, 2 april). Read JSON file using Python. GeeksforGeeks. https://www.geeksforgeeks.org/read-json-file-using-python/
+
+Liu, L. (2024, 19 maart). How to read and write JSON files in Python. HackerNoon. https://hackernoon.com/how-to-read-and-write-json-files-in-python
+
 Pryke, B. (2025, 19 mei). How to Use Jupyter Notebook: A Beginner’s Tutorial. Dataquest. https://www.dataquest.io/blog/jupyter-notebook-tutorial/
 
 Robot Squirrel Productions. (2021, 21 december). How to Plot CSV Data in Python Using Pandas [Video]. YouTube. https://www.youtube.com/watch?v=y43_o2OnI68

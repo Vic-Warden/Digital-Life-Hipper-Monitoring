@@ -11,7 +11,7 @@ services:
     volumes:
       - ./src/back-end/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "mariadb -h 127.0.0.1 -u $$MYSQL_ROOT_USER -p$$MYSQL_ROOT_PASSWORD"] # ensures a connection can be made before starting flask service
+      test: ["CMD-SHELL", "mariadb -h 127.0.0.1 -u $$MYSQL_ROOT_USER -p$$MYSQL_ROOT_PASSWORD || exit 1"] # ensures a connection can be made before starting flask service
       interval: 5s
       timeout: 3s
       retries: 10

@@ -12,14 +12,19 @@ This setup defines a MySQL database and an Nginx web server using Docker Compose
 
 **Purpose**: Provides a backend database with custom setup using a Dockerfile and environment variables.
 
-### 2. Nginx (`hipper-nginx`)
-- **Image**: `nginx:alpine`
-- **Exposes**: `8080:80`
-- **Mounts**:
-  - Static files: `./src/app/templates → /usr/share/nginx/html`
-  - Config: `./src/app/config/nginx/default.conf → /etc/nginx/conf.d/default.conf`
+### 2. Flask (`hipper-webapp`)
+- **Builds from**: `.`
+- **Image**: Custom build using `python:3.11-slim`
+- **Exposes**: `5000:5000`
+- **Dependencies**: Installed via `requirements.txt`
+- **Working directory**: `/app`
+- **Command**: Runs Flask app on `0.0.0.0:5000`
 
-**Purpose**: Serves static content and uses a custom Nginx config.
+**Purpose**: Serves as the application backend using Flask, with support for MySQL and dotenv for configuration.
+
+## Important
+
+The flask service is built from a `Dockerfile` which is present in the root folder of this project.
 
 ## Usage
 
@@ -33,9 +38,9 @@ docker-compose down
 
 ## Access
 
-- Web: http://localhost:8080
+- Web: http://localhost:5000
 
-- MySQL: localhost:3306 (credentials found in src/back-end/database.env)
+- MySQL: localhost:3306 (credentials found in src/back-end/database/database.env)
 
 ## Sources used
 

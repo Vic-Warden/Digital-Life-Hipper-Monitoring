@@ -1,6 +1,18 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+04/06
+
+When I wanted to do my user story, I see I needed to use the Postman's application , that was the first time I used this one, that why I wanted to know how that works, my first reflex was to search on the internet that was I done. 
+
+[Postman](https://learning.postman.com/docs/getting-started/first-steps/sending-the-first-request/)
+
+[Youtube](https://www.youtube.com/watch?v=QYqA1VAoyIA)
+
+I didn't have any knowledge about the Postman's application but now I can send some API with this application the things I can't do last time I tried, I can now send GET request I know also without any server you can't use it because this is the requirements for using it But I worked a lot on the back-end I need to work on the other side of the project
+
+
+
 28/05 
 
 When I showed my work at Richard he told me to fix some issues because I didn't know wich things he done, I learned to be more careful about that because we can make really basic mistakes like that

@@ -98,3 +98,34 @@ const chartData = {
 3. Right-click `admin_home.html` → "Open with Live Server"
 
 ---
+
+##  Features & Functionality
+
+###  Features
+- Interactive chart with dynamic data
+- Add/edit/delete goals
+- Responsive and accessible layout
+- Modern glassmorphism style
+
+###  Customization
+- Edit `chartData` in JS
+- Update styles in CSS
+- Change goal structure in HTML
+
+---
+
+##  Troubleshooting
+
+1. **Chart Missing?** Check `<canvas id="activityChart">` and JS import path.
+2. **CSS Not Applying?** Ensure correct folder structure and relative paths.
+3. **Buttons Not Responding?** Look for JavaScript errors in console.
+4. **Goal Data Lost?** Page refresh resets in-memory data.
+
+---
+
+##  Technical Notes
+
+- No external data or persistent storage
+- Goals reset on page reload (it is currently only stored locally not in the database yet)
+
+---

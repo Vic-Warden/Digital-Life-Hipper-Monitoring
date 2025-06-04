@@ -3,7 +3,6 @@ import mysql.connector
 # Connection to the database
 connection = mysql.connector.connect(
     host="localhost",
-    port=3306,
     user="root",
     password="superstronkrootpw",
     database="hipperdb"

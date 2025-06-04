@@ -9,7 +9,9 @@ When I wanted to do my user story, I see I needed to use the Postman's applicati
 
 [Youtube](https://www.youtube.com/watch?v=QYqA1VAoyIA)
 
-But I worked a lot on the back-end I need to work on the other side of the project
+I didn't have any knowledge about the Postman's application but now I can send some API with this application the things I can't do last time I tried, I can now send GET request I know also without any server you can't use it because this is the requirements for using it But I worked a lot on the back-end I need to work on the other side of the project
+
+
 
 28/05 
 

@@ -174,7 +174,7 @@ def admin_login_page():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        if db.check_admin_credentials(email, password):
+        if db.check_credentials(email, password):
             # Create secure cookie
             success, cookie_value = db.create_cookie(email)
 

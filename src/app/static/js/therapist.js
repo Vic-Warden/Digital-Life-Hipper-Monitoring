@@ -61,3 +61,114 @@ function drawInactiveDayBackgrounds(ctx, padding, chartWidth, chartHeight) {
   });
 }
 
+// Draw step bars
+function drawStepBars(ctx, padding, chartWidth, chartHeight) {
+  const maxSteps = Math.max(...chartData.steps);
+  const barWidth = chartWidth / chartData.dates.length * 0.6;
+  const barSpacing = chartWidth / chartData.dates.length;
+  
+  chartData.steps.forEach((steps, index) => {
+    const barHeight = (steps / maxSteps) * chartHeight * 0.8;
+    const x = padding + index * barSpacing + (barSpacing - barWidth) / 2;
+    const y = padding + chartHeight - barHeight;
+    
+    // Draw bar
+    ctx.fillStyle = '#87CEEB'; // Light blue
+    ctx.fillRect(x, y, barWidth, barHeight);
+    
+    // Draw step count on top of bar
+    ctx.fillStyle = '#333';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(steps.toString(), x + barWidth / 2, y - 5);
+  });
+}
+
+// Draw PAM score line
+function drawPamScoreLine(ctx, padding, chartWidth, chartHeight) {
+  const maxPamScore = Math.max(...chartData.pamScores);
+  const pointSpacing = chartWidth / (chartData.dates.length - 1);
+  
+  ctx.strokeStyle = '#4CAF50'; // Green
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  
+  chartData.pamScores.forEach((score, index) => {
+    const x = padding + index * pointSpacing;
+    const y = padding + chartHeight - (score / maxPamScore) * chartHeight * 0.3 - chartHeight * 0.1;
+    
+    if (index === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+    
+    // Draw point
+    ctx.fillStyle = '#4CAF50';
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  });
+  
+  ctx.stroke();
+  
+  // Add PAM score labels
+  chartData.pamScores.forEach((score, index) => {
+    const x = padding + index * pointSpacing;
+    const y = padding + chartHeight - (score / maxPamScore) * chartHeight * 0.3 - chartHeight * 0.1;
+    
+    ctx.fillStyle = '#4CAF50';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(score.toFixed(1), x, y - 15);
+  });
+}
+
+// Draw axes and labels
+function drawAxesAndLabels(ctx, padding, chartWidth, chartHeight, width, height) {
+  // X-axis
+  ctx.strokeStyle = '#ccc';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padding, padding + chartHeight);
+  ctx.lineTo(padding + chartWidth, padding + chartHeight);
+  ctx.stroke();
+  
+  // Y-axis
+  ctx.beginPath();
+  ctx.moveTo(padding, padding);
+  ctx.lineTo(padding, padding + chartHeight);
+  ctx.stroke();
+  
+  // Date labels
+  const labelSpacing = chartWidth / chartData.dates.length;
+  chartData.dates.forEach((date, index) => {
+    const x = padding + index * labelSpacing + labelSpacing / 2;
+    const y = padding + chartHeight + 20;
+    
+    ctx.fillStyle = '#666';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(date.substr(5), x, y); // Show only month-day
+  });
+  
+  // Y-axis labels for steps
+  ctx.fillStyle = '#666';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const y = padding + chartHeight - (i / 4) * chartHeight;
+    const value = (i / 4) * 8000;
+    ctx.fillText(value.toString(), padding - 10, y + 3);
+  }
+  
+  // Right Y-axis labels for PAM score
+  ctx.textAlign = 'left';
+  for (let i = 0; i <= 2; i++) {
+    const y = padding + chartHeight * 0.9 - (i / 2) * chartHeight * 0.3;
+    const value = (i / 2) * 2.5;
+    ctx.fillText(value.toFixed(1), padding + chartWidth + 10, y + 3);
+  }
+}

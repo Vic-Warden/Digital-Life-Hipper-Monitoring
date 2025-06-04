@@ -43,3 +43,58 @@ The HTML file creates the structure and layout of the dashboard with three main 
 - **Client Data Panel**: Shows weekly PAM (11/20), inactive minutes (180), and circular progress (370/600)
 - **Activity Chart**: Interactive chart showing steps, PAM scores, and inactive days
 - **Goals Panel**: Displays goals with progress bars and edit/delete buttons
+
+
+---
+
+##  CSS File (therapist.css)
+
+### Purpose
+The CSS file styles the dashboard with a modern, professional look using:
+- **Glassmorphism effects**: Blurred backgrounds with transparency
+- **Responsive design**: Works on desktop, tablet, and mobile
+- **Color scheme**: Blue gradient background with green accents
+
+### Key Design Features
+- **Blue gradient background** (#a8d8f0 to #e6f3ff): Calm and professional
+- **Green accents** (#4CAF50): Indicate progress and positivity
+- **Red highlights** (rgba(255, 182, 193, 0.3)): Signal inactive periods
+- **White/gray tones**: Ensure clarity and medical aesthetic
+- **Layout**: CSS Grid
+- **Fonts**: Modern sans-serif for readability
+
+---
+
+##  JavaScript File (therapist.js)
+
+### Purpose
+Handles all interactive functionality and visualizations.
+
+### Main Functions
+- `initializeChart()`: Draws step bars, PAM line, and highlights inactive days
+- `addNewGoal()`: Adds new goals based on user input
+- `editGoal(button)`: Edits selected goal
+- `deleteGoal(button)`: Removes selected goal with confirmation
+- `updateCircularProgress()`: Animates progress ring
+- Event listeners for time toggles and button actions
+
+### Data Structure Example (hardcoded numbers for the prototype)
+```javascript
+const chartData = {
+  dates: ['2025-05-19', '2025-05-20', ...],
+  steps: [1000, 3000, 5000, ...],
+  pamScores: [0.25, 1.0, 1.5, ...],
+  inactiveDays: [0, 1, 4, 6]
+};
+```
+
+---
+
+##  How I Run the Dashboard to see what i'm working on
+
+### VS Code Live Server
+1. Install VS Code + Live Server extension
+2. Open project folder
+3. Right-click `admin_home.html` → "Open with Live Server"
+
+---

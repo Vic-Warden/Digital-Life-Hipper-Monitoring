@@ -144,7 +144,7 @@ The login page allows patients to securely access their accounts and view their 
 ![FigmaLogin](/docs/assets/ActualLoginPage.png)
 
 ### login html
-In the html file for the login page you will find the code for the login form and the image box. In the login form the /login endpoint which has a POST method is also called. In the image box you will find the image of the Hipper logo. Also the fil
+In the html file for the login page you will find the code for the login form and the image box. In the login form the /login endpoint which has a POST method is also called. In the image box you will find the image of the Hipper logo.
 
 ```html
 <body>
@@ -160,6 +160,64 @@ In the html file for the login page you will find the code for the login form an
     <section class="login-box">
       <h2>Welcome Back</h2>
       <form action="/login" method="POST">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember" />
+          <label for="remember">Remember me</label>
+        </div>
+      
+        <button type="submit">Sign in</button>
+        <a href="#" class="forgot">Forgot Password?</a>
+      </form>
+      
+    </section>
+
+    <section class="image-box">
+      <div class="logo">
+        <img src="../static/assets/HIREZHipperLogoTransparent.png" alt="Hipper Therapeutics Logo" />
+      </div>
+    </section>
+  </main>
+```
+
+### login css
+In this file you will find all the css code that is used to style is page.
+
+### References 
+- Figma is used to help with making the design for the website.
+
+**Chatgpt was used to clean up the written code**
+
+## admin_login
+The admin login is used by therapist to login to their account and see their personal information, but also see the data from their patients. The styling of this page is the same as the login page for the patients. The only difference is that it wil send you to a home page only accessible to therapists.
+
+**Figma design:**
+![FigmaLogin](/docs/assets/Figma/LoginPage.png)
+
+**Actual design:**
+![FigmaLogin](/docs/assets/ActualLoginPage.png)
+
+### admin_login html
+In the html file for the login page you will find the code for the login form and the image box. In the login form the /admin/login endpoint which has a POST method is also called. In the image box you will find the image of the Hipper logo. 
+
+```html
+  <header>
+    <div class="header-content">
+      <div class="header-line">
+        <span>Hipper Therapeutics</span>
+      </div>
+    </div>
+  </header>
+  
+  <main class="container">
+    <section class="login-box">
+      <h2>Welcome Back</h2>
+      <form action="/admin/login" method="POST">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required />
       

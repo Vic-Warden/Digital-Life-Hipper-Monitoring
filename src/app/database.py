@@ -1,3 +1,4 @@
+import os # Import os for .env centralized settings
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
@@ -314,13 +315,12 @@ class Database:
             return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
         return None
 
-
 db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpw",
-    database="hipperdb"
+    host=os.getenv('MYSQL_HOST'),
+    port=int(os.getenv('MYSQL_PORT')),
+    user=os.getenv('MYSQL_ROOT_USER'),
+    password=os.getenv('MYSQL_ROOT_PASSWORD'),
+    database=os.getenv('MYSQL_DATABASE')
 )
 
 # Example usage to get patients for therapist with ID 1

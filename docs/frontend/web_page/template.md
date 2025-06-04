@@ -195,3 +195,9 @@ In this file you will find all the css code that is used to style is page.
 
 ## Admin_login html
 The admin login is used by therapist to login to their account and see their personal information, but also see the data from their patients. The styling of this page is the same as the login page for the patients. The only difference is that it wil send you to a home page only accessible to therapists.
+
+**Figma design:**
+![FigmaLogin](/docs/assets/Figma/LoginPage.png)
+
+**Actual design:**
+![FigmaLogin](/docs/assets/ActualLoginPage.png)

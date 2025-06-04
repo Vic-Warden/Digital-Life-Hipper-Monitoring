@@ -15,76 +15,83 @@ CREATE SCHEMA IF NOT EXISTS `hipperdb` DEFAULT CHARACTER SET utf8 ;
 USE `hipperdb` ;
 
 -- -----------------------------------------------------
--- Table `hipperdb`.`therapist`
+-- Table `hipperdb`.`Therapist`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hipperdb`.`therapist` ;
+DROP TABLE IF EXISTS `hipperdb`.`Therapist` ;
 
-CREATE TABLE IF NOT EXISTS `hipperdb`.`therapist` (
+CREATE TABLE IF NOT EXISTS `hipperdb`.`Therapist` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`id`));
 
 
 -- -----------------------------------------------------
--- Table `hipperdb`.`patient`
+-- Table `hipperdb`.`User`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hipperdb`.`patient` ;
+DROP TABLE IF EXISTS `hipperdb`.`User` ;
 
-CREATE TABLE IF NOT EXISTS `hipperdb`.`patient` (
+CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(32) NOT NULL,
   `password` VARCHAR(24) NOT NULL,
   `cookies` VARCHAR(256) NULL,
-  PRIMARY KEY (`id`));
+  `is_therapist` INT NOT NULL,
+  `fk_therapist_id` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_therapist_id_idx` (`fk_therapist_id` ASC) VISIBLE,
+  CONSTRAINT `fk_therapist_id`
+    FOREIGN KEY (`fk_therapist_id`)
+    REFERENCES `hipperdb`.`Therapist` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 
 -- -----------------------------------------------------
--- Table `hipperdb`.`goal`
+-- Table `hipperdb`.`Goal`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hipperdb`.`goal` ;
+DROP TABLE IF EXISTS `hipperdb`.`Goal` ;
 
-CREATE TABLE IF NOT EXISTS `hipperdb`.`goal` (
-  `id` INT ZEROFILL NOT NULL,
+CREATE TABLE IF NOT EXISTS `hipperdb`.`Goal` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `patient_id_goal` INT NOT NULL,
   `patient_goal` INT NOT NULL,
   `type` ENUM('daily', 'weekly', 'monthly') NOT NULL,
   `reached` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  INDEX `patient_id_idx` (`patient_id_goal` ASC) VISIBLE,
-  CONSTRAINT `patient_id_goal`
+  INDEX `patient_id_goal_idx` (`patient_id_goal` ASC) VISIBLE,
+  CONSTRAINT `fk_patient_id_goal`
     FOREIGN KEY (`patient_id_goal`)
-    REFERENCES `hipperdb`.`patient` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    REFERENCES `hipperdb`.`User` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 
 -- -----------------------------------------------------
--- Table `hipperdb`.`device`
+-- Table `hipperdb`.`Device`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hipperdb`.`device` ;
+DROP TABLE IF EXISTS `hipperdb`.`Device` ;
 
-CREATE TABLE IF NOT EXISTS `hipperdb`.`device` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `hipperdb`.`Device` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `patient_id_device` INT NOT NULL,
-  `device_label` INT NOT NULL,
+  `device_label` VARCHAR(10) NOT NULL,
+  `device_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `patient_id_idx` (`patient_id_device` ASC) VISIBLE,
-  CONSTRAINT `patient_id_device`
+  CONSTRAINT `fk_patient_id_device`
     FOREIGN KEY (`patient_id_device`)
-    REFERENCES `hipperdb`.`patient` (`id`)
+    REFERENCES `hipperdb`.`User` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `hipperdb`.`data`
+-- Table `hipperdb`.`Data`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hipperdb`.`data` ;
+DROP TABLE IF EXISTS `hipperdb`.`Data` ;
 
-CREATE TABLE IF NOT EXISTS `hipperdb`.`data` (
+CREATE TABLE IF NOT EXISTS `hipperdb`.`Data` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `device_id` INT NOT NULL,
   `timestamp` DATETIME NULL,
@@ -94,34 +101,33 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`data` (
   `data_label` VARCHAR(45) NULL,
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
-  CONSTRAINT `device_id`
+  CONSTRAINT `fk_device_id`
     FOREIGN KEY (`device_id`)
-    REFERENCES `hipperdb`.`device` (`id`)
+    REFERENCES `hipperdb`.`Device` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `hipperdb`.`patient_has_therapist`
+-- Table `hipperdb`.`Patient_has_Therapist`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `hipperdb`.`patient_has_therapist` ;
+DROP TABLE IF EXISTS `hipperdb`.`Patient_has_Therapist` ;
 
-CREATE TABLE IF NOT EXISTS `hipperdb`.`patient_has_therapist` (
+CREATE TABLE IF NOT EXISTS `hipperdb`.`Patient_has_Therapist` (
   `patient_id` INT NOT NULL,
   `therapist_id` INT NOT NULL,
   PRIMARY KEY (`patient_id`, `therapist_id`),
-  INDEX `fk_patient_has_therapist_therapist1_idx` (`therapist_id` ASC) VISIBLE,
-  INDEX `fk_patient_has_therapist_patient1_idx` (`patient_id` ASC) VISIBLE,
-  CONSTRAINT `fk_patient_has_therapist_patient1`
-    FOREIGN KEY (`patient_id`)
-    REFERENCES `hipperdb`.`patient` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_patient_has_therapist_therapist1`
+  INDEX `fk_phasth_therapist_id_idx` (`therapist_id` ASC) VISIBLE,
+  CONSTRAINT `fk_phasth_therapist_id`
     FOREIGN KEY (`therapist_id`)
-    REFERENCES `hipperdb`.`therapist` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    REFERENCES `hipperdb`.`Therapist` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_phasth_patient_id`
+    FOREIGN KEY (`patient_id`)
+    REFERENCES `hipperdb`.`User` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -129,61 +135,62 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `hipperdb`.`therapist`
+-- Data for table `hipperdb`.`Therapist`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`therapist` (`id`, `name`, `email`, `password`) VALUES (0, 'hans', 'hans@gmail.com', 'admin123');
+INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (1, 'hans');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `hipperdb`.`patient`
+-- Data for table `hipperdb`.`User`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`patient` (`id`, `name`, `email`, `password`, `cookies`) VALUES (0, 'henk', 'henk@gmail.com', 'admin123', NULL);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL, 0, NULL);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1);
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `hipperdb`.`goal`
+-- Data for table `hipperdb`.`Goal`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) VALUES (0, 0, 150, 'daily', 0);
+INSERT INTO `hipperdb`.`Goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) VALUES (1, 1, 150, 'daily', 0);
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `hipperdb`.`device`
+-- Data for table `hipperdb`.`Device`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`device` (`id`, `patient_id_device`, `device_label`) VALUES (0 , 0, 09234);
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`) VALUES (1, 1, '09234', 1);
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `hipperdb`.`data`
+-- Data for table `hipperdb`.`Data`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`data` (`id`, `device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`) VALUES (0, 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `hipperdb`.`Data` (`id`, `device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`) VALUES (1, 1, '2025-06-02 14:30:00', 145, 73.4, 2, 'testlabel');
 
 COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `hipperdb`.`patient_has_therapist`
+-- Data for table `hipperdb`.`Patient_has_Therapist`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`patient_has_therapist` (`patient_id`, `therapist_id`) VALUES (0, 0);
+INSERT INTO `hipperdb`.`Patient_has_Therapist` (`patient_id`, `therapist_id`) VALUES (1, 1);
 
 COMMIT;
 

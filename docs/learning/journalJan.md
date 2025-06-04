@@ -25,6 +25,15 @@ What I learned is that for us to perform a similar test we need to also take two
 
 * Starting with this one I had contact with Indigo and Richard on how to go about doing this. I was already expecting to have to do something with figma. I barely have any experience with it, so I got pointed to something Indigo had already made. That gave me a good base and would let me explore figma a little. After starting the first thing I did was go back to an earlier user story I did which was about the components for our web app. Then too I looked at some login pages through Google image search. After deciding on a lay-out, I went to work in Figma. I looked up a mini tutorial on YouTube: `https://www.youtube.com/watch?v=7TF2ZmtkZz0` this quickly helped me with where to find certain things. That way I constructed the login page fairly quickly. 
 
+#223 As a student, I want to learn more about docker, so that I can setup a script which will run the web app locally.
+
+* Having already heard about docker many times throughout my IT life it always came across as a little scary. Especially for me as a BIMmer it always seemed like something only diehard developers would get in touch with. In my recent years I taught myself to have a mentality that I can learn anything as long as I truly set my mind to it. Then when first searching on google for some sample scripts, I noticed that for the things we needed as a group it really was not that scary after all.
+
+* So, my first goal was to re-implement the docker script Indigo had already created for the mysql database. I talked to him about how we wanted to do this, because again, I have 0 docker experience. He explained to me that the `docker-compose.yml` file would need to be in the main folder structure. Then we could leave all of the specific files in their respective folders where they belong. So after some more research and prompting `ChatGPT`, I now know what he ment with that.
+So using common sense I was able to switch over his SQL docker file to the main `docker-compose.yml`. After that implementing a simple nginx script to launch our web app turned out to not be difficult too. Again with some help from `ChatGPT` I had successfully done that. Of course I needed to adjust the file structures and where it had to search for certain things myself, but with my common sense it worked out perfectly.
+
+
+
 ## Journal
 
 ### 5/7/2025
@@ -60,3 +69,7 @@ Today in the daily standup we as a group discussed what still needed to be done.
 ### 5/25/2025
 
 In the weekend I made sure to finish up one learning story. The coming week I will be working on my first programming challenges. I know a fair amount now, so I'm curious what I will walk into. Likely I will have to work on the web application where I need to work on my JavaScript skills and/or HTML CSS. I hope to first implement the login part, or at least the design. The functionality will be another challenge 
+
+### 6/1/2025
+
+Today I finished my learning story about docker. This was actually way easier than I thought in hindsight. My goal now is to work on the front end. Working on web stuff is probably my least favorite thing, but I will do what makes the group move forward. 

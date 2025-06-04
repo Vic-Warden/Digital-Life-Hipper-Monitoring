@@ -70,6 +70,7 @@
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  cursor: pointer;
 }
 
 .dropdown-content.active {
@@ -90,9 +91,9 @@
 }
 
 /* Responsive behavior */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .nav-center {
-    font-size: 2.75vw; /* adjust font size on smaller screens */
+    font-size: 3.5vw; /* adjust font size on smaller screens */
   }
 }
 

@@ -3,7 +3,7 @@ In this file will be written all the information about the design of the databas
 ## ERD
 This is the first version of the database.
 
-![ERD](../assets/ERD%20Hipper.png)
+![ERD](../assets/ERD_Hipper2.png)
 
 ## ERD Guide
 

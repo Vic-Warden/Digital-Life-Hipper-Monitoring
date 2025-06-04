@@ -129,3 +129,27 @@ const chartData = {
 - Goals reset on page reload (it is currently only stored locally not in the database yet)
 
 ---
+
+##  Future Enhancements
+
+- LocalStorage/database support
+- Chart export (PDF/PNG)
+- More time ranges (monthly/yearly)
+- Client switching and real-time data
+- Enhanced accessibility features
+
+---
+
+
+##  References
+
+###  Color Theory
+- [What is Color Theory? - Figma](https://www.figma.com/resource-library/what-is-color-theory/)
+
+###  Web Development
+- [MDN Web Docs - HTML Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+
+###  UX & Accessibility
+- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/WCAG21/quickref/)
+
+

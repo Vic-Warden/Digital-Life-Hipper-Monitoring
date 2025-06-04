@@ -3,6 +3,25 @@ This file contains the learning journal with the learning story's of Victor.
 
 04/06
 
+When I wanted to do my user story, I see I'll meet a problem, a math's problem to be exact because I need to be sure wich mesures I can use, when I need to use the average, median, quartiles, mode... 
+I did some research about the average, median...
+
+[Average](https://en.wikipedia.org/wiki/Average)
+[Median](https://en.wikipedia.org/wiki/Median)
+[Quartiles](https://en.wikipedia.org/wiki/Quartile)
+[Mode](https://www.cuemath.com/data/mode/)
+[Trimmed mean](https://www.investopedia.com/terms/t/trimmed_mean.asp)
+
+I was thinking if I could use all of them to be more accurate but I know there are some differents between them.
+For exemple, for the average if I have just one value very high it can disturb the result, for the median can counter it. 
+For the mode, I can have only the value who is very recurrent but it doesn't allow me to calculate the average for exemple but he is useless if I don't have duplicate value. 
+For the trimmed mean, it's a good compromise beetween the average and the median but I can do only one cut and I prefer to have some differents cut to the 
+For the quartiles, is the hardest things to implement but it can allow me to create some groups Q1, Q2, Q3 and Q4. 
+
+I know about all of this due to my Math's courses, but I learned than I can mixed all of this to be sure my user story can be done accuratly and can be reused
+
+04/06
+
 When I wanted to do my user story, I see I needed to use the Postman's application , that was the first time I used this one, that why I wanted to know how that works, my first reflex was to search on the internet that was I done. 
 
 [Postman](https://learning.postman.com/docs/getting-started/first-steps/sending-the-first-request/)
@@ -10,8 +29,6 @@ When I wanted to do my user story, I see I needed to use the Postman's applicati
 [Youtube](https://www.youtube.com/watch?v=QYqA1VAoyIA)
 
 I didn't have any knowledge about the Postman's application but now I can send some API with this application the things I can't do last time I tried, I can now send GET request I know also without any server you can't use it because this is the requirements for using it But I worked a lot on the back-end I need to work on the other side of the project
-
-
 
 28/05 
 

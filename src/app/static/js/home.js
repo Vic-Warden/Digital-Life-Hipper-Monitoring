@@ -46,11 +46,3 @@
             });
         });
 
-        // Settings icon rotation
-        const settingsIcon = document.querySelector('.settings-icon');
-        settingsIcon.addEventListener('click', function() {
-            this.style.transform = 'rotate(180deg)';
-            setTimeout(() => {
-                this.style.transform = 'rotate(0deg)';
-            }, 300);
-        });

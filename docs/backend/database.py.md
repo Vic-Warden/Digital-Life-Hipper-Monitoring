@@ -106,3 +106,27 @@ These functions enable session handling for users while maintaining secure authe
 **Account Functions**
 
 `change_user_email(token: str, new_email: str):` Changes the users email based on the session token.
+
+
+### Patient Data Access
+
+`get_patient_details(patient_id: int) -> dict | None`
+
+Gets a full summary of a patient’s:
+
+- PAM data records (`data` table)
+- Linked devices (`device` table)
+- Personal goals (`goal` table)
+
+Returns `None` if no information is found.
+
+`get_patients(therapeut_id: int) -> list[dict] | None`
+
+Returns a list of patients linked to a therapist:
+
+```python
+[
+  { "id": 1, "name": "John Doe", "email": "john@example.com" },
+  ...
+]
+```

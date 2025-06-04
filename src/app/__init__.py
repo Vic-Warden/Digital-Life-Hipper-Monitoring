@@ -8,15 +8,12 @@ from werkzeug.security import generate_password_hash
 # Create the app Flask
 app = Flask(__name__)
 
-# Required to use sessions
-app.secret_key = 'your_secret_key_here'
-
 # Database instance
 db = Database(
     host="localhost",
     port=3306,
     user="root",
-    password="superstronkrootpassword",
+    password="superstronkrootpw",
     database="hipperdb"
 )
 
@@ -84,7 +81,7 @@ def login():
 # Logout's route with POST methods
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET'])
 def logout():
     # Clear the session
     cookie = request.cookies.get('auth_cookie')
@@ -99,29 +96,17 @@ def logout():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
+    if db.verify_cookie(cookie)[0]:
 
-    if 'user' not in session:
-        return redirect('/login')
+        if request.method == "POST":
+            # TODO: Add logic for handling settings updates
+            #  - Change email
+            #  - Change password etc...
+            pass
 
-    # Retrieves sent data
-    if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        therapist = request.form.get('therapist', '').strip()
+        return render_template("settings.html")
 
-        if not username or not email:
-            # If any field is empty
-            message = "Names, e-mails and the therapist is required"
-            return render_template('profile.html', user=session['user'], message=message)
-
-        # Updates data in the session
-        session['user']['username'] = username
-        session['user']['email'] = email
-        session['user']['therapist'] = therapist
-
-        # Render the settings.html
-        return render_template('profile.html', user=session['user'], message=message)
+    return redirect("/login")
 
 # Handle the admin login page
 
@@ -136,6 +121,50 @@ def admin_login():
     else:
         # If user is not logged in, redirects to login page
         return redirect('/admin/login')
+
+
+@app.route('/admin/patients', methods=['GET'])
+def admin_patient_list():
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Fetch patient details from the database
+    # TODO: Fix database
+    # patient_details = db.get_patients()
+
+    patient_details = {
+        "name": "John Doe",
+        "email": "john.doe@gmail.com",
+    }
+
+    if not patient_details:
+        return "Patients not found", 404
+
+    # Render the patient details page
+    return render_template('admin_patients.html', patient=patient_details)
+
+
+@app.route('/admin/patients/<patient_id>', methods=['GET'])
+def admin_patient_details(patient_id):
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Fetch patient details from the database
+    patient_details = db.get_patient_details(patient_id)
+
+    if not patient_details:
+        return "Patient not found", 404
+
+    # Render the patient details page
+    return render_template('admin_patient_details.html', patient=patient_details)
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -230,6 +259,48 @@ def change_email():
     session['user']['email'] = new_email
 
     return render_template('profile.html', user=session['user'], message="Email updated successfully.")
+
+
+@app.route('/api/get-patients', methods=['GET'])
+def get_patients():
+    """
+    API endpoint to retrieve all patients.
+    Returns a JSON response with patient data and status code.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    patients = db.get_patients()
+    if not patients:
+        return {"error": "No patients found"}, 404
+
+    return {"patients": patients}, 200
+
+
+@app.route('/api/get-patient-data', methods=['GET'])
+def get_patient_data():
+    """
+    API endpoint to retrieve patient data.
+    Returns a JSON response with patient data and status code.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    patient = request.args.get('patient_id')
+    if not patient:
+        return {"error": "Patient ID is required"}, 400
+
+    patient_data = db.get_patient_details(patient)
+    if not patient_data:
+        return {"error": "Patient not found"}, 404
+
+    return patient_data, 200
 
 
 # Start the Flask application

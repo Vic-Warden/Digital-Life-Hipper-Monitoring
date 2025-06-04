@@ -70,16 +70,16 @@ class ActivityFile:
         pam = PAM_2102(self.uuid)
         await pam.run()
 
-#used to download the activityfile into a csv file
+# Used to download the activity file into a CSV file
 class ActivityDownload:
-    def __init__(self, filename, filelength, label_id = None):
-        self.label_id = None
+    def __init__(self, filename, filelength, label_id=None):
         self.label_id = label_id
 
         # UUID for ActivityFile is 2102
         self.base_uuid = base_uuid
 
         self.filelength = filelength
+        self.filename = filename
 
         self.file_uuid_extension = "2102"
         self.file_uuid = self.base_uuid.replace("XXXX", self.file_uuid_extension)
@@ -87,17 +87,16 @@ class ActivityDownload:
         self.download_uuid_extension = "2103"
         self.download_uuid = self.base_uuid.replace("XXXX", self.download_uuid_extension)
 
-
-        # Run the PAM_2102 script to send the command and confirm transmission
-        asyncio.run(self.run(filename))
-
-    async def run(self, filename):
-        pam = PAM_2103_Day_Detailed(file_uuid=self.file_uuid,
-                       download_uuid=self.download_uuid,
-                       filename=filename,
-                       filelength=self.filelength,
-                       adres=get_address_by_label(self.label_id))
+    async def run(self):
+        pam = PAM_2103_Day_Detailed(
+            file_uuid=self.file_uuid,
+            download_uuid=self.download_uuid,
+            filename=self.filename,
+            filelength=self.filelength,
+            adres=get_address_by_label(self.label_id)
+        )
         await pam.run()
+
 
 class SetTimestamp2101:
     def __init__(self, label_id=None):
@@ -155,8 +154,8 @@ class write_pam_settings:
         )
 
 class DayDataDownload:
-    def __init__(self, filename, days, label_id = None):
-        self.label_id = None
+    def __init__(self, filename, days, label_id=None):
+        self.filename = filename  # ✅ Store the filename
         self.label_id = label_id
 
         # UUID for ActivityFile is 2102
@@ -171,14 +170,15 @@ class DayDataDownload:
         self.download_uuid_extension = "2103"
         self.download_uuid = self.base_uuid.replace("XXXX", self.download_uuid_extension)
 
+        # ❌ REMOVE THIS:
+        # asyncio.run(self.run(filename))  ← REMOVE this line!
 
-        # Run the PAM_2102 script to send the command and confirm transmission
-        asyncio.run(self.run(filename))
-
-    async def run(self, filename):
-        pam = PAM_2103_Day_Data(file_uuid=self.file_uuid,
-                       download_uuid=self.download_uuid,
-                       filename=filename,
-                       filelength=self.days,
-                       adres=get_address_by_label(self.label_id))
+    async def run(self):
+        pam = PAM_2103_Day_Data(
+            file_uuid=self.file_uuid,
+            download_uuid=self.download_uuid,
+            filename=self.filename,
+            filelength=self.days,
+            adres=get_address_by_label(self.label_id)
+        )
         await pam.run()

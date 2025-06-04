@@ -172,3 +172,63 @@ function drawAxesAndLabels(ctx, padding, chartWidth, chartHeight, width, height)
     ctx.fillText(value.toFixed(1), padding + chartWidth + 10, y + 3);
   }
 }
+
+// Update circular progress indicator
+function updateCircularProgress() {
+  const circle = document.querySelector('.progress-ring-fill');
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+  const progress = 370 / 600; // Current score / Total score
+  const offset = circumference - (progress * circumference);
+  
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = offset;
+}
+
+// Initialize event handlers
+function initializeEventHandlers() {
+  // Time selector buttons
+  const timeButtons = document.querySelectorAll('.time-btn');
+  timeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      timeButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+      // Here you could implement different time period views
+    });
+  });
+  
+  // Add goal button
+  const addBtn = document.querySelector('.add-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', function() {
+      // Here you could implement add goal functionality
+      console.log('Add goal clicked');
+    });
+  }
+  
+  // Edit and delete buttons
+  const editButtons = document.querySelectorAll('.edit-btn');
+  const deleteButtons = document.querySelectorAll('.delete-btn');
+  
+  editButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      console.log('Edit goal clicked');
+      // Implement edit functionality
+    });
+  });
+  
+  deleteButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      console.log('Delete goal clicked');
+      // Implement delete functionality
+    });
+  });
+}
+
+// Handle window resize
+window.addEventListener('resize', function() {
+  // Redraw chart on resize
+  setTimeout(() => {
+    initializeChart();
+  }, 100);
+});

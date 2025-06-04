@@ -377,3 +377,33 @@ body {
 .add-btn:hover {
   background: #45a049;
 }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .header-content {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+  
+  .logo {
+    font-size: 1rem;
+  }
+  
+  .user-name {
+    display: none;
+  }
+}

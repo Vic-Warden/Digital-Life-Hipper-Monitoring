@@ -1,4 +1,4 @@
-// Chart data with numbers and scores
+// Chart data based on the screenshot
 const chartData = {
   dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
   steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
@@ -185,6 +185,83 @@ function updateCircularProgress() {
   circle.style.strokeDashoffset = offset;
 }
 
+// Goal management functions
+function addNewGoal() {
+  const goalName = prompt('Enter goal name:');
+  if (!goalName) return;
+  
+  const currentValue = parseInt(prompt('Enter current value:')) || 0;
+  const targetValue = parseInt(prompt('Enter target value:')) || 100;
+  
+  if (targetValue <= 0) {
+    alert('Target value must be greater than 0');
+    return;
+  }
+  
+  const progressPercentage = Math.min((currentValue / targetValue) * 100, 100);
+  
+  const goalHTML = `
+    <div class="goal-item">
+      <div class="goal-header">
+        <span class="goal-label">${goalName}</span>
+        <div class="goal-actions">
+          <span class="goal-value">${currentValue} / ${targetValue}</span>
+          <button class="edit-btn" onclick="editGoal(this)">✏️</button>
+          <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
+        </div>
+      </div>
+      <div class="goal-progress">
+        <div class="goal-progress-fill" style="width: ${progressPercentage}%"></div>
+      </div>
+    </div>
+  `;
+  
+  const addGoalElement = document.querySelector('.add-goal');
+  addGoalElement.insertAdjacentHTML('beforebegin', goalHTML);
+}
+
+function editGoal(button) {
+  const goalItem = button.closest('.goal-item');
+  const goalLabel = goalItem.querySelector('.goal-label');
+  const goalValue = goalItem.querySelector('.goal-value');
+  const progressFill = goalItem.querySelector('.goal-progress-fill');
+  
+  // Get current values
+  const currentName = goalLabel.textContent;
+  const currentValues = goalValue.textContent.split(' / ');
+  const currentCurrent = parseInt(currentValues[0]);
+  const currentTarget = parseInt(currentValues[1]);
+  
+  // Prompt for new values
+  const newName = prompt('Edit goal name:', currentName);
+  if (newName === null) return; // User cancelled
+  
+  const newCurrent = parseInt(prompt('Edit current value:', currentCurrent));
+  if (isNaN(newCurrent)) return;
+  
+  const newTarget = parseInt(prompt('Edit target value:', currentTarget));
+  if (isNaN(newTarget) || newTarget <= 0) {
+    alert('Target value must be a positive number');
+    return;
+  }
+  
+  // Update the goal
+  goalLabel.textContent = newName || currentName;
+  goalValue.textContent = `${newCurrent} / ${newTarget}`;
+  
+  const newProgress = Math.min((newCurrent / newTarget) * 100, 100);
+  progressFill.style.width = `${newProgress}%`;
+}
+
+function deleteGoal(button) {
+  const goalItem = button.closest('.goal-item');
+  const goalName = goalItem.querySelector('.goal-label').textContent;
+  
+  if (confirm(`Are you sure you want to delete "${goalName}"?`)) {
+    goalItem.remove();
+  }
+}
+
 // Initialize event handlers
 function initializeEventHandlers() {
   // Time selector buttons
@@ -200,27 +277,28 @@ function initializeEventHandlers() {
   // Add goal button
   const addBtn = document.querySelector('.add-btn');
   if (addBtn) {
-    addBtn.addEventListener('click', function() {
-      // Here you could implement add goal functionality
-      console.log('Add goal clicked');
-    });
+    addBtn.addEventListener('click', addNewGoal);
   }
   
-  // Edit and delete buttons
+  // Edit and delete buttons for existing goals
+  attachGoalEventHandlers();
+}
+
+function attachGoalEventHandlers() {
   const editButtons = document.querySelectorAll('.edit-btn');
   const deleteButtons = document.querySelectorAll('.delete-btn');
   
   editButtons.forEach(btn => {
+    btn.removeEventListener('click', editGoal); // Remove existing listeners
     btn.addEventListener('click', function() {
-      console.log('Edit goal clicked');
-      // Implement edit functionality
+      editGoal(this);
     });
   });
   
   deleteButtons.forEach(btn => {
+    btn.removeEventListener('click', deleteGoal); // Remove existing listeners
     btn.addEventListener('click', function() {
-      console.log('Delete goal clicked');
-      // Implement delete functionality
+      deleteGoal(this);
     });
   });
 }

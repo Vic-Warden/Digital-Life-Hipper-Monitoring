@@ -40,5 +40,31 @@ The script is designed for therapists who need to retrieve patient activity over
      ```
 ---
 
+4. **Configure the extraction parameters**:
+
+   * `patient_id`
+   * `start_date`
+   * `end_date`
+
+   Example inside the script:
+
+   ```python
+   patient_id = 1
+   start_date = "2025-06-01"
+   end_date = "2025-06-10"
+   ```
+
+5. **Run the script**:
+
+   ```bash
+   python extract_patient_data.py
+   ```
+
+6. **Retrieve the output**:
+
+   * The extracted data will be available in the generated `results.csv` file.
+
+---
+
 
 

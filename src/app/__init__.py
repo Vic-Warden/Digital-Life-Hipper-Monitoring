@@ -6,6 +6,8 @@ from database import Database
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
+from anomaly_detection import calculate_median, detect_anomalies
+
 # Create the app Flask
 app = Flask(__name__)
 
@@ -303,6 +305,53 @@ def get_patient_data():
         return {"error": "Patient not found"}, 404
 
     return patient_data, 200
+
+@app.route('/api/detect-anomalies', methods=['POST'])
+def detect_anomalies_endpoint():
+    
+    data = request.get_json()
+
+    patient_id = data.get('patient_id')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    threshold_percent = data.get('threshold_percent', 20)
+
+    if not patient_id or not start_date or not end_date:
+        return {"error": "patient_id, start_date, and end_date are required"}, 400
+
+    connection = db.get_connection()
+    cursor = connection.cursor()
+
+    query = f"""
+        SELECT 
+            DATE(timestamp) AS date,
+            steps
+        FROM Data
+        JOIN Device ON Data.device_id = Device.id
+        WHERE Device.patient_id_device = {patient_id}
+          AND DATE(timestamp) BETWEEN '{start_date}' AND '{end_date}'
+        ORDER BY date ASC;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    activity_data = [{"date": row[0], "steps": row[1]} for row in results]
+    steps_list = [entry['steps'] for entry in activity_data]
+
+    median = calculate_median(steps_list)
+    anomalies = detect_anomalies(activity_data, median, threshold_percent)
+
+    for anomaly in anomalies:
+        anomaly['date'] = anomaly['date'].strftime('%Y-%m-%d')
+
+    cursor.close()
+    connection.close()
+
+    return {
+        'median_steps': median,
+        'threshold_percent': threshold_percent,
+        'anomalies': anomalies
+    }, 200
 
 
 # Start the Flask application

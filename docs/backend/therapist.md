@@ -66,5 +66,18 @@ The script is designed for therapists who need to retrieve patient activity over
 
 ---
 
+## Features
 
+* Extracts patient activity data: date, steps, PAM score, and zone.
+* Allows selection of the time window for data extraction.
+* Automatically exports the extracted data to a CSV file.
+* Handles UTF-8 characters correctly for international data.
 
+---
+
+## Constraints
+
+* If no time window is specified, the extraction should default to the last 7 days.
+* The exported data must be structured and exportable in a machine-readable format
+
+---

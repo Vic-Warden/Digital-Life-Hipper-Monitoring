@@ -6,5 +6,14 @@ This project provides a Python script to extract patient activity data (steps, P
 
 The script is designed for therapists who need to retrieve patient activity over a specific time period.
 
+---
+
+## Technologies Used
+
+* Python 3.6+
+* MySQL Database
+* `mysql-connector-python` for database connection
+* CSV file export
+
 
 

@@ -1,4 +1,5 @@
 import statistics
+import json
 
 def calculate_median(steps_list):
     
@@ -21,3 +22,13 @@ def detect_anomalies(data, median, threshold_percent=20):
                 'deviation_percent': deviation_percent
             })
     return anomalies
+
+def export_to_json(median, anomalies, threshold_percent):
+
+    output = {
+        "median_steps": median,
+        "threshold_percent": threshold_percent,
+        "anomalies": anomalies
+    }
+    with open('anomalies.json', 'w') as json_file:
+        json.dump(output, json_file, indent=4)

@@ -352,6 +352,10 @@ def detect_anomalies_endpoint():
         'threshold_percent': threshold_percent,
         'anomalies': anomalies
     }, 200
+    
+@app.route('/anomaly-form')
+def anomaly_form():
+    return render_template('form.html')
 
 
 # Start the Flask application

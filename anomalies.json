@@ -3,4 +3,9 @@
     "threshold_percent": 20,
     "anomalies": [
         {
-            "date": 
+            "date": "2025-06-02",
+            "steps": 145,
+            "deviation_percent": 95.4
+        }
+    ]
+}

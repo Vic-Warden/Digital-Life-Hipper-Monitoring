@@ -7,10 +7,14 @@ from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
 LOG_FILE = "log.json"
-PAM_DEVICES_FILE = "pam_devices.json"
-TIME_LIMIT = timedelta(hours=1)
+PAM_DEVICES_FILE = "PAM_devices.json"
+OUTPUT_DIR = "output"
 SCAN_INTERVAL_SECONDS = 10
 DEVICE_LABEL_START = 9240  # Starting number for PAM device labels
+MAX_PULL_HOURS = 12  # Maximum hours to pull for activity data (max request option is LAST_12_HOURS)
+
+# Ensure output directory exists
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Load or initialize the log data
 if os.path.exists(LOG_FILE):
@@ -42,20 +46,6 @@ def save_pam_devices_data():
     with open(PAM_DEVICES_FILE, "w") as devices_file:
         json.dump(pam_devices_data, devices_file, indent=2)
 
-def should_pull_day_data(mac_address):
-    """Return True if day data should be pulled for the device MAC."""
-    today_str = datetime.now().date().isoformat()
-    last_pull_date = log_data.get(mac_address, {}).get("last_day_data_pull")
-    return last_pull_date != today_str
-
-def should_pull_activity_data(mac_address):
-    """Return True if activity data should be pulled for the device MAC."""
-    last_pull_timestamp = log_data.get(mac_address, {}).get("last_activity_pull")
-    if not last_pull_timestamp:
-        return True
-    last_pull_dt = datetime.fromisoformat(last_pull_timestamp)
-    return datetime.now() - last_pull_dt > TIME_LIMIT
-
 def update_log(mac_address, activity=False, day_data=False):
     """Update the log data timestamps for the given MAC address."""
     if mac_address not in log_data:
@@ -65,6 +55,41 @@ def update_log(mac_address, activity=False, day_data=False):
     if day_data:
         log_data[mac_address]["last_day_data_pull"] = datetime.now().date().isoformat()
     save_log_data()
+
+def get_days_since_last_day_pull(mac_address):
+    """Calculate days since last day data pull. Return min 1, max 31."""
+    last_day_str = log_data.get(mac_address, {}).get("last_day_data_pull")
+    if not last_day_str:
+        return 31  # If never pulled, pull max days
+    last_day = datetime.fromisoformat(last_day_str).date()
+    delta_days = (datetime.now().date() - last_day).days
+    return min(max(delta_days, 1), 31)
+
+def get_hours_since_last_activity(mac_address):
+    """Calculate hours since last activity data pull."""
+    last_activity_str = log_data.get(mac_address, {}).get("last_activity_pull")
+    if not last_activity_str:
+        return 24  # If never pulled, pull 24 hours max
+    last_activity = datetime.fromisoformat(last_activity_str)
+    delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
+    return delta_hours
+
+def select_request_name(hours):
+    """Select the closest valid request name for activity data based on hours."""
+    if hours <= 1:
+        return "LAST_1_HOUR"
+    elif hours <= 3:
+        return "LAST_3_HOURS"
+    elif hours <= 6:
+        return "LAST_6_HOURS"
+    elif hours <= 12:
+        return "LAST_12_HOURS"
+    elif hours <= 15:
+        return "LAST_15_HOURS"
+    elif hours <= 24:
+        return "LAST_1_DAY"
+    else:
+        return "LAST_1_DAY"  # fallback to max daily
 
 def generate_new_label():
     """Generate a new label string for a PAM device."""
@@ -99,15 +124,15 @@ async def main_loop():
 
                 pulled_data = False
 
-                # Pull day data if needed
-                if should_pull_day_data(mac_address):
-                    print(f"📅 Pulling day data for {mac_address} (label {label_id})...")
-
+                # Pull day data dynamically
+                days_to_pull = get_days_since_last_day_pull(mac_address)
+                if days_to_pull > 0:
+                    print(f"📅 Pulling day data for {mac_address} (label {label_id}) for last {days_to_pull} days...")
                     for attempt in range(3):
                         try:
                             day_data_downloader = DayDataDownload(
-                                filename=f"output/day_data_{mac_address.replace(':', '')}",
-                                days=10,
+                                filename=os.path.join(OUTPUT_DIR, f"day_data_{mac_address.replace(':', '')}"),
+                                days=days_to_pull,
                                 label_id=label_id,
                             )
                             await day_data_downloader.run()
@@ -122,15 +147,18 @@ async def main_loop():
                             else:
                                 print("❌ Giving up on day data for this cycle.")
 
-                # Pull activity data if needed
-                if should_pull_activity_data(mac_address):
-                    print(f"📥 Pulling activity data for {mac_address} (label {label_id})...")
-
+                # Pull activity data dynamically based on hours since last pull
+                hours_since = get_hours_since_last_activity(mac_address)
+                if hours_since >= 1:
+                    # Cap max hours to max supported request (12 hours)
+                    capped_hours = min(int(hours_since), MAX_PULL_HOURS)
+                    request_name = select_request_name(capped_hours)
+                    print(f"📥 Pulling activity data for {mac_address} (label {label_id}) for {request_name}...")
                     for attempt in range(3):
                         try:
                             activity_downloader = ActivityDownload(
-                                filename=f"output/activity_{mac_address.replace(':', '')}",
-                                filelength=get_detailed_request("LAST_1_HOUR"),
+                                filename=os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}"),
+                                filelength=get_detailed_request(request_name),
                                 label_id=label_id,
                             )
                             await activity_downloader.run()

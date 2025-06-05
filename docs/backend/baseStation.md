@@ -64,6 +64,50 @@ The main code can be run using Python. It scans for any devices in the region at
 
 After doing this, or if the device is already known, the code checks the log file to determine whether it needs to pull any data. If it has not pulled any data in the last hour, or has not pulled the day data file for that day, it uses the services from [BLE Commands](bleCommands.md) to pull the data. This then saves the data under the `output` folder as either `activity_macAddress` or `day_data_macAddress`. If the data has already been pulled, it skips this device.
 
+## Dynamic times
+The device pulls the data form the hipper monitors by comparing the time now and the last time it was pulled. In the code used there are some set options for time, for example 30mins, 1 hour, 3 hours, 6 hours, etc. This is a limit for the base station as of right now. To compare the times and see how much data it has to pull, 2 functions are used. 
+```python
+def get_days_since_last_day_pull(mac_address):
+    """Calculate days since last day data pull. Return min 1, max 31."""
+    last_day_str = log_data.get(mac_address, {}).get("last_day_data_pull")
+    if not last_day_str:
+        return 31  # If never pulled, pull max days
+    last_day = datetime.fromisoformat(last_day_str).date()
+    delta_days = (datetime.now().date() - last_day).days
+    return min(max(delta_days, 1), 31)
+
+def get_hours_since_last_activity(mac_address):
+    """Calculate hours since last activity data pull."""
+    last_activity_str = log_data.get(mac_address, {}).get("last_activity_pull")
+    if not last_activity_str:
+        return 24  # If never pulled, pull 24 hours max
+    last_activity = datetime.fromisoformat(last_activity_str)
+    delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
+    return delta_hours
+```
+
+These calculate the time that needs to be pulled. For the amount of hours this time is compared to the list of possibility's that can be used in the functions to get the activitydata. 
+
+In the main loop, this is then used to get the correct amount of data. 
+```python
+if hours_since >= 1:
+  # Cap max hours to max supported request (12 hours)
+  capped_hours = min(int(hours_since), MAX_PULL_HOURS)
+  request_name = select_request_name(capped_hours)
+  print(f"📥 Pulling activity data for {mac_address} (label {label_id}) for {request_name}...")
+  for attempt in range(3):
+      try:
+          activity_downloader = ActivityDownload(
+              filename=os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}"),
+              filelength=get_detailed_request(request_name),
+              label_id=label_id,
+          )
+          await activity_downloader.run()
+          update_log(mac_address, activity=True)
+          pulled_data = True
+          break
+```
+
 ### Error Handling
 
 If any errors occur while trying to pull data (most commonly the device shutting down while trying to connect), it will print that there was an error and attempt to pull the data 2 more times (3 times in total). If this does not work, it skips that device for that scan and will retry once it finds the device again in the next scan.

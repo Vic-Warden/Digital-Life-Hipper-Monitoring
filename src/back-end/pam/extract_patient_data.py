@@ -8,7 +8,7 @@ connection = mysql.connector.connect(
     user="root",
     password="superstronkrootpw",
     database="hipperdb",
-    collation='utf8mb4_unicode_ci'
+    collation='utf8mb4_unicode_ci' # I have no idea why is needed but it's working now
 )
 
 cursor = connection.cursor()
@@ -31,22 +31,20 @@ query = f"""
       AND DATE(timestamp) BETWEEN '{start_date}' AND '{end_date}'
     ORDER BY date ASC;
 """
-# My executable
+# The executable
 cursor.execute(query)
 
 results = cursor.fetchall()
 
+# This means we can keep a record of the 7 days for analysis in cvs' file
 with open('results.csv', mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['Date', 'Steps', 'PAM Score', 'Zone'])
     for row in results:
         writer.writerow(row)
 
-
-
 for row in cursor.fetchall():
     print(row)
-
 
 cursor.close()
 connection.close()

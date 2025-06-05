@@ -150,6 +150,45 @@ By working with JSON files, I learned how to:
 
 This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently without overloading the devices or network.
 
+## Learning story
+As a student, I want to learn how to fetch data dynamically based on the last successful pull time, so I can ensure my system always retrieves complete and relevant data
+
+### Learned
+Initially, my data collection system fetched a fixed amount of data (e.g., the last 1 hour) whenever a device was detected. This caused issues when a device hadn’t been seen for longer periods — any activity older than that fixed window was lost.
+
+To fix this, I created a time-aware system:
+
+    I logged the last pull timestamp per device.
+
+    I calculated how long it had been since the last successful pull.
+
+    I mapped that duration to a valid range supported by the API (e.g., LAST_3_HOURS, LAST_6_HOURS).
+
+    I dynamically adjusted the data pull request based on that.
+
+This ensured that if a device hadn’t been seen for, say, 6 hours, I would fetch the last 6 hours of data, not just the last 1.
+```python
+def get_hours_since_last_activity(mac_address):
+    """Calculate hours since last activity data pull."""
+    last_activity_str = log_data.get(mac_address, {}).get("last_activity_pull")
+    if not last_activity_str:
+        return 24  # If never pulled, pull 24 hours max
+    last_activity = datetime.fromisoformat(last_activity_str)
+    delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
+    return delta_hours
+```
+
+Now, my system adapts to real-world usage and avoids data loss. I learned how to:
+
+    Work with datetime objects in Python.
+
+    Maintain persistent state using JSON.
+
+    Implement robust logic for edge cases in BLE/IoT systems.
+
+
+
+<br /> <br />
 
 # Sources
 GeeksforGeeks. (2025, 2 april). Read JSON file using Python. GeeksforGeeks. https://www.geeksforgeeks.org/read-json-file-using-python/

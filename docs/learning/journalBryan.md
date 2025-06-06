@@ -214,6 +214,22 @@ for attempt in range(3):
 
 ```
 
+Now, my system is much more reliable when communicating with BLE devices:
+
+    1. It doesn’t crash on failure.
+
+    2. It gives devices a longer chance to respond.
+
+    3. It logs which devices had persistent issues and skips them temporarily without halting the loop, ensuring the programm never stops.
+
+This taught me how to:
+
+    1. Write resilient code in imperfect hardware scenarios.
+
+    2. Use try/except with retries effectively.
+
+    3. Improve user feedback when something goes wrong.
+
 
 <br /> <br />
 

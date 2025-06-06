@@ -266,3 +266,31 @@ I leared how to use the following code to achieve this.<br>
 kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
     cluster_labels = kmeans.fit_predict(scaled_data)
 ````
+
+
+# As a student I want to learn how to store trained AI models and import them again later
+
+I learned how to use the joblib library in order to store a trained AI model.<br>
+```python
+MODEL_PATH = 'decision_tree_model.joblib'
+joblib.dump(best_tree, MODEL_PATH)
+print(f"Trained decision tree saved to '{MODEL_PATH}'")
+```
+
+<br><br>And then I learned how to use joblib in order to then import the pre-trained model so that I can make predictions with it<br>
+
+````python
+MODEL_PATH = 'decision_tree_model.joblib'
+clf = joblib.load(MODEL_PATH)
+
+INPUT_CSV = './training_data/06_06_2025_device_2.csv' 
+OUTPUT_CSV = 'new_data_with_labels.csv'
+
+df_new = pd.read_csv(INPUT_CSV)
+print(df_new)
+
+FEATURE_COLUMNS = clf.feature_names_in_.tolist() if hasattr(clf, 'feature_names_in_') else df_new.drop(columns=[], errors='ignore').select_dtypes(include='number').columns.tolist()
+
+X_new = df_new[FEATURE_COLUMNS].copy()
+pred_labels = clf.predict(X_new)
+````

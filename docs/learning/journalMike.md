@@ -1,6 +1,5 @@
 # Learning Journal
-This file contains the learning journal with the lea
-rning story's of Mike.
+This file contains the learning journal with the learning story's of Mike.
 
 # Learning stories:
 
@@ -194,6 +193,57 @@ https://www.youtube.com/watch?v=tBep6Nhq5gc
 https://www.youtube.com/watch?v=aNt2s0sXltk 
 
 ![structure.png](..%2Fassets%2Fstructure.png)
+
+
+# As a student I want to learn how to use AI models in order to predict labels 
+<br>
+I learned that for classifications taks like predicting labels I need certain model.<br>
+In my case since the data was about dividing it I learned that I needed to use a simple model like Decision tree of Random forest.<br>
+first the data has to be split up in train and test data, and after that the data can be used to train the model.<br>
+In oder to find the best parameters for the AI model I learned to use a gridsearch option in order to finetune to the best parameters.<br>
+
+````python
+# =============================================================================
+# 4) SET UP A PIPELINE: SCALER + RANDOM FOREST CLASSIFIER
+# =============================================================================
+
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('rf', RandomForestClassifier(random_state=42, n_jobs=-1))
+])
+
+# =============================================================================
+# 5) HYPERPARAMETER TUNING (OPTIONAL)
+# =============================================================================
+
+# Example grid for RandomForest parameters
+param_grid = {
+    'rf__n_estimators': [100, 200],
+    'rf__max_depth': [None, 10, 20],
+    'rf__min_samples_split': [2, 5],
+    'rf__min_samples_leaf': [1, 2]
+}
+
+grid_search = GridSearchCV(
+    estimator=pipeline,
+    param_grid=param_grid,
+    cv=5,
+    scoring='accuracy',
+    n_jobs=-1,
+    verbose=1
+)
+
+print("Starting grid search for best hyperparameters...\n")
+grid_search.fit(X_train, y_train)
+print(f"Best CV score: {grid_search.best_score_:.4f}")
+print("Best parameters:")
+print(grid_search.best_params_, "\n")
+
+# Use the best estimator from grid search
+best_model = grid_search.best_estimator_
+````
+
+
 
 
 

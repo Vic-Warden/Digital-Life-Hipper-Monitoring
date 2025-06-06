@@ -193,3 +193,15 @@ https://www.youtube.com/watch?v=tBep6Nhq5gc
 https://www.youtube.com/watch?v=aNt2s0sXltk 
 
 ![structure.png](..%2Fassets%2Fstructure.png)
+
+
+# As a student I want to learn how to use AI models in order to predict labels 
+<br>
+I learned that for classifications taks like predicting labels I need certain model.<br>
+In my case since the data was about dividing it I learned that I needed to use a simple model like Decision tree of Random forest.<br>
+first the data has to be split up in train and test data, and after that the data can be used to train the model.<br>
+In oder to find the best parameters for the AI model I learned to use a gridsearch option in order to finetune to the best parameters.<br>
+
+````python
+
+````

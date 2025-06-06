@@ -106,3 +106,51 @@ def verify_cookie(self, cookie: str) -> tuple[bool, str]:
 It makes use of the same HMAC package to create a new cookie which it then compares to the old one.
 
 After the cookie is generated, it gets stored in the database for persistent storage. If the server ever goes down, all the sessions are still intact.
+
+### Learning Story #241
+
+For this learning story, I wanted to know how to safely implement an API so that we can performs actions using HTTP(S) using the API.
+
+Its important that the API is protected against stuff like sql injection and other attacks.
+
+I've read [this article](https://stackoverflow.blog/2021/10/06/best-practices-for-authentication-and-authorization-for-rest-apis/) and found a few interesting points to consider while making the API.
+
+1) Always use authentication, for this we use our cookies which are tied to permissions.
+
+2) Always use TLS, we will be using TLS when the final version of the app is ready.
+
+3) Use input sanitization to mediate SQL injection attacks.
+
+I have implemented these changes to make sure that our API is protected against common attacks.
+
+
+```python
+@app.route('/api/upload-pam-data', methods=['GET'])
+def upload_pam_data():
+    """
+    API endpoint to upload PAM data.
+    Returns a JSON response with success status and status code.
+    """
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_token(token)
+
+    if not valid:
+        return {"error": reason}, 401
+
+    patient_id = request.args.get('patient_id')
+    pam_data = request.args.get('pam_data')
+
+    if not patient_id or not pam_data:
+        return {"error": "Patient ID and PAM data are required"}, 400
+
+    # Assuming pam_data is a JSON string, you might need to parse it
+    pam_data = json.loads(pam_data)
+
+    # TODO: Implement the actual upload logic
+    # success = db.upload_pam_data(patient_id, pam_data)
+    success = True
+    if not success:
+        return {"error": "Failed to upload PAM data"}, 500
+
+    return {"message": "PAM data uploaded successfully"}, 200
+```

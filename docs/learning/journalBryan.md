@@ -148,7 +148,7 @@ By working with JSON files, I learned how to:
 
     Manage time-based conditions using Python's datetime module
 
-This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently withot overloading the devices or network.
+This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently without overloading the devices or network.
 
 ## Learning story
 As a student, I want to learn how to fetch data dynamically based on the last successful pull time, so I can ensure my system always retrieves complete and relevant data

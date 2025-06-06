@@ -194,11 +194,11 @@ When I first built my data collection script for BLE devices, I assumed the devi
 
 To make my system more robust:
 
-    I added a retry mechanism with up to 3 attempts for both day data and activity data pulls.
+    1. I added a retry mechanism with up to 3 attempts for both day data and activity data pulls.
 
-    I inserted a short delay between retries using asyncio.sleep() to give the device time to recover.
+    2. I inserted a short delay between retries using asyncio.sleep() to give the device time to recover.
 
-    I caught exceptions like TimeoutError and BleakError and handled them with simple output messages.
+    3. I caught exceptions like TimeoutError and BleakError and handled them with simple output messages.
 
 Example code:
 ```python

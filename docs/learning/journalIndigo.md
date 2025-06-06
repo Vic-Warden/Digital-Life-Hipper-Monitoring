@@ -106,3 +106,20 @@ def verify_cookie(self, cookie: str) -> tuple[bool, str]:
 It makes use of the same HMAC package to create a new cookie which it then compares to the old one.
 
 After the cookie is generated, it gets stored in the database for persistent storage. If the server ever goes down, all the sessions are still intact.
+
+### Learning Story #241
+
+For this learning story, I wanted to know how to safely implement an API so that we can performs actions using HTTP(S) using the API.
+
+Its important that the API is protected against stuff like sql injection and other attacks.
+
+I've read [this article](https://stackoverflow.blog/2021/10/06/best-practices-for-authentication-and-authorization-for-rest-apis/) and found a few interesting points to consider while making the API.
+
+1) Always use authentication, for this we use our cookies which are tied to permissions.
+
+2) Always use TLS, we will be using TLS when the final version of the app is ready.
+
+3) Use input sanitization to mediate SQL injection attacks.
+
+I have implemented these changes to make sure that our API is protected against common attacks.
+

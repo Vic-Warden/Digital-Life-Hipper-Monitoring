@@ -1,5 +1,6 @@
 # Learning Journal
-This file contains the learning journal with the learning story's of Mike.
+This file contains the learning journal with the lea
+rning story's of Mike.
 
 # Learning stories:
 
@@ -193,3 +194,25 @@ https://www.youtube.com/watch?v=tBep6Nhq5gc
 https://www.youtube.com/watch?v=aNt2s0sXltk 
 
 ![structure.png](..%2Fassets%2Fstructure.png)
+
+
+
+# As a student I want to learn how to use AI clustering in order to find clusters inside of data 
+<br>
+I learned how to use KMeans clustering in order to make clusters of the data.
+<br>
+I learned how to use an intertia plot in order to see how many clusteres there are based on where the inertia flattens out and stops finding new good clusters<br>
+
+![inertia_clustering_learnings.png](..%2Fassets%2Finertia_clustering_learnings.png)
+
+and then I used KMeansclustering to find the following clusters<br>
+
+![Clustering_learnings_mike.png](..%2Fassets%2FClustering_learnings_mike.png)
+
+<br>
+
+I leared how to use the following code to achieve this.<br>
+````python
+kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    cluster_labels = kmeans.fit_predict(scaled_data)
+````

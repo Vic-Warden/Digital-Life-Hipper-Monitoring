@@ -32,6 +32,10 @@ What I learned is that for us to perform a similar test we need to also take two
 * So, my first goal was to re-implement the docker script Indigo had already created for the mysql database. I talked to him about how we wanted to do this, because again, I have 0 docker experience. He explained to me that the `docker-compose.yml` file would need to be in the main folder structure. Then we could leave all of the specific files in their respective folders where they belong. So after some more research and prompting `ChatGPT`, I now know what he ment with that.
 So using common sense I was able to switch over his SQL docker file to the main `docker-compose.yml`. After that implementing a simple nginx script to launch our web app turned out to not be difficult too. Again with some help from `ChatGPT` I had successfully done that. Of course I needed to adjust the file structures and where it had to search for certain things myself, but with my common sense it worked out perfectly.
 
+#244 As a student, I want to know how to connect the database to the flask app, so that I can implement it into the docker script.
+
+* 
+
 
 
 ## Journal

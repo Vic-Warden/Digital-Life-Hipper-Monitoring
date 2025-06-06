@@ -314,14 +314,17 @@ class Database:
             return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
         return None
 
+    def verify_auth_token(self, token: str) -> tuple[bool, str]:
+        """
+        ### Verify the authentication token and return the associated email if valid.
 
-db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpw",
-    database="hipperdb"
-)
+        Returns a tuple (True, email) if the token is valid,
+        or (False, "Invalid token") if it is not.
+        """
+        query = "SELECT patient_id_device FROM Device WHERE auth_token = %s;"
+        params = (token,)
+        result = self.do_query(query, params, fetch=True)
 
-# Example usage to get patients for therapist with ID 1
-print(db.get_patient_details(1))  # Replace with actual patient ID
+        if result and len(result[0]) > 0:
+            return (True, result[0][0])
+        return (False, "Invalid token")

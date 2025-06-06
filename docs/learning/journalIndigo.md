@@ -161,3 +161,17 @@ I want to know how I can send cookies using Flask to the Front-end (web browser)
 
 To achieve this, I read and followed [this article](https://www.naukri.com/code360/library/handling-cookies-in-flask) which explains it clearly.
 
+I had to make sure to include the following to get it to work.
+
+```python
+# Create response and set cookie
+response = make_response(redirect('/home'))
+response.set_cookie(
+    'auth_cookie',            # Cookie name
+    cookie_value,             # Cookie value
+)
+
+# Redirect to home after form submission
+return response
+```
+

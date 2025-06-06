@@ -2,6 +2,8 @@ import mysql.connector
 
 import csv
 
+from anomaly_detection import calculate_median, detect_anomalies, export_to_json
+
 # Establish connection to the MySQL database.
 connection = mysql.connector.connect(
     host="localhost",
@@ -36,6 +38,15 @@ query = f"""
 cursor.execute(query)
 
 results = cursor.fetchall()
+
+data = [{"date": row[0], "steps": row[1]} for row in results]
+steps_list = [entry['steps'] for entry in data]
+
+median = calculate_median(steps_list)
+
+anomalies = detect_anomalies(data, median, threshold_percent=20)
+
+export_to_json(median, anomalies, threshold_percent=20)
 
 # Write the extracted data to a CSV file for further analysis.
 with open('results.csv', mode='w', newline='') as file:

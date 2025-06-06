@@ -1,0 +1,11 @@
+{
+    "median_steps": 3150.0,
+    "threshold_percent": 20,
+    "anomalies": [
+        {
+            "date": "2025-06-02",
+            "steps": 145,
+            "deviation_percent": 95.4
+        }
+    ]
+}

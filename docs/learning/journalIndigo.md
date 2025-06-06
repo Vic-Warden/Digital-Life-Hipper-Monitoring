@@ -154,3 +154,10 @@ def upload_pam_data():
 
     return {"message": "PAM data uploaded successfully"}, 200
 ```
+
+## Learning Story #243
+
+I want to know how I can send cookies using Flask to the Front-end (web browser) of the person who wants to login.
+
+To achieve this, I read and followed [this article](https://www.naukri.com/code360/library/handling-cookies-in-flask) which explains it clearly.
+

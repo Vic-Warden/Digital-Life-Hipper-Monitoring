@@ -175,3 +175,43 @@ response.set_cookie(
 return response
 ```
 
+This is the final piece of code
+
+In here I also added some cookie parameters to define how long the cookie is valid for and whether or not JS could query it.
+
+```python
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+
+        # Retrieve email password & the therapist
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if db.check_credentials(email, password):
+            # Create secure cookie
+            success, cookie_value = db.create_cookie(email)
+
+            print(f"Cookie created: {cookie_value}")
+
+            if not success:
+                return "Failed to create cookie", 500
+
+            # Create response and set cookie
+            response = make_response(redirect('/home'))
+            response.set_cookie(
+                'auth_cookie',            # Cookie name
+                cookie_value,             # Cookie value
+                max_age=60*60*24*7,       # 1 week
+                httponly=True,            # Prevent JS access (XSS)
+                secure=True,              # Only over HTTPS
+                samesite='Lax'            # Protect from CSRF somewhat
+            )
+
+            # Redirect to home after form submission
+            return response
+        return render_template('login.html', error="Invalid credentials. Please try again.")
+    else:
+        # Render the login.html
+        return render_template('login.html')
+```

@@ -281,7 +281,44 @@ def get_patient_data():
     return patient_data, 200
 ```
 
-## 12. Running the App
+## 12. Upload PAM Data
+
+`upload_pam_data()` is an API endpoint reserved for uploading movement data in JSON format to the server.
+
+It checks the cookies to make sure the user is authenticated and then uses the request.args.get() function to receive the patient_id and the pam_data.
+
+```python
+@app.route('/api/upload-pam-data', methods=['GET'])
+def upload_pam_data():
+    """
+    API endpoint to upload PAM data.
+    Returns a JSON response with success status and status code.
+    """
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_token(token)
+
+    if not valid:
+        return {"error": reason}, 401
+
+    patient_id = request.args.get('patient_id')
+    pam_data = request.args.get('pam_data')
+
+    if not patient_id or not pam_data:
+        return {"error": "Patient ID and PAM data are required"}, 400
+
+    # Assuming pam_data is a JSON string, you might need to parse it
+    pam_data = json.loads(pam_data)
+
+    # TODO: Implement the actual upload logic
+    # success = db.upload_pam_data(patient_id, pam_data)
+    success = True
+    if not success:
+        return {"error": "Failed to upload PAM data"}, 500
+
+    return {"message": "PAM data uploaded successfully"}, 200
+```
+
+## 13. Running the App
 
 ```python
 if __name__ == "__main__":

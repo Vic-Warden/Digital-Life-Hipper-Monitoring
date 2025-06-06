@@ -77,8 +77,10 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`Device` (
   `patient_id_device` INT NOT NULL,
   `device_label` VARCHAR(10) NOT NULL,
   `device_id` INT NOT NULL,
+  `auth_token` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `patient_id_idx` (`patient_id_device` ASC) VISIBLE,
+  UNIQUE INDEX `auth_token_UNIQUE` (`auth_token` ASC) VISIBLE,
   CONSTRAINT `fk_patient_id_device`
     FOREIGN KEY (`patient_id_device`)
     REFERENCES `hipperdb`.`User` (`id`)
@@ -170,7 +172,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`) VALUES (1, 1, '09234', 1);
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`) VALUES (1, 1, '09234', 1, DEFAULT);
 
 COMMIT;
 

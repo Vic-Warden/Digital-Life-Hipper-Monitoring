@@ -97,7 +97,147 @@ plt.show()
 ```
 With these results I now know how to visualize csv data using jupyter notebook. 
 
+## Learning story
+As a student I want to learn how I can read and write to json files using python, so that I can create log files for monitoring hipper monitors. 
+
+Description: When creating the basestation for pulling data from hipper monitors, I need to be able to create a log file. I need this to ensure that data is only pulled once every hour or other set time, instead of every loop. For this I need to know how I can read and write to json files using python.
+
+### Learned
+To achieve this learning story, I made use of python's built in json library. I worked on a python file located at src/back-end/pam/main.py. Within this file, Before the scanning loop starts, I check if a log file already exists. If it does, I load the data using json.load():
+```python
+if os.path.exists(LOG_FILE):
+    with open(LOG_FILE, "r") as log_file:
+        log_data = json.load(log_file)
+else:
+    log_data = {}
+```
+I found this method from GeeksforGeeks (2025). 
+
+After succesfully pulling data from a hipper device, I write the time and date from when I did this to a log.json file. 
+```python
+def update_log(mac_address, activity=False, day_data=False):
+    if mac_address not in log_data:
+        log_data[mac_address] = {}
+    if activity:
+        log_data[mac_address]["last_activity_pull"] = datetime.now().isoformat()
+    if day_data:
+        log_data[mac_address]["last_day_data_pull"] = datetime.now().date().isoformat()
+    
+    with open(LOG_FILE, "w") as log_file:
+        json.dump(log_data, log_file, indent=2)
+```
+This helps me control how often the data is pulled from the devices. The output of this log looks like this:
+```
+{
+  "AA:BB:CC:DD:EE:FF": {
+    "last_activity_pull": "2025-06-04T13:00:00",
+    "last_day_data_pull": "2025-06-04"
+  }
+}
+```
+I found this method of writing data when reading a page written by Liu (2024). Here an example is shown where they also make use of the same methods. 
+
+What I learned:
+By working with JSON files, I learned how to:
+
+    Check for the existence of a file using os.path.exists()
+
+    Load structured data from a file using json.load()
+
+    Update in-memory data and write it back using json.dump()
+
+    Manage time-based conditions using Python's datetime module
+
+This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently without overloading the devices or network.
+
+## Learning story
+As a student, I want to learn how to fetch data dynamically based on the last successful pull time, so I can ensure my system always retrieves complete and relevant data
+
+### Learned
+Initially, my data collection system fetched a fixed amount of data (e.g., the last 1 hour) whenever a device was detected. This caused issues when a device hadn’t been seen for longer periods — any activity older than that fixed window was lost.
+
+To fix this, I created a time-aware system:
+
+    I logged the last pull timestamp per device.
+
+    I calculated how long it had been since the last successful pull.
+
+    I mapped that duration to a valid range supported by the API (e.g., LAST_3_HOURS, LAST_6_HOURS).
+
+    I dynamically adjusted the data pull request based on that.
+
+This ensured that if a device hadn’t been seen for, say, 6 hours, I would fetch the last 6 hours of data, not just the last 1.
+```python
+def get_hours_since_last_activity(mac_address):
+    """Calculate hours since last activity data pull."""
+    last_activity_str = log_data.get(mac_address, {}).get("last_activity_pull")
+    if not last_activity_str:
+        return 24  # If never pulled, pull 24 hours max
+    last_activity = datetime.fromisoformat(last_activity_str)
+    delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
+    return delta_hours
+```
+
+Now, my system adapts to real-world usage and avoids data loss. I learned how to:
+
+    Work with datetime objects in Python.
+
+    Maintain persistent state using JSON.
+
+    Implement robust logic for edge cases in BLE/IoT systems.
+
+## Learning story
+As a student, I want to learn how to implement reliable retry logic in my code when working with Bluetooth Low Energy (BLE) devices, so I can ensure my system gracefully handles intermittent connectivity issues without crashing or losing important data.
+
+### Learned
+When I first built my data collection script for BLE devices, I assumed the devices would always respond quickly and reliably. But in reality, BLE connections were unstable — sometimes devices were out of range, sometimes they took too long to respond, and sometimes the device shut it self off because it had not been moved(was inactive) for too long. This gave me some errors within my code that crashed the main code. For this I needed a fix. 
+
+To make my system more robust:
+
+    1. I added a retry mechanism with up to 3 attempts for both day data and activity data pulls.
+
+    2. I inserted a short delay between retries using asyncio.sleep() to give the device time to recover.
+
+    3. I caught exceptions like TimeoutError and BleakError and handled them with simple output messages.
+
+Example code:
+```python
+for attempt in range(3):
+    try:
+        await data_downloader.run()
+        break  # success
+    except (BleakError, TimeoutError):
+        if attempt < 2:
+            await asyncio.sleep(2)  # delay before retry
+        else:
+            print("Giving up on this cycle.")
+
+```
+
+Now, my system is much more reliable when communicating with BLE devices:
+
+    1. It doesn’t crash on failure.
+
+    2. It gives devices a longer chance to respond.
+
+    3. It logs which devices had persistent issues and skips them temporarily without halting the loop, ensuring the programm never stops.
+
+This taught me how to:
+
+    1. Write resilient code in imperfect hardware scenarios.
+
+    2. Use try/except with retries effectively.
+
+    3. Improve user feedback when something goes wrong.
+
+
+<br /> <br />
+
 # Sources
+GeeksforGeeks. (2025, 2 april). Read JSON file using Python. GeeksforGeeks. https://www.geeksforgeeks.org/read-json-file-using-python/
+
+Liu, L. (2024, 19 maart). How to read and write JSON files in Python. HackerNoon. https://hackernoon.com/how-to-read-and-write-json-files-in-python
+
 Pryke, B. (2025, 19 mei). How to Use Jupyter Notebook: A Beginner’s Tutorial. Dataquest. https://www.dataquest.io/blog/jupyter-notebook-tutorial/
 
 Robot Squirrel Productions. (2021, 21 december). How to Plot CSV Data in Python Using Pandas [Video]. YouTube. https://www.youtube.com/watch?v=y43_o2OnI68

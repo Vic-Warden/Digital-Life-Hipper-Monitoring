@@ -1,3 +1,4 @@
+import os # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
@@ -10,12 +11,13 @@ from werkzeug.security import generate_password_hash
 app = Flask(__name__)
 
 # Database instance
+
 db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpw",
-    database="hipperdb"
+    host=os.getenv('MYSQL_HOST'),
+    port=int(os.getenv('MYSQL_PORT')),
+    user=os.getenv('MYSQL_ROOT_USER'),
+    password=os.getenv('MYSQL_ROOT_PASSWORD'),
+    database=os.getenv('MYSQL_DATABASE')
 )
 
 # Route for the home page

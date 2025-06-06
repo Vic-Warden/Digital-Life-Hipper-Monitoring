@@ -1,6 +1,42 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+## 04/06 As a student I want to learn when I need to use the avarage and the median so that I can correctly analyze and interpret data for my user stories
+
+When I started writing my user story, I realized I would encounter a math problem, to be exact. I need to be sure which measures I can use and when I should use the average, median, quartiles...
+
+[Average](https://en.wikipedia.org/wiki/Average)
+[Median](https://en.wikipedia.org/wiki/Median)
+[Quartiles](https://en.wikipedia.org/wiki/Quartile)
+[Mode](https://www.cuemath.com/data/mode/)
+[Trimmed mean](https://www.investopedia.com/terms/t/trimmed_mean.asp)
+
+I was thinking about using all of them to make my analysis more accurate, but I know there are differences between these measures.
+
+For example :
+
+- For the average if I have just one value very high it can disturb the result.
+
+- The median can counter this problem because it is less sensitive to outlier
+
+- The mode, I can have only the value who is very recurrent but it doesn't allow me to calculate the average for exemple but he is useless if I don't have duplicate value.
+
+- The trimmed mean, is a good compromise between the average and the median because it removes a certain percentage of the highest and lowest values. However, it only allows for a single cut, and I would prefer multiple cuts.
+
+- The quartiles are a bit more complicated to implement, but they allow me to divide the data into four groups (Q1, Q2, Q3, and Q4) giving a better sense of distribution 
+
+I learned all of this in my math courses. I also learned that combining these measures can help ensure my user story is both accurate and reusable.
+
+04/06
+
+When I wanted to do my user story, I see I needed to use the Postman's application , that was the first time I used this one, that why I wanted to know how that works, my first reflex was to search on the internet that was I done. 
+
+[Postman](https://learning.postman.com/docs/getting-started/first-steps/sending-the-first-request/)
+
+[Youtube](https://www.youtube.com/watch?v=QYqA1VAoyIA)
+
+I didn't have any knowledge about the Postman's application but now I can send some API with this application the things I can't do last time I tried, I can now send GET request I know also without any server you can't use it because this is the requirements for using it But I worked a lot on the back-end I need to work on the other side of the project
+
 28/05 
 
 When I showed my work at Richard he told me to fix some issues because I didn't know wich things he done, I learned to be more careful about that because we can make really basic mistakes like that

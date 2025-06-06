@@ -1,3 +1,4 @@
+import os  # Import os for .env centralized settings
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
@@ -280,7 +281,7 @@ class Database:
                 patient_goal,
                 type AS goal_type,
                 reached
-            FROM goal
+            FROM Goal
             WHERE patient_id_goal = %s;
         """
         goals = self.do_query(query_goal, (patient_id,), fetch=True)

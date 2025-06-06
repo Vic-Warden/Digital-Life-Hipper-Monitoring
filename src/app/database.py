@@ -1,4 +1,4 @@
-import os # Import os for .env centralized settings
+import os  # Import os for .env centralized settings
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
@@ -315,13 +315,17 @@ class Database:
             return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
         return None
 
-db = Database(
-    host=os.getenv('MYSQL_HOST'),
-    port=int(os.getenv('MYSQL_PORT')),
-    user=os.getenv('MYSQL_ROOT_USER'),
-    password=os.getenv('MYSQL_ROOT_PASSWORD'),
-    database=os.getenv('MYSQL_DATABASE')
-)
+    def verify_auth_token(self, token: str) -> tuple[bool, str]:
+        """
+        ### Verify the authentication token and return the associated email if valid.
 
-# Example usage to get patients for therapist with ID 1
-print(db.get_patient_details(1))  # Replace with actual patient ID
+        Returns a tuple (True, email) if the token is valid,
+        or (False, "Invalid token") if it is not.
+        """
+        query = "SELECT patient_id_device FROM Device WHERE auth_token = %s;"
+        params = (token,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result[0]) > 0:
+            return (True, result[0][0])
+        return (False, "Invalid token")

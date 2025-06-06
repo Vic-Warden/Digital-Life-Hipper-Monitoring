@@ -77,3 +77,7 @@ In the weekend I made sure to finish up one learning story. The coming week I wi
 ### 6/1/2025
 
 Today I finished my learning story about docker. This was actually way easier than I thought in hindsight. My goal now is to work on the front end. Working on web stuff is probably my least favorite thing, but I will do what makes the group move forward. 
+
+### 6/6/2025
+
+Today I have my second expert review with Raymond. I achieved a meets expectation, although he had some criticism on the way I formed my user story. He explained that it looked too much like a developer story. I agreed with him. Thanks to his clear explanation he set me up in a way where I should now be able to do everything correctly for the final expert review with Gerald. 

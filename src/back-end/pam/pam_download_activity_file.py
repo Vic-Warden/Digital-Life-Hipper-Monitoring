@@ -15,9 +15,22 @@ import asyncio
 #
 # SetTimestamp2101(label_id=2)
 #
-ActivityDownload(filename="../datasets/research_attempt_2/data/device__8__04-06-2025.csv",
+downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_8",
                  filelength=get_detailed_request("MAX"),
                  label_id=90248)
-ActivityDownload(filename="../datasets/research_attempt_2/data/device__2__04-06-2025.csv",
+asyncio.run(downloader.run())
+
+downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_5",
+                 filelength=get_detailed_request("MAX"),
+                 label_id=90245)
+asyncio.run(downloader.run())
+
+downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_3",
+                 filelength=get_detailed_request("MAX"),
+                 label_id=90243)
+asyncio.run(downloader.run())
+
+downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_2",
                  filelength=get_detailed_request("MAX"),
                  label_id=90242)
+asyncio.run(downloader.run())

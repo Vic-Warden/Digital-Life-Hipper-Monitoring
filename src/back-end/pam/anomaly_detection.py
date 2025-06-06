@@ -29,6 +29,7 @@ def detect_anomalies(data, median, threshold_percent=20):
     Returns:
         list: A list of anomaly dictionaries with 'date', 'steps', and 'deviation_percent'.
     """
+    
     anomalies = []
     threshold_value = median * (1 - threshold_percent / 100)
 
@@ -55,6 +56,7 @@ def export_to_json(median, anomalies, threshold_percent):
     Outputs:
         File anomalies.json containing the median, threshold, and list of anomalies.
     """
+    
     for anomaly in anomalies:
         if isinstance(anomaly['date'], (str,)):
             continue  

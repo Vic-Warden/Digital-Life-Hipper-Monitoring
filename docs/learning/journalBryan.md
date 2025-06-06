@@ -148,7 +148,7 @@ By working with JSON files, I learned how to:
 
     Manage time-based conditions using Python's datetime module
 
-This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently without overloading the devices or network.
+This approach gives me a clean and reusable way to control device data downloads and helps ensure the system runs efficiently withot overloading the devices or network.
 
 ## Learning story
 As a student, I want to learn how to fetch data dynamically based on the last successful pull time, so I can ensure my system always retrieves complete and relevant data
@@ -186,6 +186,33 @@ Now, my system adapts to real-world usage and avoids data loss. I learned how to
 
     Implement robust logic for edge cases in BLE/IoT systems.
 
+## Learning story
+As a student, I want to learn how to implement reliable retry logic in my code when working with Bluetooth Low Energy (BLE) devices, so I can ensure my system gracefully handles intermittent connectivity issues without crashing or losing important data.
+
+### Learned
+When I first built my data collection script for BLE devices, I assumed the devices would always respond quickly and reliably. But in reality, BLE connections were unstable — sometimes devices were out of range, sometimes they took too long to respond, and sometimes the device shut it self off because it had not been moved(was inactive) for too long. This gave me some errors within my code that crashed the main code. For this I needed a fix. 
+
+To make my system more robust:
+
+    I added a retry mechanism with up to 3 attempts for both day data and activity data pulls.
+
+    I inserted a short delay between retries using asyncio.sleep() to give the device time to recover.
+
+    I caught exceptions like TimeoutError and BleakError and handled them with simple output messages.
+
+Example code:
+```python
+for attempt in range(3):
+    try:
+        await data_downloader.run()
+        break  # success
+    except (BleakError, TimeoutError):
+        if attempt < 2:
+            await asyncio.sleep(2)  # delay before retry
+        else:
+            print("Giving up on this cycle.")
+
+```
 
 
 <br /> <br />

@@ -349,3 +349,6 @@ Before starting this project, I had never used Jupyter Notebook and didn’t kno
 - I used a youtube video to understand the basics of jupyter notebook. [Link to video](https://www.youtube.com/watch?v=suAkMeWJ1yE)
 
 **Chatgpt was used to help understand some of the features from notebook**
+
+## Learning story 228
+as a student, i want to learn how to call a endpoint in a html form, so i can use it in this project.

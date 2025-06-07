@@ -352,3 +352,6 @@ Before starting this project, I had never used Jupyter Notebook and didn’t kno
 
 ## Learning story 228
 as a student, i want to learn how to call a endpoint in a html form, so i can use it in this project.
+
+### What I have learned
+While I was writing code for the login pages I first started with fetching the endpoints in javascript files, but when I was talking about it with a team member he said that there was an easier way to call the endpoint. After the conversation I learned that you can just call the endpoint in the html form itself, so after learning this I started implementing it in the project.

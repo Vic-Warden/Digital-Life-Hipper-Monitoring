@@ -379,3 +379,6 @@ While I was writing code for the login pages I first started with fetching the e
 
 ## Learning story 249
 As a student, I want to learn the basics of data clustering, so I understand the work made by my team members.
+
+### What I have learned
+Clustering is a way to group data points that are similar to each other — without needing labels. It’s an unsupervised machine learning technique. This means it only looks at data and groups data that's similar to eachother. A popular algorithm for this is the K-means algorithm. With this algorithm you choose a number of clusters (K), and the algorithm tries to group data so that points in the same cluster is similar to eachother and points in different cluster and not similar to eachother.

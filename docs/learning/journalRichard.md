@@ -376,3 +376,6 @@ While I was writing code for the login pages I first started with fetching the e
 ```
 ### References
 - A team member showed me that you can call a backend endpoint using an HTML form by setting the action attribute.
+
+## Learning story 249
+As a student, I want to learn the basics of data clustering, so I understand the work made by my team members.

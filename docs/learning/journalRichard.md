@@ -355,3 +355,22 @@ as a student, i want to learn how to call a endpoint in a html form, so i can us
 
 ### What I have learned
 While I was writing code for the login pages I first started with fetching the endpoints in javascript files, but when I was talking about it with a team member he said that there was an easier way to call the endpoint. After the conversation I learned that you can just call the endpoint in the html form itself, so after learning this I started implementing it in the project.
+
+**In the code below you can see that the endpoint /admin/login with the method POST is called in the form**
+```html
+      <form action="/admin/login" method="POST">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember" />
+          <label for="remember">Remember me</label>
+        </div>
+      
+        <button type="submit">Sign in</button>
+        <a href="#" class="forgot">Forgot Password?</a>
+      </form>
+```

@@ -408,3 +408,10 @@ The actual steps of the K-Means algorithm involve initializing cluster centers, 
 5. Repeat steps 3 and 4:
 
 - Reassign data points based on the updated centroids, then recalculate the centroids again. Repeat this loop until the centroids stop changing significantly — this means the algorithm has converged.
+
+### References
+**These youtube video's were used the help understand clustering and K-means algorithm**
+- [StatQuest: K-means clustering](https://www.youtube.com/watch?v=4b5d3muPQmA&t=33s)
+- [Machine Learning Tutorial Python - 13: K Means Clustering Algorithm](https://www.youtube.com/watch?v=EItlUEPCIzM)
+
+**Chatgpt was used with helping understanding the steps of K-means algorithm and the basics of clustering data**

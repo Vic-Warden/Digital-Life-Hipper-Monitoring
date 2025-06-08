@@ -180,3 +180,22 @@ In this learning task, I focused on understanding how to structure and style a m
 ## Summary
 
 By completing this learning story, I developed foundational skills in building structured, visually engaging, and responsive web dashboards using HTML and CSS. This sets the groundwork for designing real-world UIs for applications like therapy management systems.
+
+
+## Learning story 6:
+
+As a student, I want to learn how to add interactivity using JavaScript, so I can make dashboards that respond to user actions.
+
+## What I Learned
+
+This learning story helped me understand how JavaScript brings dynamics to static web pages. Through the Therapist Dashboard project, I explored:
+
+- **DOM Manipulation**: Used JavaScript to update content dynamically based on user actions.
+- **Event Handling**: Attached functions to buttons for adding, editing, and deleting goals.
+- **Data Visualization**: Built a basic interactive chart using the Canvas API to show metrics like steps and PAM scores.
+- **Reusable Functions**: Learned to organize JavaScript code using functions like `initializeChart()` and `updateCircularProgress()`.
+- **Prototype Data Structures**: Worked with object-based data like `chartData` to simulate real-time input and changes.
+
+## Summary
+
+This exercise strengthened my ability to build interactive, user-responsive web applications using JavaScript. I now have a working understanding of how data, events, and visual components work together in modern dashboards.

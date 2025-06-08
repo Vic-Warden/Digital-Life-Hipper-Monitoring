@@ -386,3 +386,25 @@ Clustering is a way to group data points that are similar to each other — with
 K-Means is widely used because it’s simple, fast, and works well when the data naturally forms well-separated groups. It’s commonly applied in tasks like customer segmentation, grouping documents by topic, or simplifying image data. Although effective, it does require choosing the number of clusters in advance, and it works best when clusters are roughly equal in size and shape.
 
 The actual steps of the K-Means algorithm involve initializing cluster centers, assigning points, updating the centers, and repeating this process until the results stabilize — but more on that later. Everything written here is something I learned, because of never came in contact with clustering data.
+
+### Steps of the K-means algorithm
+
+1. Choose the number of clusters (K):
+
+- Decide how many groups you want the algorithm to find. For example, K = 3 means it will create 3 clusters.
+
+2. Initialize centroids randomly:
+
+- The algorithm randomly places K centroids in the data space. These are the starting "centers" of the clusters.
+
+3. Assign each data point to the nearest centroid:
+
+- For each point in the dataset, calculate the distance to each centroid and assign the point to the closest one. This forms K groups.
+
+4. Recalculate the centroids:
+
+- For each cluster, compute the new centroid by taking the average of all the data points currently assigned to that cluster.
+
+5. Repeat steps 3 and 4:
+
+- Reassign data points based on the updated centroids, then recalculate the centroids again. Repeat this loop until the centroids stop changing significantly — this means the algorithm has converged.

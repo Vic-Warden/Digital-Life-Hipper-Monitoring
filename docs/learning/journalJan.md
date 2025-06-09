@@ -36,6 +36,10 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 * In an earlier user story I had already started with setting up a script for docker so that our groups application would be entirely containerized. Seeing my background as a BIM student I had a lot to learn. So what I had done was convert the simple SQL docker script by indigo to our root folders `docker-compose` including the flask service. When everything ran at first I though I was done. Then I realized the database was not connecting, so I had to figure out what was going wrong and where. Since the entire script links to quite a few files in the repository this took some time to figure out. With some scripting help and explanation from `ChatGPT` and `Google Gemini`, I managed to even go the extra mile to remove the hardcoded database values from our python files. So now all of the database credentials and other variables are located in: `./src/back-end/database/.env`. Docker also reads from this env file to set everything up correctly. 
 
+#252 As a student, I need to fix remaining issues for Docker to successfully launch the webapp, so that we can continue development.
+
+
+
 ## Journal
 
 ### 5/7/2025

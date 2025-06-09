@@ -1,7 +1,7 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Darian.
 
-#### Learning story: 
+## Learning story 1: 
 As a student, I want to learn how powerbi can be implemented in our web application, so that I can have the knownledge to implement it into the application.
 
 #### Learned:
@@ -21,7 +21,7 @@ the steps to take are found and are as follows:
 
 ---
 
-#### Learning story 2:
+## Learning story 2:
 As a student, I want to learn how I can use colors for graphs in PowerBi, so that we can keep the graphs easy to understand.
 
 #### Learned:
@@ -101,7 +101,7 @@ With the **Live Preview** extension in VS Code:
 
 # Learning Journal: Figma Homepage Design for Therapist
 
-## User Story
+## Learning story 4:
 As a student, I want to learn how to use Figma to make the homepage design for the therapist, so that I can make the design which can be used for the web application.
 
 ## Description
@@ -161,3 +161,22 @@ I reviewed previous team designs and adopted a system of reusable components and
 
 ## Summary
 Through focused exploration of Figma’s tools and documentation, and by studying existing team designs, I quickly developed the skills needed to create a usable homepage layout for a therapist. This experience helped me understand interface design fundamentals and prepared me to contribute to future web application projects using Figma. Facing challenges such as tool unfamiliarity and trying to get familiar with the Figma layout helped me grow more to get better at learning design in Figma.
+
+
+## Learning story 5:
+
+As a student, I want to learn how to structure a responsive web dashboard, so I can build modern, user-friendly interfaces like the therapist dashboard.
+
+## What I Learned
+
+In this learning task, I focused on understanding how to structure and style a modern, responsive web dashboard. Using the Therapist Dashboard project as a guide, I learned:
+
+- **Project Organization**: How to set up a logical folder structure (`css`, `js`, and HTML files) for maintainable web projects.
+- **HTML Layouts**: How to build a three-panel dashboard layout using semantic HTML.
+- **CSS Grid and Flexbox**: How to use modern CSS techniques to create responsive designs that adapt to different screen sizes.
+- **Glassmorphism Design**: Applied a visually appealing design style using transparency, blur, and soft gradients.
+- **Accessibility and Aesthetics**: Considered professional color schemes and readable typography for health-focused applications.
+
+## Summary
+
+By completing this learning story, I developed foundational skills in building structured, visually engaging, and responsive web dashboards using HTML and CSS. This sets the groundwork for designing real-world UIs for applications like therapy management systems.

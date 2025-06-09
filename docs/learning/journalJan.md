@@ -36,6 +36,10 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 * In an earlier user story I had already started with setting up a script for docker so that our groups application would be entirely containerized. Seeing my background as a BIM student I had a lot to learn. So what I had done was convert the simple SQL docker script by indigo to our root folders `docker-compose` including the flask service. When everything ran at first I though I was done. Then I realized the database was not connecting, so I had to figure out what was going wrong and where. Since the entire script links to quite a few files in the repository this took some time to figure out. With some scripting help and explanation from `ChatGPT` and `Google Gemini`, I managed to even go the extra mile to remove the hardcoded database values from our python files. So now all of the database credentials and other variables are located in: `./src/back-end/database/.env`. Docker also reads from this env file to set everything up correctly. 
 
+#252 As a student, I need to fix remaining issues for Docker to successfully launch the webapp, so that we can continue development.
+
+* Today Richard notified me about Docker no longer working. I was surprised because of course the last time I tested everything was working fine. So I cloned the main repository and to my surprise it indeed was no longer working. I had seen that Victor added a new component to the lib which is called "anomaly_detection". Unfortunately he didn't implement it in a way so that the .py module was recognizable for docker. I already notified him about this. Anyway, through a bit of help from `ChatGPT` I was able to notice this quickly. Then I also found a minor mistake in the database `init.sql` file which was causing the mysql service to spit out an error and not boot correctly. I fixed that too. Docker works now. 
+
 ## Journal
 
 ### 5/7/2025

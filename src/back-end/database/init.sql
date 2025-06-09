@@ -172,7 +172,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`) VALUES (1, 1, '09234', 1, DEFAULT);
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`) VALUES (1, 1, '09234', 1, 'default token here');
 
 COMMIT;
 

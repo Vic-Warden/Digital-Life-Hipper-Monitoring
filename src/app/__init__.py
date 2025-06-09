@@ -7,7 +7,7 @@ import json
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
-from anomaly_detection import calculate_median, detect_anomalies
+from .anomaly_detection import calculate_median, detect_anomalies
 
 # Create the app Flask
 app = Flask(__name__)

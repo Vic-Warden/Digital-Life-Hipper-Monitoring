@@ -199,3 +199,68 @@ Computation of the percentage of goal achievement days.
 Prediction of activity drops using simple machine learning models (e.g., linear regression).
 
 Clustering of patients based on behavior similarity (e.g., k-means clustering).
+
+# **Real-time Activity Monitoring**
+
+This project provides a real-time monitoring feature that automatically detects significant deviations in patient activity as soon as new data is available.
+
+### How It Works
+
+* The system continuously monitors the database for new activity entries every 5 seconds.
+* It calculates the rolling median of daily steps for each patient.
+* If the new activity is more than 30% below the median, it triggers an anomaly alert.
+* Alerts are displayed directly in the system console.
+
+### Features
+
+* Real-time anomaly detection (within 5 seconds of new data).
+* Median calculation for deviation detection.
+* Configurable global threshold (default: 30%).
+* Scalable monitoring for multiple patients simultaneously.
+
+### How to Run the Real-time Monitoring
+
+1. **Ensure your database is running and populated with activity data**
+
+2. **Launch the monitoring script**
+
+   ```bash
+   python realtime_alert.py
+   ```
+
+3. **Monitor the console for alerts**
+
+   Example of a detected anomaly:
+
+   ```
+   [ALERT] Patient 1: 2025-06-08 | Baseline: 2800, Steps: 1000 (Deviation: -64.29%)
+   ```
+
+### Requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+Additional requirements for real-time monitoring:
+
+```
+python-dotenv>=0.21.0
+```
+
+---
+
+# **Limitations & Future Work**
+
+## Limitations
+
+* Currently, the system uses a global threshold for anomaly detection (e.g., 30% for all patients).
+* Notifications are delivered via system console only (no email or dashboard yet).
+
+## Future Work
+
+* **Per-patient threshold configuration**: Allow therapists to define custom thresholds for each patient.
+* **Email Notifications**: Send automatic email alerts to therapists for detected anomalies.
+* **Web Dashboard**: Display alerts in a real-time dashboard for a better clinical overview.
+* **Advanced anomaly types**: Detect prolonged inactivity, pattern shifts, and activity variability.
+* **Machine Learning**: Predict potential drops in activity based on historical trends.

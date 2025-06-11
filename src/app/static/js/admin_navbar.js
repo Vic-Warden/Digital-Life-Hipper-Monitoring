@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const navbar = `
-<nav class="navbar">
+<nav class="admin-navbar">
   <div class="nav-left"></div>
 
   <div class="nav-center">------ Hipper Therapeutics ------</div>
@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     </button>
     <div class="dropdown-content">
-      <a href="/home" class="nav-link">Home</a>
+      <a href="/admin/home" class="nav-link">Home</a>
+      <a href="/admin/patients" class="nav-link">Patients</a>
       <a href="/settings" class="nav-link">Settings</a>
       <a href="/logout" class="nav-link">Logout</a>
     </div>
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
 
   // Insert the navbar HTML into the page
-  document.getElementById("navbar").innerHTML = navbar;
+  document.getElementById("admin-navbar").innerHTML = navbar;
 
 // Highlight current page in dropdown
 // Have to check if this works when we work on local server: extension vscode can't find the paths!

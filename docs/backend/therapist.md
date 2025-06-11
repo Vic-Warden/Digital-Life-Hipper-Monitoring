@@ -167,42 +167,42 @@ python-dotenv>=0.21.0
 
 ## Future Improvements
 
-Support for detecting extended inactivity periods.
+Support for detecting extended inactivity periods
 
-Pattern change detection (e.g., activity shifts from morning to evening).
+Pattern change detection (activity shifts from morning to evening)
 
-Configurable thresholds per patient.
+Configurable thresholds per patient
 
-Detection of consecutive days with low activity (e.g., steps < 100).
+Detection of consecutive days with low activity (steps < 100).
 
-Identification of daily habit pattern shifts based on active hours.
+Identification of daily habit pattern shifts based on active hours
 
-Calculation of 7-day moving average trends.
+Calculation of 7-day moving average trends
 
-Computation of a trend score based on activity fluctuations.
+Computation of a trend score based on activity fluctuations
 
-Measurement of daily activity variability using standard deviation.
+Measurement of daily activity variability using standard deviation
 
-Detection of prolonged low-activity streaks (2+ consecutive days).
+Detection of prolonged low-activity streaks (2+ consecutive days)
 
-Calculation of daily inactivity duration (requires hourly data).
+Calculation of daily inactivity duration (requires hourly data)
 
-Computation of the percentage of goal achievement days.
+Computation of the percentage of goal achievement days
 
-Prediction of activity drops using simple machine learning models (e.g., linear regression).
+Prediction of activity drops using simple machine learning models (linear regression)
 
-Clustering of patients based on behavior similarity (e.g., k-means clustering).
+Clustering of patients based on behavior similarity (k-means clustering)
 
 # **Real-time Activity Monitoring**
 
-This project provides a real-time monitoring feature that automatically detects significant deviations in patient activity as soon as new data is available.
+This project provides a real-time monitoring feature that automatically detects significant deviations in patient activity as soon as new data is available
 
 ### How It Works
 
-* The system continuously monitors the database for new activity entries every 5 seconds.
-* It calculates the rolling median of daily steps for each patient.
-* If the new activity is more than 30% below the median, it triggers an anomaly alert.
-* Alerts are displayed directly in the system console.
+* The system continuously monitors the database for new activity entries every 5 seconds
+* It calculates the rolling median of daily steps for each patient
+* If the new activity is more than 30% below the median, it triggers an anomaly alert
+* Alerts are displayed directly in the system console
 
 ### Features
 
@@ -302,12 +302,12 @@ Detection of Changes in Routine
 
 Activity Pattern Recognition by Deep Learning
 
-Objective: automatically identify patterns (e.g. walking, resting, brief efforts).
+**Objective :** automatically identify patterns (e.g. walking, resting, brief efforts).
 
-Utility: advanced typology of days.
+**Utility :** advanced typology of days.
 
-Model: CNN or LSTM on fine time series
+**Model :** CNN or LSTM on fine time series
 
-Data: raw acceleration vectors or series of steps/zone per hour
+**Data :** raw acceleration vectors or series of steps/zone per hour
 
-Complexity: high level (need for volume and labels)
+**Complexity :** high level (need for volume and labels)

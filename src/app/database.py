@@ -32,7 +32,9 @@ class Database:
                 port=self._port,
                 user=self._user,
                 password=self._password,
-                database=self._database
+                database=self._database,
+                charset='utf8mb4',               
+                collation='utf8mb4_unicode_ci'
             )
             # Check if the connection was successful
             # and print some server information

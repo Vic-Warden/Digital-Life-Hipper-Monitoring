@@ -1,3 +1,7 @@
+# TODO
+
+- How to insert multiple rows using one sql query?
+
 # Learning Journal
 
 ### Learning story #203

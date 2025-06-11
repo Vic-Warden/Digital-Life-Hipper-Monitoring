@@ -30,7 +30,7 @@ The script is designed for therapists who need to extract patient activity over 
 3. **Set up the MySQL Database**
 
    * Ensure a MySQL database is running.
-   * Update the database connection parameters in extract_patient_data.py if needed:
+   * Update the database connection parameters in extract_patient_data.py if needed :
 
      ```python
      host = "localhost"
@@ -46,7 +46,7 @@ The script is designed for therapists who need to extract patient activity over 
    * `start_date`
    * `end_date`
 
-   Example inside the script:
+   Example inside the script :
 
    ```python
    patient_id = 1
@@ -68,27 +68,20 @@ The script is designed for therapists who need to extract patient activity over 
 
 ## Features
 
-* Extracts patient activity data: date, steps, PAM score, and zone.
-* Allows selection of the time window for data extraction.
-* Automatically exports the extracted data to a CSV file.
-* Handles UTF-8 characters correctly for international data.
-
----
-
-## Constraints
-
-* If no time window is specified, the extraction should default to the last 7 days.
-* The exported data must be structured and exportable in a machine-readable format
+* Extracts patient activity data: date, steps, PAM score, and zone
+* Allows selection of the time window for data extraction
+* Automatically exports the extracted data to a CSV file
+* Handles UTF-8 characters correctly for international data
 
 ---
 
 ## Anomaly Detection Feature
 
-This project also provides an anomaly detection feature to identify significant deviations in patient activity. Therapists can detect sudden drops in activity that may require intervention.
+This project also provides an anomaly detection feature to identify deviations in patient activity. Therapists can detect sudden drops in activity that may require intervention
 
-* The system calculates the median of daily steps over a specified time window.
-* It flags any day where the activity is more than 20% below the median.
-* Results are available via API and a simple web form.
+* The system calculates the median of daily steps over a specified time window
+* It flags any day where the activity is more than 20% below the median
+* Results are available via API and a simple web form
 
 ---
 

@@ -27,10 +27,12 @@ the templates folder had all the html files,<br>
 the static folder has the css and js files in their folders as well as all the assets like fonts and images.
 ![structure.png](structure.png)
 
-## Navigation bar
+## Navigation bar (Patient and Therapist)
 The navigation bar is made in JavaScript in this way the navbar can be injected into every HTML file where it is needed. 
 
 The call upon the navbar in an HTML file you need to include this code:
+
+**Patient navigation bar**
 
 ```HTML
    <link rel="stylesheet" href="../static/css/navbar.css" />
@@ -40,21 +42,34 @@ The call upon the navbar in an HTML file you need to include this code:
    <script src="../static/js/navbar.js"></script>
 
 ```
+**Therapist navigation bar**
+
+```HTML
+   <link rel="stylesheet" href="../static/css/navbar.css" />
+
+   <div id="admin-navbar"></div>
+
+   <script src="../static/js/navbar.js"></script>
+
+```
 These lines of code will dynamically inject the navbar on page load. 
 
 ### Navbar design
-Before making the code for the navbar there was a design made for the navbar in figma. After talking about it with the team there was decided that we would take most of the design from figma, but there will be some changes to the actual navbar made for the app. The most important page for the patients is the homepage, because of this the navbar won't be used as much, so there was decided that the "Hamburger icon" would be used on the actual design and make a hover effect to show the elements of the navbar.
+Before making the code for the navbar there was a design made for the navbar in figma. After talking about it with the team there was decided that we would take most of the design from figma, but there will be some changes to the actual navbar made for the app. The most important page for the patients is the homepage, because of this the navbar won't be used as much, so there was decided that the "Hamburger icon" would be used on the actual design and make a hover effect to show the elements of the navbar. The design for the navbar of the therapist is the same, but the only difference is there are some extra elements on the navbar for the therapist.
 
 **Figma design navbar**
 ![FigmaNavbar](/docs/assets/NavbarFigma.png)
 
-**Actual design for app**
-![FigmaNavbar](/docs/assets/ActualNavbar.png)
+**Actual design for app (Patient)**
+![patientNavbar](/docs/assets/patientNavbar.png)
 
-### navbar.js
+**Actual design for app (Therapist)**
+![therapistNavbar](/docs/assets/adminNavbar.png)
+
+### navbar/admin_navbar.js
 In this file you will find all the html code for the injection of the navbar and function that are used for the functionality of the navbar.
 
-### navbar.css
+### navbar/admin_navbar.css
 In this file you will find all the code for the styling of the navbar.
 
 ### Responsive 

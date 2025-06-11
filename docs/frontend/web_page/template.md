@@ -61,7 +61,7 @@ Before making the code for the navbar there was a design made for the navbar in 
 ![FigmaNavbar](/docs/assets/NavbarFigma.png)
 
 **Actual design for app (Patient)**
-![FigmaNavbar](/docs/assets/ActualNavbar.png)
+![patientNavbar](/docs/assets/patientNavbar.png)
 
 **Actual design for app (Therapist)**
 ![therapistNavbar](/docs/assets/adminNavbar.png)

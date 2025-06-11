@@ -1,0 +1,106 @@
+.admin-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #90D4FF;
+  border-bottom: 2px solid #5db3e9;
+  color: white;
+  position: relative;
+}
+
+/* Left and right sections shrink to fit */
+.nav-left,
+.nav-right {
+  flex: 0 0 auto;
+}
+
+/* Center stays in the middle */
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  font-family: 'Julius Sans One', sans-serif;
+  color: black;
+}
+
+/* Center text style */
+.navbar-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Hamburger menu */
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: black;
+  margin: 4px 0;
+}
+
+.dropbtn {
+  background-color: #90D4FF;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.dropbtn:focus {
+  outline: none;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+}
+
+.dropdown-content.active {
+  display: none;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Highlight the current page */
+/* Have to check if this works when we work on local server: extension vscode can't find the paths!*/
+.dropdown-content a.active-link {
+  background-color: #1E5F86;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .nav-center {
+    font-size: 3.5vw; /* adjust font size on smaller screens */
+  }
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #f1f1f1;
+}

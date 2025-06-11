@@ -48,8 +48,11 @@ Before making the code for the navbar there was a design made for the navbar in 
 **Figma design navbar**
 ![FigmaNavbar](/docs/assets/NavbarFigma.png)
 
-**Actual design for app**
+**Actual design for app (Patient)**
 ![FigmaNavbar](/docs/assets/ActualNavbar.png)
+
+**Actual design for app (Patient)**
+![therapistNavbar](/docs/assets/adminNavbar.png)
 
 ### navbar.js
 In this file you will find all the html code for the injection of the navbar and function that are used for the functionality of the navbar.

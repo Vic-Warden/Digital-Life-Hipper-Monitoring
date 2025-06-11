@@ -33,7 +33,7 @@ class Database:
                 user=self._user,
                 password=self._password,
                 database=self._database,
-                charset='utf8mb4',               
+                charset='utf8mb4',
                 collation='utf8mb4_unicode_ci'
             )
             # Check if the connection was successful
@@ -331,3 +331,17 @@ class Database:
         if result and len(result[0]) > 0:
             return (True, result[0][0])
         return (False, "Invalid token")
+
+    def get_last_update_period(self, device_mac_addr: str):
+        """
+        ### Get the last update period for a device based on its MAC address.
+
+        Returns the last update period as a string.
+        """
+        query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
+        params = (device_mac_addr,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0]
+        return None

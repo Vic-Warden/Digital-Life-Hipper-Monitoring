@@ -9,3 +9,7 @@ Date,Steps,Activity Score,Zone 3 (Sport),Zone 2 (Health),Zone 1 (Living)
 2025-06-09,3,0,0,0,0
 2025-06-10,7083,454,0,44,167
 2025-06-11,4293,270,0,37,83
+
+
+Date,           Steps,  Activity Score, Zone 3 (Sport), Zone 2 (Health),Zone 1 (Living)
+2025-06-11,     4293,              270,              0,              37,            83

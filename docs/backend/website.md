@@ -23,20 +23,35 @@ This is a Flask web application that provides routes for users and admin access,
 
 The application is initialized using Flask and Werkzeug for password hashing. A custom `Database` class is used for database operations.
 
+The database variables get loaded through a .env environment file. This enables a more secure way of storing passwords and endpoint addresses.
+
 ```python
+import os  # Import os for .env centralized settings
+# Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
+import json
+from dotenv import load_dotenv
+
+
+# Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
+from anomaly_detection import calculate_median, detect_anomalies
+
+# Create the app Flask
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+
+# Database instance
+
+load_dotenv()  # This will look for a .env file in the current directory
 
 db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpassword",
-    database="hipperdb"
+    host=os.getenv('MYSQL_HOST'),
+    port=int(os.getenv('MYSQL_PORT')),
+    user=os.getenv('MYSQL_ROOT_USER'),
+    password=os.getenv('MYSQL_ROOT_PASSWORD'),
+    database=os.getenv('MYSQL_DATABASE')
 )
 ```
 

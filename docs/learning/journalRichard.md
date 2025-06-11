@@ -349,3 +349,69 @@ Before starting this project, I had never used Jupyter Notebook and didn’t kno
 - I used a youtube video to understand the basics of jupyter notebook. [Link to video](https://www.youtube.com/watch?v=suAkMeWJ1yE)
 
 **Chatgpt was used to help understand some of the features from notebook**
+
+## Learning story 228
+as a student, i want to learn how to call a endpoint in a html form, so i can use it in this project.
+
+### What I have learned
+While I was writing code for the login pages I first started with fetching the endpoints in javascript files, but when I was talking about it with a team member he said that there was an easier way to call the endpoint. After the conversation I learned that you can just call the endpoint in the html form itself, so after learning this I started implementing it in the project.
+
+**In the code below you can see that the endpoint /admin/login with the method POST is called in the form**
+```html
+      <form action="/admin/login" method="POST">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      
+        <div class="remember">
+          <input type="checkbox" id="remember" name="remember" />
+          <label for="remember">Remember me</label>
+        </div>
+      
+        <button type="submit">Sign in</button>
+        <a href="#" class="forgot">Forgot Password?</a>
+      </form>
+```
+### References
+- A team member showed me that you can call a backend endpoint using an HTML form by setting the action attribute.
+
+## Learning story 249
+As a student, I want to learn the basics of data clustering, so I understand the work made by my team members.
+
+### What I have learned
+Clustering is a way to group data points that are similar to each other — without needing labels. It’s an unsupervised machine learning technique. This means it only looks at the data and groups points that are similar to each other. A popular algorithm for this is the K-Means algorithm. With this algorithm, you choose a number of clusters (K), and the algorithm tries to group the data so that points in the same cluster are similar to each other, and points in different clusters are as different as possible.
+
+K-Means is widely used because it’s simple, fast, and works well when the data naturally forms well-separated groups. It’s commonly applied in tasks like customer segmentation, grouping documents by topic, or simplifying image data. Although effective, it does require choosing the number of clusters in advance, and it works best when clusters are roughly equal in size and shape.
+
+The actual steps of the K-Means algorithm involve initializing cluster centers, assigning points, updating the centers, and repeating this process until the results stabilize — but more on that later. Everything written here is something I learned, because of never came in contact with clustering data.
+
+### Steps of the K-means algorithm
+
+1. Choose the number of clusters (K):
+
+- Decide how many groups you want the algorithm to find. For example, K = 3 means it will create 3 clusters.
+
+2. Initialize centroids randomly:
+
+- The algorithm randomly places K centroids in the data space. These are the starting "centers" of the clusters.
+
+3. Assign each data point to the nearest centroid:
+
+- For each point in the dataset, calculate the distance to each centroid and assign the point to the closest one. This forms K groups.
+
+4. Recalculate the centroids:
+
+- For each cluster, compute the new centroid by taking the average of all the data points currently assigned to that cluster.
+
+5. Repeat steps 3 and 4:
+
+- Reassign data points based on the updated centroids, then recalculate the centroids again. Repeat this loop until the centroids stop changing significantly — this means the algorithm has converged.
+
+### References
+**These youtube video's were used the help understand clustering and K-means algorithm**
+- [StatQuest: K-means clustering](https://www.youtube.com/watch?v=4b5d3muPQmA&t=33s)
+- [Machine Learning Tutorial Python - 13: K Means Clustering Algorithm](https://www.youtube.com/watch?v=EItlUEPCIzM)
+
+**Chatgpt was used with helping understanding the steps of K-means algorithm and the basics of clustering data**

@@ -2,9 +2,12 @@ import os # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
+import json
 
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
+
+from .anomaly_detection import calculate_median, detect_anomalies
 
 # Create the app Flask
 app = Flask(__name__)
@@ -304,7 +307,88 @@ def get_patient_data():
 
     return patient_data, 200
 
+@app.route('/api/detect-anomalies', methods=['POST'])
+def detect_anomalies_endpoint():
+    
+    data = request.get_json()
+
+    patient_id = data.get('patient_id')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    threshold_percent = data.get('threshold_percent', 20)
+
+    if not patient_id or not start_date or not end_date:
+        return {"error": "patient_id, start_date, and end_date are required"}, 400
+
+    connection = db.get_connection()
+    cursor = connection.cursor()
+
+    query = f"""
+        SELECT 
+            DATE(timestamp) AS date,
+            steps
+        FROM Data
+        JOIN Device ON Data.device_id = Device.id
+        WHERE Device.patient_id_device = {patient_id}
+          AND DATE(timestamp) BETWEEN '{start_date}' AND '{end_date}'
+        ORDER BY date ASC;
+    """
+    cursor.execute(query)
+    results = cursor.fetchall()
+
+    activity_data = [{"date": row[0], "steps": row[1]} for row in results]
+    steps_list = [entry['steps'] for entry in activity_data]
+
+    median = calculate_median(steps_list)
+    anomalies = detect_anomalies(activity_data, median, threshold_percent)
+
+    for anomaly in anomalies:
+        anomaly['date'] = anomaly['date'].strftime('%Y-%m-%d')
+
+    cursor.close()
+    connection.close()
+
+    return {
+        'median_steps': median,
+        'threshold_percent': threshold_percent,
+        'anomalies': anomalies
+    }, 200
+    
+@app.route('/anomaly-form')
+def anomaly_form():
+    return render_template('form.html')
+
+
+@app.route('/api/upload-pam-data', methods=['GET'])
+def upload_pam_data():
+    """
+    API endpoint to upload PAM data.
+    Returns a JSON response with success status and status code.
+    """
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_token(token)
+
+    if not valid:
+        return {"error": reason}, 401
+
+    patient_id = request.args.get('patient_id')
+    pam_data = request.args.get('pam_data')
+
+    if not patient_id or not pam_data:
+        return {"error": "Patient ID and PAM data are required"}, 400
+
+    # Assuming pam_data is a JSON string, you might need to parse it
+    pam_data = json.loads(pam_data)
+
+    # TODO: Implement the actual upload logic
+    # success = db.upload_pam_data(patient_id, pam_data)
+    success = True
+    if not success:
+        return {"error": "Failed to upload PAM data"}, 500
+
+    return {"message": "PAM data uploaded successfully"}, 200
+
 
 # Start the Flask application
 if __name__ == "__main__":
-    app.run(debug=True, port=6001)
+    app.run(debug=True, use_reloader=True, port=6001)

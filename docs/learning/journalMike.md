@@ -193,3 +193,104 @@ https://www.youtube.com/watch?v=tBep6Nhq5gc
 https://www.youtube.com/watch?v=aNt2s0sXltk 
 
 ![structure.png](..%2Fassets%2Fstructure.png)
+
+
+# As a student I want to learn how to use AI models in order to predict labels 
+<br>
+I learned that for classifications taks like predicting labels I need certain model.<br>
+In my case since the data was about dividing it I learned that I needed to use a simple model like Decision tree of Random forest.<br>
+first the data has to be split up in train and test data, and after that the data can be used to train the model.<br>
+In oder to find the best parameters for the AI model I learned to use a gridsearch option in order to finetune to the best parameters.<br>
+
+````python
+# =============================================================================
+# 4) SET UP A PIPELINE: SCALER + RANDOM FOREST CLASSIFIER
+# =============================================================================
+
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('rf', RandomForestClassifier(random_state=42, n_jobs=-1))
+])
+
+# =============================================================================
+# 5) HYPERPARAMETER TUNING (OPTIONAL)
+# =============================================================================
+
+# Example grid for RandomForest parameters
+param_grid = {
+    'rf__n_estimators': [100, 200],
+    'rf__max_depth': [None, 10, 20],
+    'rf__min_samples_split': [2, 5],
+    'rf__min_samples_leaf': [1, 2]
+}
+
+grid_search = GridSearchCV(
+    estimator=pipeline,
+    param_grid=param_grid,
+    cv=5,
+    scoring='accuracy',
+    n_jobs=-1,
+    verbose=1
+)
+
+print("Starting grid search for best hyperparameters...\n")
+grid_search.fit(X_train, y_train)
+print(f"Best CV score: {grid_search.best_score_:.4f}")
+print("Best parameters:")
+print(grid_search.best_params_, "\n")
+
+# Use the best estimator from grid search
+best_model = grid_search.best_estimator_
+````
+
+
+
+
+
+# As a student I want to learn how to use AI clustering in order to find clusters inside of data 
+<br>
+I learned how to use KMeans clustering in order to make clusters of the data.
+<br>
+I learned how to use an intertia plot in order to see how many clusteres there are based on where the inertia flattens out and stops finding new good clusters<br>
+
+![inertia_clustering_learnings.png](..%2Fassets%2Finertia_clustering_learnings.png)
+
+and then I used KMeansclustering to find the following clusters<br>
+
+![Clustering_learnings_mike.png](..%2Fassets%2FClustering_learnings_mike.png)
+
+<br>
+
+I leared how to use the following code to achieve this.<br>
+````python
+kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    cluster_labels = kmeans.fit_predict(scaled_data)
+````
+
+
+# As a student I want to learn how to store trained AI models and import them again later
+
+I learned how to use the joblib library in order to store a trained AI model.<br>
+```python
+MODEL_PATH = 'decision_tree_model.joblib'
+joblib.dump(best_tree, MODEL_PATH)
+print(f"Trained decision tree saved to '{MODEL_PATH}'")
+```
+
+<br><br>And then I learned how to use joblib in order to then import the pre-trained model so that I can make predictions with it<br>
+
+````python
+MODEL_PATH = 'decision_tree_model.joblib'
+clf = joblib.load(MODEL_PATH)
+
+INPUT_CSV = './training_data/06_06_2025_device_2.csv' 
+OUTPUT_CSV = 'new_data_with_labels.csv'
+
+df_new = pd.read_csv(INPUT_CSV)
+print(df_new)
+
+FEATURE_COLUMNS = clf.feature_names_in_.tolist() if hasattr(clf, 'feature_names_in_') else df_new.drop(columns=[], errors='ignore').select_dtypes(include='number').columns.tolist()
+
+X_new = df_new[FEATURE_COLUMNS].copy()
+pred_labels = clf.predict(X_new)
+````

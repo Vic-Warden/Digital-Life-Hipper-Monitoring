@@ -106,3 +106,112 @@ def verify_cookie(self, cookie: str) -> tuple[bool, str]:
 It makes use of the same HMAC package to create a new cookie which it then compares to the old one.
 
 After the cookie is generated, it gets stored in the database for persistent storage. If the server ever goes down, all the sessions are still intact.
+
+### Learning Story #241
+
+For this learning story, I wanted to know how to safely implement an API so that we can performs actions using HTTP(S) using the API.
+
+Its important that the API is protected against stuff like sql injection and other attacks.
+
+I've read [this article](https://stackoverflow.blog/2021/10/06/best-practices-for-authentication-and-authorization-for-rest-apis/) and found a few interesting points to consider while making the API.
+
+1) Always use authentication, for this we use our cookies which are tied to permissions.
+
+2) Always use TLS, we will be using TLS when the final version of the app is ready.
+
+3) Use input sanitization to mediate SQL injection attacks.
+
+I have implemented these changes to make sure that our API is protected against common attacks.
+
+
+```python
+@app.route('/api/upload-pam-data', methods=['GET'])
+def upload_pam_data():
+    """
+    API endpoint to upload PAM data.
+    Returns a JSON response with success status and status code.
+    """
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_token(token)
+
+    if not valid:
+        return {"error": reason}, 401
+
+    patient_id = request.args.get('patient_id')
+    pam_data = request.args.get('pam_data')
+
+    if not patient_id or not pam_data:
+        return {"error": "Patient ID and PAM data are required"}, 400
+
+    # Assuming pam_data is a JSON string, you might need to parse it
+    pam_data = json.loads(pam_data)
+
+    # TODO: Implement the actual upload logic
+    # success = db.upload_pam_data(patient_id, pam_data)
+    success = True
+    if not success:
+        return {"error": "Failed to upload PAM data"}, 500
+
+    return {"message": "PAM data uploaded successfully"}, 200
+```
+
+## Learning Story #243
+
+I want to know how I can send cookies using Flask to the Front-end (web browser) of the person who wants to login.
+
+To achieve this, I read and followed [this article](https://www.naukri.com/code360/library/handling-cookies-in-flask) which explains it clearly.
+
+I had to make sure to include the following to get it to work.
+
+```python
+# Create response and set cookie
+response = make_response(redirect('/home'))
+response.set_cookie(
+    'auth_cookie',            # Cookie name
+    cookie_value,             # Cookie value
+)
+
+# Redirect to home after form submission
+return response
+```
+
+This is the final piece of code
+
+In here I also added some cookie parameters to define how long the cookie is valid for and whether or not JS could query it.
+
+```python
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+
+        # Retrieve email password & the therapist
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if db.check_credentials(email, password):
+            # Create secure cookie
+            success, cookie_value = db.create_cookie(email)
+
+            print(f"Cookie created: {cookie_value}")
+
+            if not success:
+                return "Failed to create cookie", 500
+
+            # Create response and set cookie
+            response = make_response(redirect('/home'))
+            response.set_cookie(
+                'auth_cookie',            # Cookie name
+                cookie_value,             # Cookie value
+                max_age=60*60*24*7,       # 1 week
+                httponly=True,            # Prevent JS access (XSS)
+                secure=True,              # Only over HTTPS
+                samesite='Lax'            # Protect from CSRF somewhat
+            )
+
+            # Redirect to home after form submission
+            return response
+        return render_template('login.html', error="Invalid credentials. Please try again.")
+    else:
+        # Render the login.html
+        return render_template('login.html')
+```

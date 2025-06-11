@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detect Patient Anomalies</title>
+</head>
+<body>
+    <h1>Detect Patient Anomalies</h1>
+    <form id="anomalyForm">
+        <label>Patient ID:</label><br>
+        <input type="number" id="patient_id" required><br><br>
+
+        <label>Start Date:</label><br>
+        <input type="date" id="start_date" required><br><br>
+
+        <label>End Date:</label><br>
+        <input type="date" id="end_date" required><br><br>
+
+        <label>Threshold Percent (default 20%):</label><br>
+        <input type="number" id="threshold_percent" value="20"><br><br>
+
+        <button type="submit">Detect Anomalies</button>
+    </form>
+
+    <h2>Result:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        const form = document.getElementById('anomalyForm');
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const response = await fetch('/api/detect-anomalies', 
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    patient_id: document.getElementById('patient_id').value,
+                    start_date: document.getElementById('start_date').value,
+                    end_date: document.getElementById('end_date').value,
+                    threshold_percent: document.getElementById('threshold_percent').value
+                })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(result, null, 4);
+        });
+    </script>
+</body>
+</html>

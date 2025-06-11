@@ -1,18 +1,22 @@
-import os # Import os for .env centralized settings
+import os  # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
 import json
+from dotenv import load_dotenv
+
 
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
-from .anomaly_detection import calculate_median, detect_anomalies
+from anomaly_detection import calculate_median, detect_anomalies
 
 # Create the app Flask
 app = Flask(__name__)
 
 # Database instance
+
+load_dotenv()  # This will look for a .env file in the current directory
 
 db = Database(
     host=os.getenv('MYSQL_HOST'),
@@ -307,9 +311,10 @@ def get_patient_data():
 
     return patient_data, 200
 
+
 @app.route('/api/detect-anomalies', methods=['POST'])
 def detect_anomalies_endpoint():
-    
+
     data = request.get_json()
 
     patient_id = data.get('patient_id')
@@ -353,7 +358,8 @@ def detect_anomalies_endpoint():
         'threshold_percent': threshold_percent,
         'anomalies': anomalies
     }, 200
-    
+
+
 @app.route('/anomaly-form')
 def anomaly_form():
     return render_template('form.html')

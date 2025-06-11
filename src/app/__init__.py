@@ -387,6 +387,7 @@ def upload_pam_data():
 
     patient_id = request.args.get('patient_id')
     pam_data = request.args.get('pam_data')
+    device_mac_addr = request.args.get('device_mac_addr')
 
     if not patient_id or not pam_data:
         return {"error": "Patient ID and PAM data are required"}, 400
@@ -399,6 +400,9 @@ def upload_pam_data():
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500
+
+    # Set the last update period for the patient
+    db.set_last_update_period(device_mac_addr)
 
     return {"message": "PAM data uploaded successfully"}, 200
 

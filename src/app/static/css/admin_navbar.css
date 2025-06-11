@@ -91,9 +91,9 @@
 }
 
 /* Responsive behavior */
-@media (max-width: 768px) {
+@media (max-width: 430px) {
   .nav-center {
-    font-size: 3.5vw; /* adjust font size on smaller screens */
+    font-size: 2.90vw; /* adjust font size on smaller screens */
   }
 }
 

@@ -264,3 +264,57 @@ python-dotenv>=0.21.0
 * **Web Dashboard**: Display alerts in a real-time dashboard for a better clinical overview.
 * **Advanced anomaly types**: Detect prolonged inactivity, pattern shifts, and activity variability.
 * **Machine Learning**: Predict potential drops in activity based on historical trends.
+
+# **Machine Learning**
+
+Prediction of short-term decline in activity
+
+**Objective :** predict whether a patient's activity will decline in the next 3 days.
+
+**Utility :** proactive prevention, alerts to therapists.
+
+**Model :** binary classification
+
+**Data :** step history, WFP, activity zones
+
+**Deployment :** in the API or via weekly batch
+
+---
+
+Behavioural profiling of patients (clustering)
+
+**Objective :** segment patients according to their level and regularity of activity.
+
+**Benefits :** personalisation of care plans, population analysis.
+
+**Model :** K-Means, DBSCAN
+
+**Data :** average daily steps, zone ratios, average MAP
+
+**Visualisation :** ‘patient mapping’ type dashboard
+
+---
+
+Detection of Changes in Routine
+
+**Objective :** detect lasting changes in activity patterns (e.g. switching from morning to evening).
+
+**Utility :** longitudinal monitoring, identification of critical periods.
+
+**Method :** changepoint detection, HMM, time series
+
+**Display :** chronology of changes
+
+---
+
+Activity Pattern Recognition by Deep Learning
+
+Objective: automatically identify patterns (e.g. walking, resting, brief efforts).
+
+Utility: advanced typology of days.
+
+Model: CNN or LSTM on fine time series
+
+Data: raw acceleration vectors or series of steps/zone per hour
+
+Complexity: high level (need for volume and labels)

@@ -3,6 +3,7 @@ import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
 from crypto import Cookie
+from datetime import datetime
 
 
 class Database:

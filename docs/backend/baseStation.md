@@ -4,52 +4,7 @@ For this project, a "base station" is needed. This base station will be used to 
 
 ## Main Code
 
-The main code used for this base station makes use of the already existing [BLE commands](bleCommands.md) to pull the data of a full day, and of intervals of 1 hour. In an automatically generated and updated `log.json` file, there will be timestamps of when the data was last pulled from a device with a specific MAC address. This will look like this:
-
-```json
-{
-  "C1:08:00:01:12:33": {
-    "last_day_data_pull": "2025-06-02",
-    "last_activity_pull": "2025-06-02T11:57:12.181395"
-  },
-  "C1:08:00:01:0E:9C": {
-    "last_day_data_pull": "2025-06-02",
-    "last_activity_pull": "2025-06-02T11:58:44.017814"
-  }
-}
-```
-
-This is generated from:
-
-```python
-# Load or initialize the log data
-if os.path.exists(LOG_FILE):
-    with open(LOG_FILE, "r") as log_file:
-        log_data = json.load(log_file)
-else:
-    log_data = {}
-```
-
-And can be updated using this function:
-
-```python
-def save_log_data():
-    """Save the log data to the log file."""
-    with open(LOG_FILE, "w") as log_file:
-        json.dump(log_data, log_file, indent=2)
-```
-
-Used with:
-
-```python
-update_log(mac_address, activity=True)
-```
-
-Or for day data:
-
-```python
-update_log(mac_address, day_data=True)
-```
+The main code used for this base station makes use of the already existing [BLE commands](bleCommands.md) to pull the data of a full day, and of intervals of 1 hour. 
 
 The main code can be run using Python. It scans for any devices in the region at an interval of 10 seconds using low-powered Bluetooth, that correspond with a Hipper monitor. If it finds one that it does not recognize, it adds the MAC address with a generated label to `PAM_devices.json`:
 
@@ -107,6 +62,30 @@ if hours_since >= 1:
           pulled_data = True
           break
 ```
+
+## Database Integration
+
+In the new version of the main code for the base station, data is no longer only written to local files. Instead, once the data is pulled from the Hipper monitors, The time and date is directly gotten and updated from the database. 
+
+Once the data has been pulled (either daily or activity data), the data is processed, After that the code makes a request to the back-end to update the last time it has pulled data from the current monitor. This is done by looking at the MAC adress.
+For any information about the backend and how this connection is handled, go to [backend](database.py.md).
+
+
+### Data Sent
+
+The contents of the file that used to be saved locally are now also as JSON in the body of the API request. This ensures that both the local log and the backend database stay in sync.
+
+The API takes care of:
+
+    Receiving the data,
+
+    Validating it,
+
+    Storing it in the appropriate tables,
+
+    And making it available for visualization.
+
+If the backend is unreachable or if there's an error during the upload, the base station logs the error and proceeds as usual. The upload can be retried on the next run.
 
 ### Error Handling
 

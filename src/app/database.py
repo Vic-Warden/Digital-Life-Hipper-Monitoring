@@ -380,48 +380,27 @@ class Database:
         return None
 
 
-    def update_log_timestamps(self, mac_address, activity, day_data):
+    def update_log_timestamps(self, mac_address, update_activity, update_day_data=False):
         now = datetime.utcnow()
+        updates = []
+        params = []
 
-        # First check if the device exists
-        query_check = "SELECT 1 FROM Device WHERE device_mac_addr=%s"
-        exists = self.do_query(query_check, (mac_address,))
+        if update_activity:
+            updates.append("last_activity_pull = %s")
+            params.append(now)
 
-        if exists:
-            # Dynamically build SET clause based on what’s being updated
-            set_clauses = []
-            params = []
+        if update_day_data:
+            updates.append("last_day_data_pull = %s")
+            params.append(now)
 
-            if activity:
-                set_clauses.append("last_activity_pull = %s")
-                params.append(now)
+        if not updates:
+            return False  # Nothing to update
 
-            if day_data:
-                set_clauses.append("last_day_data_pull = %s")
-                params.append(now)
+        params.append(mac_address)
 
-            if not set_clauses:
-                # Nothing to update
-                return True
-
-            query_update = f"""
-                UPDATE Device
-                SET {", ".join(set_clauses)}
-                WHERE device_mac_addr = %s
-            """
-            params.append(mac_address)
-
-            return self.do_query(query_update, tuple(params), fetch=False) is not None
-
-        else:
-            # Insert new record — fill in missing fields as NULL if needed
-            ts_activity = now if activity else None
-            ts_day_data = now if day_data else None
-
-            query_insert = """
-                INSERT INTO Device (device_mac_addr, last_activity_pull, last_day_data_pull)
-                VALUES (%s, %s, %s)
-            """
-            params_insert = (mac_address, ts_activity, ts_day_data)
-
-            return self.do_query(query_insert, params_insert, fetch=False) is not None
+        query = f"""
+            UPDATE Device
+            SET {', '.join(updates)}
+            WHERE device_mac_addr = %s
+        """
+        return self.do_query(query, tuple(params), fetch=False) is not None

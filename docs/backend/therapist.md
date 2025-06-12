@@ -1,10 +1,10 @@
 # Extract Patient Activity Data
 
-## Project Description
+## Description
 
-This project provides a Python script to extract patient activity data (steps, PAM score, and activity zone) from a MySQL database. The extracted data can be used for analysis and is exported into a CSV file for easy usage and reporting.
+This first part of the documentation provides a Python script to extract patient activity data from a MySQL database. The extracted data can be used for analysis and is exported to a file for ease of use and reporting.
 
-The script is designed for therapists who need to retrieve patient activity over a specific time period.
+The script is designed for therapists who need to extract patient activity over a specific period of time.
 
 ---
 
@@ -29,8 +29,8 @@ The script is designed for therapists who need to retrieve patient activity over
 
 3. **Set up the MySQL Database**
 
-   * Ensure a MySQL database is running.
-   * Update the database connection parameters in extract_patient_data.py if needed:
+   * Ensure MySQL database is running
+   * Update the database connection parameters in extract_patient_data.py if needed :
 
      ```python
      host = "localhost"
@@ -40,13 +40,13 @@ The script is designed for therapists who need to retrieve patient activity over
      ```
 ---
 
-4. **Configure the extraction parameters**:
+4. **Configure the extraction parameters :**
 
    * `patient_id`
    * `start_date`
    * `end_date`
 
-   Example inside the script:
+   Example inside the script :
 
    ```python
    patient_id = 1
@@ -62,33 +62,25 @@ The script is designed for therapists who need to retrieve patient activity over
 
 6. **Retrieve the output**
 
-   * The extracted data will be available in the generated `results.csv` file.
+   * The extracted data will be available in the generated `results.csv` file
 
 ---
 
 ## Features
 
-* Extracts patient activity data: date, steps, PAM score, and zone.
-* Allows selection of the time window for data extraction.
-* Automatically exports the extracted data to a CSV file.
-* Handles UTF-8 characters correctly for international data.
+* Extracts patient activity data : date, steps, PAM score, and zone
+* Allows selection of the time window for data extraction
+* Automatically exports the extracted data to a CSV file
 
 ---
 
-## Constraints
+# Anomaly Detection Feature
 
-* If no time window is specified, the extraction should default to the last 7 days.
-* The exported data must be structured and exportable in a machine-readable format
+The second part of this documentation provides an anomaly detection feature to identify deviations in patient activity. Therapists can detect sudden drops in activity that may require intervention
 
----
-
-## Anomaly Detection Feature
-
-This project also provides an anomaly detection feature to identify significant deviations in patient activity. Therapists can detect sudden drops in activity that may require intervention.
-
-* The system calculates the median of daily steps over a specified time window.
-* It flags any day where the activity is more than 20% below the median.
-* Results are available via API and a simple web form.
+* The system calculates the median of daily steps over a specified time window
+* It flags any day where the activity is below than 20% the median
+* Results are available via API and a simple web form
 
 ---
 
@@ -174,53 +166,43 @@ python-dotenv>=0.21.0
 
 ## Future Improvements
 
-Support for detecting extended inactivity periods.
+- If a patient doesn't move at all during an extended inactivity periods
 
-Pattern change detection (e.g., activity shifts from morning to evening).
+- Maybe we can try to use some pattern change detection, maybe split the day like morning / evening and try to make it configurable about that
 
-Configurable thresholds per patient.
+- Two patients can and are very different, we could be able to configure thresholds per patient
 
-Detection of consecutive days with low activity (e.g., steps < 100).
+- We should implement a consecutive days, for exemple if a patient travel by plane he'll just stay sit down during a long period and it will not be necessary to send a notification for that so implement a detection of prolonged low-activity streaks like more 2 days in a row it can be usefull
 
-Identification of daily habit pattern shifts based on active hours.
+- We should try to implement a machine learning who can learn from the patient about his habit
 
-Calculation of 7-day moving average trends.
+- For the different calculations we should see from a 7 periods of day & on activity fluctuations
 
-Computation of a trend score based on activity fluctuations.
+- We could implement a pourcentage of goal achivements days it can be a motivation's source for the patient
 
-Measurement of daily activity variability using standard deviation.
-
-Detection of prolonged low-activity streaks (2+ consecutive days).
-
-Calculation of daily inactivity duration (requires hourly data).
-
-Computation of the percentage of goal achievement days.
-
-Prediction of activity drops using simple machine learning models (e.g., linear regression).
-
-Clustering of patients based on behavior similarity (e.g., k-means clustering).
+---
 
 # **Real-time Activity Monitoring**
 
-This project provides a real-time monitoring feature that automatically detects significant deviations in patient activity as soon as new data is available.
+The third part of the documentation provides a real-time monitoring feature that automatically detects significant deviations in patient activity
 
 ### How It Works
 
-* The system continuously monitors the database for new activity entries every 5 seconds.
-* It calculates the rolling median of daily steps for each patient.
-* If the new activity is more than 30% below the median, it triggers an anomaly alert.
-* Alerts are displayed directly in the system console.
+* The system continuously monitors the database for new activity entries every 5 seconds
+* It calculates the rolling median of daily steps for each patient
+* If the new activity is below than 20% the median, it triggers an anomaly alert
+* Alerts are displayed directly in the system console for now
 
 ### Features
 
-* Real-time anomaly detection (within 5 seconds of new data).
-* Median calculation for deviation detection.
-* Configurable global threshold (default: 30%).
-* Scalable monitoring for multiple patients simultaneously.
+* Real-time anomaly detection (within 5 seconds of new data)
+* Median calculation for deviation detection
+* Configurable global threshold (default: 20%)
+* Scalable monitoring for multiple patients simultaneously
 
-### How to Run the Real-time Monitoring
+## How to Run the Real-time Monitoring
 
-1. **Ensure your database is running and populated with activity data**
+1. **Ensure your database is running**
 
 2. **Launch the monitoring script**
 
@@ -254,13 +236,67 @@ python-dotenv>=0.21.0
 
 ## Limitations
 
-* Currently, the system uses a global threshold for anomaly detection (e.g., 30% for all patients).
-* Notifications are delivered via system console only (no email or dashboard yet).
+* Currently, the system uses a global threshold for anomaly detection (20% for all patients)
+* Notifications are delivered via system console only (no email or dashboard yet)
 
 ## Future Work
 
-* **Per-patient threshold configuration**: Allow therapists to define custom thresholds for each patient.
-* **Email Notifications**: Send automatic email alerts to therapists for detected anomalies.
-* **Web Dashboard**: Display alerts in a real-time dashboard for a better clinical overview.
-* **Advanced anomaly types**: Detect prolonged inactivity, pattern shifts, and activity variability.
-* **Machine Learning**: Predict potential drops in activity based on historical trends.
+* **Per-patient threshold configuration**: Allow therapists to define custom thresholds for each patient
+* **Email Notifications**: Send automatic email alerts to therapists for detected anomalies
+* **Web Dashboard**: Display alerts in a real-time dashboard for a better clinical overview
+* **Advanced anomaly types**: Detect prolonged inactivity, pattern shifts, and activity variability
+* **Machine Learning**: Predict potential drops in activity based on historical trends
+
+# **Machine Learning**
+
+Prediction of short-term decline in activity
+
+**Objective :** predict whether a patient's activity will decline in the next 3 days
+
+**Utility :** proactive prevention, alerts to therapists
+
+**Model :** binary classification
+
+**Data :** step history, WFP, activity zones
+
+**Deployment :** in the API or via weekly batch
+
+---
+
+Behavioural profiling of patients (clustering)
+
+**Objective :** segment patients according to their level and regularity of activity.
+
+**Benefits :** personalisation of care plans, population analysis.
+
+**Model :** K-Means, DBSCAN
+
+**Data :** average daily steps, zone ratios, average MAP
+
+**Visualisation :** ‘patient mapping’ type dashboard
+
+---
+
+Detection of Changes in Routine
+
+**Objective :** detect lasting changes in activity patterns (switching from morning to evening)
+
+**Utility :** longitudinal monitoring, identification of critical periods
+
+**Method :** changepoint detection, HMM, time series
+
+**Display :** chronology of changes
+
+---
+
+Activity Pattern Recognition by Deep Learning
+
+**Objective :** automatically identify patterns (walking, resting, brief efforts)
+
+**Utility :** advanced typology of days
+
+**Model :** CNN or LSTM on fine time series
+
+**Data :** raw acceleration vectors or series of steps/zone per hour
+
+**Complexity :** high level (need for volume and labels)

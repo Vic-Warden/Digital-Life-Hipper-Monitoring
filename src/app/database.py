@@ -3,6 +3,7 @@ import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
 from crypto import Cookie
+from datetime import datetime
 
 
 class Database:
@@ -33,7 +34,7 @@ class Database:
                 user=self._user,
                 password=self._password,
                 database=self._database,
-                charset='utf8mb4',               
+                charset='utf8mb4',
                 collation='utf8mb4_unicode_ci'
             )
             # Check if the connection was successful
@@ -331,3 +332,36 @@ class Database:
         if result and len(result[0]) > 0:
             return (True, result[0][0])
         return (False, "Invalid token")
+
+    def get_last_update_period(self, device_mac_addr: str):
+        """
+        ### Get the last update period for a device based on its MAC address.
+
+        Returns the last update period as a string.
+        """
+        query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
+        params = (device_mac_addr,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0]
+        return None
+
+    def set_last_update_period(self, device_mac_addr: str) -> bool:
+        """
+        ### Set the last update period for a device based on its MAC address.
+
+        Returns True if the update was successful, False otherwise.
+        """
+        # Get current time
+        now = datetime.now()
+
+        # Format as MySQL-compatible DATETIME string
+        current_time = now.strftime('%Y-%m-%d %H:%M:%S')
+
+        # Update the last_update_period for the device
+        query = "UPDATE Device SET last_update_period = %s WHERE device_mac_addr = %s;"
+        params = (current_time, device_mac_addr)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None and len(result[0][0]) > 0

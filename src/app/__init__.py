@@ -97,6 +97,14 @@ def logout():
 
 # Profile' route with GET & POST
 
+@app.route('/admin/logout', methods=['GET'])
+def admin_logout():
+    # Clear the session
+    cookie = request.cookies.get('auth_cookie')
+    db.remove_cookie(cookie)
+
+    # Redirection to the login if logout
+    return redirect('/admin/login')
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():

@@ -5,6 +5,7 @@ from mysql.connector import MySQLConnection  # MySQL connection type
 from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 class Database:
@@ -381,7 +382,7 @@ class Database:
 
 
     def update_log_timestamps(self, mac_address, update_activity, update_day_data=False):
-        now = datetime.utcnow()
+        now = datetime.now(ZoneInfo("Europe/Amsterdam")).replace(tzinfo=None)
         updates = []
         params = []
 

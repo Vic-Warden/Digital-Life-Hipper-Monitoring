@@ -17,3 +17,9 @@ a standard scaler was then used to normalize the data.<br>
 after which a basic KMeans clustering model was used on the data.<br>
 From the inertia plot you could see how the optimal number of clusters was 3.<br>
 <br>for a more visual impact we also used the KMeans on multiple variables of clusters to see what the impact was, and since our data was only in 2 dimensions we could easilly visualise the plots along 2 axis.<br>
+
+## Trainings data
+
+## The model
+
+## usage

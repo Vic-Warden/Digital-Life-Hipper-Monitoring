@@ -1,10 +1,70 @@
 import asyncio
 import json
 import os
+import aiohttp
+
 from datetime import datetime, timedelta
 from bleak import BleakScanner
 from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
+
+BACKEND_URL = "http://192.168.138.161:5000"
+
+async def fetch_log(mac_address):
+    print(f"[fetch_log] Fetching log for MAC: {mac_address}")
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{BACKEND_URL}/log/{mac_address}") as resp:
+                print(f"[fetch_log] HTTP GET {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
+                if resp.status == 200:
+                    data = await resp.json()
+                    print(f"[fetch_log] Log data found for {mac_address}: {data}")
+                    return data
+                else:
+                    print(f"[fetch_log] No log entry found for {mac_address}, returning empty dict.")
+                    return {}  # If no log exists
+    except Exception as e:
+        print(f"[fetch_log] Error fetching log for {mac_address}: {e}")
+        return {}
+
+async def update_log(mac_address, activity=False, day_data=False):
+    payload = {
+        "activity": activity,
+        "day_data": day_data
+    }
+    print(f"[update_log] Updating log for {mac_address} with payload: {payload}")
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(f"{BACKEND_URL}/log/{mac_address}", json=payload) as resp:
+                print(f"[update_log] HTTP POST {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
+                if resp.status != 200:
+                    print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
+    except Exception as e:
+        print(f"[update_log] Error updating log for {mac_address}: {e}")
+
+async def get_days_since_last_day_pull(mac_address):
+    print(f"[get_days_since_last_day_pull] Checking days since last day_data pull for {mac_address}")
+    log_entry = await fetch_log(mac_address)
+    last_day_str = log_entry.get("last_day_data_pull")
+    if not last_day_str:
+        print(f"[get_days_since_last_day_pull] No previous day_data pull found. Returning 31 days.")
+        return 31
+    last_day = datetime.fromisoformat(last_day_str).date()
+    delta_days = (datetime.now().date() - last_day).days
+    print(f"[get_days_since_last_day_pull] Last pull was {delta_days} days ago.")
+    return min(max(delta_days, 1), 31)
+
+async def get_hours_since_last_activity(mac_address):
+    print(f"[get_hours_since_last_activity] Checking hours since last activity pull for {mac_address}")
+    log_entry = await fetch_log(mac_address)
+    last_activity_str = log_entry.get("last_activity_pull")
+    if not last_activity_str:
+        print(f"[get_hours_since_last_activity] No previous activity pull found. Returning 24 hours.")
+        return 24
+    last_activity = datetime.fromisoformat(last_activity_str)
+    delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
+    print(f"[get_hours_since_last_activity] Last activity pull was {delta_hours:.2f} hours ago.")
+    return delta_hours
 
 LOG_FILE = "log.json"
 PAM_DEVICES_FILE = "PAM_devices.json"
@@ -45,34 +105,6 @@ def save_pam_devices_data():
     """Save the PAM devices data to the devices file."""
     with open(PAM_DEVICES_FILE, "w") as devices_file:
         json.dump(pam_devices_data, devices_file, indent=2)
-
-def update_log(mac_address, activity=False, day_data=False):
-    """Update the log data timestamps for the given MAC address."""
-    if mac_address not in log_data:
-        log_data[mac_address] = {}
-    if activity:
-        log_data[mac_address]["last_activity_pull"] = datetime.now().isoformat()
-    if day_data:
-        log_data[mac_address]["last_day_data_pull"] = datetime.now().date().isoformat()
-    save_log_data()
-
-def get_days_since_last_day_pull(mac_address):
-    """Calculate days since last day data pull. Return min 1, max 31."""
-    last_day_str = log_data.get(mac_address, {}).get("last_day_data_pull")
-    if not last_day_str:
-        return 31  # If never pulled, pull max days
-    last_day = datetime.fromisoformat(last_day_str).date()
-    delta_days = (datetime.now().date() - last_day).days
-    return min(max(delta_days, 1), 31)
-
-def get_hours_since_last_activity(mac_address):
-    """Calculate hours since last activity data pull."""
-    last_activity_str = log_data.get(mac_address, {}).get("last_activity_pull")
-    if not last_activity_str:
-        return 24  # If never pulled, pull 24 hours max
-    last_activity = datetime.fromisoformat(last_activity_str)
-    delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
-    return delta_hours
 
 def select_request_name(hours):
     """Select the closest valid request name for activity data based on hours."""
@@ -125,7 +157,7 @@ async def main_loop():
                 pulled_data = False
 
                 # Pull day data dynamically
-                days_to_pull = get_days_since_last_day_pull(mac_address)
+                days_to_pull = await get_days_since_last_day_pull(mac_address)
                 if days_to_pull > 0:
                     print(f"📅 Pulling day data for {mac_address} (label {label_id}) for last {days_to_pull} days...")
                     for attempt in range(3):
@@ -136,7 +168,7 @@ async def main_loop():
                                 label_id=label_id,
                             )
                             await day_data_downloader.run()
-                            update_log(mac_address, day_data=True)
+                            await update_log(mac_address, day_data=True)
                             pulled_data = True
                             break
                         except (asyncio.TimeoutError, BleakError, Exception) as error:
@@ -148,7 +180,7 @@ async def main_loop():
                                 print("❌ Giving up on day data for this cycle.")
 
                 # Pull activity data dynamically based on hours since last pull
-                hours_since = get_hours_since_last_activity(mac_address)
+                hours_since = await get_hours_since_last_activity(mac_address)
                 if hours_since >= 1:
                     # Cap max hours to max supported request (12 hours)
                     capped_hours = min(int(hours_since), MAX_PULL_HOURS)
@@ -162,7 +194,7 @@ async def main_loop():
                                 label_id=label_id,
                             )
                             await activity_downloader.run()
-                            update_log(mac_address, activity=True)
+                            await update_log(mac_address, activity=True)
                             pulled_data = True
                             break
                         except (asyncio.TimeoutError, BleakError, Exception) as error:

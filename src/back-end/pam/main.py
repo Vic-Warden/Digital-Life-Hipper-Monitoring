@@ -8,7 +8,7 @@ from bleak import BleakScanner
 from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
-BACKEND_URL = "http://192.168.138.161:5000"
+BACKEND_URL = "http://192.168.138.161:5000/api"
 
 async def fetch_log(mac_address):
     # print(f"[fetch_log] Fetching log for MAC: {mac_address}")

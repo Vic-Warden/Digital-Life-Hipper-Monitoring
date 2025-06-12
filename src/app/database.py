@@ -365,8 +365,7 @@ class Database:
     #     query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
     #     params = (current_time, device_mac_addr)
     #     result = self.do_query(query, params, fetch=False)
-
-        return result is not None
+    #     return result is not None
     
     def get_log_for_mac(self, mac_address):
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"

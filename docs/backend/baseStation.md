@@ -68,7 +68,7 @@ if hours_since >= 1:
 In the new version of the main code for the base station, data is no longer only written to local files. Instead, once the data is pulled from the Hipper monitors, The time and date is directly gotten and updated from the database. 
 
 Once the data has been pulled (either daily or activity data), the data is processed, After that the code makes a request to the back-end to update the last time it has pulled data from the current monitor. This is done by looking at the MAC adress.
-For any information about the backend and how this connection is handled, go to [backend](database.py.md).
+For any information about the backend and how this connection is handled, go to [backend](database.py.md) for the implementation code and to [website](website.md) for the routing.
 
 
 ### Data Sent

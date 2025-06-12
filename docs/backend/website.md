@@ -318,7 +318,45 @@ def upload_pam_data():
     return {"message": "PAM data uploaded successfully"}, 200
 ```
 
-## 13. Running the App
+## 13. Get the last update period
+
+## 📄 Device Update Period Functions
+
+### 🔍 `get_last_update_period`
+
+Gets the last time at which the data was updated.
+
+```python
+def get_last_update_period(self, device_mac_addr: str):
+    """
+    ### Get the last update period for a device based on its MAC address.
+
+    Returns the last update period as a string.
+    """
+    query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
+    params = (device_mac_addr,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result) > 0:
+        return result[0][0]
+    return None
+```
+
+## 14. Admin logout
+
+Removes the auth cookie and redirects to admin login.
+
+```python
+@app.route('/admin/logout', methods=['POST'])
+def logout():
+    cookie = request.cookies.get('auth_cookie')
+    db.remove_cookie(cookie)
+    return redirect('/admin/login')
+```
+
+---
+
+## 15. Running the App
 
 ```python
 if __name__ == "__main__":

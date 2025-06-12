@@ -130,3 +130,40 @@ Returns a list of patients linked to a therapist:
   ...
 ]
 ```
+
+### Get last update period
+
+`get_last_update_period(self, device_mac_addr: str)`
+
+Gets the last time at which the data was updated.
+
+```python
+query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
+params = (device_mac_addr,)
+result = self.do_query(query, params, fetch=True)
+
+if result and len(result) > 0:
+    return result[0][0]
+return None
+```
+
+### Set last update period
+
+`set_last_update_period(self, device_mac_addr: str) -> bool`
+
+Sets the last dat aupdate time to the current time
+
+```python
+# Get current time
+now = datetime.now()
+
+# Format as MySQL-compatible DATETIME string
+current_time = now.strftime('%Y-%m-%d %H:%M:%S')
+
+# Update the last_update_period for the device
+query = "UPDATE Device SET last_update_period = %s WHERE device_mac_addr = %s;"
+params = (current_time, device_mac_addr)
+result = self.do_query(query, params, fetch=False)
+
+return result is not None and len(result[0][0]) > 0
+```

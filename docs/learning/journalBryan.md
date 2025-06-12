@@ -230,6 +230,78 @@ This taught me how to:
 
     3. Improve user feedback when something goes wrong.
 
+## Learning story
+As a student, I want to learn how to store logs in a relational database instead of flat files, so I can manage and query device data more efficiently and reliably.
+
+### Learned
+
+Initially, I was logging the last data pull times from each BLE device in a JSON file (log.json). This worked fine for a small test setup, but it quickly became hard to manage as I scaled the number of devices and the frequency of pulls. Problems included:
+
+    File corruption risk if the program stopped while writing.
+
+    No easy way to search or query for last pull times across multiple devices.
+
+    Messy data structure with duplicate timestamps per device (e.g. separate for "day" and "activity" pulls).
+
+To improve this, I decided to store this logging data in a database — in this case, SQLite for local testing. This meant designing a proper table and replacing all file I/O code with SQL queries.
+
+Steps I took:
+
+    Defined a schema for the logs with fields: mac_address, label_id, last_pull_time.
+
+    Created a helper class using Python's sqlite3 module to connect, insert, update, and fetch data.
+
+    Refactored save_log_data() and update_log() to write to the database instead of log.json.
+
+    Unified the timestamps so each device has a single field tracking the last successful data pull.
+
+Example of sql table and logic: 
+```sql
+DROP TABLE IF EXISTS `hipperdb`.`Device` ;
+
+CREATE TABLE IF NOT EXISTS `hipperdb`.`Device` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `patient_id_device` INT NOT NULL,
+  `device_label` VARCHAR(10) NOT NULL,
+  `device_id` INT NOT NULL,
+  `last_data_pull` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `patient_id_idx` (`patient_id_device` ASC) VISIBLE,
+  CONSTRAINT `fk_patient_id_device`
+    FOREIGN KEY (`patient_id_device`)
+    REFERENCES `hipperdb`.`User` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+```
+```python
+def update_log(mac_address, label_id):
+    now = datetime.now().isoformat()
+    cursor.execute("""
+        INSERT INTO device_log (mac_address, label_id, last_pull_time)
+        VALUES (?, ?, ?)
+        ON CONFLICT(mac_address) DO UPDATE SET
+            last_pull_time=excluded.last_pull_time,
+            label_id=excluded.label_id;
+    """, (mac_address, label_id, now))
+    conn.commit()
+```
+
+Now the system:
+
+    Stores data more reliably and doesn't risk corruption from concurrent file writes.
+
+    Keeps a clean, consistent log where each device has a single source of truth.
+
+    Allows querying and sorting of devices by last pull time if needed.
+
+This taught me how to:
+
+    Design a minimal SQL schema to replace a JSON object.
+
+    Use sqlite3 for local development and test it without adding extra dependencies.
+
+    Think about data structure design to simplify later queries and reporting.
+
 
 <br /> <br />
 

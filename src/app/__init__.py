@@ -1,4 +1,4 @@
-import os # Import os for .env centralized settings
+import os  # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
@@ -97,6 +97,14 @@ def logout():
 
 # Profile' route with GET & POST
 
+@app.route('/admin/logout', methods=['GET'])
+def admin_logout():
+    # Clear the session
+    cookie = request.cookies.get('auth_cookie')
+    db.remove_cookie(cookie)
+
+    # Redirection to the login if logout
+    return redirect('/admin/login')
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -272,6 +280,9 @@ def get_patients():
     API endpoint to retrieve all patients.
     Returns a JSON response with patient data and status code.
     """
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
 
@@ -291,6 +302,9 @@ def get_patient_data():
     API endpoint to retrieve patient data.
     Returns a JSON response with patient data and status code.
     """
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
 
@@ -307,9 +321,13 @@ def get_patient_data():
 
     return patient_data, 200
 
+
 @app.route('/api/detect-anomalies', methods=['POST'])
 def detect_anomalies_endpoint():
-    
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+
     data = request.get_json()
 
     patient_id = data.get('patient_id')
@@ -353,7 +371,8 @@ def detect_anomalies_endpoint():
         'threshold_percent': threshold_percent,
         'anomalies': anomalies
     }, 200
-    
+
+
 @app.route('/anomaly-form')
 def anomaly_form():
     return render_template('form.html')
@@ -365,6 +384,9 @@ def upload_pam_data():
     API endpoint to upload PAM data.
     Returns a JSON response with success status and status code.
     """
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
     token = request.cookies.get('auth_token')
     valid, reason = db.verify_token(token)
 
@@ -373,6 +395,7 @@ def upload_pam_data():
 
     patient_id = request.args.get('patient_id')
     pam_data = request.args.get('pam_data')
+    device_mac_addr = request.args.get('device_mac_addr')
 
     if not patient_id or not pam_data:
         return {"error": "Patient ID and PAM data are required"}, 400
@@ -386,7 +409,36 @@ def upload_pam_data():
     if not success:
         return {"error": "Failed to upload PAM data"}, 500
 
+    # Set the last update period for the patient
+    db.set_last_update_period(device_mac_addr)
+
     return {"message": "PAM data uploaded successfully"}, 200
+
+
+@app.route('/api/last-update-period', methods=['GET'])
+def last_update_period():
+    """
+    API endpoint to get the last update period for a patient.
+    Returns a JSON response with the last update period and status code.
+    """
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+    # TODO: Change this to auth_token
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return {"error": "Invalid or expired cookie"}, 401
+
+    device_mac_addr = request.args.get('device_mac_addr')
+    if not device_mac_addr:
+        return {"error": "Device MAC address is required"}, 400
+
+    last_update = db.get_last_update_period(device_mac_addr)
+    if not last_update:
+        return {"error": "No updates found for this patient"}, 404
+
+    return {"last_update": last_update}, 200
 
 
 # Start the Flask application

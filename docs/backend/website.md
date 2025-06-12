@@ -342,7 +342,48 @@ def get_last_update_period(self, device_mac_addr: str):
     return None
 ```
 
-## 14. Running the App
+## 14. Log date time
+update and get last date and time when data was pulled form sensor by looking at the mac address
+### Get date time
+```python
+@app.route('/log/<mac_address>', methods=['GET'])
+def get_log(mac_address):
+    mac = mac_address.upper()
+    log_entry = db.get_log_for_mac(mac)
+    if not log_entry:
+        return jsonify({}), 200
+    return jsonify({
+        "last_activity_pull": log_entry.get("last_activity_pull"),
+        "last_day_data_pull": log_entry.get("last_day_data_pull")
+    }), 200
+```
+
+### Update date time
+```
+@app.route('/log/<mac_address>', methods=['POST'])
+def update_log(mac_address):
+    mac = mac_address.upper()
+
+    if not request.is_json:
+        return {"error": "Expected JSON payload"}, 400
+    data = request.get_json()
+
+    activity = data.get("activity")
+    day_data = data.get("day_data")
+
+    if activity is None or day_data is None:
+        return {"error": "Missing 'activity' or 'day_data' fields"}, 400
+
+    success = db.update_log_timestamps(mac, activity, day_data)
+    if not success:
+        return {"error": "Failed to update log"}, 500
+
+    return {"message": "Log updated"}, 200
+```
+
+Find functions used for implementation under [database.py](database.py.md).
+
+## 15. Running the App
 
 ```python
 if __name__ == "__main__":

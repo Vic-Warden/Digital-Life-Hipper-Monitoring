@@ -364,4 +364,4 @@ class Database:
         params = (current_time, device_mac_addr)
         result = self.do_query(query, params, fetch=False)
 
-        return result is not None and len(result[0][0]) > 0
+        return result is not None

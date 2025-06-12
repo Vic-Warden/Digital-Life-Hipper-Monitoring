@@ -446,14 +446,17 @@ def get_log(mac_address):
 @app.route('/log/<mac_address>', methods=['POST'])
 def update_log(mac_address):
     mac = mac_address.upper()
+
+    if not request.is_json:
+        return {"error": "Expected JSON payload"}, 400
     data = request.get_json()
-    if not data:
-        return {"error": "Missing JSON body"}, 400
 
-    activity = data.get("activity", False)
-    day_data = data.get("day_data", False)
+    activity = data.get("activity")
+    day_data = data.get("day_data")
 
-    # Update DB log accordingly
+    if activity is None or day_data is None:
+        return {"error": "Missing 'activity' or 'day_data' fields"}, 400
+
     success = db.update_log_timestamps(mac, activity, day_data)
     if not success:
         return {"error": "Failed to update log"}, 500

@@ -19,7 +19,14 @@ From the inertia plot you could see how the optimal number of clusters was 3.<br
 <br>for a more visual impact we also used the KMeans on multiple variables of clusters to see what the impact was, and since our data was only in 2 dimensions we could easilly visualise the plots along 2 axis.<br>
 
 ## Trainings data
+the training data exists from the labels that came from the clustered data from the previous clustering work.<br>
+these clusters were exported as a label inside of a trainings data .csv file.<br>
 
 ## The model
+we have only 3 features we can use for predictions, 
 
 ## usage
+
+### retraining the model
+
+### making predictions

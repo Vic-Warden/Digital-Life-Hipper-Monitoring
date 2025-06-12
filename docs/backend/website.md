@@ -342,7 +342,19 @@ def get_last_update_period(self, device_mac_addr: str):
     return None
 ```
 
-## 14. Log date time
+## 14. Admin logout
+
+Removes the auth cookie and redirects to admin login.
+
+```python
+@app.route('/admin/logout', methods=['POST'])
+def logout():
+    cookie = request.cookies.get('auth_cookie')
+    db.remove_cookie(cookie)
+    return redirect('/admin/login')
+```
+
+## 15. Log date time
 update and get last date and time when data was pulled form sensor by looking at the mac address
 ### Get date time
 ```python
@@ -383,7 +395,7 @@ def update_log(mac_address):
 
 Find functions used for implementation under [database.py](database.py.md).
 
-## 15. Running the App
+## 16. Running the App
 
 ```python
 if __name__ == "__main__":

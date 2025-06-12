@@ -1,6 +1,17 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+
+
+## Learning Story #254
+
+I worked on the " limit " like the client like to say, about the when the client was "too" inactive and it should be adjustable by the therapist. When I contacted him to tell him I'll take care of it, he suggested me to make it very configurable and maybe it can even learn. That why I need first to know with AI I'll use for my user story.
+
+[The Medical Futurist](https://medicalfuturist.com/top-artificial-intelligence-companies-in-healthcare/)
+[Machine Learning from Wiki](https://en.wikipedia.org/wiki/Machine_learning)
+
+I learned from this two websites that first, I found some idea I could present to the client and the second one I learned what is a machine learning, but the thing I didn't understand is that if it's exist different machine learning. After talking to my groups, I'll follow their advices to write a model with the best parameters, try to figure it out what I will do with the output and try to compare the next 5 days for exemple
+
 ## 04/06 As a student I want to learn when I need to use the avarage and the median so that I can correctly analyze and interpret data for my user stories
 
 When I started writing my user story, I realized I would encounter a math problem, to be exact. I need to be sure which measures I can use and when I should use the average, median, quartiles...

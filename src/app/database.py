@@ -2,6 +2,7 @@ import os  # Import os for .env centralized settings
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
+from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
 from datetime import datetime
 
@@ -333,35 +334,69 @@ class Database:
             return (True, result[0][0])
         return (False, "Invalid token")
 
-    def get_last_update_period(self, device_mac_addr: str):
-        """
-        ### Get the last update period for a device based on its MAC address.
+    # def get_last_update_period(self, device_mac_addr: str):
+    #     """
+    #     ### Get the last update period for a device based on its MAC address.
 
-        Returns the last update period as a string.
-        """
-        query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
-        params = (device_mac_addr,)
-        result = self.do_query(query, params, fetch=True)
+    #     Returns the last update period as a string.
+    #     """
+    #     query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
+    #     params = (device_mac_addr,)
+    #     result = self.do_query(query, params, fetch=True)
 
-        if result and len(result) > 0:
-            return result[0][0]
-        return None
+    #     if result and len(result) > 0:
+    #         return result[0][0]
+    #     return None
 
-    def set_last_update_period(self, device_mac_addr: str) -> bool:
-        """
-        ### Set the last update period for a device based on its MAC address.
+    # def set_last_update_period(self, device_mac_addr: str) -> bool:
+    #     """
+    #     ### Set the last update period for a device based on its MAC address.
 
-        Returns True if the update was successful, False otherwise.
-        """
-        # Get current time
-        now = datetime.now()
+    #     Returns True if the update was successful, False otherwise.
+    #     """
+    #     # Get current time
+    #     now = datetime.now()
 
-        # Format as MySQL-compatible DATETIME string
-        current_time = now.strftime('%Y-%m-%d %H:%M:%S')
+    #     # Format as MySQL-compatible DATETIME string
+    #     current_time = now.strftime('%Y-%m-%d %H:%M:%S')
 
-        # Update the last_data_pull for the device
-        query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
-        params = (current_time, device_mac_addr)
-        result = self.do_query(query, params, fetch=False)
+    #     # Update the last_data_pull for the device
+    #     query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
+    #     params = (current_time, device_mac_addr)
+    #     result = self.do_query(query, params, fetch=False)
 
         return result is not None
+    
+    def get_log_for_mac(self, mac_address):
+        query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
+        params = (mac_address,)
+        result = self.do_query(query, params, fetch=True)
+        if result and len(result) > 0:
+            row = result[0]
+            return {
+                "last_activity_pull": row[0].isoformat() if row[0] else None,
+                "last_day_data_pull": row[1].isoformat() if row[1] else None,
+            }
+        return None
+
+
+    def update_log_timestamps(self, mac_address, activity, day_data):
+        # First check if exists
+        query_check = "SELECT 1 FROM Device WHERE device_mac_addr=%s"
+        if self.do_query(query_check, (mac_address,)):
+            # Update existing record
+            query_update = """
+                UPDATE Device
+                SET last_activity_pull = %s, last_day_data_pull = %s
+                WHERE device_mac_addr = %s
+            """
+            params_update = (activity, day_data, mac_address)
+            return self.do_query(query_update, params_update, fetch=False) is not None
+        else:
+            # Insert new record
+            query_insert = """
+                INSERT INTO Device (device_mac_addr, last_activity_pull, last_day_data_pull)
+                VALUES (%s, %s, %s)
+            """
+            params_insert = (mac_address, activity, day_data)
+            return self.do_query(query_insert, params_insert, fetch=False) is not None

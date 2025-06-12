@@ -11,20 +11,20 @@ from services import ActivityDownload, DayDataDownload, get_detailed_request
 BACKEND_URL = "http://192.168.138.161:5000"
 
 async def fetch_log(mac_address):
-    print(f"[fetch_log] Fetching log for MAC: {mac_address}")
+    # print(f"[fetch_log] Fetching log for MAC: {mac_address}")
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{BACKEND_URL}/log/{mac_address}") as resp:
-                print(f"[fetch_log] HTTP GET {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
+                # print(f"[fetch_log] HTTP GET {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
                 if resp.status == 200:
                     data = await resp.json()
-                    print(f"[fetch_log] Log data found for {mac_address}: {data}")
+                    # print(f"[fetch_log] Log data found for {mac_address}: {data}")
                     return data
                 else:
-                    print(f"[fetch_log] No log entry found for {mac_address}, returning empty dict.")
+                    # print(f"[fetch_log] No log entry found for {mac_address}, returning empty dict.")
                     return {}  # If no log exists
     except Exception as e:
-        print(f"[fetch_log] Error fetching log for {mac_address}: {e}")
+        # print(f"[fetch_log] Error fetching log for {mac_address}: {e}")
         return {}
 
 async def update_log(mac_address, activity=False, day_data=False):
@@ -32,30 +32,39 @@ async def update_log(mac_address, activity=False, day_data=False):
         "activity": activity,
         "day_data": day_data
     }
-    print(f"[update_log] Updating log for {mac_address} with payload: {payload}")
+    # print(f"[update_log] Updating log for {mac_address} with payload: {payload}")
     try:
         async with aiohttp.ClientSession() as session:
             async with session.post(f"{BACKEND_URL}/log/{mac_address}", json=payload) as resp:
-                print(f"[update_log] HTTP POST {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
+                # print(f"[update_log] HTTP POST {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
                 if resp.status != 200:
-                    print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
+                    # print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
     except Exception as e:
-        print(f"[update_log] Error updating log for {mac_address}: {e}")
+        # print(f"[update_log] Error updating log for {mac_address}: {e}")
 
 async def get_days_since_last_day_pull(mac_address):
-    print(f"[get_days_since_last_day_pull] Checking days since last day_data pull for {mac_address}")
+    # print(f"[get_days_since_last_day_pull] Checking days since last day_data pull for {mac_address}")
     log_entry = await fetch_log(mac_address)
     last_day_str = log_entry.get("last_day_data_pull")
     if not last_day_str:
         print(f"[get_days_since_last_day_pull] No previous day_data pull found. Returning 31 days.")
         return 31
     last_day = datetime.fromisoformat(last_day_str).date()
-    delta_days = (datetime.now().date() - last_day).days
-    print(f"[get_days_since_last_day_pull] Last pull was {delta_days} days ago.")
-    return min(max(delta_days, 1), 31)
+    today = datetime.now().date()
+    delta_days = (today - last_day).days
+
+    if delta_days == 0:
+        # Last pull was today, so no need to pull again
+        # print(f"[get_days_since_last_day_pull] Last pull was today, returning 0 days.")
+        return 0
+    else:
+        # Return number of days, capped between 1 and 31
+        # print(f"[get_days_since_last_day_pull] Last pull was {delta_days} days ago.")
+        return min(max(delta_days, 1), 31)
+
 
 async def get_hours_since_last_activity(mac_address):
-    print(f"[get_hours_since_last_activity] Checking hours since last activity pull for {mac_address}")
+    # print(f"[get_hours_since_last_activity] Checking hours since last activity pull for {mac_address}")
     log_entry = await fetch_log(mac_address)
     last_activity_str = log_entry.get("last_activity_pull")
     if not last_activity_str:
@@ -63,7 +72,7 @@ async def get_hours_since_last_activity(mac_address):
         return 24
     last_activity = datetime.fromisoformat(last_activity_str)
     delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
-    print(f"[get_hours_since_last_activity] Last activity pull was {delta_hours:.2f} hours ago.")
+    # print(f"[get_hours_since_last_activity] Last activity pull was {delta_hours:.2f} hours ago.")
     return delta_hours
 
 LOG_FILE = "log.json"

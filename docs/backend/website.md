@@ -342,7 +342,21 @@ def get_last_update_period(self, device_mac_addr: str):
     return None
 ```
 
-## 14. Running the App
+## 14. Admin logout
+
+Removes the auth cookie and redirects to admin login.
+
+```python
+@app.route('/admin/logout', methods=['POST'])
+def logout():
+    cookie = request.cookies.get('auth_cookie')
+    db.remove_cookie(cookie)
+    return redirect('/admin/login')
+```
+
+---
+
+## 15. Running the App
 
 ```python
 if __name__ == "__main__":

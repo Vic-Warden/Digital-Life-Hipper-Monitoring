@@ -359,8 +359,8 @@ class Database:
         # Format as MySQL-compatible DATETIME string
         current_time = now.strftime('%Y-%m-%d %H:%M:%S')
 
-        # Update the last_update_period for the device
-        query = "UPDATE Device SET last_update_period = %s WHERE device_mac_addr = %s;"
+        # Update the last_data_pull for the device
+        query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
         params = (current_time, device_mac_addr)
         result = self.do_query(query, params, fetch=False)
 

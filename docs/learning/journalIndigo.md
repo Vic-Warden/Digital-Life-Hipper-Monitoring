@@ -220,3 +220,5 @@ def login():
 
 I wanted to know how I can insert multiple rows in a database using only 1 mysql query.
 
+The reason for this was becuase I had to insert a lot of entries in a database. I did not want to query the database 1000+ times so that I could insert everything.
+

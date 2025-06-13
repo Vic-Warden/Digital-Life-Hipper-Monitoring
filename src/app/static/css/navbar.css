@@ -65,6 +65,23 @@
   z-index: 1;
 }
 
+.logo-container{
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+}
+
+.logo-line{
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px;
+  height: 1px;
+  background-color: black;
+
+}
+
+
 .dropdown-content a {
   color: black;
   padding: 12px 16px;

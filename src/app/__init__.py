@@ -7,7 +7,7 @@ import json
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
-from .anomaly_detection import calculate_median, detect_anomalies
+from anomaly_detection import calculate_median, detect_anomalies
 
 # Create the app Flask
 app = Flask(__name__)
@@ -97,6 +97,7 @@ def logout():
 
 # Profile' route with GET & POST
 
+
 @app.route('/admin/logout', methods=['GET'])
 def admin_logout():
     # Clear the session
@@ -105,6 +106,7 @@ def admin_logout():
 
     # Redirection to the login if logout
     return redirect('/admin/login')
+
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():

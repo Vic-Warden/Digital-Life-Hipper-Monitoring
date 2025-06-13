@@ -294,3 +294,19 @@ FEATURE_COLUMNS = clf.feature_names_in_.tolist() if hasattr(clf, 'feature_names_
 X_new = df_new[FEATURE_COLUMNS].copy()
 pred_labels = clf.predict(X_new)
 ````
+
+# As a student I want to learn how to make a correct learning story so that I can get better grades
+
+- I learned that the user story title will have to be vague because if you are even remotely specific in the title then it's a developer story instead of a user story.<br>
+
+- I learned that you are already supposed to know what every single file and piece of code is supposed to look like so that you can make a very specific list of acceptance criteria for it.<br>
+
+- I learned that every user story must have something to do with all parts of the vertical slice like the front-end, back-end and embedded side. This is to avoid very clearly and straight forward learning stories that would have allowed for simple and fast and efficient work.<br>
+
+- I learned that you must split your work up into as many git commits as possible so that it will look like you did more work without actually doing more work.<br>
+
+- I learned that at least 30% of the time spent working on a project must be sacrificed in order to make user stories about the work, instead of actually doing said work.<br>
+
+- I learned that there is no real structure to which a user story must be made, since every teacher of the hva will grade it differently<br>
+
+- I learned that important learnings that were critical to making the work of the user story dont have to be documented so long as you can point to a personal learning story in which you have vaguely writen these down.<br>

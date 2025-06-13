@@ -348,6 +348,12 @@ This taught me how to:
 
     Handle real-world errors in networked applications.
 
+## Learning story
+As a student, I want to learn how to track and update timestamps of data collection in a database, so I can monitor the freshness and reliability of the data.
+
+### Learned
+Originally, I didn’t track when data was last pulled from each device — so if something went wrong or the server restarted, I had no way to know what was up-to-date and what wasn’t. This caused confusion, especially with multiple sensors, and made debugging harder.
+
 <br /> <br />
 
 # Sources

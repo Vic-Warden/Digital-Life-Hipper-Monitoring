@@ -310,3 +310,15 @@ pred_labels = clf.predict(X_new)
 - I learned that there is no real structure to which a user story must be made, since every teacher of the hva will grade it differently<br>
 
 - I learned that important learnings that were critical to making the work of the user story dont have to be documented so long as you can point to a personal learning story in which you have vaguely writen these down.<br>
+
+# As a student I want to learns how to make a Hipper Logo for the top bar
+
+I learned how to use css div classes and make use of flex in order to set attributes.<br>
+<br> I learned to use the div class as follows:<br>
+````js
+<div class="logo-container">
+    <div class="logo-line"></div>
+    <span class="hippertext">Hipper Therapeutics</span>
+    <div class="logo-line"></div>
+  </div>
+````

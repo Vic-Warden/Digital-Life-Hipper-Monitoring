@@ -431,3 +431,7 @@ When i first wanted to run docker I found out that something was already running
 3. After you see which port you need that is already in use search on google what exactly is running on that port. (You will see this after running the command written above)
 
 4. Turn off whatever is needed to terminate what is running on the port you need.
+
+### References
+- To find the command for seeing which ports are in use I used this website [Link to website](https://help.extensis.com/hc/en-us/articles/360010122594-Identifying-ports-in-use-on-macOS-and-Windows)
+- To find what was running on that port, so i could terminate it I used this website [Link to website](https://stackoverflow.com/questions/72369320/why-always-something-is-running-at-port-5000-on-my-mac)

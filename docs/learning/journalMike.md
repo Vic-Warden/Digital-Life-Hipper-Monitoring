@@ -338,3 +338,17 @@ I learned how to use css div classes and make use of flex in order to set attrib
   margin-left: 50px;
 }
 ````
+
+<br>
+and I learned how to make lines with this.<br>
+I was struggling a lot at first and then I learned that I could just make a box of 1 pixel tall and it'd be a line.<br>
+
+````css
+.logo-line{
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px;
+  height: 1px;
+  background-color: black;
+}
+````

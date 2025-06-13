@@ -66,16 +66,16 @@
 }
 
 .logo-container{
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: center;
-font-family: 'Julius Sans One', sans-serif;
-font-weight: bold;
-color: black;
-letter-spacing: 2px;
-position: relative;
-margin-left: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Julius Sans One', sans-serif;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 2px;
+  position: relative;
+  margin-left: 50px;
 }
 
 .logo-line{
@@ -84,9 +84,7 @@ margin-left: 50px;
   width: 200px;
   height: 1px;
   background-color: black;
-
 }
-
 
 .dropdown-content a {
   color: black;

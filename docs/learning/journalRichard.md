@@ -415,3 +415,6 @@ The actual steps of the K-Means algorithm involve initializing cluster centers, 
 - [Machine Learning Tutorial Python - 13: K Means Clustering Algorithm](https://www.youtube.com/watch?v=EItlUEPCIzM)
 
 **Chatgpt was used with helping understanding the steps of K-means algorithm and the basics of clustering data**
+
+## Learning story 265
+As a student I want to learn have i can see which ports are in use on my mac, so I can fix my problem with running docker.

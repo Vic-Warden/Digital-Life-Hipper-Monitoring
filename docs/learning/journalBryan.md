@@ -332,7 +332,21 @@ Example code:
         print(f"Failed to send log update: {e}")
 ```
 
+Now, my data upload routine is much more reliable:
 
+    It gives me feedback when something goes wrong.
+
+    It doesn’t crash the program if the server is offline.
+
+    It ensures only valid, complete data gets sent to the backend.
+
+This taught me how to:
+
+    Build resilient client-server communication in Python.
+
+    Debug and test web APIs effectively.
+
+    Handle real-world errors in networked applications.
 
 <br /> <br />
 

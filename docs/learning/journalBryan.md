@@ -392,7 +392,8 @@ This taught me how to:
 
     Combine backend logic and database updates into a full data pipeline.
 
-
+Using this I can now use multiple basestations in the same area, because they all have the same generalised location where they check wat time and date data was pulled for the last time from a specific sensor. 
+This implementation ensures there is no double data collected from a single sensor.
 
 <br /> <br />
 

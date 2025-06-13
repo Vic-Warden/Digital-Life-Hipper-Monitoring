@@ -3,6 +3,8 @@ import os  # Import os for .env centralized settings
 from flask import Flask, render_template, redirect, request, session, make_response, jsonify
 from database import Database
 import json
+from dotenv import load_dotenv
+
 
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
@@ -13,6 +15,8 @@ from anomaly_detection import calculate_median, detect_anomalies
 app = Flask(__name__)
 
 # Database instance
+
+load_dotenv()  # This will look for a .env file in the current directory
 
 db = Database(
     host=os.getenv('MYSQL_HOST'),

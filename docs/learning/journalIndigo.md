@@ -1,7 +1,3 @@
-# TODO
-
-- How to insert multiple rows using one sql query?
-
 # Learning Journal
 
 ### Learning story #203
@@ -219,3 +215,8 @@ def login():
         # Render the login.html
         return render_template('login.html')
 ```
+
+## Learning Story #267
+
+I wanted to know how I can insert multiple rows in a database using only 1 mysql query.
+

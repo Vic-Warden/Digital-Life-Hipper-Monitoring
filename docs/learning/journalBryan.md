@@ -376,6 +376,23 @@ def update_log(mac_address):
     return {"message": "Log updated"} if success else {"error": "Failed to update"}, 200
 ```
 
+Using this, my system can:
+
+    Track exactly when each type of data was last pulled.
+
+    Help me detect inactive devices.
+
+    Provide a clear generalised way to have timestaped logs.
+
+This taught me how to:
+
+    Design and use metadata in a database schema.
+
+    Work with timestamps and timezones reliably.
+
+    Combine backend logic and database updates into a full data pipeline.
+
+
 
 <br /> <br />
 

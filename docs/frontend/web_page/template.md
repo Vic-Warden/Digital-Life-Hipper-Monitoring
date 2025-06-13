@@ -104,6 +104,7 @@ and the flex that is used for these divs works as follows:<br>
 }
 ````
 <br>
+the logo exists of the name of the company ("Hipper Theraputics") and some lines before and after it<br>
 
 ### navbar/admin_navbar.css
 In this file you will find all the code for the styling of the navbar.<br>

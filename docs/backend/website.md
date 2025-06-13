@@ -23,20 +23,35 @@ This is a Flask web application that provides routes for users and admin access,
 
 The application is initialized using Flask and Werkzeug for password hashing. A custom `Database` class is used for database operations.
 
+The database variables get loaded through a .env environment file. This enables a more secure way of storing passwords and endpoint addresses.
+
 ```python
+import os  # Import os for .env centralized settings
+# Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response
 from database import Database
+import json
+from dotenv import load_dotenv
+
+
+# Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
+from anomaly_detection import calculate_median, detect_anomalies
+
+# Create the app Flask
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+
+# Database instance
+
+load_dotenv()  # This will look for a .env file in the current directory
 
 db = Database(
-    host="localhost",
-    port=3306,
-    user="root",
-    password="superstronkrootpassword",
-    database="hipperdb"
+    host=os.getenv('MYSQL_HOST'),
+    port=int(os.getenv('MYSQL_PORT')),
+    user=os.getenv('MYSQL_ROOT_USER'),
+    password=os.getenv('MYSQL_ROOT_PASSWORD'),
+    database=os.getenv('MYSQL_DATABASE')
 )
 ```
 
@@ -354,9 +369,48 @@ def logout():
     return redirect('/admin/login')
 ```
 
----
+## 15. Log date time
+update and get last date and time when data was pulled form sensor by looking at the mac address
+### Get date time
+```python
+@app.route('/log/<mac_address>', methods=['GET'])
+def get_log(mac_address):
+    mac = mac_address.upper()
+    log_entry = db.get_log_for_mac(mac)
+    if not log_entry:
+        return jsonify({}), 200
+    return jsonify({
+        "last_activity_pull": log_entry.get("last_activity_pull"),
+        "last_day_data_pull": log_entry.get("last_day_data_pull")
+    }), 200
+```
 
-## 15. Running the App
+### Update date time
+```
+@app.route('/log/<mac_address>', methods=['POST'])
+def update_log(mac_address):
+    mac = mac_address.upper()
+
+    if not request.is_json:
+        return {"error": "Expected JSON payload"}, 400
+    data = request.get_json()
+
+    activity = data.get("activity")
+    day_data = data.get("day_data")
+
+    if activity is None or day_data is None:
+        return {"error": "Missing 'activity' or 'day_data' fields"}, 400
+
+    success = db.update_log_timestamps(mac, activity, day_data)
+    if not success:
+        return {"error": "Failed to update log"}, 500
+
+    return {"message": "Log updated"}, 200
+```
+
+Find functions used for implementation under [database.py](database.py.md).
+
+## 16. Running the App
 
 ```python
 if __name__ == "__main__":

@@ -300,3 +300,7 @@ pred_labels = clf.predict(X_new)
 - I learned that the user story title will have to be vague because if you are even remotely specific in the title then it's a developer story instead of a user story.<br>
 
 - I learned that you are already supposed to know what every single file and piece of code is supposed to look like so that you can make a very specific list of acceptance criteria for it.<br>
+
+- I learned that every user story must have something to do with all parts of the vertical slice like the front-end, back-end and embedded side. This is to avoid very clearly and straight forward learning stories that would have allowed for simple and fast and efficient work.<br>
+
+- I learned that you must split your work up into as many git commits as possible so that it will look like you did more work without actually doing more work.<br>

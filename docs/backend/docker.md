@@ -28,6 +28,7 @@ This setup defines a MySQL database and a Flask web server using Docker Compose 
 - **Command**: Runs Flask app on `0.0.0.0:5000`
 - **Environment**:
   - `FLASK_APP=__init__.py`
+  - `FLASK_DEBUG=1` <- needed so that page will automatically adopt changes to files upon reloading
 - **Depends on**: MySQL (waits until MySQL is healthy)
 - **Volumes**: Mounts the app directory for live development
 - **Env file**: Reuses MySQL `.env` for shared config

@@ -376,3 +376,62 @@ While I was writing code for the login pages I first started with fetching the e
 ```
 ### References
 - A team member showed me that you can call a backend endpoint using an HTML form by setting the action attribute.
+
+## Learning story 249
+As a student, I want to learn the basics of data clustering, so I understand the work made by my team members.
+
+### What I have learned
+Clustering is a way to group data points that are similar to each other — without needing labels. It’s an unsupervised machine learning technique. This means it only looks at the data and groups points that are similar to each other. A popular algorithm for this is the K-Means algorithm. With this algorithm, you choose a number of clusters (K), and the algorithm tries to group the data so that points in the same cluster are similar to each other, and points in different clusters are as different as possible.
+
+K-Means is widely used because it’s simple, fast, and works well when the data naturally forms well-separated groups. It’s commonly applied in tasks like customer segmentation, grouping documents by topic, or simplifying image data. Although effective, it does require choosing the number of clusters in advance, and it works best when clusters are roughly equal in size and shape.
+
+The actual steps of the K-Means algorithm involve initializing cluster centers, assigning points, updating the centers, and repeating this process until the results stabilize — but more on that later. Everything written here is something I learned, because of never came in contact with clustering data.
+
+### Steps of the K-means algorithm
+
+1. Choose the number of clusters (K):
+
+- Decide how many groups you want the algorithm to find. For example, K = 3 means it will create 3 clusters.
+
+2. Initialize centroids randomly:
+
+- The algorithm randomly places K centroids in the data space. These are the starting "centers" of the clusters.
+
+3. Assign each data point to the nearest centroid:
+
+- For each point in the dataset, calculate the distance to each centroid and assign the point to the closest one. This forms K groups.
+
+4. Recalculate the centroids:
+
+- For each cluster, compute the new centroid by taking the average of all the data points currently assigned to that cluster.
+
+5. Repeat steps 3 and 4:
+
+- Reassign data points based on the updated centroids, then recalculate the centroids again. Repeat this loop until the centroids stop changing significantly — this means the algorithm has converged.
+
+### References
+**These youtube video's were used the help understand clustering and K-means algorithm**
+- [StatQuest: K-means clustering](https://www.youtube.com/watch?v=4b5d3muPQmA&t=33s)
+- [Machine Learning Tutorial Python - 13: K Means Clustering Algorithm](https://www.youtube.com/watch?v=EItlUEPCIzM)
+
+**Chatgpt was used with helping understanding the steps of K-means algorithm and the basics of clustering data**
+
+## Learning story 265
+As a student I want to learn have i can see which ports are in use on my mac, so I can fix my problem with running docker.
+
+### What i have learned
+When i first wanted to run docker I found out that something was already running on the port that was used for docker, So I started searching what was running on docker, but couldn't find what exactly was running on that port. After a couple of days when I went to school again I asked one of the teachers to help me out, because I couldn't figure out what was running on that port. When looking at it with the teacher I learned that with a simple command you can see all the ports running on your mac, so now I could see what was running on port 5000. When looking up on the internet what it was I found out it was control center on monterey listening to port 5000. At last after i turned of Airplay reciever on my mac like the internet told me I could finally run my docker smoothly.
+
+### Steps used to figure out how to see which ports are already in use
+
+1. Search on the internet for the command to see which port are in use on your mac
+
+2. After you find the command you run the command in your terminal. (sudo lsof -i -n -P | grep TCP)
+
+3. After you see which port you need that is already in use search on google what exactly is running on that port. (You will see this after running the command written above)
+
+4. Turn off whatever is needed to terminate what is running on the port you need.
+
+### References
+- To find the command for seeing which ports are in use I used this website [Link to website](https://help.extensis.com/hc/en-us/articles/360010122594-Identifying-ports-in-use-on-macOS-and-Windows)
+- To find what was running on that port, so i could terminate it I used this website [Link to website](https://stackoverflow.com/questions/72369320/why-always-something-is-running-at-port-5000-on-my-mac)

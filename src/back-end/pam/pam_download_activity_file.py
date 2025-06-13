@@ -9,15 +9,33 @@ import asyncio
 #
 # asyncio.run(asyncio.sleep(5))
 
-# TimeDate(label_id=90242)
+TimeDate(label_id=90245)
+
+asyncio.run(asyncio.sleep(5))
+
+SetTimestamp2101(label_id=5)
 #
-# asyncio.run(asyncio.sleep(5))
+# downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_8.csv",
+#                               filelength=get_detailed_request("MAX"),
+#                               label_id=90248)
+# asyncio.run(downloader.run())
 #
-# SetTimestamp2101(label_id=2)
+# downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_5.csv",
+#                               filelength=get_detailed_request("MAX"),
+#                               label_id=90245)
+# asyncio.run(downloader.run())
 #
-ActivityDownload(filename="../datasets/research_attempt_2/data/device__8__04-06-2025.csv",
-                 filelength=get_detailed_request("MAX"),
-                 label_id=90248)
-ActivityDownload(filename="../datasets/research_attempt_2/data/device__2__04-06-2025.csv",
-                 filelength=get_detailed_request("MAX"),
-                 label_id=90242)
+# downloader = ActivityDownload(filename="../AI/training_data/06_06_2025_device_3.csv",
+#                               filelength=get_detailed_request("MAX"),
+#                               label_id=90243)
+# asyncio.run(downloader.run())
+
+downloader = ActivityDownload(filename="../AI/training_data/11_06_2025_afternoon_device_5.csv",
+                              filelength=get_detailed_request("MAX"),
+                              label_id=90245)
+asyncio.run(downloader.run())
+#
+# downloader = ActivityDownload(filename="../AI/training_data/11_06_2025_device_3.csv",
+#                               filelength=get_detailed_request("MAX"),
+#                               label_id=90243)
+# asyncio.run(downloader.run())

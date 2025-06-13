@@ -317,6 +317,20 @@ To make my system more reliable:
 
     I handled network errors using try/except so that the system would retry later instead of failing.
 
+Example code:
+```python
+    payload = {"activity": True, "day_data": False}
+    url = f"http://server_ip:5000/log/{mac_address}"
+
+    try:
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            print("Log update successful")
+        else:
+            print(f"Server error: {response.status_code} - {response.text}")
+    except requests.RequestException as e:
+        print(f"Failed to send log update: {e}")
+```
 
 
 

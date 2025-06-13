@@ -232,3 +232,14 @@ VALUES (value1_row1, value2_row1, ...),
        (value1_rowN, value2_rowN, ...);
 ```
 
+And with some test values, it becomes this:
+
+```sql
+INSERT INTO Student (id, name, national_id)
+VALUES (1001, 'John Liu', '123345566'),
+       (1003, 'Rita Ora', '132345166'),
+       (1007, 'Philip Lose', '321345566'),
+       (1010, 'Samantha Prabhu', '3217165566');
+```
+
+It was luckily easy to insert multiple rows using by adding more values to the VALUES field.

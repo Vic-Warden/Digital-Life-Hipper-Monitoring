@@ -222,3 +222,5 @@ I wanted to know how I can insert multiple rows in a database using only 1 mysql
 
 The reason for this was becuase I had to insert a lot of entries in a database. I did not want to query the database 1000+ times so that I could insert everything.
 
+I found this [article](https://www.baeldung.com/sql/insert-multiple-rows-same-query#:~:text=Using%20INSERT%20INTO%20Statement%20With,in%20a%20single%20SQL%20query.), this shows that I can do the following to insert multiple rows using only 1 query.
+

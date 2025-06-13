@@ -415,3 +415,23 @@ The actual steps of the K-Means algorithm involve initializing cluster centers, 
 - [Machine Learning Tutorial Python - 13: K Means Clustering Algorithm](https://www.youtube.com/watch?v=EItlUEPCIzM)
 
 **Chatgpt was used with helping understanding the steps of K-means algorithm and the basics of clustering data**
+
+## Learning story 265
+As a student I want to learn have i can see which ports are in use on my mac, so I can fix my problem with running docker.
+
+### What i have learned
+When i first wanted to run docker I found out that something was already running on the port that was used for docker, So I started searching what was running on docker, but couldn't find what exactly was running on that port. After a couple of days when I went to school again I asked one of the teachers to help me out, because I couldn't figure out what was running on that port. When looking at it with the teacher I learned that with a simple command you can see all the ports running on your mac, so now I could see what was running on port 5000. When looking up on the internet what it was I found out it was control center on monterey listening to port 5000. At last after i turned of Airplay reciever on my mac like the internet told me I could finally run my docker smoothly.
+
+### Steps used to figure out how to see which ports are already in use
+
+1. Search on the internet for the command to see which port are in use on your mac
+
+2. After you find the command you run the command in your terminal. (sudo lsof -i -n -P | grep TCP)
+
+3. After you see which port you need that is already in use search on google what exactly is running on that port. (You will see this after running the command written above)
+
+4. Turn off whatever is needed to terminate what is running on the port you need.
+
+### References
+- To find the command for seeing which ports are in use I used this website [Link to website](https://help.extensis.com/hc/en-us/articles/360010122594-Identifying-ports-in-use-on-macOS-and-Windows)
+- To find what was running on that port, so i could terminate it I used this website [Link to website](https://stackoverflow.com/questions/72369320/why-always-something-is-running-at-port-5000-on-my-mac)

@@ -322,3 +322,19 @@ I learned how to use css div classes and make use of flex in order to set attrib
     <div class="logo-line"></div>
   </div>
 ````
+
+<br>and I then learned to use the flex in order to give parameters to this:<br>
+````css
+.logo-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Julius Sans One', sans-serif;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 2px;
+  position: relative;
+  margin-left: 50px;
+}
+````

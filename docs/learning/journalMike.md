@@ -294,3 +294,9 @@ FEATURE_COLUMNS = clf.feature_names_in_.tolist() if hasattr(clf, 'feature_names_
 X_new = df_new[FEATURE_COLUMNS].copy()
 pred_labels = clf.predict(X_new)
 ````
+
+# As a student I want to learn how to make a correct learning story so that I can get better grades
+
+- I learned that the user story title will have to be vague because if you are even remotely specific in the title then it's a developer story instead of a user story.<br>
+
+- I learned that you are already supposed to know what every single file and piece of code is supposed to look like so that you can make a very specific list of acceptance criteria for it.<br>

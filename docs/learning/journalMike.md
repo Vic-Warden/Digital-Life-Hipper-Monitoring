@@ -272,7 +272,7 @@ kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
 
 I learned how to use the joblib library in order to store a trained AI model.<br>
 ```python
-MODEL_PATH = 'decision_tree_model.joblib'
+MODEL_PATH = 'HipperLabeler.joblib'
 joblib.dump(best_tree, MODEL_PATH)
 print(f"Trained decision tree saved to '{MODEL_PATH}'")
 ```
@@ -280,7 +280,7 @@ print(f"Trained decision tree saved to '{MODEL_PATH}'")
 <br><br>And then I learned how to use joblib in order to then import the pre-trained model so that I can make predictions with it<br>
 
 ````python
-MODEL_PATH = 'decision_tree_model.joblib'
+MODEL_PATH = 'HipperLabeler.joblib'
 clf = joblib.load(MODEL_PATH)
 
 INPUT_CSV = './training_data/06_06_2025_device_2.csv' 

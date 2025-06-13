@@ -302,6 +302,23 @@ This taught me how to:
 
     Think about data structure design to simplify later queries and reporting.
 
+## Learning story
+As a student, I want to learn how to send sensor data from a Raspberry Pi to a remote server using HTTP requests, 
+so I can build IoT solutions that communicate with cloud infrastructure.
+
+### Learned
+When I first started sending data from my Raspberry Pi, I assumed that sending a POST request to the backend would "just work" every time. But I quickly ran into problems: sometimes the server wasn’t reachable, sometimes the data format was wrong, and sometimes I forgot to include required fields like "activity" or "day_data". These would either throw an error or return a 400 Bad Request.
+
+To make my system more reliable:
+
+    I structured the JSON payload carefully and checked that all required fields were present.
+
+    I added status code checks to make sure the data was successfully received.
+
+    I handled network errors using try/except so that the system would retry later instead of failing.
+
+
+
 
 <br /> <br />
 

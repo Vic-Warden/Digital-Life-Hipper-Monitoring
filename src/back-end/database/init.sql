@@ -14,6 +14,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE SCHEMA IF NOT EXISTS `hipperdb` DEFAULT CHARACTER SET utf8 ;
 USE `hipperdb` ;
 
+SET GLOBAL time_zone = 'Europe/Amsterdam';
+
 -- -----------------------------------------------------
 -- Table `hipperdb`.`Therapist`
 -- -----------------------------------------------------
@@ -78,7 +80,8 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`Device` (
   `device_label` VARCHAR(10) NOT NULL,
   `device_id` INT NOT NULL,
   `auth_token` VARCHAR(32) NOT NULL,
-  `last_data_pull` DATETIME NULL,
+  `last_day_data_pull` DATE NULL,
+  `last_activity_pull` DATETIME NULL,
   `device_mac_addr` VARCHAR(17) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `patient_id_idx` (`patient_id_device` ASC) VISIBLE,
@@ -175,7 +178,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_data_pull`, `device_mac_addr`) VALUES (1, 1, '09234', 1, 'auth_token', NULL, '00:00:00:00:00:00');
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_day_data_pull`, `last_activity_pull`, `device_mac_addr`) VALUES (1, 1, '90242', 1, 'auth_token', NOW(), NOW(), 'C1:08:00:01:23:B0');
 
 COMMIT;
 

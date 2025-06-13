@@ -224,3 +224,11 @@ The reason for this was becuase I had to insert a lot of entries in a database. 
 
 I found this [article](https://www.baeldung.com/sql/insert-multiple-rows-same-query#:~:text=Using%20INSERT%20INTO%20Statement%20With,in%20a%20single%20SQL%20query.), this shows that I can do the following to insert multiple rows using only 1 query.
 
+```sql
+INSERT INTO Table_name (column1, column2, ...)
+VALUES (value1_row1, value2_row1, ...),
+       (value1_row2, value2_row2, ...),
+       ...
+       (value1_rowN, value2_rowN, ...);
+```
+

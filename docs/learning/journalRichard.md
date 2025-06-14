@@ -441,3 +441,6 @@ as a student I want to learn how to refine my user stories, so I can get a highe
 
 ### What I have learned
 I learned how to clearly define a user story by focusing on the user’s role, objective, and need. I also gained experience writing a complete description that includes design constraints and user experience expectations, such as responsiveness and consistent hamburger menu behavior across devices. Additionally, I learned that for simple UI components like a CSS-based navigation bar, manual testing in a local Docker environment is often sufficient, and that unit testing is only necessary when dynamic logic or complex interactivity is involved.
+
+**Here is the link to the refined user story**
+[Refined user story](https://gitlab.fdmci.hva.nl/IoT/2024-2025-semester-2/group-project/duuseedeewuu36/-/issues/163)

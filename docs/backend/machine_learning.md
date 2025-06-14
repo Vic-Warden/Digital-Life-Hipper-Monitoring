@@ -12,3 +12,25 @@ MySQL database
 Pandas for data processing
 
 dotenv for environment configuration
+
+## How to Use It
+
+```bash
+pip install pandas mysql-connector-python python-dotenv
+```
+
+```bash
+python src/back-end/pam/get_usual_slots.py
+```
+
+## Features
+
+Automatically analyzes the past 7 days of hourly activity
+
+Identifies time slots with consistently high activity
+
+Configurable detection threshold 
+
+Output is structured and exportable in JSON format
+
+Easily extendable for future usage like anomaly comparison

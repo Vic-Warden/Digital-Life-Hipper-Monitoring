@@ -444,3 +444,8 @@ I learned how to clearly define a user story by focusing on the user’s role, o
 
 **Here is the link to the refined user story**
 [Refined user story](https://gitlab.fdmci.hva.nl/IoT/2024-2025-semester-2/group-project/duuseedeewuu36/-/issues/163)
+
+### References 
+- I talked about how I could refine the user story for a better grade with my team members.
+
+**AI tools like ChatGPT were used for language refinement.**

@@ -438,3 +438,6 @@ When i first wanted to run docker I found out that something was already running
 
 ## Learning story 272
 as a student I want to learn how to refine my user stories, so I can get a higher grade for the review.
+
+### What I have learned
+I learned how to clearly define a user story by focusing on the user’s role, objective, and need. I also gained experience writing a complete description that includes design constraints and user experience expectations, such as responsiveness and consistent hamburger menu behavior across devices. Additionally, I learned that for simple UI components like a CSS-based navigation bar, manual testing in a local Docker environment is often sufficient, and that unit testing is only necessary when dynamic logic or complex interactivity is involved.

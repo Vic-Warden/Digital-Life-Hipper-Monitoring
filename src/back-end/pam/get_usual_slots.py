@@ -14,7 +14,7 @@ db_config = {
     "port": int(os.getenv("MYSQL_PORT", 3306))
 }
 
-# Connection to the data base
+# Connection to the database
 try:
     connection = mysql.connector.connect(**db_config)
     print("Success")

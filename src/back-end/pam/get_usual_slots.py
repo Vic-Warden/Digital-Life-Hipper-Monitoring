@@ -1,5 +1,6 @@
 import os
 import mysql.connector
+import json
 import pandas as pd
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -48,5 +49,21 @@ df = pd.DataFrame(rows)
 # Show times with more activity
 print("\nAverage steps per hour (over 7 days) :")
 print(df)
+
+def detect_usual_slots(df, threshold=200):
+    """
+    Identifies hours with average activity above the given threshold
+    Returns a structured JSON
+    """
+    usual_slots = df[df['total_steps'] > threshold]['hour_slot'].tolist()
+
+    result = {
+        "usual_slots": usual_slots,
+        "threshold": threshold,
+        "total_hours_analyzed": df.shape[0],
+        "slots_details": df.to_dict(orient='records')
+    }
+
+    return result
 
 connection.close()

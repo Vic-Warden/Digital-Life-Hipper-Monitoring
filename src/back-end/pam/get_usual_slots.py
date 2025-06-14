@@ -1,6 +1,9 @@
 import os
 import mysql.connector
+import pandas as pd
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
+
 
 # Load variables from the .env file
 load_dotenv(dotenv_path='../database/.env')
@@ -21,5 +24,29 @@ try:
 except mysql.connector.Error as err:
     print("error", err)
     exit(1)
+    
+cursor = connection.cursor(dictionary=True)
+
+# Define the analysis period
+end_date = datetime.now().date()
+start_date = end_date - timedelta(days=7)
+
+# Run the query
+query = """
+SELECT HOUR(timestamp) AS hour_slot, SUM(steps) as total_steps
+FROM Data
+WHERE timestamp BETWEEN %s AND %s
+GROUP BY hour_slot
+ORDER BY hour_slot;
+"""
+cursor.execute(query, (start_date, end_date))
+rows = cursor.fetchall()
+
+# Convert to DataFrame
+df = pd.DataFrame(rows)
+
+# Show times with more activity
+print("\nAverage steps per hour (over 7 days) :")
+print(df)
 
 connection.close()

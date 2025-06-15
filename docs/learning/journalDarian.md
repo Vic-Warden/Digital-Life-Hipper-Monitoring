@@ -226,3 +226,9 @@ Build a simple, interactive interface where users can select a start and end tim
    - Added basic checks to ensure both times are filled.
    - Handled invalid or identical time selections.
    - Provided user-friendly feedback using `alert()` or error messages on screen. 
+
+4. **Storage:**
+   - Stored the time range in `localStorage` for later use or persistence across sessions.
+
+5. **Testing:**
+   - Tested by logging the stored values and verifying correct behavior with various time inputs.

@@ -62,4 +62,17 @@ if df.empty:
     print("No result")
     exit(0)
 
+# Matrice
+pivot_df = df.pivot_table(
+    index="date",
+    columns="hour",
+    values="total_steps",
+    fill_value=0
+)
 
+pivot_df = pivot_df.reindex(sorted(pivot_df.columns), axis=1)
+
+print("\n📊 Matrice activité (date x heure) :")
+print(pivot_df)
+
+connection.close()

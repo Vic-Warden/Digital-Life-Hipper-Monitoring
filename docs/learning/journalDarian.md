@@ -257,3 +257,8 @@ I learned how to use JavaScript to apply a user-selected time range (representin
 Use JavaScript to filter out night-time hours from an array of activity timestamps based on user input.
 
 ### Steps:
+
+1. **Create Mock Data:**
+   - Built a sample array of activity timestamps using JavaScript `Date` objects or formatted strings (e.g., `'2025-06-15T23:00:00'`).
+
+   

@@ -1,7 +1,25 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+## Learning Story #277
 
+I learned how to automatically extract behavioural patterns from raw data. Rather than asking the therapist to manually set activity times for each patient, I devised a method that analyses step data over the last 7 days, groups the steps by hour, and then identifies the time slots where the patient is regularly active.
+
+I used :
+
+SQL queries
+
+Pandas
+
+An average and filtering by threshold to identify significant periods.
+
+This work has enabled me to understand :
+
+The importance of temporality in behavioural data
+
+How to do simple learning without machine learning, just from descriptive statistics
+
+How to transform an intuition into a rule that can be calculated automatically
 
 ## Learning Story #254
 

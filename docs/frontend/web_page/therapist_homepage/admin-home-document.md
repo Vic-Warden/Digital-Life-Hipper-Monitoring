@@ -156,3 +156,69 @@ const chartData = {
 - [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/WCAG21/quickref/)
 
 
+
+# Implementing Night-Time Inactivity Filter on the User Homepage
+
+##  What I Built
+I developed a dashboard feature that allows users to set a custom night-time inactive period on their homepage. This range is used to exclude those hours from inactivity metrics. If the user doesn’t set a time range, default tracking is used. I also integrated Chart.js to visualize activity and inactivity data.
+
+---
+
+###  Step-by-Step: How I Did It
+
+### 1. Set Up Project Structure
+```
+project/
+├── index.html
+├── static/
+│   ├── css/
+│   │   ├── therapist.css
+│   │   └── admin_navbar.css
+│   └── js/
+│       ├── therapist.js
+│       └── admin_navbar.js
+```
+
+### 2. Include Chart.js in HTML
+In `index.html`, I added the Chart.js CDN to the `<head>` so the dashboard can render charts:
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+```
+
+### 3. Build the Time Picker Feature in HTML
+- Created a modal with two `<input type="time">` fields.
+- Added a button for setting the inactive time period.
+
+### 4. Write JavaScript Logic (`therapist.js`)
+- Built a function to validate that the start and end time are not equal.
+- Supported overnight time ranges (e.g., 10 PM to 6 AM).
+- Saved the inactive range to `localStorage` (simulating back-end saving).
+- Filtered the inactivity data to exclude the selected period.
+- Fallback to default metrics if no range is set.
+
+### 5. Integrate Chart.js for Visual Display
+- Created a mixed chart:
+  - Bar chart for step counts.
+  - Line chart for PAM scores.
+- Highlighted inactive periods with a red background.
+- Configured dual y-axes for step data and PAM scores.
+
+### 6. Add UI Feedback
+- Displayed success and validation messages for user interactions.
+- Used CSS animations for modals and notifications.
+- Built progress bars and circular indicators to show goal completion.
+
+## Summary
+
+By completing this feature, I learned how to:
+- Use `<input type="time">` with JavaScript to capture and validate time ranges.
+- Handle 24-hour time logic in JavaScript (including cross-midnight ranges).
+- Store user settings locally with `localStorage`.
+- Exclude specific time ranges from metrics calculation.
+- Integrate and configure Chart.js in a multi-metric dashboard.
+- Improve user experience through feedback, validation, and visual indicators.
+
+This setup now provides a smooth and intuitive user experience for controlling night-time exclusion in activity data.
+
+---
+

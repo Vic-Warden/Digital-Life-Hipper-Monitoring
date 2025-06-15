@@ -222,4 +222,7 @@ Build a simple, interactive interface where users can select a start and end tim
    - Used `document.getElementById()` to access time values.
    - Parsed and compared time strings to handle overnight periods (e.g., 10:00 PM to 6:00 AM).
 
-   
+3. **Validation:**
+   - Added basic checks to ensure both times are filled.
+   - Handled invalid or identical time selections.
+   - Provided user-friendly feedback using `alert()` or error messages on screen. 

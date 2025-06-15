@@ -207,3 +207,10 @@ As a student, I want to learn how to use JavaScript to define and apply a user-s
 ## What I learned
 
 I learned how to use JavaScript to apply a user-selected time range (representing night-time) to filter out periods from activity data. This helped me understand how to work with time values in JavaScript, compare them correctly—even when crossing midnight—and use that logic to produce a filtered data set that reflects only relevant activity.
+
+##  How I Learned It
+
+### Goal:
+Use JavaScript to filter out night-time hours from an array of activity timestamps based on user input.
+
+### Steps:

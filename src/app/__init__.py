@@ -478,6 +478,24 @@ def update_log(mac_address):
     return {"message": "Log updated"}, 200
 
 
+@app.route('/api/routine-disruption', methods=['POST'])
+def detect_routine_disruption():
+    data = request.get_json()
+    patient_id = data.get("patient_id")
+
+    if not patient_id:
+        return {"error": "Missing patient_id"}, 400
+
+    usual_slots = db.get_usual_slots(patient_id)
+    if not usual_slots:
+        return {"disruptions": []}, 200
+
+    disruptions = db.get_disruptions(patient_id, usual_slots)
+
+    return {"disruptions": disruptions}, 200
+
+
+
 # Start the Flask application
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True, port=6001)

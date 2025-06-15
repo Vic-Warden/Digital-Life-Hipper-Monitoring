@@ -404,3 +404,28 @@ class Database:
             WHERE device_mac_addr = %s
         """
         return self.do_query(query, tuple(params), fetch=False) is not None
+    
+    def get_usual_active_slots(self, patient_id: int, days: int = 7) -> list[dict]:
+        """
+        Display hours when the patient don't do activity
+        """
+        from datetime import datetime, timedelta
+
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days)
+
+        query = """
+            SELECT HOUR(timestamp) AS hour_slot, SUM(steps) AS total_steps
+            FROM Data
+            INNER JOIN Device ON Data.device_id = Device.id
+            WHERE Device.patient_id_device = %s
+            AND timestamp BETWEEN %s AND %s
+            GROUP BY hour_slot
+            ORDER BY hour_slot;
+        """
+        result = self.do_query(query, (patient_id, start_date, end_date))
+
+        if not result:
+            return []
+
+        return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]

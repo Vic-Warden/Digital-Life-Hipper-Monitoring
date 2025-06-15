@@ -12,12 +12,22 @@
     <div id="admin-navbar"></div>
 
   <div class="container">
-    <div class="card">
+    <div class="patient-card">
       <h3>Patients</h3>
-      <div id="display-name" class="display-box">Hans</div>
+      <input type="text" id="search" placeholder="Search patients by name..." />
+      <div id="patient-list" class="display-box"></div>
     </div>
-    <div class="card">
-      <h3>Add patients</h3>
+    <div class="addPatient-card">
+      <h3>Add Patient</h3>
+      <form action="" method="POST">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+    
+        <button type="submit">Add Patient</button>
+      </form>
     </div>
   </div>
 

@@ -199,3 +199,8 @@ This learning story helped me understand how JavaScript brings dynamics to stati
 ## Summary
 
 This exercise strengthened my ability to build interactive, user-responsive web applications using JavaScript. I now have a working understanding of how data, events, and visual components work together in modern dashboards.
+
+## Learning story 7:
+
+As a student, I want to learn how to build an interactive time picker in HTML, so that users can customize their night-time period directly on the web interface.
+

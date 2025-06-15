@@ -121,5 +121,13 @@ if alerts:
 else:
     print("Any routine breaks")
 
+# Save all of this in a JSON File
+output_file = "routine_alerts.json"
+
+with open(output_file, "w") as f:
+    json.dump(alerts, f, indent=2)
+
+print(f"\nAlerts saved in '{output_file}'")
+
 
 connection.close()

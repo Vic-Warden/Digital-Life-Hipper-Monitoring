@@ -42,6 +42,7 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 #276 As a student, I want to learn how to make sure the website automatically adopts changes, so that my team can develop without needing to reload the docker container.
 
+* Today Richard (once again) notified me that the website was not updating as expected when making changes. Back during the individual project we all had our projects setup in a way where during development all changes would immediately appear on the webapp when performing a simple reload. Now this was not the case with our flask webapp. So later we noticed that this could be fixed by reloading the docker container and then waiting ~10 seconds. This was very annoying when constantly making small changes, so I asked `ChatGPT` what to do. It turns out that setting debug enabled in the python file alone didn't do much, it of course also had to be enabled in the Docker file. So that is what I added to the docker file: 
 
 
 

@@ -33,9 +33,18 @@
       <div class="metric-card">
         <div class="metric-icon inactive-icon">🏃‍♂️</div>
         <div class="metric-info">
-          <div class="metric-value">180</div>
+          <div class="metric-value" id="inactive-minutes-value">180</div>
           <div class="metric-label">Inactive Minutes</div>
         </div>
+      </div>
+
+      <!-- Inactive Period Settings -->
+      <div class="inactive-period-settings">
+        <div class="inactive-period-header">
+          <span class="inactive-period-title">Night Inactive Period</span>
+          <button class="set-period-btn" id="setPeriodBtn">Set Period</button>
+        </div>
+        <div class="current-period" id="currentPeriod">No period set</div>
       </div>
 
       <!-- Overall Monthly Score -->
@@ -114,6 +123,39 @@
       </div>
     </section>
   </main>
+
+  <!-- Inactive Period Modal -->
+  <div id="inactivePeriodModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Set Night Inactive Period</h3>
+        <span class="close" id="closeModal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Select the time period when you're typically inactive (e.g., sleeping). This period will be excluded from your inactive minutes calculation.</p>
+        
+        <div class="time-inputs">
+          <div class="time-input-group">
+            <label for="startTime">Start Time:</label>
+            <input type="time" id="startTime" name="startTime" required>
+          </div>
+          
+          <div class="time-input-group">
+            <label for="endTime">End Time:</label>
+            <input type="time" id="endTime" name="endTime" required>
+          </div>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="modal-actions">
+          <button class="cancel-btn" id="cancelBtn">Cancel</button>
+          <button class="save-btn" id="saveBtn">Save Period</button>
+          <button class="remove-btn" id="removeBtn" style="display: none;">Remove Period</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="../static/js/therapist.js"></script>
   <script src="../static/js/admin_navbar.js"></script>

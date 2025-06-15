@@ -44,7 +44,25 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 * Today Richard (once again) notified me that the website was not updating as expected when making changes. Back during the individual project we all had our projects setup in a way where during development all changes would immediately appear on the webapp when performing a simple reload. Now this was not the case with our flask webapp. So later we noticed that this could be fixed by reloading the docker container and then waiting ~10 seconds. This was very annoying when constantly making small changes, so I asked `ChatGPT` what to do. It turns out that setting debug enabled in the python file alone didn't do much, it of course also had to be enabled in the Docker file. So that is what I added to the docker file: 
 
+```
+  flask:
+    container_name: hipper-webapp
+    build: .
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./src/back-end/database/.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_APP=__init__.py
+    volumes:
+      - ./src/app:/app
+```
 
+The difference maker is `- FLASK_DEBUG=1`. Now everything works as expected!
 
 ## Journal
 

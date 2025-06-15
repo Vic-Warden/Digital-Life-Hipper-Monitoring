@@ -207,3 +207,19 @@ As a student, I want to learn how to build an interactive time picker in HTML, s
 ## What I learned
 
 I learned how to create an interactive time picker using HTML and JavaScript to allow users to define their custom night-time period. This enables dynamic configuration of excluded time ranges, supporting better control over inactivity tracking on the homepage.
+
+## How I learned it
+
+Build a simple, interactive interface where users can select a start and end time, validate the input, and store it for later use in filtering activity data.
+
+### Steps:
+
+1. **HTML Form Creation:**
+   - Used `<input type="time">` for both start and end time.
+   - Created a submit button to capture user input.
+
+2. **JavaScript Input Handling:**
+   - Used `document.getElementById()` to access time values.
+   - Parsed and compared time strings to handle overnight periods (e.g., 10:00 PM to 6:00 AM).
+
+   

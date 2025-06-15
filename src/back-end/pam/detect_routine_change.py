@@ -27,4 +27,20 @@ except mysql.connector.Error as err:
 cursor = connection.cursor(dictionary=True)
 
 
+# Load usual_slots
+try:
+    with open("usual_slots.json", "r") as f:
+        routine_data = json.load(f)
+        usual_slots = routine_data.get("usual_slots", [])
+except FileNotFoundError:
+    print("File not found")
+    usual_slots = []
+
+print(f"\nPatterns detected : {usual_slots}")
+
+if not usual_slots:
+    print("Any patterns detected")
+    exit(0)
+
+
 

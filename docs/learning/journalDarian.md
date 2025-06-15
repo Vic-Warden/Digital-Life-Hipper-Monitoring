@@ -261,4 +261,8 @@ Use JavaScript to filter out night-time hours from an array of activity timestam
 1. **Create Mock Data:**
    - Built a sample array of activity timestamps using JavaScript `Date` objects or formatted strings (e.g., `'2025-06-15T23:00:00'`).
 
+2. **Capture User Time Input:**
+   - Used `<input type="time">` in HTML for selecting start and end times.
+   - Retrieved input values using `document.getElementById().value`.
+
    

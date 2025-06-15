@@ -265,4 +265,11 @@ Use JavaScript to filter out night-time hours from an array of activity timestam
    - Used `<input type="time">` in HTML for selecting start and end times.
    - Retrieved input values using `document.getElementById().value`.
 
-   
+3. **Convert and Compare Times:**
+   - Parsed time strings into `Date` or `Date.getHours()` format.
+   - Handled edge cases where the range spans midnight (e.g., 10 PM to 6 AM).
+   - Implemented logic to identify whether a given timestamp falls *within* or *outside* the night-time range.
+
+4. **Filter Logic:**
+   - Created a `filterActiveTime(data, startTime, endTime)` function.
+   - Returned only entries that fall *outside* the defined night-time period.

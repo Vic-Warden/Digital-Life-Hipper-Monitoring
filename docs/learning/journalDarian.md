@@ -199,3 +199,11 @@ This learning story helped me understand how JavaScript brings dynamics to stati
 ## Summary
 
 This exercise strengthened my ability to build interactive, user-responsive web applications using JavaScript. I now have a working understanding of how data, events, and visual components work together in modern dashboards.
+
+## Learning story 8:
+
+
+
+## What I learned
+
+I learned how to use JavaScript to apply a user-selected time range (representing night-time) to filter out periods from activity data. This helped me understand how to work with time values in JavaScript, compare them correctly—even when crossing midnight—and use that logic to produce a filtered data set that reflects only relevant activity.

@@ -278,7 +278,6 @@ Use JavaScript to filter out night-time hours from an array of activity timestam
    - Ran the filter with different time ranges and mock data.
    - Printed the filtered results to the console to verify accuracy.
 
----
 
 ## Summary
 

@@ -156,3 +156,10 @@ const chartData = {
 - [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/WCAG21/quickref/)
 
 
+
+# Implementing Night-Time Inactivity Filter on the User Homepage
+
+##  What I Built
+I developed a dashboard feature that allows users to set a custom night-time inactive period on their homepage. This range is used to exclude those hours from inactivity metrics. If the user doesn’t set a time range, default tracking is used. I also integrated Chart.js to visualize activity and inactivity data.
+
+---

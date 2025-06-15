@@ -202,7 +202,7 @@ This exercise strengthened my ability to build interactive, user-responsive web 
 
 ## Learning story 8:
 
-
+As a student, I want to learn how to use JavaScript to define and apply a user-selected time range (night-time for sleeping) to filter out periods from inactivity data, so I can accurately reflect active time on the homepage. 
 
 ## What I learned
 

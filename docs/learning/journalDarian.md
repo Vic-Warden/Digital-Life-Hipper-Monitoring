@@ -204,4 +204,6 @@ This exercise strengthened my ability to build interactive, user-responsive web 
 
 As a student, I want to learn how to build an interactive time picker in HTML, so that users can customize their night-time period directly on the web interface.
 
-## What
+## What I learned
+
+I learned how to create an interactive time picker using HTML and JavaScript to allow users to define their custom night-time period. This enables dynamic configuration of excluded time ranges, supporting better control over inactivity tracking on the homepage.

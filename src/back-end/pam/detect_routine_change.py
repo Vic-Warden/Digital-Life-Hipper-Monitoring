@@ -82,7 +82,7 @@ alerts = []
 
 for slot_hour in usual_slots:
     if slot_hour not in pivot_df.columns:
-        print(f"⚠️ Le créneau {slot_hour}h n'existe pas dans les données.")
+        print(f"This hours {slot_hour}h don't exist in this data")
         continue
 
     # Retrieve the series of activities for this time slot

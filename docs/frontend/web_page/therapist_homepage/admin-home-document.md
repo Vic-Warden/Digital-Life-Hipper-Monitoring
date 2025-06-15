@@ -207,3 +207,17 @@ In `index.html`, I added the Chart.js CDN to the `<head>` so the dashboard can r
 - Displayed success and validation messages for user interactions.
 - Used CSS animations for modals and notifications.
 - Built progress bars and circular indicators to show goal completion.
+
+## Summary
+
+By completing this feature, I learned how to:
+- Use `<input type="time">` with JavaScript to capture and validate time ranges.
+- Handle 24-hour time logic in JavaScript (including cross-midnight ranges).
+- Store user settings locally with `localStorage`.
+- Exclude specific time ranges from metrics calculation.
+- Integrate and configure Chart.js in a multi-metric dashboard.
+- Improve user experience through feedback, validation, and visual indicators.
+
+This setup now provides a smooth and intuitive user experience for controlling night-time exclusion in activity data.
+
+---

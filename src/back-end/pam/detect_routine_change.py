@@ -75,4 +75,51 @@ pivot_df = pivot_df.reindex(sorted(pivot_df.columns), axis=1)
 print("\nMatrice generated :")
 print(pivot_df)
 
+# Detect if the patient is inactive during 3 days in a row
+ALERT_THRESHOLD_DAYS = 3  
+
+alerts = []
+
+for slot_hour in usual_slots:
+    if slot_hour not in pivot_df.columns:
+        print(f"⚠️ Le créneau {slot_hour}h n'existe pas dans les données.")
+        continue
+
+    # Retrieve the series of activities for this time slot
+    activity_series = pivot_df[slot_hour]
+
+    # Mark each day as active or inactive
+    is_active = activity_series > 0
+
+    # Detecting sequences of inactive days
+    inactive_streak = []
+    current_streak = []
+
+    for date, active in is_active.items():
+        if not active:
+            current_streak.append(str(date))
+        else:
+            if len(current_streak) >= ALERT_THRESHOLD_DAYS:
+                inactive_streak.append(current_streak)
+            current_streak = []
+
+    # Checks one last time at the end of the series
+    if len(current_streak) >= ALERT_THRESHOLD_DAYS:
+        inactive_streak.append(current_streak)
+
+    # Add to report if there are alerts
+    for streak in inactive_streak:
+        alerts.append({
+            "hour_slot": slot_hour,
+            "inactive_days": streak
+        })
+
+# Print result
+print("\nResults of routine breaks :")
+if alerts:
+    print(json.dumps(alerts, indent=2))
+else:
+    print("Any routine breaks")
+
+
 connection.close()

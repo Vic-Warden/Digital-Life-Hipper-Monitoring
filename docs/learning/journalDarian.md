@@ -282,3 +282,6 @@ Use JavaScript to filter out night-time hours from an array of activity timestam
 ## Summary
 
 By completing this learning story, I now know how to use JavaScript to compare time values, handle ranges that cross over midnight, and filter timestamped activity data accordingly. This logic is essential for excluding night-time hours from inactivity analytics and ensuring the homepage reflects meaningful, awake-time behavior.
+
+---
+

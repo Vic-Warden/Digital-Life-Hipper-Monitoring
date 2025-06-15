@@ -43,4 +43,23 @@ if not usual_slots:
     exit(0)
 
 
+# Load activity
+end_date = datetime.now().date()
+start_date = end_date - timedelta(days=7)
+
+query = """
+SELECT DATE(timestamp) AS date, HOUR(timestamp) AS hour, SUM(steps) AS total_steps
+FROM Data
+WHERE timestamp BETWEEN %s AND %s
+GROUP BY date, hour
+ORDER BY date, hour;
+"""
+cursor.execute(query, (start_date, end_date))
+rows = cursor.fetchall()
+df = pd.DataFrame(rows)
+
+if df.empty:
+    print("No result")
+    exit(0)
+
 

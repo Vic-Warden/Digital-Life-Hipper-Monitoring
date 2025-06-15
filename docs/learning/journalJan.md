@@ -40,6 +40,11 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 * Today Richard notified me about Docker no longer working. I was surprised because of course the last time I tested everything was working fine. So I cloned the main repository and to my surprise it indeed was no longer working. I had seen that Victor added a new component to the lib which is called "anomaly_detection". Unfortunately he didn't implement it in a way so that the .py module was recognizable for docker. I already notified him about this. Anyway, through a bit of help from `ChatGPT` I was able to notice this quickly. Then I also found a minor mistake in the database `init.sql` file which was causing the mysql service to spit out an error and not boot correctly. I fixed that too. Docker works now. 
 
+#276 As a student, I want to learn how to make sure the website automatically adopts changes, so that my team can develop without needing to reload the docker container.
+
+
+
+
 ## Journal
 
 ### 5/7/2025

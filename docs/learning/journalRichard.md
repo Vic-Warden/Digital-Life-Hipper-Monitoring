@@ -435,3 +435,18 @@ When i first wanted to run docker I found out that something was already running
 ### References
 - To find the command for seeing which ports are in use I used this website [Link to website](https://help.extensis.com/hc/en-us/articles/360010122594-Identifying-ports-in-use-on-macOS-and-Windows)
 - To find what was running on that port, so i could terminate it I used this website [Link to website](https://stackoverflow.com/questions/72369320/why-always-something-is-running-at-port-5000-on-my-mac)
+
+## Learning story 272
+as a student I want to learn how to refine my user stories, so I can get a higher grade for the review.
+
+### What I have learned
+I learned how to clearly define a user story by focusing on the user’s role, objective, and need. I also gained experience writing a complete description that includes design constraints and user experience expectations, such as responsiveness and consistent hamburger menu behavior across devices. Additionally, I learned that for simple UI components like a CSS-based navigation bar, manual testing in a local Docker environment is often sufficient, and that unit testing is only necessary when dynamic logic or complex interactivity is involved.
+
+**Here is the link to the refined user story**
+
+[Refined user story](https://gitlab.fdmci.hva.nl/IoT/2024-2025-semester-2/group-project/duuseedeewuu36/-/issues/163)
+
+### References 
+- I talked about how I could refine the user story for a better grade with my team members.
+
+**AI tools like ChatGPT were used for language refinement.**

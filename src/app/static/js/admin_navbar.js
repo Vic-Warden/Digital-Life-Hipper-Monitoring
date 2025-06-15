@@ -2,8 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbar = `
 <nav class="admin-navbar">
   <div class="nav-left"></div>
+ 
+   <div class="logo-container">
+    <div class="logo-line"></div>
+    <span class="hippertext">Hipper Therapeutics</span>
+    <div class="logo-line"></div>
+  </div>
 
-  <div class="nav-center">------ Hipper Therapeutics ------</div>
+<!--  <div class="nav-center">&#45;&#45;&#45;&#45;&#45;&#45; Hipper Therapeutics &#45;&#45;&#45;&#45;&#45;&#45;</div>-->
 
   <div class="dropdown nav-right">
     <button class="dropbtn" aria-label="Menu Toggle" id="menu-button">

@@ -310,3 +310,45 @@ pred_labels = clf.predict(X_new)
 - I learned that there is no real structure to which a user story must be made, since every teacher of the hva will grade it differently<br>
 
 - I learned that important learnings that were critical to making the work of the user story dont have to be documented so long as you can point to a personal learning story in which you have vaguely writen these down.<br>
+
+# As a student I want to learns how to make a Hipper Logo for the top bar
+
+I learned how to use css div classes and make use of flex in order to set attributes.<br>
+<br> I learned to use the div class as follows:<br>
+````js
+<div class="logo-container">
+    <div class="logo-line"></div>
+    <span class="hippertext">Hipper Therapeutics</span>
+    <div class="logo-line"></div>
+  </div>
+````
+
+<br>and I then learned to use the flex in order to give parameters to this:<br>
+````css
+.logo-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Julius Sans One', sans-serif;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 2px;
+  position: relative;
+  margin-left: 50px;
+}
+````
+
+<br>
+and I learned how to make lines with this.<br>
+I was struggling a lot at first and then I learned that I could just make a box of 1 pixel tall and it'd be a line.<br>
+
+````css
+.logo-line{
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px;
+  height: 1px;
+  background-color: black;
+}
+````

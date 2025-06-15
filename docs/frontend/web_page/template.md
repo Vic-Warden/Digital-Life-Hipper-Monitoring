@@ -67,10 +67,48 @@ Before making the code for the navbar there was a design made for the navbar in 
 ![therapistNavbar](/docs/assets/adminNavbar.png)
 
 ### navbar/admin_navbar.js
-In this file you will find all the html code for the injection of the navbar and function that are used for the functionality of the navbar.
+In this file you will find all the html code for the injection of the navbar and function that are used for the functionality of the navbar.<br>
+the navbar has the logo with a line, then HIPPER THERAPUTICS and then another line. these were made using css flex in a container class that was defined in navbar.js<br>
+<br>the container class in navbar looks like the following<br>
+````js
+   <div class="logo-container">
+    <div class="logo-line"></div>
+    <span class="hippertext">Hipper Therapeutics</span>
+    <div class="logo-line"></div>
+  </div>
+````
+<br>
+and the flex that is used for these divs works as follows:<br>
+<br>
+
+````css
+.logo-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Julius Sans One', sans-serif;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 2px;
+  position: relative;
+  margin-left: 50px;
+}
+
+.logo-line{
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px;
+  height: 1px;
+  background-color: black;
+}
+````
+<br>
+the logo exists of the name of the company ("Hipper Theraputics") and some lines before and after it<br>
 
 ### navbar/admin_navbar.css
-In this file you will find all the code for the styling of the navbar.
+In this file you will find all the code for the styling of the navbar.<br>
+the navbar of the admin pages works exactly the same.<br>
 
 ### Responsive 
 The links in the navbar will always be hidden under what is called "a hamburger icon" this will stay the same on phone and on desktop. The only thing that will be different is that the text in the center of the navbar will resize when visiting the page on a different device.

@@ -495,6 +495,11 @@ def detect_routine_disruption():
     return {"disruptions": disruptions}, 200
 
 
+@app.route('/routine-form')
+def routine_form():
+    return render_template('routine_form.html')
+
+
 
 # Start the Flask application
 if __name__ == "__main__":

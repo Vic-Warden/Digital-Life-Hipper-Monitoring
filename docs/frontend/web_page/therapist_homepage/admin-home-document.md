@@ -164,7 +164,7 @@ I developed a dashboard feature that allows users to set a custom night-time ina
 
 ---
 
-##  Step-by-Step: How I Did It
+###  Step-by-Step: How I Did It
 
 ### 1. Set Up Project Structure
 ```

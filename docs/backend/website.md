@@ -16,6 +16,7 @@ This is a Flask web application that provides routes for users and admin access,
 * `/change-email`
 * `/admin/home`
 * `/admin/login`
+* `/api/routine-disruption`
 
 ---
 
@@ -410,7 +411,34 @@ def update_log(mac_address):
 
 Find functions used for implementation under [database.py](database.py.md).
 
-## 16. Running the App
+## 17. Routine Analysis & Anomaly Detection
+
+Detects if a patient has not been active in his usual time slots for a certain number of consecutive days
+
+**Méthode :** `POST`
+**Payload :**
+
+```json
+{
+  "patient_id": 12
+}
+```
+
+**Réponse :**
+
+```json
+{
+  "disruptions": [
+    {
+      "hour_slot": 10,
+      "inactive_days": ["2025-06-10", "2025-06-11", "2025-06-12"]
+    }
+  ]
+}
+```
+
+
+## 18. Running the App
 
 ```python
 if __name__ == "__main__":

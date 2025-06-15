@@ -72,7 +72,7 @@ pivot_df = df.pivot_table(
 
 pivot_df = pivot_df.reindex(sorted(pivot_df.columns), axis=1)
 
-print("\n📊 Matrice activité (date x heure) :")
+print("\nMatrice generated :")
 print(pivot_df)
 
 connection.close()

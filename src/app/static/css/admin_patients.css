@@ -24,20 +24,48 @@ body {
 }
 
 /* Card styling */
-.card {
-  border: 2px solid #74a6d4;
-  border-radius: 6px;
+.patient-card {
+  border: 3px solid #74a6d4;
+  border-radius: 10px;
   padding: 20px;
-  width: 250px;
+  width: 350px;
   box-sizing: border-box;
   background: white;
 }
 
-.card h3 {
+.addPatient-card {
+  border: 3px solid #74a6d4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 500px;
+  box-sizing: border-box;
+  background: white;
+}
+
+
+.patient-card h3 {
   text-align: center;
   font-weight: bold;
   margin-bottom: 20px;
   font-size: 1.5em;
+}
+
+.addPatient-card h3 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+}
+
+#search {
+	width: 100%;
+	border: 1px solid #74a6d4;
+  border-radius: 6px;
+	min-height: 30px;
+  background-color: #fff;
+  box-sizing: border-box;
+	padding: 10px;
+	margin-bottom: 10px;
 }
 
 label {
@@ -51,7 +79,7 @@ label {
   border: 1px solid #74a6d4;
   border-radius: 6px;
   padding: 8px;
-  min-height: 30px;
+  min-height: 50px;
   background-color: #fff;
   box-sizing: border-box;
   width: 100%;
@@ -59,37 +87,48 @@ label {
   word-break: break-word;
 }
 
-.setting {
-  margin-bottom: 20px;
-}
+  .login-box {
+    padding: 60px;
+  }
+  
+  .login-box h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #000;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  form input[type="email"],
+  form input[type="password"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #74a6d4;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 450px;
+  }
 
-.toggle-bar {
-  display: flex;
-  height: 32px;
-  border: 1px solid #74a6d4;
-  border-radius: 4px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 180px;
-}
+  button {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #74a6d4;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 450px;
+  }
 
-.half {
-  width: 50%;
-  height: 100%;
-  text-align: center;
-  cursor: pointer;
-  line-height: 32px;
-  font-size: 1em;
-}
-
-.light {
-  background: white;
-}
-
-.dark {
-  background: #87BAE8;
-  color: white;
-}
 
 /* ✅ Mobile-specific styles */
 @media (max-width: 768px) {
@@ -117,13 +156,4 @@ label {
     font-size: 0.95em;
   }
 
-  .toggle-bar {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .half {
-    font-size: 0.95em;
-    line-height: 32px;
-  }
 }

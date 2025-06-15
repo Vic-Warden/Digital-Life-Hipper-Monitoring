@@ -348,6 +348,53 @@ This taught me how to:
 
     Handle real-world errors in networked applications.
 
+## Learning story
+As a student, I want to learn how to track and update timestamps of data collection in a database, so I can monitor the freshness and reliability of the data.
+
+### Learned
+Originally, I didn’t track when data was last pulled from each device — so if something went wrong or the server restarted, I had no way to know what was up-to-date and what wasn’t. This caused confusion, especially with multiple sensors, and made debugging harder.
+
+To fix this:
+
+    I added a last_activity_pull and last_day_data_pull column in the database for each device.
+
+    I created two endpoints in the Flask API: one to update timestamps and one to retrieve them.
+
+    I made sure the timestamps were timezone-aware (Europe/Amsterdam) and stored in a consistent format (ISO 8601).
+
+Example code:
+```python
+@app.route('/log/<mac_address>', methods=['POST'])
+def update_log(mac_address):
+    mac = mac_address.upper()
+    data = request.get_json()
+
+    activity = data.get("activity")
+    day_data = data.get("day_data")
+
+    success = db.update_log_timestamps(mac, activity, day_data)
+    return {"message": "Log updated"} if success else {"error": "Failed to update"}, 200
+```
+
+Using this, my system can:
+
+    Track exactly when each type of data was last pulled.
+
+    Help me detect inactive devices.
+
+    Provide a clear generalised way to have timestaped logs.
+
+This taught me how to:
+
+    Design and use metadata in a database schema.
+
+    Work with timestamps and timezones reliably.
+
+    Combine backend logic and database updates into a full data pipeline.
+
+Using this I can now use multiple basestations in the same area, because they all have the same generalised location where they check wat time and date data was pulled for the last time from a specific sensor. 
+This implementation ensures there is no double data collected from a single sensor.
+
 <br /> <br />
 
 # Sources

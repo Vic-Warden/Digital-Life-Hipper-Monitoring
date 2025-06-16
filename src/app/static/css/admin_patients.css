@@ -67,6 +67,15 @@ body {
   font-size: 1.5em;
 }
 
+.display-box {
+  max-height: 310px; /* Adjust this height depending on your card size */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 5px; /* Optional: give room for scrollbar */
+}
+
 #search {
 	width: 100%;
 	border: 1px solid #74a6d4;
@@ -76,6 +85,15 @@ body {
   box-sizing: border-box;
 	padding: 10px;
 	margin-bottom: 10px;
+}
+
+.patient-card-box {
+  border: 3px solid #74a6d4;
+  border-radius: 10px;
+  padding: 20px;
+  background: white;
+  width: 100%; /* or set a fixed width */
+  box-sizing: border-box;
 }
 
 label {
@@ -96,6 +114,7 @@ form label {
   font-family: Arial, sans-serif;
 }
 
+form input[type="text"],
 form input[type="email"],
 form input[type="password"] {
   padding: 10px;
@@ -106,7 +125,7 @@ form input[type="password"] {
   width: 450px;
 }
 
-button {
+.patient-button {
   padding: 10px;
   background-color: white;
   border: 2px solid #74a6d4;
@@ -118,7 +137,7 @@ button {
 }
 
 button:hover {
-  background-color: #f0f8ff;
+  background-color: #74a6d4;
 }
 
 

@@ -127,6 +127,25 @@ def settings():
 
     return redirect("/login")
 
+# Handle the admin settings
+
+@app.route('/admin/settings', methods=['GET', 'POST'])
+def admin_settings():
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+
+        if request.method == "POST":
+            # TODO: Add logic for handling settings updates
+            #  - Change email
+            #  - Change password etc...
+            pass
+
+        return render_template("admin_settings.html")
+
+    return redirect("/admin/login")
+
+
+
 # Handle the admin login page
 
 

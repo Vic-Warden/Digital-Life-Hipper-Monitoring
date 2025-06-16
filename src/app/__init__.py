@@ -1,18 +1,22 @@
 import os  # Import os for .env centralized settings
 # Import Flask
-from flask import Flask, render_template, redirect, request, session, make_response
+from flask import Flask, render_template, redirect, request, session, make_response, jsonify
 from database import Database
 import json
+from dotenv import load_dotenv
+
 
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
 
-from .anomaly_detection import calculate_median, detect_anomalies
+from anomaly_detection import calculate_median, detect_anomalies
 
 # Create the app Flask
 app = Flask(__name__)
 
 # Database instance
+
+load_dotenv()  # This will look for a .env file in the current directory
 
 db = Database(
     host=os.getenv('MYSQL_HOST'),
@@ -97,6 +101,7 @@ def logout():
 
 # Profile' route with GET & POST
 
+
 @app.route('/admin/logout', methods=['GET'])
 def admin_logout():
     # Clear the session
@@ -105,6 +110,7 @@ def admin_logout():
 
     # Redirection to the login if logout
     return redirect('/admin/login')
+
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -387,8 +393,8 @@ def upload_pam_data():
     # TODO: Change this to auth_token
     # TODO: Change this to auth_token
     # TODO: Change this to auth_token
-    token = request.cookies.get('auth_token')
-    valid, reason = db.verify_token(token)
+    token = request.cookies.get('_token')
+    valid, reason = db.verify_auth_token(token)
 
     if not valid:
         return {"error": reason}, 401
@@ -415,30 +421,62 @@ def upload_pam_data():
     return {"message": "PAM data uploaded successfully"}, 200
 
 
-@app.route('/api/last-update-period', methods=['GET'])
-def last_update_period():
-    """
-    API endpoint to get the last update period for a patient.
-    Returns a JSON response with the last update period and status code.
-    """
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
+# @app.route('/api/last-update-period', methods=['GET'])
+# def last_update_period():
+#     """
+#     API endpoint to get the last update period for a patient.
+#     Returns a JSON response with the last update period and status code.
+#     """
+#     # TODO: Change this to auth_token
+#     # TODO: Change this to auth_token
+#     # TODO: Change this to auth_token
+#     cookie = request.cookies.get('auth_cookie')
+#     valid, user_data = db.verify_cookie(cookie)
 
-    if not valid:
-        return {"error": "Invalid or expired cookie"}, 401
+#     if not valid:
+#         return {"error": "Invalid or expired cookie"}, 401
 
-    device_mac_addr = request.args.get('device_mac_addr')
-    if not device_mac_addr:
-        return {"error": "Device MAC address is required"}, 400
+#     device_mac_addr = request.args.get('device_mac_addr')
+#     if not device_mac_addr:
+#         return {"error": "Device MAC address is required"}, 400
 
-    last_update = db.get_last_update_period(device_mac_addr)
-    if not last_update:
-        return {"error": "No updates found for this patient"}, 404
+#     last_update = db.get_last_update_period(device_mac_addr)
+#     if not last_update:
+#         return {"error": "No updates found for this patient"}, 404
 
-    return {"last_update": last_update}, 200
+#     return {"last_update": last_update}, 200
+
+@app.route('/log/<mac_address>', methods=['GET'])
+def get_log(mac_address):
+    mac = mac_address.upper()
+    log_entry = db.get_log_for_mac(mac)
+    if not log_entry:
+        return jsonify({}), 200
+    return jsonify({
+        "last_activity_pull": log_entry.get("last_activity_pull"),
+        "last_day_data_pull": log_entry.get("last_day_data_pull")
+    }), 200
+
+
+@app.route('/log/<mac_address>', methods=['POST'])
+def update_log(mac_address):
+    mac = mac_address.upper()
+
+    if not request.is_json:
+        return {"error": "Expected JSON payload"}, 400
+    data = request.get_json()
+
+    activity = data.get("activity")
+    day_data = data.get("day_data")
+
+    if activity is None or day_data is None:
+        return {"error": "Missing 'activity' or 'day_data' fields"}, 400
+
+    success = db.update_log_timestamps(mac, activity, day_data)
+    if not success:
+        return {"error": "Failed to update log"}, 500
+
+    return {"message": "Log updated"}, 200
 
 
 # Start the Flask application

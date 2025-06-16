@@ -312,6 +312,7 @@ class Database:
             JOIN Patient_has_Therapist AS pt ON p.id = pt.patient_id
             WHERE pt.therapist_id = %s;
         """
+        # TODO: Get terapist id from cookie
         params = (therapeut_id,)
         result = self.do_query(query, params, fetch=True)
 

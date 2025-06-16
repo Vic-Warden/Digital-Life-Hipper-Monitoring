@@ -139,6 +139,9 @@ def admin_settings():
             #  - Change email
             #  - Change password etc...
             pass
+        if db.is_super_user(cookie):
+            return render_template("super/admin_settings.html")
+
 
         return render_template("admin_settings.html")
 

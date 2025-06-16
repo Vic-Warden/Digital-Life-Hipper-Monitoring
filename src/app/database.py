@@ -429,3 +429,17 @@ class Database:
             return []
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+
+    def is_super_user(self, cookie: int) -> bool:
+        """
+        ### Check whether the given user is a super‑user.
+
+        Returns True if `is_super_user` = 1, False if 0 or user not found.
+        """
+        query = "SELECT is_superuser FROM `User` WHERE cookies = %s;"
+        result = self.do_query(query, (cookie,), fetch=True)
+        if not result:
+            # no such user
+            return False
+        # result[0][0] will be 0 or 1
+        return bool(result[0][0])

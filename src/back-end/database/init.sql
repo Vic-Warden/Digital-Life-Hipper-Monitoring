@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `cookies` VARCHAR(256) NULL,
   `is_therapist` INT NOT NULL,
   `fk_therapist_id` INT NULL,
-  `is_super_user` TINYINT NOT NULL DEFAULT 0,
+  `is_superuser` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_therapist_id_idx` (`fk_therapist_id` ASC) VISIBLE,
   CONSTRAINT `fk_therapist_id`
@@ -149,6 +149,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (1, 'hans');
+INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (2, 'super');
 
 COMMIT;
 
@@ -160,6 +161,8 @@ START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL, 0, NULL);
 INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`,`is_superuser`) VALUES (3, 'super', 'super@gmail.com', 'super', NULL, 1, 1, 1);
+
 
 COMMIT;
 

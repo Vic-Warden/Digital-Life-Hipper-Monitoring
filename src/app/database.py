@@ -398,6 +398,19 @@ class Database:
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
 
+    def device_id_from_patient_id(self, patient_id: int) -> int:
+        """
+        Get the device ID associated with a patient ID.
+        Returns the device ID or None if not found.
+        """
+        query = "SELECT device_id FROM Device WHERE patient_id_device = %s;"
+        params = (patient_id,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0]
+        return None
+
     def upload_pam_data(self, patient_id: str, pam_data: list):
         """
         Upload PAM data for a patient.
@@ -409,11 +422,13 @@ class Database:
         - 'zone'
         - 'data_label'
         """
+        device_id = self.device_id_from_patient_id(patient_id)
+
         if not pam_data:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+            INSERT INTO Data (patient_id_device, timestamp, steps, PAM_score, zone, data_label)
             VALUES (%s, %s, %s, %s, %s, %s);
         """
         params = [

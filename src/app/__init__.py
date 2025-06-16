@@ -150,20 +150,45 @@ def admin_patient_list():
 
     if not valid:
         return redirect('/admin/login')
+    
+    therapist_id = db.therapist_id_from_cookie(cookie)
+    print(therapist_id)
 
-    # Replace this with your database call eventually
-    patient_details = [
-        {"name": "John Doe", "email": "john.doe@gmail.com"},
-        {"name": "Jane Smith", "email": "jane.smith@gmail.com"},
-        {"name": "Alice Johnson", "email": "alice.johnson@example.com"}
-    ]
+    # Extended list with 6 patients
+    patient_details = db.get_patients(therapist_id)
+    print(patient_details)
 
     if not patient_details:
         return "Patients not found", 404
 
-    # Pass the list to the template
     return render_template('admin_patients.html', patients=patient_details)
 
+
+@app.route('/api/add-patient', methods=['POST'])
+def admin_add_patient():
+    # Get data from form
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Check if user is authorized to add patient
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Validate required data
+    if not all([name, email, password, cookie]):
+        return "Missing required fields", 400
+
+    # Call DB logic to insert the patient
+    success = db.add_patient(name, email, password, cookie)
+
+    if not success:
+        return "Failed to add patient", 400
+
+    return redirect('/admin/patients')
 
 
 @app.route('/admin/patients/<patient_id>', methods=['GET'])
@@ -182,7 +207,7 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     # Render the patient details page
-    return render_template('admin_patient_details.html', patient=patient_details)
+    return render_template('admin_home.html', patient=patient_details)
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])

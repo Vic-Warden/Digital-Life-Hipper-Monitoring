@@ -54,7 +54,7 @@ def home():
             calculated_data = db.calculate_average_data(patient_data)
             print(calculated_data)
             
-            return render_template('home.html', patient=patient_data)
+            return render_template('home.html', patient=patient_data, calculated=calculated_data)
         else:
             return redirect('/login')
     else:

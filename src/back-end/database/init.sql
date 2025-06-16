@@ -175,7 +175,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_data_pull`, `device_mac_addr`) VALUES (1, 1, '09234', 1, 'auth_token', NULL, '00:00:00:00:00:00');
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_day_data_pull`, `last_activity_pull`, `device_mac_addr`) VALUES (1, 1, '90242', 1, '1234567890', NOW(), NOW(), 'C1:08:00:01:23:B0');
 
 COMMIT;
 

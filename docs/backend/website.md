@@ -370,7 +370,18 @@ def logout():
     return redirect('/admin/login')
 ```
 
-## 15. Log date time
+## 15. Token Authentication
+
+Checks the authentication token of the base station for communication with the api.
+
+```python
+token = request.cookies.get('auth_token')
+valid, reason = db.verify_auth_token(token)
+if not valid:
+    return {"error": reason}, 401
+```
+
+## 16. Log date time
 update and get last date and time when data was pulled form sensor by looking at the mac address
 ### Get date time
 ```python
@@ -386,8 +397,8 @@ def get_log(mac_address):
     }), 200
 ```
 
-### Update date time
-```
+### 17. Update date time
+```python
 @app.route('/log/<mac_address>', methods=['POST'])
 def update_log(mac_address):
     mac = mac_address.upper()
@@ -411,7 +422,7 @@ def update_log(mac_address):
 
 Find functions used for implementation under [database.py](database.py.md).
 
-## 17. Routine Analysis & Anomaly Detection
+## 18. Routine Analysis & Anomaly Detection
 
 Detects if a patient has not been active in his usual time slots for a certain number of consecutive days
 
@@ -438,7 +449,7 @@ Detects if a patient has not been active in his usual time slots for a certain n
 ```
 
 
-## 18. Running the App
+## 19. Running the App
 
 ```python
 if __name__ == "__main__":

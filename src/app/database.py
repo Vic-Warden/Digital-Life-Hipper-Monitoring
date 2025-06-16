@@ -313,6 +313,7 @@ class Database:
             JOIN Patient_has_Therapist AS pt ON p.id = pt.patient_id
             WHERE pt.therapist_id = %s;
         """
+        # TODO: Get terapist id from cookie
         params = (therapeut_id,)
         result = self.do_query(query, params, fetch=True)
 
@@ -366,7 +367,7 @@ class Database:
     #     params = (current_time, device_mac_addr)
     #     result = self.do_query(query, params, fetch=False)
     #     return result is not None
-    
+
     def get_log_for_mac(self, mac_address):
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
         params = (mac_address,)
@@ -378,7 +379,6 @@ class Database:
                 "last_day_data_pull": row[1].isoformat() if row[1] else None,
             }
         return None
-
 
     def update_log_timestamps(self, mac_address, update_activity, update_day_data=False):
         now = datetime.now(ZoneInfo("Europe/Amsterdam")).replace(tzinfo=None)
@@ -404,7 +404,7 @@ class Database:
             WHERE device_mac_addr = %s
         """
         return self.do_query(query, tuple(params), fetch=False) is not None
-    
+
     def get_usual_active_slots(self, patient_id: int, days: int = 7) -> list[dict]:
         """
         Display hours when the patient don't do activity

@@ -330,9 +330,10 @@ def get_patient_data():
 
 @app.route('/api/detect-anomalies', methods=['POST'])
 def detect_anomalies_endpoint():
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return {"error": reason}, 401
 
     data = request.get_json()
 
@@ -390,12 +391,8 @@ def upload_pam_data():
     API endpoint to upload PAM data.
     Returns a JSON response with success status and status code.
     """
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
     token = request.cookies.get('auth_token')
-    valid, reason = db.verify_token(token)
-
+    valid, reason = db.verify_auth_token(token)
     if not valid:
         return {"error": reason}, 401
 
@@ -414,9 +411,6 @@ def upload_pam_data():
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500
-
-    # Set the last update period for the patient
-    db.set_last_update_period(device_mac_addr)
 
     return {"message": "PAM data uploaded successfully"}, 200
 
@@ -456,7 +450,8 @@ def get_log(mac_address):
         "last_activity_pull": log_entry.get("last_activity_pull"),
         "last_day_data_pull": log_entry.get("last_day_data_pull")
     }), 200
-    
+
+
 @app.route('/log/<mac_address>', methods=['POST'])
 def update_log(mac_address):
     mac = mac_address.upper()
@@ -498,7 +493,6 @@ def detect_routine_disruption():
 @app.route('/routine-form')
 def routine_form():
     return render_template('routine_form.html')
-
 
 
 # Start the Flask application

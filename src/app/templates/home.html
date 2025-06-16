@@ -8,14 +8,11 @@
     <link rel="stylesheet" href="../static/css/navbar.css" />
     <link rel="stylesheet" href="../static/css/home.css" />
     <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
-
-
 </head>
 
 <body>
 
     <div id="navbar"></div>
-
 
     <div class="container">
         <div class="card">
@@ -23,7 +20,6 @@
                 <div class="mood-section">
                     <div class="mood-emoji">😊</div>
                     <div class="activity-title">Raymond's Daily Activity</div>
-
                 </div>
 
                 <div class="activity-item">
@@ -95,122 +91,413 @@
             </div>
         </div>
 
-<div class="card chart-section">
-    <div class="chart-header">
-        <div class="chart-title">Historic Activity</div>
-        <div class="chart-toggle">
-            <button class="toggle-btn active">Hourly</button>
-            <button class="toggle-btn">Daily</button>
-            <button class="toggle-btn">Weekly</button>
-            <button class="toggle-btn">Monthly</button>
+        <div class="card chart-section">
+            <div class="chart-header">
+                <div class="chart-title">Historic Activity</div>
+                <div class="chart-toggle">
+                    <button class="toggle-btn active" onclick="showChart('hourly')">Hourly</button>
+                    <button class="toggle-btn" onclick="showChart('daily')">Daily</button>
+                    <button class="toggle-btn" onclick="showChart('weekly')">Weekly</button>
+                    <button class="toggle-btn" onclick="showChart('monthly')">Monthly</button>
+                </div>
+            </div>
+
+            <!-- Hourly Chart (Past 12 hours) -->
+            <div class="chart-container" id="hourly-chart">
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 25px;" data-value="25">
+                            <div class="bar-value">25</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 15px;" data-value="15">
+                            <div class="bar-value">15</div>
+                        </div>
+                    </div>
+                    <div class="day-label">12h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 35px;" data-value="35">
+                            <div class="bar-value">35</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 28px;" data-value="28">
+                            <div class="bar-value">28</div>
+                        </div>
+                    </div>
+                    <div class="day-label">11h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 45px;" data-value="45">
+                            <div class="bar-value">45</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 32px;" data-value="32">
+                            <div class="bar-value">32</div>
+                        </div>
+                    </div>
+                    <div class="day-label">10h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 75px;" data-value="75">
+                            <div class="bar-value">75</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 55px;" data-value="55">
+                            <div class="bar-value">55</div>
+                        </div>
+                    </div>
+                    <div class="day-label">9h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 95px;" data-value="95">
+                            <div class="bar-value">95</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 70px;" data-value="70">
+                            <div class="bar-value">70</div>
+                        </div>
+                    </div>
+                    <div class="day-label">8h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 120px;" data-value="120">
+                            <div class="bar-value">120</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 85px;" data-value="85">
+                            <div class="bar-value">85</div>
+                        </div>
+                    </div>
+                    <div class="day-label">7h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 110px;" data-value="110">
+                            <div class="bar-value">110</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 90px;" data-value="90">
+                            <div class="bar-value">90</div>
+                        </div>
+                    </div>
+                    <div class="day-label">6h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 85px;" data-value="85">
+                            <div class="bar-value">85</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 65px;" data-value="65">
+                            <div class="bar-value">65</div>
+                        </div>
+                    </div>
+                    <div class="day-label">5h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 100px;" data-value="100">
+                            <div class="bar-value">100</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 75px;" data-value="75">
+                            <div class="bar-value">75</div>
+                        </div>
+                    </div>
+                    <div class="day-label">4h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 65px;" data-value="65">
+                            <div class="bar-value">65</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 45px;" data-value="45">
+                            <div class="bar-value">45</div>
+                        </div>
+                    </div>
+                    <div class="day-label">3h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 80px;" data-value="80">
+                            <div class="bar-value">80</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 60px;" data-value="60">
+                            <div class="bar-value">60</div>
+                        </div>
+                    </div>
+                    <div class="day-label">2h ago</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 55px;" data-value="55">
+                            <div class="bar-value">55</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 40px;" data-value="40">
+                            <div class="bar-value">40</div>
+                        </div>
+                    </div>
+                    <div class="day-label">1h ago</div>
+                </div>
+            </div>
+
+            <!-- Daily Chart (Past 7 days) -->
+            <div class="chart-container" id="daily-chart" style="display: none;">
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 65px;" data-value="65">
+                            <div class="bar-value">65</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 55px;" data-value="55">
+                            <div class="bar-value">55</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 1</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 58px;" data-value="58">
+                            <div class="bar-value">58</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 48px;" data-value="48">
+                            <div class="bar-value">48</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 2</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 90px;" data-value="90">
+                            <div class="bar-value">90</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 40px;" data-value="40">
+                            <div class="bar-value">40</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 3</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 87px;" data-value="87">
+                            <div class="bar-value">87</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 78px;" data-value="78">
+                            <div class="bar-value">78</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 4</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 110px;" data-value="110">
+                            <div class="bar-value">110</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 95px;" data-value="95">
+                            <div class="bar-value">95</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 5</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 54px;" data-value="54">
+                            <div class="bar-value">54</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 35px;" data-value="35">
+                            <div class="bar-value">35</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 6</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 140px;" data-value="140">
+                            <div class="bar-value">140</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 105px;" data-value="105">
+                            <div class="bar-value">105</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Day 7</div>
+                </div>
+            </div>
+
+            <!-- Weekly Chart (Past 6 weeks) -->
+            <div class="chart-container" id="weekly-chart" style="display: none;">
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 120px;" data-value="380">
+                            <div class="bar-value">380</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 95px;" data-value="285">
+                            <div class="bar-value">285</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Week 1</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 105px;" data-value="420">
+                            <div class="bar-value">420</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 85px;" data-value="310">
+                            <div class="bar-value">310</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Week 2</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 135px;" data-value="465">
+                            <div class="bar-value">465</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 110px;" data-value="350">
+                            <div class="bar-value">350</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Week 3</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 90px;" data-value="345">
+                            <div class="bar-value">345</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 70px;" data-value="245">
+                            <div class="bar-value">245</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Week 4</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 115px;" data-value="405">
+                            <div class="bar-value">405</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 95px;" data-value="295">
+                            <div class="bar-value">295</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Week 5</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 125px;" data-value="445">
+                            <div class="bar-value">445</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 100px;" data-value="325">
+                            <div class="bar-value">325</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Week 6</div>
+                </div>
+            </div>
+
+            <!-- Monthly Chart (Past 6 months) -->
+            <div class="chart-container" id="monthly-chart" style="display: none;">
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 110px;" data-value="1650">
+                            <div class="bar-value">1650</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 85px;" data-value="1240">
+                            <div class="bar-value">1240</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Jan</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 125px;" data-value="1820">
+                            <div class="bar-value">1820</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 95px;" data-value="1380">
+                            <div class="bar-value">1380</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Feb</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 140px;" data-value="1950">
+                            <div class="bar-value">1950</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 110px;" data-value="1520">
+                            <div class="bar-value">1520</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Mar</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 95px;" data-value="1485">
+                            <div class="bar-value">1485</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 75px;" data-value="1120">
+                            <div class="bar-value">1120</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Apr</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 130px;" data-value="1780">
+                            <div class="bar-value">1780</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 100px;" data-value="1350">
+                            <div class="bar-value">1350</div>
+                        </div>
+                    </div>
+                    <div class="day-label">May</div>
+                </div>
+
+                <div class="chart-day">
+                    <div class="bars">
+                        <div class="bar steps-bar" style="height: 115px;" data-value="1670">
+                            <div class="bar-value">1670</div>
+                        </div>
+                        <div class="bar pam-bar" style="height: 90px;" data-value="1285">
+                            <div class="bar-value">1285</div>
+                        </div>
+                    </div>
+                    <div class="day-label">Jun</div>
+                </div>
+            </div>
+
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-steps"></div>
+                    <span>Steps</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-pam"></div>
+                    <span>PAM</span>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="chart-container">
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 65px;" data-value="65">
-                    <div class="bar-value">65</div>
-                </div>
-                <div class="bar pam-bar" style="height: 55px;" data-value="55">
-                    <div class="bar-value">55</div>
-                </div>
-            </div>
-            <div class="day-label">Day 1</div>
-        </div>
-
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 58px;" data-value="58">
-                    <div class="bar-value">58</div>
-                </div>
-                <div class="bar pam-bar" style="height: 48px;" data-value="48">
-                    <div class="bar-value">48</div>
-                </div>
-            </div>
-            <div class="day-label">Day 2</div>
-        </div>
-
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 90px;" data-value="90">
-                    <div class="bar-value">90</div>
-                </div>
-                <div class="bar pam-bar" style="height: 40px;" data-value="40">
-                    <div class="bar-value">40</div>
-                </div>
-            </div>
-            <div class="day-label">Day 3</div>
-        </div>
-
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 87px;" data-value="87">
-                    <div class="bar-value">87</div>
-                </div>
-                <div class="bar pam-bar" style="height: 78px;" data-value="78">
-                    <div class="bar-value">78</div>
-                </div>
-            </div>
-            <div class="day-label">Day 4</div>
-        </div>
-
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 110px;" data-value="110">
-                    <div class="bar-value">110</div>
-                </div>
-                <div class="bar pam-bar" style="height: 95px;" data-value="95">
-                    <div class="bar-value">95</div>
-                </div>
-            </div>
-            <div class="day-label">Day 5</div>
-        </div>
-
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 54px;" data-value="54">
-                    <div class="bar-value">54</div>
-                </div>
-                <div class="bar pam-bar" style="height: 35px;" data-value="35">
-                    <div class="bar-value">35</div>
-                </div>
-            </div>
-            <div class="day-label">Day 6</div>
-        </div>
-
-        <div class="chart-day">
-            <div class="activity-label">Activity</div>
-            <div class="bars">
-                <div class="bar steps-bar" style="height: 140px;" data-value="140">
-                    <div class="bar-value">140</div>
-                </div>
-                <div class="bar pam-bar" style="height: 105px;" data-value="105">
-                    <div class="bar-value">105</div>
-                </div>
-            </div>
-            <div class="day-label">Day 7</div>
-        </div>
-    </div>
-
-    <div class="chart-legend">
-        <div class="legend-item">
-            <div class="legend-color legend-steps"></div>
-            <span>Steps</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color legend-pam"></div>
-            <span>PAM</span>
-        </div>
-    </div>
-</div>
-
 
     <script src="../static/js/navbar.js"></script>
     <script src="../static/js/home.js"></script>

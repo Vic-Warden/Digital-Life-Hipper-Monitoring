@@ -47,12 +47,13 @@ def home():
         result = db.do_query(user_query, (cookie,))
 
         if result:
-            # Result returned a legitmate row containing the cookie
+            # Result returns a legitmate row containing the cookie
             device_id = result[0][0]  # result is a list of tuples
             data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
             patient_data = db.do_query(data_query, (device_id,))
-            print(patient_data)
-
+            calculated_data = db.calculate_average_data(patient_data)
+            print(calculated_data)
+            
             return render_template('home.html', patient=patient_data)
         else:
             return redirect('/login')

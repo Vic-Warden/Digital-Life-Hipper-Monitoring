@@ -428,11 +428,11 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (patient_id_device, timestamp, steps, PAM_score, zone, data_label)
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
             VALUES (%s, %s, %s, %s, %s, %s);
         """
         params = [
-            (data['device_id'], data['timestamp'], data['steps'],
+            (device_id, data['timestamp'], data['steps'],
              data['pam_score'], data['zone'], data['data_label'])
             for data in pam_data
         ]
@@ -447,3 +447,34 @@ class Database:
             return False
         finally:
             cursor.close()
+
+
+if __name__ == "__main__":
+    from dotenv import load_dotenv
+    load_dotenv()  # This will look for a .env file in the current directory
+
+    db = Database(
+        host=os.getenv('MYSQL_HOST'),
+        port=int(os.getenv('MYSQL_PORT')),
+        user=os.getenv('MYSQL_ROOT_USER'),
+        password=os.getenv('MYSQL_ROOT_PASSWORD'),
+        database=os.getenv('MYSQL_DATABASE')
+    )
+
+    from datetime import datetime, timedelta
+
+    base_time = datetime.strptime("2023-10-01 12:00:00", "%Y-%m-%d %H:%M:%S")
+
+    pam_data = [
+        {
+            "device_id": 1,
+            "timestamp": (base_time + timedelta(minutes=i)).strftime("%Y-%m-%d %H:%M:%S"),
+            "steps": 1000 + i * 10,
+            "pam_score": 5 + (i % 3),  # Cycles through 5, 6, 7
+            "zone": (i % 3),           # 0, 1, 2
+            "data_label": f"sample_{i}"
+        }
+        for i in range(10000)
+    ]
+
+    db.upload_pam_data(1, pam_data)

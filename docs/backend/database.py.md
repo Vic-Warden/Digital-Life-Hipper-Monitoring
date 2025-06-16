@@ -170,6 +170,29 @@ result = self.do_query(query, params, fetch=False)
 return result is not None and len(result[0][0]) > 0
 ```
 
+### API Token Authentication
+
+Verifies the authentication token and return the associated email if valid.
+
+`verify_auth_token(self, token: str) -> tuple[bool, str]`
+
+```python
+def verify_auth_token(self, token: str) -> tuple[bool, str]:
+    """
+    ### Verify the authentication token and return the associated email if valid.
+
+    Returns a tuple (True, email) if the token is valid,
+    or (False, "Invalid token") if it is not.
+    """
+    query = "SELECT patient_id_device FROM Device WHERE auth_token = %s;"
+    params = (token,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result[0]) > 0:
+        return (True, result[0][0])
+    return (False, "Invalid token")
+```
+
 ### Getting and setting time for sensor data
 2 functions are used to interact with the backend database for reading and updating log timestamps for each device, based on its MAC address.
 

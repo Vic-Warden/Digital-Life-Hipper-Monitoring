@@ -167,3 +167,26 @@ result = self.do_query(query, params, fetch=False)
 
 return result is not None and len(result[0][0]) > 0
 ```
+
+### API Token Authentication
+
+Verifies the authentication token and return the associated email if valid.
+
+`verify_auth_token(self, token: str) -> tuple[bool, str]`
+
+```python
+def verify_auth_token(self, token: str) -> tuple[bool, str]:
+    """
+    ### Verify the authentication token and return the associated email if valid.
+
+    Returns a tuple (True, email) if the token is valid,
+    or (False, "Invalid token") if it is not.
+    """
+    query = "SELECT patient_id_device FROM Device WHERE auth_token = %s;"
+    params = (token,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result[0]) > 0:
+        return (True, result[0][0])
+    return (False, "Invalid token")
+```

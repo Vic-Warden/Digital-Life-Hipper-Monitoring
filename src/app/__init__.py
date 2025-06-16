@@ -473,26 +473,26 @@ def update_log(mac_address):
     return {"message": "Log updated"}, 200
 
 
-@app.route('/api/routine-disruption', methods=['POST'])
-def detect_routine_disruption():
-    data = request.get_json()
-    patient_id = data.get("patient_id")
-
-    if not patient_id:
-        return {"error": "Missing patient_id"}, 400
-
-    usual_slots = db.get_usual_slots(patient_id)
-    if not usual_slots:
-        return {"disruptions": []}, 200
-
-    disruptions = db.get_disruptions(patient_id, usual_slots)
-
-    return {"disruptions": disruptions}, 200
-
-
-@app.route('/routine-form')
+@app.route('/routine-form', methods=['GET', 'POST'])
 def routine_form():
+    if request.method == 'POST':
+        data = request.get_json()
+        patient_id = data.get("patient_id")
+
+        if not patient_id:
+            return {"error": "Missing patient_id"}, 400
+
+        usual_slots = db.get_usual_active_slots(patient_id)
+        if not usual_slots:
+            return {"disruptions": []}, 200
+
+        disruptions = db.get_disruptions(patient_id, usual_slots)
+
+        return {"disruptions": disruptions}, 200
+
+    # Pour le GET, on renvoie juste la page HTML
     return render_template('routine_form.html')
+
 
 
 # Start the Flask application

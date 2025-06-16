@@ -15,7 +15,16 @@
     <div class="patient-card">
       <h3>Patients</h3>
       <input type="text" id="search" placeholder="Search patients by name..." />
-      <div id="patient-list" class="display-box"></div>
+      <div id="patient-list" class="display-box">
+        {% for patient in patients %}
+          <div class="patient-card-item" data-name="{{ patient.name | lower }}">
+            <div class="patient-card-box">
+              <strong>{{ patient.name }}</strong><br>
+              Email: {{ patient.email }}
+            </div>
+          </div>
+        {% endfor %}
+      </div> 
     </div>
     <div class="addPatient-card">
       <h3>Add Patient</h3>

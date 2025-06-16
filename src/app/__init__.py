@@ -330,9 +330,10 @@ def get_patient_data():
 
 @app.route('/api/detect-anomalies', methods=['POST'])
 def detect_anomalies_endpoint():
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return {"error": reason}, 401
 
     data = request.get_json()
 
@@ -390,12 +391,8 @@ def upload_pam_data():
     API endpoint to upload PAM data.
     Returns a JSON response with success status and status code.
     """
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    # TODO: Change this to auth_token
-    token = request.cookies.get('_token')
+    token = request.cookies.get('auth_token')
     valid, reason = db.verify_auth_token(token)
-
     if not valid:
         return {"error": reason}, 401
 
@@ -415,39 +412,16 @@ def upload_pam_data():
     if not success:
         return {"error": "Failed to upload PAM data"}, 500
 
-    # Set the last update period for the patient
-    db.set_last_update_period(device_mac_addr)
-
     return {"message": "PAM data uploaded successfully"}, 200
 
 
-# @app.route('/api/last-update-period', methods=['GET'])
-# def last_update_period():
-#     """
-#     API endpoint to get the last update period for a patient.
-#     Returns a JSON response with the last update period and status code.
-#     """
-#     # TODO: Change this to auth_token
-#     # TODO: Change this to auth_token
-#     # TODO: Change this to auth_token
-#     cookie = request.cookies.get('auth_cookie')
-#     valid, user_data = db.verify_cookie(cookie)
-
-#     if not valid:
-#         return {"error": "Invalid or expired cookie"}, 401
-
-#     device_mac_addr = request.args.get('device_mac_addr')
-#     if not device_mac_addr:
-#         return {"error": "Device MAC address is required"}, 400
-
-#     last_update = db.get_last_update_period(device_mac_addr)
-#     if not last_update:
-#         return {"error": "No updates found for this patient"}, 404
-
-#     return {"last_update": last_update}, 200
-
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return {"error": reason}, 401
+
     mac = mac_address.upper()
     log_entry = db.get_log_for_mac(mac)
     if not log_entry:
@@ -460,6 +434,11 @@ def get_log(mac_address):
 
 @app.route('/log/<mac_address>', methods=['POST'])
 def update_log(mac_address):
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return {"error": reason}, 401
+
     mac = mac_address.upper()
 
     if not request.is_json:

@@ -2,6 +2,7 @@ import os  # Import os for .env centralized settings
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
+from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -371,9 +372,12 @@ class Database:
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
         params = (mac_address,)
         result = self.do_query(query, params, fetch=True)
-
         if result and len(result) > 0:
-            return result[0][0]
+            row = result[0]
+            return {
+                "last_activity_pull": row[0].isoformat() if row[0] else None,
+                "last_day_data_pull": row[1].isoformat() if row[1] else None,
+            }
         return None
 
     def update_log_timestamps(self, mac_address, update_activity, update_day_data=False):
@@ -400,3 +404,28 @@ class Database:
             WHERE device_mac_addr = %s
         """
         return self.do_query(query, tuple(params), fetch=False) is not None
+
+    def get_usual_active_slots(self, patient_id: int, days: int = 7) -> list[dict]:
+        """
+        Display hours when the patient don't do activity
+        """
+        from datetime import datetime, timedelta
+
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days)
+
+        query = """
+            SELECT HOUR(timestamp) AS hour_slot, SUM(steps) AS total_steps
+            FROM Data
+            INNER JOIN Device ON Data.device_id = Device.id
+            WHERE Device.patient_id_device = %s
+            AND timestamp BETWEEN %s AND %s
+            GROUP BY hour_slot
+            ORDER BY hour_slot;
+        """
+        result = self.do_query(query, (patient_id, start_date, end_date))
+
+        if not result:
+            return []
+
+        return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]

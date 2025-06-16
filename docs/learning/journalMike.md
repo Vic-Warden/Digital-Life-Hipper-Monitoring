@@ -272,7 +272,7 @@ kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
 
 I learned how to use the joblib library in order to store a trained AI model.<br>
 ```python
-MODEL_PATH = 'decision_tree_model.joblib'
+MODEL_PATH = 'HipperLabeler.joblib'
 joblib.dump(best_tree, MODEL_PATH)
 print(f"Trained decision tree saved to '{MODEL_PATH}'")
 ```
@@ -280,7 +280,7 @@ print(f"Trained decision tree saved to '{MODEL_PATH}'")
 <br><br>And then I learned how to use joblib in order to then import the pre-trained model so that I can make predictions with it<br>
 
 ````python
-MODEL_PATH = 'decision_tree_model.joblib'
+MODEL_PATH = 'HipperLabeler.joblib'
 clf = joblib.load(MODEL_PATH)
 
 INPUT_CSV = './training_data/06_06_2025_device_2.csv' 
@@ -293,4 +293,62 @@ FEATURE_COLUMNS = clf.feature_names_in_.tolist() if hasattr(clf, 'feature_names_
 
 X_new = df_new[FEATURE_COLUMNS].copy()
 pred_labels = clf.predict(X_new)
+````
+
+# As a student I want to learn how to make a correct learning story so that I can get better grades
+
+- I learned that the user story title will have to be vague because if you are even remotely specific in the title then it's a developer story instead of a user story.<br>
+
+- I learned that you are already supposed to know what every single file and piece of code is supposed to look like so that you can make a very specific list of acceptance criteria for it.<br>
+
+- I learned that every user story must have something to do with all parts of the vertical slice like the front-end, back-end and embedded side. This is to avoid very clearly and straight forward learning stories that would have allowed for simple and fast and efficient work.<br>
+
+- I learned that you must split your work up into as many git commits as possible so that it will look like you did more work without actually doing more work.<br>
+
+- I learned that at least 30% of the time spent working on a project must be sacrificed in order to make user stories about the work, instead of actually doing said work.<br>
+
+- I learned that there is no real structure to which a user story must be made, since every teacher of the hva will grade it differently<br>
+
+- I learned that important learnings that were critical to making the work of the user story dont have to be documented so long as you can point to a personal learning story in which you have vaguely writen these down.<br>
+
+# As a student I want to learns how to make a Hipper Logo for the top bar
+
+I learned how to use css div classes and make use of flex in order to set attributes.<br>
+<br> I learned to use the div class as follows:<br>
+````js
+<div class="logo-container">
+    <div class="logo-line"></div>
+    <span class="hippertext">Hipper Therapeutics</span>
+    <div class="logo-line"></div>
+  </div>
+````
+
+<br>and I then learned to use the flex in order to give parameters to this:<br>
+````css
+.logo-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Julius Sans One', sans-serif;
+  font-weight: bold;
+  color: black;
+  letter-spacing: 2px;
+  position: relative;
+  margin-left: 50px;
+}
+````
+
+<br>
+and I learned how to make lines with this.<br>
+I was struggling a lot at first and then I learned that I could just make a box of 1 pixel tall and it'd be a line.<br>
+
+````css
+.logo-line{
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px;
+  height: 1px;
+  background-color: black;
+}
 ````

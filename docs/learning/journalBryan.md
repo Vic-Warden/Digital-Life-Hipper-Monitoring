@@ -302,6 +302,98 @@ This taught me how to:
 
     Think about data structure design to simplify later queries and reporting.
 
+## Learning story
+As a student, I want to learn how to send sensor data from a Raspberry Pi to a remote server using HTTP requests, 
+so I can build IoT solutions that communicate with cloud infrastructure.
+
+### Learned
+When I first started sending data from my Raspberry Pi, I assumed that sending a POST request to the backend would "just work" every time. But I quickly ran into problems: sometimes the server wasn’t reachable, sometimes the data format was wrong, and sometimes I forgot to include required fields like "activity" or "day_data". These would either throw an error or return a 400 Bad Request.
+
+To make my system more reliable:
+
+    I structured the JSON payload carefully and checked that all required fields were present.
+
+    I added status code checks to make sure the data was successfully received.
+
+    I handled network errors using try/except so that the system would retry later instead of failing.
+
+Example code:
+```python
+    payload = {"activity": True, "day_data": False}
+    url = f"http://server_ip:5000/log/{mac_address}"
+
+    try:
+        response = requests.post(url, json=payload)
+        if response.status_code == 200:
+            print("Log update successful")
+        else:
+            print(f"Server error: {response.status_code} - {response.text}")
+    except requests.RequestException as e:
+        print(f"Failed to send log update: {e}")
+```
+
+Now, my data upload routine is much more reliable:
+
+    It gives me feedback when something goes wrong.
+
+    It doesn’t crash the program if the server is offline.
+
+    It ensures only valid, complete data gets sent to the backend.
+
+This taught me how to:
+
+    Build resilient client-server communication in Python.
+
+    Debug and test web APIs effectively.
+
+    Handle real-world errors in networked applications.
+
+## Learning story
+As a student, I want to learn how to track and update timestamps of data collection in a database, so I can monitor the freshness and reliability of the data.
+
+### Learned
+Originally, I didn’t track when data was last pulled from each device — so if something went wrong or the server restarted, I had no way to know what was up-to-date and what wasn’t. This caused confusion, especially with multiple sensors, and made debugging harder.
+
+To fix this:
+
+    I added a last_activity_pull and last_day_data_pull column in the database for each device.
+
+    I created two endpoints in the Flask API: one to update timestamps and one to retrieve them.
+
+    I made sure the timestamps were timezone-aware (Europe/Amsterdam) and stored in a consistent format (ISO 8601).
+
+Example code:
+```python
+@app.route('/log/<mac_address>', methods=['POST'])
+def update_log(mac_address):
+    mac = mac_address.upper()
+    data = request.get_json()
+
+    activity = data.get("activity")
+    day_data = data.get("day_data")
+
+    success = db.update_log_timestamps(mac, activity, day_data)
+    return {"message": "Log updated"} if success else {"error": "Failed to update"}, 200
+```
+
+Using this, my system can:
+
+    Track exactly when each type of data was last pulled.
+
+    Help me detect inactive devices.
+
+    Provide a clear generalised way to have timestaped logs.
+
+This taught me how to:
+
+    Design and use metadata in a database schema.
+
+    Work with timestamps and timezones reliably.
+
+    Combine backend logic and database updates into a full data pipeline.
+
+Using this I can now use multiple basestations in the same area, because they all have the same generalised location where they check wat time and date data was pulled for the last time from a specific sensor. 
+This implementation ensures there is no double data collected from a single sensor.
 
 <br /> <br />
 

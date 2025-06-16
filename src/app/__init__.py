@@ -415,13 +415,33 @@ def upload_pam_data():
     return {"message": "PAM data uploaded successfully"}, 200
 
 
+# @app.route('/api/last-update-period', methods=['GET'])
+# def last_update_period():
+#     """
+#     API endpoint to get the last update period for a patient.
+#     Returns a JSON response with the last update period and status code.
+#     """
+#     # TODO: Change this to auth_token
+#     # TODO: Change this to auth_token
+#     # TODO: Change this to auth_token
+#     cookie = request.cookies.get('auth_cookie')
+#     valid, user_data = db.verify_cookie(cookie)
+
+#     if not valid:
+#         return {"error": "Invalid or expired cookie"}, 401
+
+#     device_mac_addr = request.args.get('device_mac_addr')
+#     if not device_mac_addr:
+#         return {"error": "Device MAC address is required"}, 400
+
+#     last_update = db.get_last_update_period(device_mac_addr)
+#     if not last_update:
+#         return {"error": "No updates found for this patient"}, 404
+
+#     return {"last_update": last_update}, 200
+
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
-    token = request.cookies.get('auth_token')
-    valid, reason = db.verify_auth_token(token)
-    if not valid:
-        return {"error": reason}, 401
-
     mac = mac_address.upper()
     log_entry = db.get_log_for_mac(mac)
     if not log_entry:
@@ -434,11 +454,6 @@ def get_log(mac_address):
 
 @app.route('/log/<mac_address>', methods=['POST'])
 def update_log(mac_address):
-    token = request.cookies.get('auth_token')
-    valid, reason = db.verify_auth_token(token)
-    if not valid:
-        return {"error": reason}, 401
-
     mac = mac_address.upper()
 
     if not request.is_json:
@@ -456,6 +471,28 @@ def update_log(mac_address):
         return {"error": "Failed to update log"}, 500
 
     return {"message": "Log updated"}, 200
+
+
+@app.route('/api/routine-disruption', methods=['POST'])
+def detect_routine_disruption():
+    data = request.get_json()
+    patient_id = data.get("patient_id")
+
+    if not patient_id:
+        return {"error": "Missing patient_id"}, 400
+
+    usual_slots = db.get_usual_slots(patient_id)
+    if not usual_slots:
+        return {"disruptions": []}, 200
+
+    disruptions = db.get_disruptions(patient_id, usual_slots)
+
+    return {"disruptions": disruptions}, 200
+
+
+@app.route('/routine-form')
+def routine_form():
+    return render_template('routine_form.html')
 
 
 # Start the Flask application

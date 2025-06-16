@@ -199,3 +199,89 @@ This learning story helped me understand how JavaScript brings dynamics to stati
 ## Summary
 
 This exercise strengthened my ability to build interactive, user-responsive web applications using JavaScript. I now have a working understanding of how data, events, and visual components work together in modern dashboards.
+
+---
+
+## Learning story 7:
+
+As a student, I want to learn how to build an interactive time picker in HTML, so that users can customize their night-time period directly on the web interface.
+
+## What I Learned
+
+I learned how to create an interactive time picker using HTML and JavaScript to allow users to define their custom night-time period. This enables dynamic configuration of excluded time ranges, supporting better control over inactivity tracking on the homepage.
+
+
+## How I Learned It
+
+### Goal:
+Build a simple, interactive interface where users can select a start and end time, validate the input, and store it for later use in filtering activity data.
+
+### Steps:
+1. **HTML Form Creation:**
+   - Used `<input type="time">` for both start and end time.
+   - Created a submit button to capture user input.
+
+2. **JavaScript Input Handling:**
+   - Used `document.getElementById()` to access time values.
+   - Parsed and compared time strings to handle overnight periods (e.g., 10:00 PM to 6:00 AM).
+   
+3. **Validation:**
+   - Added basic checks to ensure both times are filled.
+   - Handled invalid or identical time selections.
+   - Provided user-friendly feedback using `alert()` or error messages on screen.
+
+4. **Storage:**
+   - Stored the time range in `localStorage` for later use or persistence across sessions.
+
+5. **Testing:**
+   - Tested by logging the stored values and verifying correct behavior with various time inputs.
+
+
+##  Summary
+
+By building an interactive time picker, I now understand how to collect, validate, and store time-based input on the web using HTML and JavaScript. This learning directly supports the goal of allowing users to customize and exclude their night-time hours from activity tracking logic.
+
+---
+
+## Learning story 8:
+
+As a student, I want to learn how to use JavaScript to define and apply a user-selected time range (night-time for sleeping) to filter out periods from inactivity data, so I can accurately reflect active time on the homepage. 
+
+## What I learned
+
+I learned how to use JavaScript to apply a user-selected time range (representing night-time) to filter out periods from activity data. This helped me understand how to work with time values in JavaScript, compare them correctly—even when crossing midnight—and use that logic to produce a filtered data set that reflects only relevant activity.
+
+## How I Learned It
+
+### Goal:
+Use JavaScript to filter out night-time hours from an array of activity timestamps based on user input.
+
+### Steps:
+
+1. **Create Mock Data:**
+   - Built a sample array of activity timestamps using JavaScript `Date` objects or formatted strings (e.g., `'2025-06-15T23:00:00'`).
+
+2. **Capture User Time Input:**
+   - Used `<input type="time">` in HTML for selecting start and end times.
+   - Retrieved input values using `document.getElementById().value`.
+
+3. **Convert and Compare Times:**
+   - Parsed time strings into `Date` or `Date.getHours()` format.
+   - Handled edge cases where the range spans midnight (e.g., 10 PM to 6 AM).
+   - Implemented logic to identify whether a given timestamp falls *within* or *outside* the night-time range.
+
+4. **Filter Logic:**
+   - Created a `filterActiveTime(data, startTime, endTime)` function.
+   - Returned only entries that fall *outside* the defined night-time period.
+
+5. **Testing and Output:**
+   - Ran the filter with different time ranges and mock data.
+   - Printed the filtered results to the console to verify accuracy.
+
+
+## Summary
+
+By completing this learning story, I now know how to use JavaScript to compare time values, handle ranges that cross over midnight, and filter timestamped activity data accordingly. This logic is essential for excluding night-time hours from inactivity analytics and ensuring the homepage reflects meaningful, awake-time behavior.
+
+---
+

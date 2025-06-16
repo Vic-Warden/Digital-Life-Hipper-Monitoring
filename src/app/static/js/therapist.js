@@ -6,307 +6,571 @@ const chartData = {
   inactiveDays: [0, 1, 4, 6] // indices of inactive days (red background)
 };
 
+// Inactive period management
+let inactivePeriod = {
+  startTime: null,
+  endTime: null,
+  isSet: false
+};
+
+// Original inactive minutes (before excluding period)
+const originalInactiveMinutes = 180;
+
+// Chart instance
+let activityChart = null;
+
 // Initialize the dashboard when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
   initializeChart();
   initializeEventHandlers();
   updateCircularProgress();
+  initializeInactivePeriod();
 });
 
-// Initialize the activity chart
+// Initialize Chart.js chart
 function initializeChart() {
-  const canvas = document.getElementById('activityChart');
-  const ctx = canvas.getContext('2d');
+  const ctx = document.getElementById('activityChart').getContext('2d');
   
-  // Set canvas dimensions
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * window.devicePixelRatio;
-  canvas.height = rect.height * window.devicePixelRatio;
-  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-  
-  drawChart(ctx, rect.width, rect.height);
-}
-
-// Draw the complete chart
-function drawChart(ctx, width, height) {
-  const padding = 60;
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2;
-  
-  // Clear canvas
-  ctx.clearRect(0, 0, width, height);
-  
-  // Draw inactive day backgrounds (red highlights)
-  drawInactiveDayBackgrounds(ctx, padding, chartWidth, chartHeight);
-  
-  // Draw step bars (blue)
-  drawStepBars(ctx, padding, chartWidth, chartHeight);
-  
-  // Draw PAM score line (green)
-  drawPamScoreLine(ctx, padding, chartWidth, chartHeight);
-  
-  // Draw axes and labels
-  drawAxesAndLabels(ctx, padding, chartWidth, chartHeight, width, height);
-}
-
-// Draw red background for inactive days
-function drawInactiveDayBackgrounds(ctx, padding, chartWidth, chartHeight) {
-  const barWidth = chartWidth / chartData.dates.length;
-  
-  chartData.inactiveDays.forEach(dayIndex => {
-    const x = padding + dayIndex * barWidth;
-    
-    ctx.fillStyle = 'rgba(255, 182, 193, 0.3)'; // Light red
-    ctx.fillRect(x, padding, barWidth, chartHeight);
+  // Prepare data for Chart.js
+  const labels = chartData.dates.map(date => {
+    const d = new Date(date);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
-}
 
-// Draw step bars
-function drawStepBars(ctx, padding, chartWidth, chartHeight) {
-  const maxSteps = Math.max(...chartData.steps);
-  const barWidth = chartWidth / chartData.dates.length * 0.6;
-  const barSpacing = chartWidth / chartData.dates.length;
-  
-  chartData.steps.forEach((steps, index) => {
-    const barHeight = (steps / maxSteps) * chartHeight * 0.8;
-    const x = padding + index * barSpacing + (barSpacing - barWidth) / 2;
-    const y = padding + chartHeight - barHeight;
-    
-    // Draw bar
-    ctx.fillStyle = '#87CEEB'; // Light blue
-    ctx.fillRect(x, y, barWidth, barHeight);
-    
-    // Draw step count on top of bar
-    ctx.fillStyle = '#333';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(steps.toString(), x + barWidth / 2, y - 5);
-  });
-}
-
-// Draw PAM score line
-function drawPamScoreLine(ctx, padding, chartWidth, chartHeight) {
-  const maxPamScore = Math.max(...chartData.pamScores);
-  const pointSpacing = chartWidth / (chartData.dates.length - 1);
-  
-  ctx.strokeStyle = '#4CAF50'; // Green
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  
-  chartData.pamScores.forEach((score, index) => {
-    const x = padding + index * pointSpacing;
-    const y = padding + chartHeight - (score / maxPamScore) * chartHeight * 0.3 - chartHeight * 0.1;
-    
-    if (index === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
+  activityChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Steps',
+          data: chartData.steps,
+          backgroundColor: chartData.dates.map((_, index) => 
+            chartData.inactiveDays.includes(index) ? '#ffcccb' : '#4a90e2'
+          ),
+          borderColor: chartData.dates.map((_, index) => 
+            chartData.inactiveDays.includes(index) ? '#ff6b6b' : '#357abd'
+          ),
+          borderWidth: 1,
+          yAxisID: 'y'
+        },
+        {
+          label: 'PAM Score',
+          data: chartData.pamScores,
+          type: 'line',
+          borderColor: '#b8e986',
+          backgroundColor: 'rgba(184, 233, 134, 0.1)',
+          borderWidth: 3,
+          fill: false,
+          tension: 0.4,
+          pointBackgroundColor: '#b8e986',
+          pointBorderColor: '#9ed65f',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleColor: 'white',
+          bodyColor: 'white',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderWidth: 1,
+          callbacks: {
+            label: function(context) {
+              if (context.datasetIndex === 0) {
+                return `Steps: ${context.parsed.y.toLocaleString()}`;
+              } else {
+                return `PAM Score: ${context.parsed.y.toFixed(1)}`;
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            color: '#666'
+          }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Steps',
+            color: '#666'
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          },
+          ticks: {
+            color: '#666',
+            callback: function(value) {
+              return value.toLocaleString();
+            }
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'PAM Score',
+            color: '#666'
+          },
+          grid: {
+            drawOnChartArea: false,
+          },
+          ticks: {
+            color: '#666'
+          }
+        }
+      }
     }
-    
-    // Draw point
-    ctx.fillStyle = '#4CAF50';
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
   });
-  
-  ctx.stroke();
-  
-  // Add PAM score labels
-  chartData.pamScores.forEach((score, index) => {
-    const x = padding + index * pointSpacing;
-    const y = padding + chartHeight - (score / maxPamScore) * chartHeight * 0.3 - chartHeight * 0.1;
-    
-    ctx.fillStyle = '#4CAF50';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(score.toFixed(1), x, y - 15);
-  });
-}
-
-// Draw axes and labels
-function drawAxesAndLabels(ctx, padding, chartWidth, chartHeight, width, height) {
-  // X-axis
-  ctx.strokeStyle = '#ccc';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(padding, padding + chartHeight);
-  ctx.lineTo(padding + chartWidth, padding + chartHeight);
-  ctx.stroke();
-  
-  // Y-axis
-  ctx.beginPath();
-  ctx.moveTo(padding, padding);
-  ctx.lineTo(padding, padding + chartHeight);
-  ctx.stroke();
-  
-  // Date labels
-  const labelSpacing = chartWidth / chartData.dates.length;
-  chartData.dates.forEach((date, index) => {
-    const x = padding + index * labelSpacing + labelSpacing / 2;
-    const y = padding + chartHeight + 20;
-    
-    ctx.fillStyle = '#666';
-    ctx.font = '11px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(date.substr(5), x, y); // Show only month-day
-  });
-  
-  // Y-axis labels for steps
-  ctx.fillStyle = '#666';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'right';
-  for (let i = 0; i <= 4; i++) {
-    const y = padding + chartHeight - (i / 4) * chartHeight;
-    const value = (i / 4) * 8000;
-    ctx.fillText(value.toString(), padding - 10, y + 3);
-  }
-  
-  // Right Y-axis labels for PAM score
-  ctx.textAlign = 'left';
-  for (let i = 0; i <= 2; i++) {
-    const y = padding + chartHeight * 0.9 - (i / 2) * chartHeight * 0.3;
-    const value = (i / 2) * 2.5;
-    ctx.fillText(value.toFixed(1), padding + chartWidth + 10, y + 3);
-  }
-}
-
-// Update circular progress indicator
-function updateCircularProgress() {
-  const circle = document.querySelector('.progress-ring-fill');
-  const radius = 90;
-  const circumference = 2 * Math.PI * radius;
-  const progress = 370 / 600; // Current score / Total score
-  const offset = circumference - (progress * circumference);
-  
-  circle.style.strokeDasharray = circumference;
-  circle.style.strokeDashoffset = offset;
-}
-
-// Goal management functions
-function addNewGoal() {
-  const goalName = prompt('Enter goal name:');
-  if (!goalName) return;
-  
-  const currentValue = parseInt(prompt('Enter current value:')) || 0;
-  const targetValue = parseInt(prompt('Enter target value:')) || 100;
-  
-  if (targetValue <= 0) {
-    alert('Target value must be greater than 0');
-    return;
-  }
-  
-  const progressPercentage = Math.min((currentValue / targetValue) * 100, 100);
-  
-  const goalHTML = `
-    <div class="goal-item">
-      <div class="goal-header">
-        <span class="goal-label">${goalName}</span>
-        <div class="goal-actions">
-          <span class="goal-value">${currentValue} / ${targetValue}</span>
-          <button class="edit-btn" onclick="editGoal(this)">✏️</button>
-          <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
-        </div>
-      </div>
-      <div class="goal-progress">
-        <div class="goal-progress-fill" style="width: ${progressPercentage}%"></div>
-      </div>
-    </div>
-  `;
-  
-  const addGoalElement = document.querySelector('.add-goal');
-  addGoalElement.insertAdjacentHTML('beforebegin', goalHTML);
-}
-
-function editGoal(button) {
-  const goalItem = button.closest('.goal-item');
-  const goalLabel = goalItem.querySelector('.goal-label');
-  const goalValue = goalItem.querySelector('.goal-value');
-  const progressFill = goalItem.querySelector('.goal-progress-fill');
-  
-  // Get current values
-  const currentName = goalLabel.textContent;
-  const currentValues = goalValue.textContent.split(' / ');
-  const currentCurrent = parseInt(currentValues[0]);
-  const currentTarget = parseInt(currentValues[1]);
-  
-  // Prompt for new values
-  const newName = prompt('Edit goal name:', currentName);
-  if (newName === null) return; // User cancelled
-  
-  const newCurrent = parseInt(prompt('Edit current value:', currentCurrent));
-  if (isNaN(newCurrent)) return;
-  
-  const newTarget = parseInt(prompt('Edit target value:', currentTarget));
-  if (isNaN(newTarget) || newTarget <= 0) {
-    alert('Target value must be a positive number');
-    return;
-  }
-  
-  // Update the goal
-  goalLabel.textContent = newName || currentName;
-  goalValue.textContent = `${newCurrent} / ${newTarget}`;
-  
-  const newProgress = Math.min((newCurrent / newTarget) * 100, 100);
-  progressFill.style.width = `${newProgress}%`;
-}
-
-function deleteGoal(button) {
-  const goalItem = button.closest('.goal-item');
-  const goalName = goalItem.querySelector('.goal-label').textContent;
-  
-  if (confirm(`Are you sure you want to delete "${goalName}"?`)) {
-    goalItem.remove();
-  }
 }
 
 // Initialize event handlers
 function initializeEventHandlers() {
   // Time selector buttons
   const timeButtons = document.querySelectorAll('.time-btn');
-  timeButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      timeButtons.forEach(btn => btn.classList.remove('active'));
+  timeButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      timeButtons.forEach(b => b.classList.remove('active'));
       this.classList.add('active');
-      // Here you could implement different time period views
+      
+      // Here you could update the chart based on the selected time period
+      // For now, we'll just log the selection
+      console.log('Time period selected:', this.textContent);
     });
   });
-  
+
   // Add goal button
   const addBtn = document.querySelector('.add-btn');
   if (addBtn) {
-    addBtn.addEventListener('click', addNewGoal);
+    addBtn.addEventListener('click', function() {
+      addNewGoal();
+    });
+  }
+}
+
+// Update circular progress
+function updateCircularProgress() {
+  const circle = document.querySelector('.progress-ring-fill');
+  const current = 370;
+  const total = 600;
+  const percentage = (current / total) * 100;
+  
+  // Circle calculations
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
+  
+  circle.style.strokeDashoffset = offset;
+}
+
+// Initialize inactive period functionality
+function initializeInactivePeriod() {
+  const modal = document.getElementById('inactivePeriodModal');
+  const setPeriodBtn = document.getElementById('setPeriodBtn');
+  const closeModal = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const removeBtn = document.getElementById('removeBtn');
+  const startTimeInput = document.getElementById('startTime');
+  const endTimeInput = document.getElementById('endTime');
+  const errorMessage = document.getElementById('errorMessage');
+
+  // Load saved period from localStorage (if available)
+  loadSavedPeriod();
+
+  // Event listeners
+  setPeriodBtn.addEventListener('click', openModal);
+  closeModal.addEventListener('click', closeModalHandler);
+  cancelBtn.addEventListener('click', closeModalHandler);
+  saveBtn.addEventListener('click', savePeriod);
+  removeBtn.addEventListener('click', removePeriod);
+
+  // Close modal when clicking outside
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      closeModalHandler();
+    }
+  });
+
+  // Real-time validation
+  startTimeInput.addEventListener('change', validateTimes);
+  endTimeInput.addEventListener('change', validateTimes);
+
+  function openModal() {
+    modal.classList.add('show');
+    
+    // If period is already set, populate the inputs and show remove button
+    if (inactivePeriod.isSet) {
+      startTimeInput.value = inactivePeriod.startTime;
+      endTimeInput.value = inactivePeriod.endTime;
+      removeBtn.style.display = 'inline-block';
+    } else {
+      startTimeInput.value = '';
+      endTimeInput.value = '';
+      removeBtn.style.display = 'none';
+    }
+    
+    errorMessage.textContent = '';
+  }
+
+  function closeModalHandler() {
+    modal.classList.remove('show');
+    errorMessage.textContent = '';
+  }
+
+  function validateTimes() {
+    const startTime = startTimeInput.value;
+    const endTime = endTimeInput.value;
+    
+    if (!startTime || !endTime) {
+      errorMessage.textContent = '';
+      return false;
+    }
+
+    if (startTime === endTime) {
+      errorMessage.textContent = 'Start time and end time cannot be the same.';
+      return false;
+    }
+
+    errorMessage.textContent = '';
+    return true;
+  }
+
+  function savePeriod() {
+    const startTime = startTimeInput.value;
+    const endTime = endTimeInput.value;
+
+    if (!startTime || !endTime) {
+      errorMessage.textContent = 'Please select both start and end times.';
+      return;
+    }
+
+    if (!validateTimes()) {
+      return;
+    }
+
+    // Save the period
+    inactivePeriod = {
+      startTime: startTime,
+      endTime: endTime,
+      isSet: true
+    };
+
+    // Save to localStorage (simulate backend saving)
+    savePeriodToBackend(inactivePeriod);
+
+    // Update UI
+    updatePeriodDisplay();
+    updateInactiveMinutes();
+    
+    closeModalHandler();
+    
+    // Show success message
+    showNotification('Inactive period saved successfully!', 'success');
+  }
+
+  function removePeriod() {
+    if (confirm('Are you sure you want to remove the inactive period?')) {
+      inactivePeriod = {
+        startTime: null,
+        endTime: null,
+        isSet: false
+      };
+
+      // Remove from localStorage
+      localStorage.removeItem('inactivePeriod');
+
+      // Update UI
+      updatePeriodDisplay();
+      updateInactiveMinutes();
+      
+      closeModalHandler();
+      
+      // Show success message
+      showNotification('Inactive period removed successfully!', 'success');
+    }
+  }
+}
+
+// Update the period display
+function updatePeriodDisplay() {
+  const currentPeriodElement = document.getElementById('currentPeriod');
+  
+  if (inactivePeriod.isSet) {
+    const startTime = formatTime(inactivePeriod.startTime);
+    const endTime = formatTime(inactivePeriod.endTime);
+    currentPeriodElement.textContent = `Active: ${startTime} - ${endTime}`;
+    currentPeriodElement.classList.add('active');
+  } else {
+    currentPeriodElement.textContent = 'No period set';
+    currentPeriodElement.classList.remove('active');
+  }
+}
+
+// Update inactive minutes based on set period
+function updateInactiveMinutes() {
+  const inactiveMinutesElement = document.getElementById('inactive-minutes-value');
+  
+  if (inactivePeriod.isSet) {
+    // Calculate excluded minutes (simplified calculation)
+    const excludedMinutes = calculateExcludedMinutes(inactivePeriod.startTime, inactivePeriod.endTime);
+    const adjustedMinutes = Math.max(0, originalInactiveMinutes - excludedMinutes);
+    inactiveMinutesElement.textContent = adjustedMinutes;
+  } else {
+    inactiveMinutesElement.textContent = originalInactiveMinutes;
+  }
+}
+
+// Calculate excluded minutes based on time period
+function calculateExcludedMinutes(startTime, endTime) {
+  const start = new Date(`2000-01-01T${startTime}:00`);
+  const end = new Date(`2000-01-01T${endTime}:00`);
+  
+  // Handle overnight periods
+  if (end < start) {
+    end.setDate(end.getDate() + 1);
   }
   
-  // Edit and delete buttons for existing goals
-  attachGoalEventHandlers();
+  const diffMs = end - start;
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  
+  // Return a portion of the excluded time (simplified calculation)
+  // In a real app, this would be more sophisticated
+  return Math.min(diffMinutes, 120); // Cap at 2 hours for demo
 }
 
-function attachGoalEventHandlers() {
-  const editButtons = document.querySelectorAll('.edit-btn');
-  const deleteButtons = document.querySelectorAll('.delete-btn');
-  
-  editButtons.forEach(btn => {
-    btn.removeEventListener('click', editGoal); // Remove existing listeners
-    btn.addEventListener('click', function() {
-      editGoal(this);
-    });
-  });
-  
-  deleteButtons.forEach(btn => {
-    btn.removeEventListener('click', deleteGoal); // Remove existing listeners
-    btn.addEventListener('click', function() {
-      deleteGoal(this);
-    });
-  });
+// Format time for display
+function formatTime(timeString) {
+  const [hours, minutes] = timeString.split(':');
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${minutes} ${ampm}`;
 }
 
-// Handle window resize
-window.addEventListener('resize', function() {
-  // Redraw chart on resize
+// Load saved period from localStorage
+function loadSavedPeriod() {
+  const savedPeriod = localStorage.getItem('inactivePeriod');
+  if (savedPeriod) {
+    try {
+      inactivePeriod = JSON.parse(savedPeriod);
+      updatePeriodDisplay();
+      updateInactiveMinutes();
+    } catch (error) {
+      console.error('Error loading saved period:', error);
+      // Reset to default if corrupted
+      inactivePeriod = {
+        startTime: null,
+        endTime: null,
+        isSet: false
+      };
+    }
+  }
+}
+
+// Save period to backend (localStorage simulation)
+function savePeriodToBackend(period) {
+  try {
+    localStorage.setItem('inactivePeriod', JSON.stringify(period));
+    console.log('Period saved to backend:', period);
+  } catch (error) {
+    console.error('Error saving period:', error);
+    showNotification('Error saving period. Please try again.', 'error');
+  }
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.textContent = message;
+  
+  // Style the notification
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideInRight 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  `;
+  
+  // Set background color based on type
+  switch (type) {
+    case 'success':
+      notification.style.backgroundColor = '#4CAF50';
+      break;
+    case 'error':
+      notification.style.backgroundColor = '#f44336';
+      break;
+    case 'warning':
+      notification.style.backgroundColor = '#ff9800';
+      break;
+    default:
+      notification.style.backgroundColor = '#2196F3';
+  }
+  
+  // Add to DOM
+  document.body.appendChild(notification);
+  
+  // Remove after 3 seconds
   setTimeout(() => {
-    initializeChart();
-  }, 100);
-});
+    notification.style.animation = 'slideOutRight 0.3s ease';
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  }, 3000);
+}
+
+// Goal management functions
+function editGoal(button) {
+  const goalItem = button.closest('.goal-item');
+  const goalValue = goalItem.querySelector('.goal-value');
+  const currentValue = goalValue.textContent;
+  
+  const newValue = prompt('Enter new goal value:', currentValue);
+  if (newValue && newValue !== currentValue) {
+    goalValue.textContent = newValue;
+    
+    // Update progress bar if needed
+    const [current, total] = newValue.split(' / ').map(v => parseInt(v.trim()));
+    const percentage = (current / total) * 100;
+    const progressFill = goalItem.querySelector('.goal-progress-fill');
+    progressFill.style.width = `${Math.min(percentage, 100)}%`;
+    
+    showNotification('Goal updated successfully!', 'success');
+  }
+}
+
+function deleteGoal(button) {
+  if (confirm('Are you sure you want to delete this goal?')) {
+    const goalItem = button.closest('.goal-item');
+    goalItem.style.animation = 'fadeOut 0.3s ease';
+    setTimeout(() => {
+      goalItem.remove();
+      showNotification('Goal deleted successfully!', 'success');
+    }, 300);
+  }
+}
+
+function addNewGoal() {
+  const goalName = prompt('Enter goal name:');
+  if (!goalName) return;
+  
+  const goalTarget = prompt('Enter target value:');
+  if (!goalTarget) return;
+  
+  const goalCurrent = prompt('Enter current value:', '0');
+  if (goalCurrent === null) return;
+  
+  // Create new goal element
+  const goalsPanel = document.querySelector('.client-goals-panel');
+  const addGoalElement = document.querySelector('.add-goal');
+  
+  const newGoal = document.createElement('div');
+  newGoal.className = 'goal-item';
+  newGoal.style.animation = 'fadeIn 0.3s ease';
+  
+  const percentage = (parseInt(goalCurrent) / parseInt(goalTarget)) * 100;
+  
+  newGoal.innerHTML = `
+    <div class="goal-header">
+      <span class="goal-label">${goalName}</span>
+      <div class="goal-actions">
+        <span class="goal-value">${goalCurrent} / ${goalTarget}</span>
+        <button class="edit-btn" onclick="editGoal(this)">✏️</button>
+        <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
+      </div>
+    </div>
+    <div class="goal-progress">
+      <div class="goal-progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+    </div>
+  `;
+  
+  goalsPanel.insertBefore(newGoal, addGoalElement);
+  showNotification('Goal added successfully!', 'success');
+}
+
+// Add CSS animations if not already present
+if (!document.querySelector('#dynamic-animations')) {
+  const style = document.createElement('style');
+  style.id = 'dynamic-animations';
+  style.textContent = `
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes fadeOut {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}

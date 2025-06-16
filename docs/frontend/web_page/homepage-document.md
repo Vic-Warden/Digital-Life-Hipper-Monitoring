@@ -37,6 +37,7 @@ Contains:
 
 ---
 
+
 ## Main Dashboard (`<main class="dashboard">`)
 
 ### 1. **Left Panel – Daily Stats** (`<section class="stats-panel">`)

@@ -7,18 +7,20 @@ Under the hood it uses the `mysql.connector` library, which provides simple but 
 `database.py` contains the following functions:
 
 ```python
-__init__()             # Initializes connection and configuration
-connect()              # Establishes the MySQL connection
-do_query()            # Executes parameterized queries on the database
-check_valid_table()   # Checks if a table name is allowed to be queried
-check_email()         # Checks if an email is already registered
-check_credentials()   # Verifies email and password combination
-add_patient()         # Registers a new patient in the system
-remove_patient()      # Removes a patient based on their email
-create_cookie()       # Creates a new login cookie for a user
-verify_cookie()       # Verifies a cookie's validity and retrieves the associated user
-remove_cookie()       # Deletes a cookie from the database
-change_user_email()   # Changes the users email based on session token
+__init__()              # Initializes connection and configuration
+connect()               # Establishes the MySQL connection
+do_query()              # Executes parameterized queries on the database
+check_valid_table()     # Checks if a table name is allowed to be queried
+check_email()           # Checks if an email is already registered
+check_credentials()     # Verifies email and password combination
+add_patient()           # Registers a new patient in the system
+remove_patient()        # Removes a patient based on their email
+create_cookie()         # Creates a new login cookie for a user
+verify_cookie()         # Verifies a cookie's validity and retrieves the associated user
+remove_cookie()         # Deletes a cookie from the database
+change_user_email()     # Changes the users email based on session token
+get_log_for_mac()       # Get the last time data was pulled from a specific sensor, by looking at the mac address
+update_log_timestamps() # Update the last time data was pulled from a specific sensor, by looking at the mac address
 ```
 
 ### How to execute queries
@@ -190,3 +192,48 @@ def verify_auth_token(self, token: str) -> tuple[bool, str]:
         return (True, result[0][0])
     return (False, "Invalid token")
 ```
+
+### Getting and setting time for sensor data
+2 functions are used to interact with the backend database for reading and updating log timestamps for each device, based on its MAC address.
+
+#### get_log_for_mac(mac_address)
+This function retrieves the last time activity and day data were pulled for a specific device from the database.
+Parameters
+    mac_address (str): The MAC address of the device.
+
+Returns
+    A dictionary with the following keys:
+
+        "last_activity_pull": The last time activity data was pulled, in ISO 8601 format.
+
+        "last_day_data_pull": The last time day data was pulled, in ISO 8601 format.
+
+    If the device is not found in the database, it returns None.
+
+Example Output
+```json
+{
+  "last_activity_pull": "2025-06-12T09:45:00",
+  "last_day_data_pull": "2025-06-11"
+}
+```
+
+#### update_log_timestamps(mac_address, update_activity, update_day_data=False)
+
+This function updates the database with the current timestamp for a given device, showing the most recent time that data was pulled.
+Parameters
+    mac_address (str): The MAC address of the device to update.
+
+    update_activity (bool): Whether to update the activity data timestamp.
+
+    update_day_data (bool) (optional): Whether to update the day data timestamp. Default is False.
+
+Behavior
+    If either flag (update_activity or update_day_data) is set to True, it will update the corresponding timestamp in the database using the current time in the Europe/Amsterdam time zone.
+
+    If no flags are set, the function returns False and does nothing.
+
+Returns
+    True if the update was successful.
+
+    False if no update was performed.

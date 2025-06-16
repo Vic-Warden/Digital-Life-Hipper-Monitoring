@@ -43,14 +43,15 @@ def home():
     # if connected
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
-        user_query = "SELECT device_id FROM users WHERE cookies = %s"
+        user_query = "SELECT id FROM User WHERE cookies = %s"
         result = db.do_query(user_query, (cookie,))
 
         if result:
+            # Result returned a legitmate row containing the cookie
             device_id = result[0][0]  # result is a list of tuples
-
             data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
             patient_data = db.do_query(data_query, (device_id,))
+            print(patient_data)
 
             return render_template('home.html', patient=patient_data)
         else:

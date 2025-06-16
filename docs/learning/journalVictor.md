@@ -1,6 +1,17 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+## Learning Story #280
+
+[Python](https://www.codecademy.com/resources/docs/sklearn)
+
+I learned how to use the sklearn machine learning, I wanted to use this alogorithms :
+
+K-Means
+Agglomerative Clustering
+
+With the both of that I can learned the patient's patterns and try to be more accurate for this task
+
 ## Learning Story #277
 
 I learned how to automatically extract behavioural patterns from raw data. Rather than asking the therapist to manually set activity times for each patient, I devised a method that analyses step data over the last 7 days, groups the steps by hour, and then identifies the time slots where the patient is regularly active.

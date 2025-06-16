@@ -336,38 +336,6 @@ class Database:
             return (True, result[0][0])
         return (False, "Invalid token")
 
-    # def get_last_update_period(self, device_mac_addr: str):
-    #     """
-    #     ### Get the last update period for a device based on its MAC address.
-
-    #     Returns the last update period as a string.
-    #     """
-    #     query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
-    #     params = (device_mac_addr,)
-    #     result = self.do_query(query, params, fetch=True)
-
-    #     if result and len(result) > 0:
-    #         return result[0][0]
-    #     return None
-
-    # def set_last_update_period(self, device_mac_addr: str) -> bool:
-    #     """
-    #     ### Set the last update period for a device based on its MAC address.
-
-    #     Returns True if the update was successful, False otherwise.
-    #     """
-    #     # Get current time
-    #     now = datetime.now()
-
-    #     # Format as MySQL-compatible DATETIME string
-    #     current_time = now.strftime('%Y-%m-%d %H:%M:%S')
-
-    #     # Update the last_data_pull for the device
-    #     query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
-    #     params = (current_time, device_mac_addr)
-    #     result = self.do_query(query, params, fetch=False)
-    #     return result is not None
-
     def get_log_for_mac(self, mac_address):
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
         params = (mac_address,)

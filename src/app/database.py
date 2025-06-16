@@ -1,4 +1,5 @@
 import os  # Import os for .env centralized settings
+import pandas as pd
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
@@ -429,3 +430,26 @@ class Database:
             return []
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+    
+    def calculate_average_data(self, data):
+        # Create a DataFrame taken from db `Data` structure
+        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+
+        # Ensure timestamp is datetime
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+
+        # Resample and calculate means
+        hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
+        daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
+        weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
+        monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
+
+        return {
+            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
+            'daily': daily_avg.reset_index().to_dict(orient='records'),
+            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
+            'monthly': monthly_avg.reset_index().to_dict(orient='records')
+        }        

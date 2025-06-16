@@ -188,7 +188,17 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Data` (`id`, `device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`) VALUES (1, 1, '2025-06-02 14:30:00', 145, 73.4, 2, 'testlabel');
+INSERT INTO `hipperdb`.`Data` (`device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`)
+VALUES 
+  (1, '2025-06-16 12:00:00', 100, 73.4, 2, 'testlabel'),
+  (1, '2025-06-16 13:00:00', 47, 28.9, 2, 'testlabel'),
+  (1, '2025-06-16 14:00:00', 139, 42.1, 2, 'testlabel'),
+  (1, '2025-06-16 15:00:00', 70, 27.7, 2, 'testlabel'),
+  (1, '2025-06-16 16:00:00', 39, 40.8, 2, 'testlabel'),
+  (1, '2025-06-17 17:00:00', 145, 64.8, 2, 'testlabel'),
+  (1, '2025-06-18 18:00:00', 94, 19.4, 2, 'testlabel'),
+  (1, '2025-06-19 17:00:00', 145, 64.8, 2, 'testlabel'),
+  (1, '2025-06-20 18:00:00', 94, 19.4, 2, 'testlabel');
 
 COMMIT;
 

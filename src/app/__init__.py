@@ -151,20 +151,19 @@ def admin_patient_list():
     if not valid:
         return redirect('/admin/login')
 
-    # Fetch patient details from the database
-    # TODO: Fix database
-    # patient_details = db.get_patients()
-
-    patient_details = {
-        "name": "John Doe",
-        "email": "john.doe@gmail.com",
-    }
+    # Replace this with your database call eventually
+    patient_details = [
+        {"name": "John Doe", "email": "john.doe@gmail.com"},
+        {"name": "Jane Smith", "email": "jane.smith@gmail.com"},
+        {"name": "Alice Johnson", "email": "alice.johnson@example.com"}
+    ]
 
     if not patient_details:
         return "Patients not found", 404
 
-    # Render the patient details page
-    return render_template('admin_patients.html', patient=patient_details)
+    # Pass the list to the template
+    return render_template('admin_patients.html', patients=patient_details)
+
 
 
 @app.route('/admin/patients/<patient_id>', methods=['GET'])

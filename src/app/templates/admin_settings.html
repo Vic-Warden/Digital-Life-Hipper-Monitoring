@@ -1,10 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/admin_settings.css" />
+  <link rel="stylesheet" href="../static/css/admin_navbar.css" />
 </head>
 <body>
 
+  <!-- Content goes here -->
+    <div id="admin-navbar"></div>
+
+     <div class="container">
+      <div class="card">
+      <h3>Profile</h3>
+      <label>Name:</label>
+      <div id="display-name" class="display-box">Hans</div>
+
+      <label>Email:</label>
+      <div id="display-email" class="display-box">Hans@gmail.com</div>
+
+    </div>
+    <div class="card">
+      <h3>Settings</h3>
+      <div class="setting">
+        <label>Light/Dark mode</label>
+        <div class="toggle-bar" id="theme-toggle">
+          <div class="half light selected" data-value="light">Light</div>
+          <div class="half dark" data-value="dark">Dark</div>
+        </div>
+      </div>
+      <div class="setting">
+        <label>Font-Size</label>
+        <div class="toggle-bar" id="font-toggle">
+          <div class="half light selected" data-value="normal">Normal</div>
+          <div class="half dark" data-value="big">Big</div>
+        </div>
+      </div>
+      <div class="setting">
+        <label>Change language</label>
+        <div class="toggle-bar" id="language-toggle">
+          <div class="half light selected" data-value="en">EN</div>
+          <div class="half dark" data-value="nl">NL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../static/js/admin_settings.js"></script>
+  <script src="../static/js/admin_navbar.js"></script>
 </body>
 </html>

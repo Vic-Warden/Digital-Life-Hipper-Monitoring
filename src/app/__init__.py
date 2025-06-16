@@ -478,19 +478,18 @@ def routine_form():
     if request.method == 'POST':
         data = request.get_json()
         patient_id = data.get("patient_id")
-
+        
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
         usual_slots = db.get_usual_active_slots(patient_id)
+        
         if not usual_slots:
             return {"disruptions": []}, 200
 
         disruptions = db.get_disruptions(patient_id, usual_slots)
 
         return {"disruptions": disruptions}, 200
-
-    # Pour le GET, on renvoie juste la page HTML
     return render_template('routine_form.html')
 
 

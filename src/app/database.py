@@ -397,3 +397,38 @@ class Database:
             return []
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+
+    def upload_pam_data(self, patient_id: str, pam_data: list):
+        """
+        Upload PAM data for a patient.
+        Expects pam_data to be a list of dictionaries with keys:
+        - 'device_id'
+        - 'timestamp'
+        - 'steps'
+        - 'pam_score'
+        - 'zone'
+        - 'data_label'
+        """
+        if not pam_data:
+            return False
+
+        query = """
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+            VALUES (%s, %s, %s, %s, %s, %s);
+        """
+        params = [
+            (data['device_id'], data['timestamp'], data['steps'],
+             data['pam_score'], data['zone'], data['data_label'])
+            for data in pam_data
+        ]
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.executemany(query, params)
+            self._connection.commit()
+            return True
+        except Error as e:
+            print("Error while uploading PAM data:", e)
+            return False
+        finally:
+            cursor.close()

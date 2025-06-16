@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 <div class="day-label">
-                    {{ entry.timestamp.strftime('%-Hh ago') if entry.timestamp else 'N/A' }}
+                    {{ entry.timestamp.strftime('%-H:%M') if entry.timestamp else 'N/A' }}
                 </div>
                 </div>
             {% endfor %}
@@ -126,253 +126,70 @@
 
             <!-- Daily Chart (Past 7 days) -->
             <div class="chart-container" id="daily-chart" style="display: none;">
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 65px;" data-value="65">
-                            <div class="bar-value">65</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 55px;" data-value="55">
-                            <div class="bar-value">55</div>
-                        </div>
-                    </div>
-                    <div class="day-label">7 days ago</div>
-                </div>
+            {% for entry in calculated['daily'][-7:] %}
+                {% set steps = entry.steps | round(0) %}
+                {% set pam = entry.PAM_score | round(0) %}
 
                 <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 58px;" data-value="58">
-                            <div class="bar-value">58</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 48px;" data-value="48">
-                            <div class="bar-value">48</div>
-                        </div>
+                <div class="bars">
+                    <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
+                    <div class="bar-value">{{ steps }}</div>
                     </div>
-                    <div class="day-label">6 days ago</div>
-                </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 90px;" data-value="90">
-                            <div class="bar-value">90</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 40px;" data-value="40">
-                            <div class="bar-value">40</div>
-                        </div>
+                    <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
+                    <div class="bar-value">{{ pam }}</div>
                     </div>
-                    <div class="day-label">5 days ago</div>
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 87px;" data-value="87">
-                            <div class="bar-value">87</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 78px;" data-value="78">
-                            <div class="bar-value">78</div>
-                        </div>
-                    </div>
-                    <div class="day-label">4 days ago</div>
+                <div class="day-label">
+                    {{ entry.timestamp.strftime('%B %d') if entry.timestamp else 'N/A' }}
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 110px;" data-value="110">
-                            <div class="bar-value">110</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 95px;" data-value="95">
-                            <div class="bar-value">95</div>
-                        </div>
-                    </div>
-                    <div class="day-label">3 days ago</div>
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 54px;" data-value="54">
-                            <div class="bar-value">54</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 35px;" data-value="35">
-                            <div class="bar-value">35</div>
-                        </div>
-                    </div>
-                    <div class="day-label">2 days ago</div>
-                </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 140px;" data-value="140">
-                            <div class="bar-value">140</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 105px;" data-value="105">
-                            <div class="bar-value">105</div>
-                        </div>
-                    </div>
-                    <div class="day-label">Last 24 hours</div>
-                </div>
+            {% endfor %}
             </div>
 
-            <!-- Weekly Chart (Past 6 weeks) -->
+            <!-- Weekly Chart (Past 7 weeks) -->
             <div class="chart-container" id="weekly-chart" style="display: none;">
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 120px;" data-value="380">
-                            <div class="bar-value">380</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 95px;" data-value="285">
-                            <div class="bar-value">285</div>
-                        </div>
-                    </div>
-                    <div class="day-label">6 weeks ago</div>
-                </div>
+            {% for entry in calculated['weekly'][-7:] %}
+                {% set steps = entry.steps | round(0) %}
+                {% set pam = entry.PAM_score | round(0) %}
 
                 <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 105px;" data-value="420">
-                            <div class="bar-value">420</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 85px;" data-value="310">
-                            <div class="bar-value">310</div>
-                        </div>
+                <div class="bars">
+                    <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
+                    <div class="bar-value">{{ steps }}</div>
                     </div>
-                    <div class="day-label">5 weeks ago</div>
-                </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 135px;" data-value="465">
-                            <div class="bar-value">465</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 110px;" data-value="350">
-                            <div class="bar-value">350</div>
-                        </div>
+                    <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
+                    <div class="bar-value">{{ pam }}</div>
                     </div>
-                    <div class="day-label">4 weeks ago</div>
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 90px;" data-value="345">
-                            <div class="bar-value">345</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 70px;" data-value="245">
-                            <div class="bar-value">245</div>
-                        </div>
-                    </div>
-                    <div class="day-label">3 week ago</div>
+                <div class="day-label">
+                    {% set week = ((entry.timestamp.day + entry.timestamp.replace(day=1).weekday() - 1) // 7) + 1 %}
+Week {{ week }} of {{ entry.timestamp.strftime('%B') }}
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 115px;" data-value="405">
-                            <div class="bar-value">405</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 95px;" data-value="295">
-                            <div class="bar-value">295</div>
-                        </div>
-                    </div>
-                    <div class="day-label">2 weeks ago</div>
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 125px;" data-value="445">
-                            <div class="bar-value">445</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 100px;" data-value="325">
-                            <div class="bar-value">325</div>
-                        </div>
-                    </div>
-                    <div class="day-label">Last 7 days</div>
-                </div>
+            {% endfor %}
             </div>
 
             <!-- Monthly Chart (Past 6 months) -->
             <div class="chart-container" id="monthly-chart" style="display: none;">
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 110px;" data-value="1650">
-                            <div class="bar-value">1650</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 85px;" data-value="1240">
-                            <div class="bar-value">1240</div>
-                        </div>
-                    </div>
-                    <div class="day-label">6 months ago</div>
-                </div>
+            {% for entry in calculated['monthly'][-6:] %}
+                {% set steps = entry.steps | round(0) %}
+                {% set pam = entry.PAM_score | round(0) %}
 
                 <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 125px;" data-value="1820">
-                            <div class="bar-value">1820</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 95px;" data-value="1380">
-                            <div class="bar-value">1380</div>
-                        </div>
+                <div class="bars">
+                    <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
+                    <div class="bar-value">{{ steps }}</div>
                     </div>
-                    <div class="day-label">5 months ago</div>
-                </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 140px;" data-value="1950">
-                            <div class="bar-value">1950</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 110px;" data-value="1520">
-                            <div class="bar-value">1520</div>
-                        </div>
+                    <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
+                    <div class="bar-value">{{ pam }}</div>
                     </div>
-                    <div class="day-label">4 months ago</div>
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 95px;" data-value="1485">
-                            <div class="bar-value">1485</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 75px;" data-value="1120">
-                            <div class="bar-value">1120</div>
-                        </div>
-                    </div>
-                    <div class="day-label">3 months ago</div>
+                <div class="day-label">
+                    {{ entry.timestamp.strftime('%B') if entry.timestamp else 'N/A' }}
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 130px;" data-value="1780">
-                            <div class="bar-value">1780</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 100px;" data-value="1350">
-                            <div class="bar-value">1350</div>
-                        </div>
-                    </div>
-                    <div class="day-label">2 months ago</div>
                 </div>
-
-                <div class="chart-day">
-                    <div class="bars">
-                        <div class="bar steps-bar" style="height: 115px;" data-value="1670">
-                            <div class="bar-value">1670</div>
-                        </div>
-                        <div class="bar pam-bar" style="height: 90px;" data-value="1285">
-                            <div class="bar-value">1285</div>
-                        </div>
-                    </div>
-                    <div class="day-label">Last 30 days</div>
-                </div>
+            {% endfor %}
             </div>
-
-            <div class="chart-legend">
-                <div class="legend-item">
-                    <div class="legend-color legend-steps"></div>
-                    <span>Steps</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color legend-pam"></div>
-                    <span>PAM</span>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script src="../static/js/navbar.js"></script>
     <script src="../static/js/home.js"></script>

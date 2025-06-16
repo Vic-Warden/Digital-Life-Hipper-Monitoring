@@ -320,6 +320,7 @@ body {
 
 .chart-section {
     margin-top: 30px;
+    grid-column: 1 / -1; /* This makes the chart span all columns */
 }
 
 .chart-header {

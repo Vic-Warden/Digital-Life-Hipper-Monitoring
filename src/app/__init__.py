@@ -52,8 +52,7 @@ def home():
             data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
             patient_data = db.do_query(data_query, (device_id,))
             calculated_data = db.calculate_average_data(patient_data)
-            print(calculated_data)
-            
+
             return render_template('home.html', patient=patient_data, calculated=calculated_data)
         else:
             return redirect('/login')

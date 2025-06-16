@@ -411,11 +411,10 @@ class Database:
             return result[0][0]
         return None
 
-    def upload_pam_data(self, patient_id: str, pam_data: list):
+    def upload_minute_data(self, patient_id: int, minute_data: list):
         """
         Upload PAM data for a patient.
         Expects pam_data to be a list of dictionaries with keys:
-        - 'device_id'
         - 'timestamp'
         - 'steps'
         - 'pam_score'
@@ -434,7 +433,7 @@ class Database:
         params = [
             (device_id, data['timestamp'], data['steps'],
              data['pam_score'], data['zone'], data['data_label'])
-            for data in pam_data
+            for data in minute_data
         ]
 
         try:
@@ -444,6 +443,40 @@ class Database:
             return True
         except Error as e:
             print("Error while uploading PAM data:", e)
+            return False
+        finally:
+            cursor.close()
+
+    def upload_day_data(self, patient_id: int, day_data: list):
+        """
+        Upload daily PAM data for a patient.
+        Expects day_data to be a list of dictionaries with keys:
+        - 'timestamp'
+        - 'steps'
+        - 'pam_score' 
+        """
+        device_id = self.device_id_from_patient_id(patient_id)
+
+        if not day_data:
+            return False
+
+        query = """
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score)
+            VALUES (%s, %s, %s, %s);
+        """
+        params = [
+            (device_id, data['timestamp'], data['steps'],
+             data['pam_score'])
+            for data in day_data
+        ]
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.executemany(query, params)
+            self._connection.commit()
+            return True
+        except Error as e:
+            print("Error while uploading daily PAM data:", e)
             return False
         finally:
             cursor.close()

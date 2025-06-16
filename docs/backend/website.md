@@ -354,9 +354,18 @@ def logout():
     return redirect('/admin/login')
 ```
 
----
+## 15. Token Authentication
 
-## 15. Running the App
+Checks the authentication token of the base station for communication with the api.
+
+```python
+token = request.cookies.get('auth_token')
+valid, reason = db.verify_auth_token(token)
+if not valid:
+    return {"error": reason}, 401
+```
+
+## 16. Running the App
 
 ```python
 if __name__ == "__main__":

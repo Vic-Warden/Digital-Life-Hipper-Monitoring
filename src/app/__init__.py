@@ -1,3 +1,17 @@
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO Add documentation about: figma design, database schema, __init__.py changes.
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO
+
+
+from flask import request, jsonify
 import os  # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response, jsonify
@@ -125,32 +139,42 @@ def admin_logout():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    if db.verify_cookie(cookie)[0]:
+    if not db.verify_cookie(cookie)[0]:
+        return redirect('/login')
 
-        if request.method == "POST":
-            # Retrieve the form data
-            dark_mode = request.form.get('dark_mode', 'off') == 'on'
-            large_font = request.form.get('large_text', 'off') == 'on'
-            language = request.form.get('language', 'NL')
+    if request.method == "POST":
+        # Expecting JSON
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-            # Validate the language input
-            if not ["nl", "en"] in language.lower():
-                return render_template("settings.html", error="Invalid language selected.", preferences=db.get_user_preferences(cookie))
+        # Extract values
+        dark_mode = data.get('dark_mode', 0)
+        large_font = data.get('large_font', 0)
+        language = data.get('language', 'nl')
 
-            # Update user preferences in the database
-            db.set_user_preferences(cookie, dark_mode, large_font, language)
+        # Validate language
+        if language.lower() not in ["nl", "en"]:
+            return jsonify({"error": "Language not supported."}), 400
 
-            user_preferences = {
+        # Convert to boolean
+        dark_mode = (dark_mode == 1)
+        large_font = (large_font == 1)
+
+        # Save preferences
+        db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+        return jsonify({
+            "msg": "Settings updated successfully.",
+            "preferences": {
                 "dark_mode": dark_mode,
-                "large_text": large_font,
+                "large_font": large_font,
                 "language": language
             }
+        }), 200
 
-            return render_template("settings.html", msg="Successfully updated settings.", preferences=user_preferences)
-
-        return render_template("settings.html", preferences=db.get_user_preferences(cookie))
-
-    return redirect("/login")
+    # If GET request, render the settings page
+    return render_template("settings.html", preferences=db.get_user_preferences(cookie))
 
 # Handle the admin settings
 
@@ -161,32 +185,37 @@ def admin_settings():
     if db.verify_cookie(cookie)[0]:
 
         if request.method == "POST":
-            # Retrieve the form data
-            dark_mode = request.form.get('dark_mode', 'off') == 'on'
-            large_font = request.form.get('large_text', 'off') == 'on'
-            language = request.form.get('language', 'NL')
+            # Expecting JSON
+            data = request.get_json()
+            if not data:
+                return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-            # Validate the language input
-            if not ["nl", "en"] in language.lower():
-                return render_template("settings.html", error="Invalid language selected.", preferences=db.get_user_preferences(cookie))
+            # Extract values
+            dark_mode = data.get('dark_mode', 0)
+            large_font = data.get('large_font', 0)
+            language = data.get('language', 'nl')
 
-            # Update user preferences in the database
+            # Validate language
+            if language.lower() not in ["nl", "en"]:
+                return jsonify({"error": "Language not supported."}), 400
+
+            # Convert to boolean
+            dark_mode = (dark_mode == 1)
+            large_font = (large_font == 1)
+
+            # Save preferences
             db.set_user_preferences(cookie, dark_mode, large_font, language)
 
-            user_preferences = {
-                "dark_mode": dark_mode,
-                "large_text": large_font,
-                "language": language
-            }
+            return jsonify({
+                "msg": "Settings updated successfully.",
+                "preferences": {
+                    "dark_mode": dark_mode,
+                    "large_font": large_font,
+                    "language": language
+                }
+            }), 200
 
-            return render_template("settings.html", msg="Successfully updated settings.", preferences=user_preferences)
-
-        # Fetch user preferences from the database
-        user_preferences = db.get_user_preferences(cookie)
-
-        print(user_preferences)
-
-        return render_template("admin_settings.html", preferences=user_preferences)
+        return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
 

@@ -1,3 +1,4 @@
+from flask import request, jsonify
 import os  # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response, jsonify
@@ -53,7 +54,7 @@ def home():
             patient_data = db.do_query(data_query, (device_id,))
             calculated_data = db.calculate_average_data(patient_data)
 
-            return render_template('home.html', patient=patient_data, calculated=calculated_data)
+            return render_template('home.html', patient=patient_data, calculated=calculated_data, preferences=db.get_user_preferences(cookie))
         else:
             return redirect('/login')
     else:
@@ -125,19 +126,45 @@ def admin_logout():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    if db.verify_cookie(cookie)[0]:
+    if not db.verify_cookie(cookie)[0]:
+        return redirect('/login')
 
-        if request.method == "POST":
-            # TODO: Add logic for handling settings updates
-            #  - Change email
-            #  - Change password etc...
-            pass
+    if request.method == "POST":
+        # Expecting JSON
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-        return render_template("settings.html")
+        # Extract values
+        dark_mode = data.get('dark_mode', 0)
+        large_font = data.get('large_font', 0)
+        language = data.get('language', 'nl')
 
-    return redirect("/login")
+        # Validate language
+        if language.lower() not in ["nl", "en"]:
+            return jsonify({"error": "Language not supported."}), 400
+
+        # Convert to boolean
+        dark_mode = (dark_mode == 1)
+        large_font = (large_font == 1)
+
+        # Save preferences
+        db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+        return jsonify({
+            "msg": "Settings updated successfully.",
+            "preferences": {
+                "dark_mode": dark_mode,
+                "large_font": large_font,
+                "language": language
+            }
+        }), 200
+
+    # If GET request, render the settings page
+    return render_template("settings.html", preferences=db.get_user_preferences(cookie))
 
 # Handle the admin settings
+
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 def admin_settings():
@@ -145,15 +172,39 @@ def admin_settings():
     if db.verify_cookie(cookie)[0]:
 
         if request.method == "POST":
-            # TODO: Add logic for handling settings updates
-            #  - Change email
-            #  - Change password etc...
-            pass
+            # Expecting JSON
+            data = request.get_json()
+            if not data:
+                return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-        return render_template("admin_settings.html")
+            # Extract values
+            dark_mode = data.get('dark_mode', 0)
+            large_font = data.get('large_font', 0)
+            language = data.get('language', 'nl')
+
+            # Validate language
+            if language.lower() not in ["nl", "en"]:
+                return jsonify({"error": "Language not supported."}), 400
+
+            # Convert to boolean
+            dark_mode = (dark_mode == 1)
+            large_font = (large_font == 1)
+
+            # Save preferences
+            db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+            return jsonify({
+                "msg": "Settings updated successfully.",
+                "preferences": {
+                    "dark_mode": dark_mode,
+                    "large_font": large_font,
+                    "language": language
+                }
+            }), 200
+
+        return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
-
 
 
 # Handle the admin login page
@@ -165,7 +216,7 @@ def admin_login():
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
         # Render the home.html
-        return render_template('admin_home.html')
+        return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
     else:
         # If user is not logged in, redirects to login page
         return redirect('/admin/login')
@@ -193,7 +244,7 @@ def admin_patient_list():
         return "Patients not found", 404
 
     # Render the patient details page
-    return render_template('admin_patients.html', patient=patient_details)
+    return render_template('admin_patients.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/patients/<patient_id>', methods=['GET'])
@@ -212,7 +263,7 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     # Render the patient details page
-    return render_template('admin_patient_details.html', patient=patient_details)
+    return render_template('admin_patient_details.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -298,7 +349,7 @@ def change_email():
     new_email = request.form.get('new_email', '').strip()
 
     if not new_email:
-        return render_template('profile.html', user=session['user'], message="Email cannot be empty.")
+        return render_template('profile.html', user=session['user'], message="Email cannot be empty.", preferences=db.get_user_preferences(cookie))
 
     # Update the user's email in the database
     db.change_user_email(cookie, new_email)
@@ -306,7 +357,7 @@ def change_email():
     # Update the session data
     session['user']['email'] = new_email
 
-    return render_template('profile.html', user=session['user'], message="Email updated successfully.")
+    return render_template('profile.html', user=session['user'], message="Email updated successfully.", preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/api/get-patients', methods=['GET'])
@@ -507,12 +558,12 @@ def routine_form():
     if request.method == 'POST':
         data = request.get_json()
         patient_id = data.get("patient_id")
-        
+
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
         usual_slots = db.get_usual_active_slots(patient_id)
-        
+
         if not usual_slots:
             return {"disruptions": []}, 200
 
@@ -520,7 +571,6 @@ def routine_form():
 
         return {"disruptions": disruptions}, 200
     return render_template('routine_form.html')
-
 
 
 # Start the Flask application

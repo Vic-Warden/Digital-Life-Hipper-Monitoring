@@ -44,7 +44,7 @@ class Database:
             # and print some server information
             if connection.is_connected():
                 # Get the server information
-                db_info = connection.get_server_info()
+                db_info = connection.server_info
                 print("Connected to MySQL Server version", db_info)
                 # Get the database name
                 cursor = connection.cursor()
@@ -506,3 +506,51 @@ class Database:
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
             'monthly': monthly_avg.reset_index().to_dict(orient='records')
         }
+
+    def get_user_preferences(self, cookie: str) -> dict:
+        """
+        ### Get user preferences based on user ID.
+        Returns a dictionary containing user preferences or None if not found.
+
+        ### How to use:
+        ```python
+        preferences = get_user_preferences(cookie)
+        ```
+        ### Returns:
+        - A dictionary containing user preferences.
+        """
+        query = "SELECT dark_mode, large_font, language FROM User WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return_dict = {
+                "dark_mode": result[0][0],
+                "large_font": result[0][1],
+                "language": result[0][2]
+            }
+            return return_dict
+        return {}
+
+    def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, language: str) -> bool:
+        """
+        ### Set user preferences based on user ID.
+        Returns True if the preferences were updated successfully, False otherwise.
+
+        ### How to use:
+        ```python
+        success = set_user_preferences(cookie, dark_mode=True, large_font=False, language='en')
+        ```
+        ### Returns:
+        - True if the preferences were updated successfully.
+        - False if the update failed.
+        """
+        query = """
+            UPDATE User
+            SET dark_mode = %s, large_font = %s, language = %s
+            WHERE cookies = %s;
+        """
+        params = (dark_mode, large_font, language, cookie)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None

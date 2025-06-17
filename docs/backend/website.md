@@ -136,29 +136,50 @@ def logout():
 
 Displays and updates user profile information.
 
+By pressing the save button on the website it sends the preferences to the back.end which interprets them and writes them to the database.
+
+On a page refresh, they are retreived from the database and are sent to the front-end.
+
 ```python
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
-
-    if 'user' not in session:
+    if not db.verify_cookie(cookie)[0]:
         return redirect('/login')
 
-    if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        therapist = request.form.get('therapist', '').strip()
+    if request.method == "POST":
+        # Expecting JSON
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-        if not username or not email:
-            message = "Names, e-mails and the therapist is required"
-            return render_template('profile.html', user=session['user'], message=message)
+        # Extract values
+        dark_mode = data.get('dark_mode', 0)
+        large_font = data.get('large_font', 0)
+        language = data.get('language', 'nl')
 
-        session['user']['username'] = username
-        session['user']['email'] = email
-        session['user']['therapist'] = therapist
+        # Validate language
+        if language.lower() not in ["nl", "en"]:
+            return jsonify({"error": "Language not supported."}), 400
 
-        return render_template('profile.html', user=session['user'], message=message)
+        # Convert to boolean
+        dark_mode = (dark_mode == 1)
+        large_font = (large_font == 1)
+
+        # Save preferences
+        db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+        return jsonify({
+            "msg": "Settings updated successfully.",
+            "preferences": {
+                "dark_mode": dark_mode,
+                "large_font": large_font,
+                "language": language
+            }
+        }), 200
+
+    # If GET request, render the settings page
+    return render_template("settings.html", preferences=db.get_user_preferences(cookie))
 ```
 
 ---
@@ -462,6 +483,52 @@ Detects if a patient has not been active in his usual time slots for a certain n
     }
   ]
 }
+```
+
+## Admin settings
+
+The admin settings back-end is almost identical to the user settings back-end. It saves the admin's preferences and loads them when the page is refreshed or requested.
+
+```python
+@app.route('/admin/settings', methods=['GET', 'POST'])
+def admin_settings():
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+
+        if request.method == "POST":
+            # Expecting JSON
+            data = request.get_json()
+            if not data:
+                return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
+
+            # Extract values
+            dark_mode = data.get('dark_mode', 0)
+            large_font = data.get('large_font', 0)
+            language = data.get('language', 'nl')
+
+            # Validate language
+            if language.lower() not in ["nl", "en"]:
+                return jsonify({"error": "Language not supported."}), 400
+
+            # Convert to boolean
+            dark_mode = (dark_mode == 1)
+            large_font = (large_font == 1)
+
+            # Save preferences
+            db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+            return jsonify({
+                "msg": "Settings updated successfully.",
+                "preferences": {
+                    "dark_mode": dark_mode,
+                    "large_font": large_font,
+                    "language": language
+                }
+            }), 200
+
+        return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
+
+    return redirect("/admin/login")
 ```
 
 

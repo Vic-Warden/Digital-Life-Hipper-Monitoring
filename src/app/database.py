@@ -398,6 +398,56 @@ class Database:
             return []
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+    
+    def get_disruptions(self, patient_id: int, usual_slots: list[int], alert_days: int = 3) -> list[dict]:
+        from datetime import datetime, timedelta
+        import pandas as pd
+
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=7)
+
+        query = """
+            SELECT DATE(timestamp) AS date, HOUR(timestamp) AS hour, SUM(steps) AS total_steps
+            FROM Data
+            INNER JOIN Device ON Data.device_id = Device.id
+            WHERE Device.patient_id_device = %s
+            AND timestamp BETWEEN %s AND %s
+            GROUP BY date, hour
+            ORDER BY date, hour;
+        """
+        rows = self.do_query(query, (patient_id, start_date, end_date))
+
+        if not rows:
+            return []
+
+        df = pd.DataFrame(rows, columns=["date", "hour", "total_steps"])
+        pivot_df = df.pivot_table(index="date", columns="hour", values="total_steps", fill_value=0)
+
+        alerts = []
+        for hour_slot in usual_slots:
+            if hour_slot not in pivot_df.columns:
+                continue
+
+            is_active = pivot_df[hour_slot] > 0
+            current_streak = []
+            inactive_streaks = []
+
+            for date, active in is_active.items():
+                if not active:
+                    current_streak.append(str(date))
+                else:
+                    if len(current_streak) >= alert_days:
+                        inactive_streaks.append(current_streak)
+                    current_streak = []
+
+            if len(current_streak) >= alert_days:
+                inactive_streaks.append(current_streak)
+
+            for streak in inactive_streaks:
+                alerts.append({"hour_slot": hour_slot, "inactive_days": streak})
+
+        return alerts
+
 
     def device_id_from_patient_id(self, patient_id: int) -> int:
         """

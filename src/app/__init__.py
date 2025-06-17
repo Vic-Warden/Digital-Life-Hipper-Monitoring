@@ -128,16 +128,37 @@ def settings():
     if db.verify_cookie(cookie)[0]:
 
         if request.method == "POST":
-            # TODO: Add logic for handling settings updates
-            #  - Change email
-            #  - Change password etc...
-            pass
+            # Retrieve the form data
+            dark_mode = request.form.get('dark_mode', 'off') == 'on'
+            large_font = request.form.get('large_text', 'off') == 'on'
+            language = request.form.get('language', 'NL')
 
-        return render_template("settings.html")
+            # Validate the language input
+            if not ["nl", "en"] in language.lower():
+                return render_template("settings.html", error="Invalid language selected.")
+
+            # Update user preferences in the database
+            db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+            user_preferences = {
+                "dark_mode": dark_mode,
+                "large_text": large_font,
+                "language": language
+            }
+
+            return render_template("settings.html", msg="Successfully updated settings.", preferences=user_preferences)
+
+        # Fetch user preferences from the database
+        user_preferences = db.get_user_preferences(cookie)
+
+        print(user_preferences, 1)
+
+        return render_template("settings.html", preferences=user_preferences)
 
     return redirect("/login")
 
 # Handle the admin settings
+
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 def admin_settings():
@@ -145,15 +166,34 @@ def admin_settings():
     if db.verify_cookie(cookie)[0]:
 
         if request.method == "POST":
-            # TODO: Add logic for handling settings updates
-            #  - Change email
-            #  - Change password etc...
-            pass
+            # Retrieve the form data
+            dark_mode = request.form.get('dark_mode', 'off') == 'on'
+            large_font = request.form.get('large_text', 'off') == 'on'
+            language = request.form.get('language', 'NL')
 
-        return render_template("admin_settings.html")
+            # Validate the language input
+            if not ["nl", "en"] in language.lower():
+                return render_template("settings.html", error="Invalid language selected.")
+
+            # Update user preferences in the database
+            db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+            user_preferences = {
+                "dark_mode": dark_mode,
+                "large_text": large_font,
+                "language": language
+            }
+
+            return render_template("settings.html", msg="Successfully updated settings.", preferences=user_preferences)
+
+        # Fetch user preferences from the database
+        user_preferences = db.get_user_preferences(cookie)
+
+        print(user_preferences)
+
+        return render_template("admin_settings.html", preferences=user_preferences)
 
     return redirect("/admin/login")
-
 
 
 # Handle the admin login page
@@ -507,12 +547,12 @@ def routine_form():
     if request.method == 'POST':
         data = request.get_json()
         patient_id = data.get("patient_id")
-        
+
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
         usual_slots = db.get_usual_active_slots(patient_id)
-        
+
         if not usual_slots:
             return {"disruptions": []}, 200
 
@@ -520,7 +560,6 @@ def routine_form():
 
         return {"disruptions": disruptions}, 200
     return render_template('routine_form.html')
-
 
 
 # Start the Flask application

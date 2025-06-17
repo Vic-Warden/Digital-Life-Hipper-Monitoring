@@ -303,3 +303,13 @@ In this file you will find all the css code that is used to style is page.
 - Figma is used to help with making the design for the website.
 
 **Chatgpt was used to clean up the written code**
+
+## admin_patients
+
+The admin patients is used for therapist to view all their patients and also add new patients if needed.
+
+**Figma Design**
+![FigmaDesignPatientsPage](/docs/assets/AdminPatientsPageDesign.png)
+
+**Design Used**
+![FigmaDesignPatientsPage](/docs/assets/AdminPatientsPage.png)

@@ -362,3 +362,23 @@ When the form is submitted, it sends a POST request to the backend route '/api/a
 ```
 ### admin_patients.css
 In this file you will find all the css code that is used to style is page.
+
+### admin_patients.js
+The JavaScript file for the admin patients page contains the function that enables search functionality in the patient list.
+
+```javascript
+    // Filter patients based on search
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById("search");
+      const patientItems = document.querySelectorAll(".patient-card-item");
+  
+      searchInput.addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+  
+        patientItems.forEach(item => {
+          const name = item.dataset.name;
+          item.style.display = name.includes(query) ? "block" : "none";
+        });
+      });
+    });
+```

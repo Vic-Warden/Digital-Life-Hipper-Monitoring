@@ -412,7 +412,7 @@ class Database:
             return result[0][0]
         return None
 
-    def upload_minute_data(self, patient_id: int, minute_data: list):
+    def upload_minute_data(self, patient_id: int, pam_data: list):
         """
         Upload PAM data for a patient.
         Expects pam_data to be a list of dictionaries with keys:
@@ -434,7 +434,7 @@ class Database:
         params = [
             (device_id, data['timestamp'], data['steps'],
              data['pam_score'], data['zone'], data['data_label'])
-            for data in minute_data
+            for data in pam_data
         ]
 
         try:

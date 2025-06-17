@@ -1,14 +1,3 @@
-# TODO
-# TODO
-# TODO
-# TODO
-# TODO
-# TODO Add documentation about: figma design, database schema, __init__.py changes.
-# TODO
-# TODO
-# TODO
-# TODO
-# TODO
 
 
 from flask import request, jsonify
@@ -106,7 +95,7 @@ def login():
 
             # Redirect to home after form submission
             return response
-        return render_template('login.html', error="Invalid credentials. Please try again.", preferences=db.get_user_preferences(cookie))
+        return render_template('login.html', error="Invalid credentials. Please try again.")
     else:
         # Render the login.html
         return render_template('login.html')

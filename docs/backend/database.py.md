@@ -237,3 +237,104 @@ Returns
     True if the update was successful.
 
     False if no update was performed.
+
+### Get device id from patient id
+
+This function is provided to get the device_id (base station device id) associated with a patient.
+
+```python
+def device_id_from_patient_id(self, patient_id: int) -> int:
+    """
+    Get the device ID associated with a patient ID.
+    Returns the device ID or None if not found.
+    """
+    query = "SELECT device_id FROM Device WHERE patient_id_device = %s;"
+    params = (patient_id,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result) > 0:
+        return result[0][0]
+    return None
+```
+
+### Upload minute data
+
+Uploads minute data to the database using the patient_id.
+
+```python
+def upload_minute_data(self, patient_id: int, minute_data: list):
+    """
+    Upload PAM data for a patient.
+    Expects pam_data to be a list of dictionaries with keys:
+    - 'timestamp'
+    - 'steps'
+    - 'pam_score'
+    - 'zone'
+    - 'data_label'
+    """
+    device_id = self.device_id_from_patient_id(patient_id)
+
+    if not pam_data:
+        return False
+
+    query = """
+        INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+        VALUES (%s, %s, %s, %s, %s, %s);
+    """
+    params = [
+        (device_id, data['timestamp'], data['steps'],
+        data['pam_score'], data['zone'], data['data_label'])
+        for data in minute_data
+    ]
+
+    try:
+        cursor = self._connection.cursor()
+        cursor.executemany(query, params)
+        self._connection.commit()
+        return True
+    except Error as e:
+        print("Error while uploading PAM data:", e)
+        return False
+    finally:
+        cursor.close()
+```
+
+### Upload day data
+
+Uploads day data to the database using patient_id.
+
+```python
+def upload_day_data(self, patient_id: int, day_data: list):
+    """
+    Upload daily PAM data for a patient.
+    Expects day_data to be a list of dictionaries with keys:
+    - 'timestamp'
+    - 'steps'
+    - 'pam_score' 
+    """
+    device_id = self.device_id_from_patient_id(patient_id)
+
+    if not day_data:
+        return False
+
+    query = """
+        INSERT INTO Data (device_id, timestamp, steps, PAM_score)
+        VALUES (%s, %s, %s, %s);
+    """
+    params = [
+        (device_id, data['timestamp'], data['steps'],
+            data['pam_score'])
+        for data in day_data
+    ]
+
+    try:
+        cursor = self._connection.cursor()
+        cursor.executemany(query, params)
+        self._connection.commit()
+        return True
+    except Error as e:
+        print("Error while uploading daily PAM data:", e)
+        return False
+    finally:
+        cursor.close()
+```

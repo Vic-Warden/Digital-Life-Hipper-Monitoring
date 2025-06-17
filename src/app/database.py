@@ -337,38 +337,6 @@ class Database:
             return (True, result[0][0])
         return (False, "Invalid token")
 
-    # def get_last_update_period(self, device_mac_addr: str):
-    #     """
-    #     ### Get the last update period for a device based on its MAC address.
-
-    #     Returns the last update period as a string.
-    #     """
-    #     query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
-    #     params = (device_mac_addr,)
-    #     result = self.do_query(query, params, fetch=True)
-
-    #     if result and len(result) > 0:
-    #         return result[0][0]
-    #     return None
-
-    # def set_last_update_period(self, device_mac_addr: str) -> bool:
-    #     """
-    #     ### Set the last update period for a device based on its MAC address.
-
-    #     Returns True if the update was successful, False otherwise.
-    #     """
-    #     # Get current time
-    #     now = datetime.now()
-
-    #     # Format as MySQL-compatible DATETIME string
-    #     current_time = now.strftime('%Y-%m-%d %H:%M:%S')
-
-    #     # Update the last_data_pull for the device
-    #     query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
-    #     params = (current_time, device_mac_addr)
-    #     result = self.do_query(query, params, fetch=False)
-    #     return result is not None
-
     def get_log_for_mac(self, mac_address):
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
         params = (mac_address,)
@@ -430,13 +398,98 @@ class Database:
             return []
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
-    
+
+    def device_id_from_patient_id(self, patient_id: int) -> int:
+        """
+        Get the device ID associated with a patient ID.
+        Returns the device ID or None if not found.
+        """
+        query = "SELECT device_id FROM Device WHERE patient_id_device = %s;"
+        params = (patient_id,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0]
+        return None
+
+    def upload_minute_data(self, patient_id: int, minute_data: list):
+        """
+        Upload PAM data for a patient.
+        Expects pam_data to be a list of dictionaries with keys:
+        - 'timestamp'
+        - 'steps'
+        - 'pam_score'
+        - 'zone'
+        - 'data_label'
+        """
+        device_id = self.device_id_from_patient_id(patient_id)
+
+        if not pam_data:
+            return False
+
+        query = """
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+            VALUES (%s, %s, %s, %s, %s, %s);
+        """
+        params = [
+            (device_id, data['timestamp'], data['steps'],
+             data['pam_score'], data['zone'], data['data_label'])
+            for data in minute_data
+        ]
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.executemany(query, params)
+            self._connection.commit()
+            return True
+        except Error as e:
+            print("Error while uploading PAM data:", e)
+            return False
+        finally:
+            cursor.close()
+
+    def upload_day_data(self, patient_id: int, day_data: list):
+        """
+        Upload daily PAM data for a patient.
+        Expects day_data to be a list of dictionaries with keys:
+        - 'timestamp'
+        - 'steps'
+        - 'pam_score' 
+        """
+        device_id = self.device_id_from_patient_id(patient_id)
+
+        if not day_data:
+            return False
+
+        query = """
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score)
+            VALUES (%s, %s, %s, %s);
+        """
+        params = [
+            (device_id, data['timestamp'], data['steps'],
+             data['pam_score'])
+            for data in day_data
+        ]
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.executemany(query, params)
+            self._connection.commit()
+            return True
+        except Error as e:
+            print("Error while uploading daily PAM data:", e)
+            return False
+        finally:
+            cursor.close()
+
     def calculate_average_data(self, data):
         # Create a DataFrame taken from db `Data` structure
-        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+        df = pd.DataFrame(data, columns=[
+                          'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
 
         # Ensure timestamp is datetime
-        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+        df['timestamp'] = pd.to_datetime(
+            df['timestamp']).dt.tz_localize('Europe/Amsterdam')
 
         # Set timestamp as index
         df.set_index('timestamp', inplace=True)
@@ -452,4 +505,4 @@ class Database:
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
             'monthly': monthly_avg.reset_index().to_dict(orient='records')
-        }        
+        }

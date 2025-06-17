@@ -74,6 +74,19 @@ Each goal includes:
 
 ---
 
+### 4. **Bottom panel – Historical graph** (`<class="card chart-section">`)
+The section allows users to visualize their historical activity data (steps and PAM score) across different time scales:
+- Hourly (past 12 hours)
+- Daily (past 7 days)
+- Weekly (past 7 weeks)
+- Monthly (past 6 months)
+
+Each view displays bar charts for two metrics:
+- steps: Number of steps taken
+- PAM_score: A physical activity measure
+
+---
+
 ## Script Reference
 
 The following JS script is included at the bottom of the HTML:

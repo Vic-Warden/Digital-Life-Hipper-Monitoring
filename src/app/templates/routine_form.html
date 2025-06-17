@@ -18,7 +18,7 @@
       e.preventDefault();
       const patientId = document.getElementById('patient_id').value;
 
-      const response = await fetch('/api/routine-disruption', {
+      const response = await fetch('/routine-form', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ patient_id: patientId })

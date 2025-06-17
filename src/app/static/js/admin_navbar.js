@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="dropdown-content">
       <a href="/admin/home" class="nav-link">Home</a>
       <a href="/admin/patients" class="nav-link">Patients</a>
-      <a href="/settings" class="nav-link">Settings</a>
+      <a href="/admin/settings" class="nav-link">Settings</a>
       <a href="/admin/logout" class="nav-link">Logout</a>
     </div>
   </div>

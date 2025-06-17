@@ -43,10 +43,20 @@ def home():
     # if connected
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
-        # Render the home.html
-        return render_template('home.html')
+        user_query = "SELECT id FROM User WHERE cookies = %s"
+        result = db.do_query(user_query, (cookie,))
+
+        if result:
+            # Result returns a legitmate row containing the cookie
+            device_id = result[0][0]  # result is a list of tuples
+            data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
+            patient_data = db.do_query(data_query, (device_id,))
+            calculated_data = db.calculate_average_data(patient_data)
+
+            return render_template('home.html', patient=patient_data, calculated=calculated_data)
+        else:
+            return redirect('/login')
     else:
-        # If user is not logged in, redirects to login page
         return redirect('/login')
 
 # Request the user & the password with GET and POST methods
@@ -126,6 +136,25 @@ def settings():
         return render_template("settings.html")
 
     return redirect("/login")
+
+# Handle the admin settings
+
+@app.route('/admin/settings', methods=['GET', 'POST'])
+def admin_settings():
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+
+        if request.method == "POST":
+            # TODO: Add logic for handling settings updates
+            #  - Change email
+            #  - Change password etc...
+            pass
+
+        return render_template("admin_settings.html")
+
+    return redirect("/admin/login")
+
+
 
 # Handle the admin login page
 
@@ -473,26 +502,25 @@ def update_log(mac_address):
     return {"message": "Log updated"}, 200
 
 
-@app.route('/api/routine-disruption', methods=['POST'])
-def detect_routine_disruption():
-    data = request.get_json()
-    patient_id = data.get("patient_id")
-
-    if not patient_id:
-        return {"error": "Missing patient_id"}, 400
-
-    usual_slots = db.get_usual_slots(patient_id)
-    if not usual_slots:
-        return {"disruptions": []}, 200
-
-    disruptions = db.get_disruptions(patient_id, usual_slots)
-
-    return {"disruptions": disruptions}, 200
-
-
-@app.route('/routine-form')
+@app.route('/routine-form', methods=['GET', 'POST'])
 def routine_form():
+    if request.method == 'POST':
+        data = request.get_json()
+        patient_id = data.get("patient_id")
+        
+        if not patient_id:
+            return {"error": "Missing patient_id"}, 400
+
+        usual_slots = db.get_usual_active_slots(patient_id)
+        
+        if not usual_slots:
+            return {"disruptions": []}, 200
+
+        disruptions = db.get_disruptions(patient_id, usual_slots)
+
+        return {"disruptions": disruptions}, 200
     return render_template('routine_form.html')
+
 
 
 # Start the Flask application

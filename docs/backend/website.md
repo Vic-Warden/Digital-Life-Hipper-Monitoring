@@ -16,7 +16,9 @@ This is a Flask web application that provides routes for users and admin access,
 * `/change-email`
 * `/admin/home`
 * `/admin/login`
+* `/admin/patients`
 * `/api/routine-disruption`
+* `/api/add-patient`
 
 ---
 
@@ -245,7 +247,34 @@ def admin_login():
         return redirect('/admin/login')
 ```
 
-## 10. Patients
+## 10. Admin Patients
+
+Admin users (therapists) can see there patient a list of their patients.
+
+```python
+@app.route('/admin/patients', methods=['GET'])
+def admin_patient_list():
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+    
+    therapist_id = db.therapist_id_from_cookie(cookie)
+    print(therapist_id)
+
+    # Extended list with 6 patients
+    patient_details = db.get_patients(therapist_id)
+    print(patient_details)
+
+    if not patient_details:
+        return "Patients not found", 404
+
+    return render_template('admin_patients.html', patients=patient_details)
+```
+
+## 11. Patients
 
 `get_patients(therapist_id: int)` returns a list of all the patients connected to a therapist.
 
@@ -269,7 +298,7 @@ def get_patients():
     return {"patients": patients}, 200
 ```
 
-## 11. Patient Data
+## 12. Patient Data
 
 `get_patient_details(patient_id: int)` returns the details from a single patient.
 
@@ -297,7 +326,7 @@ def get_patient_data():
     return patient_data, 200
 ```
 
-## 12. Upload PAM Data
+## 13. Upload PAM Data
 
 `upload_pam_data()` is an API endpoint reserved for uploading movement data in JSON format to the server.
 
@@ -334,7 +363,7 @@ def upload_pam_data():
     return {"message": "PAM data uploaded successfully"}, 200
 ```
 
-## 13. Get the last update period
+## 14. Get the last update period
 
 ## 📄 Device Update Period Functions
 
@@ -358,7 +387,7 @@ def get_last_update_period(self, device_mac_addr: str):
     return None
 ```
 
-## 14. Admin logout
+## 15. Admin logout
 
 Removes the auth cookie and redirects to admin login.
 
@@ -370,7 +399,7 @@ def logout():
     return redirect('/admin/login')
 ```
 
-## 15. Log date time
+## 16. Log date time
 update and get last date and time when data was pulled form sensor by looking at the mac address
 ### Get date time
 ```python
@@ -437,6 +466,37 @@ Detects if a patient has not been active in his usual time slots for a certain n
 }
 ```
 
+## 18. Add Patient
+
+This route adds a new patient into the database.
+
+```python
+@app.route('/api/add-patient', methods=['POST'])
+def admin_add_patient():
+    # Get data from form
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Check if user is authorized to add patient
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Validate required data
+    if not all([name, email, password, cookie]):
+        return "Missing required fields", 400
+
+    # Call DB logic to insert the patient
+    success = db.add_patient(name, email, password, cookie)
+
+    if not success:
+        return "Failed to add patient", 400
+
+    return redirect('/admin/patients')
+```
 
 ## 18. Running the App
 

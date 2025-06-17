@@ -267,3 +267,13 @@ Therapists using this dashboard can:
 - Track performance against **customizable weekly and monthly goals**.
 - Use visual insights (graph & dial) to guide discussions and adjust plans.
 - Add, edit, or remove goals based on progress.
+
+---
+
+## Save button and error messages
+
+The design choice behind this was that it should fit the theme, but also convey the action through colors to the user. Green meaning it was successful and red meaning something went wrong. The save button has a border which is the same color as the borders around the profile and settings cards, with a slightly brighter inside. It also changes to a darker color on hover and the text becomes white.
+
+The message fade out after 5 seconds, giving the user enough time to read them. This way they are not in the way the entire time.
+
+![preferences design](../../design/save_preferences_design.png)

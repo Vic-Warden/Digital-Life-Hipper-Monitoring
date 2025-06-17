@@ -237,3 +237,49 @@ Returns
     True if the update was successful.
 
     False if no update was performed.
+
+
+### Data averages for historical graph
+
+```python
+    def calculate_average_data(self, data):
+        # Create a DataFrame taken from db `Data` structure
+        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+
+        # Ensure timestamp is datetime
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+
+        # Resample and calculate means
+        hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
+        daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
+        weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
+        monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
+
+        return {
+            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
+            'daily': daily_avg.reset_index().to_dict(orient='records'),
+            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
+            'monthly': monthly_avg.reset_index().to_dict(orient='records')
+        } 
+```
+
+The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly.
+
+Parameters:
+* data: list of records containing id, device_id, timestamp, steps, PAM_score, zone, and data_label.
+
+Returns:
+* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly'.
+Each contains a list of records with average steps and PAM_score for the corresponding time period.
+
+Key Steps:
+> Converts data to a DataFrame.
+
+> Parses timestamps and sets as index.
+
+> Resamples data by time intervals.
+
+> Computes mean values and formats results as dictionaries.

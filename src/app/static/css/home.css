@@ -22,7 +22,6 @@ body {
 }
 
 .logo {
-    font-family: ;
     font-size: 14px;
     font-weight: 300;
     letter-spacing: 3px;
@@ -320,6 +319,7 @@ body {
 
 .chart-section {
     margin-top: 30px;
+    grid-column: 1 / -1; /* This makes the chart span all columns */
 }
 
 .chart-header {

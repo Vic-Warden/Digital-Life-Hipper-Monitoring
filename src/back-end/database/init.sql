@@ -14,8 +14,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 CREATE SCHEMA IF NOT EXISTS `hipperdb` DEFAULT CHARACTER SET utf8 ;
 USE `hipperdb` ;
 
-SET GLOBAL time_zone = 'Europe/Amsterdam';
-
 -- -----------------------------------------------------
 -- Table `hipperdb`.`Therapist`
 -- -----------------------------------------------------
@@ -40,6 +38,10 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `cookies` VARCHAR(256) NULL,
   `is_therapist` INT NOT NULL,
   `fk_therapist_id` INT NULL,
+  `is_superuser` INT NOT NULL DEFAULT 0,
+  `dark_mode` INT NOT NULL DEFAULT 0,
+  `large_font` INT NOT NULL DEFAULT 0,
+  `language` VARCHAR(3) NOT NULL DEFAULT 'NL',
   PRIMARY KEY (`id`),
   INDEX `fk_therapist_id_idx` (`fk_therapist_id` ASC) VISIBLE,
   CONSTRAINT `fk_therapist_id`
@@ -80,8 +82,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`Device` (
   `device_label` VARCHAR(10) NOT NULL,
   `device_id` INT NOT NULL,
   `auth_token` VARCHAR(32) NOT NULL,
-  `last_day_data_pull` DATE NULL,
-  `last_activity_pull` DATETIME NULL,
+  `last_data_pull` DATETIME NULL,
   `device_mac_addr` VARCHAR(17) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `patient_id_idx` (`patient_id_device` ASC) VISIBLE,
@@ -138,6 +139,27 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`Patient_has_Therapist` (
     ON UPDATE CASCADE);
 
 
+-- -----------------------------------------------------
+-- Table `hipperdb`.`MinuteData`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hipperdb`.`MinuteData` ;
+
+CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `device_id` INT NOT NULL,
+  `timestamp` DATETIME NOT NULL,
+  `steps` INT NOT NULL,
+  `pam_score` DECIMAL(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
+  CONSTRAINT `device_id_fk`
+    FOREIGN KEY (`device_id`)
+    REFERENCES `hipperdb`.`Device` (`patient_id_device`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -157,8 +179,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL, 0, NULL);
-INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL, 0, NULL, 0, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1, 1, DEFAULT, DEFAULT, DEFAULT);
 
 COMMIT;
 
@@ -178,7 +200,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_day_data_pull`, `last_activity_pull`, `device_mac_addr`) VALUES (1, 1, '90242', 1, '1234567890', NOW(), NOW(), 'C1:08:00:01:23:B0');
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_data_pull`, `device_mac_addr`) VALUES (1, 1, '09234', 1, '1234567890', NULL, '00:00:00:00:00:00');
 
 COMMIT;
 
@@ -216,3 +238,12 @@ INSERT INTO `hipperdb`.`Patient_has_Therapist` (`patient_id`, `therapist_id`) VA
 
 COMMIT;
 
+
+-- -----------------------------------------------------
+-- Data for table `hipperdb`.`MinuteData`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `hipperdb`;
+INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`) VALUES (1, 1, '2025-06-02 14:30:00', 10, 1.3);
+
+COMMIT;

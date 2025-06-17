@@ -191,6 +191,19 @@ Week {{ week }} of {{ entry.timestamp.strftime('%B') }}
             {% endfor %}
             </div>
 
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-steps"></div>
+                    <span>Steps</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-pam"></div>
+                    <span>PAM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../static/js/navbar.js"></script>
     <script src="../static/js/home.js"></script>
 

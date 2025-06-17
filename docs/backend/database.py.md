@@ -383,3 +383,17 @@ Key Steps:
 > Resamples data by time intervals.
 
 > Computes mean values and formats results as dictionaries.
+
+### Get user preferences
+
+Returns the user preferences such as dark_mode, large_font, and language, by using the cookie (active session) of the player.
+
+```python
+def get_user_preferences(self, cookie: str) -> dict:
+    query = "SELECT dark_mode, large_font, language FROM User WHERE cookies = %s;"
+    params = (cookie,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result) > 0:
+        return result[0][0]
+```

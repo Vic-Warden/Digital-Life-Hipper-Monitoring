@@ -346,21 +346,23 @@ def get_patient_data():
 
 It checks the cookies to make sure the user is authenticated and then uses the request.args.get() function to receive the patient_id and the pam_data.
 
+The upload pam data route also uses an authentication token (otherwise known as an api token) and can only communicate if that token is provided with the request.
+
 ```python
 @app.route('/api/upload-pam-data', methods=['GET'])
 def upload_pam_data():
     """
     API endpoint to upload PAM data.
     Returns a JSON response with success status and status code.
-    """
+    """a
     token = request.cookies.get('auth_token')
-    valid, reason = db.verify_token(token)
-
+    valid, reason = db.verify_auth_token(token)
     if not valid:
         return {"error": reason}, 401
 
     patient_id = request.args.get('patient_id')
     pam_data = request.args.get('pam_data')
+    device_mac_addr = request.args.get('device_mac_addr')
 
     if not patient_id or not pam_data:
         return {"error": "Patient ID and PAM data are required"}, 400
@@ -369,7 +371,7 @@ def upload_pam_data():
     pam_data = json.loads(pam_data)
 
     # TODO: Implement the actual upload logic
-    # success = db.upload_pam_data(patient_id, pam_data)
+    success = db.upload_pam_data(patient_id, pam_data)
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500

@@ -460,7 +460,7 @@ def upload_pam_data():
     pam_data = json.loads(pam_data)
 
     # TODO: Implement the actual upload logic
-    # success = db.upload_pam_data(patient_id, pam_data)
+    success = db.upload_pam_data(patient_id, pam_data)
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500

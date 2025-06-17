@@ -172,6 +172,29 @@ result = self.do_query(query, params, fetch=False)
 return result is not None and len(result[0][0]) > 0
 ```
 
+### API Token Authentication
+
+Verifies the authentication token and return the associated email if valid.
+
+`verify_auth_token(self, token: str) -> tuple[bool, str]`
+
+```python
+def verify_auth_token(self, token: str) -> tuple[bool, str]:
+    """
+    ### Verify the authentication token and return the associated email if valid.
+
+    Returns a tuple (True, email) if the token is valid,
+    or (False, "Invalid token") if it is not.
+    """
+    query = "SELECT patient_id_device FROM Device WHERE auth_token = %s;"
+    params = (token,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result[0]) > 0:
+        return (True, result[0][0])
+    return (False, "Invalid token")
+```
+
 ### Getting and setting time for sensor data
 2 functions are used to interact with the backend database for reading and updating log timestamps for each device, based on its MAC address.
 
@@ -255,3 +278,48 @@ This function creates an association between a patient and a therapist in the da
         params = (patient_id, therapist_id)
         self.do_query(query, params, fetch=False)
 ```
+
+### Data averages for historical graph
+
+```python
+    def calculate_average_data(self, data):
+        # Create a DataFrame taken from db `Data` structure
+        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+
+        # Ensure timestamp is datetime
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+
+        # Resample and calculate means
+        hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
+        daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
+        weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
+        monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
+
+        return {
+            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
+            'daily': daily_avg.reset_index().to_dict(orient='records'),
+            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
+            'monthly': monthly_avg.reset_index().to_dict(orient='records')
+        } 
+```
+
+The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly.
+
+Parameters:
+* data: list of records containing id, device_id, timestamp, steps, PAM_score, zone, and data_label.
+
+Returns:
+* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly'.
+Each contains a list of records with average steps and PAM_score for the corresponding time period.
+
+Key Steps:
+> Converts data to a DataFrame.
+
+> Parses timestamps and sets as index.
+
+> Resamples data by time intervals.
+
+> Computes mean values and formats results as dictionaries.

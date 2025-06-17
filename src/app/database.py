@@ -1,4 +1,5 @@
 import os  # Import os for .env centralized settings
+import pandas as pd
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
@@ -333,6 +334,7 @@ class Database:
             JOIN Patient_has_Therapist AS pt ON p.id = pt.patient_id
             WHERE pt.therapist_id = %s;
         """
+        # TODO: Get terapist id from cookie
         params = (therapeut_id,)
         result = self.do_query(query, params, fetch=True)
 
@@ -386,7 +388,7 @@ class Database:
     #     params = (current_time, device_mac_addr)
     #     result = self.do_query(query, params, fetch=False)
     #     return result is not None
-    
+
     def get_log_for_mac(self, mac_address):
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
         params = (mac_address,)
@@ -398,7 +400,6 @@ class Database:
                 "last_day_data_pull": row[1].isoformat() if row[1] else None,
             }
         return None
-
 
     def update_log_timestamps(self, mac_address, update_activity, update_day_data=False):
         now = datetime.now(ZoneInfo("Europe/Amsterdam")).replace(tzinfo=None)
@@ -424,7 +425,7 @@ class Database:
             WHERE device_mac_addr = %s
         """
         return self.do_query(query, tuple(params), fetch=False) is not None
-    
+
     def get_usual_active_slots(self, patient_id: int, days: int = 7) -> list[dict]:
         """
         Display hours when the patient don't do activity
@@ -450,6 +451,28 @@ class Database:
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
     
+    def calculate_average_data(self, data):
+        # Create a DataFrame taken from db `Data` structure
+        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+
+        # Ensure timestamp is datetime
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+
+        # Resample and calculate means
+        hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
+        daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
+        weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
+        monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
+
+        return {
+            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
+            'daily': daily_avg.reset_index().to_dict(orient='records'),
+            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
+            'monthly': monthly_avg.reset_index().to_dict(orient='records')
+        }            
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """
         

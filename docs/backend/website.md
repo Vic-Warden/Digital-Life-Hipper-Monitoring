@@ -62,7 +62,8 @@ db = Database(
 
 ## 2. Root and Home Routes
 
-Redirects the root `/` to `/home`. The `/home` route checks for a valid authentication cookie.
+Redirects the root `/` to `/home`. The `/home` route checks for a valid authentication cookie. 
+Besides that the patient data is being exposed and made ready for use. Same for the calculated data which will be shown in the historical graphs on the home page.
 
 ```python
 @app.route('/')
@@ -73,9 +74,22 @@ def redirect_to_home():
 def home():
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
-        return render_template('home.html')
+        user_query = "SELECT id FROM User WHERE cookies = %s"
+        result = db.do_query(user_query, (cookie,))
+
+        if result:
+            # Result returns a legitmate row containing the cookie
+            device_id = result[0][0]  # result is a list of tuples
+            data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
+            patient_data = db.do_query(data_query, (device_id,))
+            calculated_data = db.calculate_average_data(patient_data)
+
+            return render_template('home.html', patient=patient_data, calculated=calculated_data)
+        else:
+            return redirect('/login')
     else:
         return redirect('/login')
+
 ```
 
 ---
@@ -399,6 +413,17 @@ def logout():
     return redirect('/admin/login')
 ```
 
+## 16. Token Authentication
+
+Checks the authentication token of the base station for communication with the api.
+
+```python
+token = request.cookies.get('auth_token')
+valid, reason = db.verify_auth_token(token)
+if not valid:
+    return {"error": reason}, 401
+```
+
 ## 16. Log date time
 update and get last date and time when data was pulled form sensor by looking at the mac address
 ### Get date time
@@ -415,8 +440,8 @@ def get_log(mac_address):
     }), 200
 ```
 
-### Update date time
-```
+### 17. Update date time
+```python
 @app.route('/log/<mac_address>', methods=['POST'])
 def update_log(mac_address):
     mac = mac_address.upper()
@@ -440,7 +465,7 @@ def update_log(mac_address):
 
 Find functions used for implementation under [database.py](database.py.md).
 
-## 17. Routine Analysis & Anomaly Detection
+## 18. Routine Analysis & Anomaly Detection
 
 Detects if a patient has not been active in his usual time slots for a certain number of consecutive days
 
@@ -498,7 +523,7 @@ def admin_add_patient():
     return redirect('/admin/patients')
 ```
 
-## 18. Running the App
+## 19. Running the App
 
 ```python
 if __name__ == "__main__":

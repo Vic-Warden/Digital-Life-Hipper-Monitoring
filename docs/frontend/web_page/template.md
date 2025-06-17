@@ -321,7 +321,7 @@ The patient card is used to display the patients assigned to a therapist. Inside
 
 The patient data is fetched from the backend before the page is rendered, using Jinja2 to loop through the list. Jinja2 calls Flask's url_for() to generate links to patient detail pages, which are connected to specific Flask routes.
 
-````html
+```html
     <div class="patient-card">
       <h3>Patients</h3>
       <input type="text" id="search" placeholder="Search patients by name..." />
@@ -343,7 +343,7 @@ The Add Patient card allows a therapist to register a new patient via a form. Th
 
 When the form is submitted, it sends a POST request to the backend route '/api/add-patient', which is connected to the Flask function admin_add_patient().
 
-````html
+```html
     <div class="addPatient-card">
       <h3>Add Patient</h3>
       <form action="{{ url_for('admin_add_patient') }}" method="POST">
@@ -360,3 +360,5 @@ When the form is submitted, it sends a POST request to the backend route '/api/a
       </form>
     </div>
 ```
+### admin_patients.css
+In this file you will find all the css code that is used to style is page.

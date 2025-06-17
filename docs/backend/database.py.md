@@ -397,3 +397,20 @@ def get_user_preferences(self, cookie: str) -> dict:
     if result and len(result) > 0:
         return result[0][0]
 ```
+
+### Set user preferences
+
+Sets the user preferences using the cookie (active session) of the player.
+
+```python
+def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, language: str) -> bool:
+    query = """
+        UPDATE User
+        SET dark_mode = %s, large_font = %s, language = %s
+        WHERE cookies = %s;
+    """
+    params = (dark_mode, large_font, language, cookie)
+    result = self.do_query(query, params, fetch=False)
+
+    return result is not None
+```

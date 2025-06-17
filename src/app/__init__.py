@@ -53,7 +53,7 @@ def home():
             patient_data = db.do_query(data_query, (device_id,))
             calculated_data = db.calculate_average_data(patient_data)
 
-            return render_template('home.html', patient=patient_data, calculated=calculated_data)
+            return render_template('home.html', patient=patient_data, calculated=calculated_data, preferences=db.get_user_preferences(cookie))
         else:
             return redirect('/login')
     else:
@@ -92,7 +92,7 @@ def login():
 
             # Redirect to home after form submission
             return response
-        return render_template('login.html', error="Invalid credentials. Please try again.")
+        return render_template('login.html', error="Invalid credentials. Please try again.", preferences=db.get_user_preferences(cookie))
     else:
         # Render the login.html
         return render_template('login.html')
@@ -135,7 +135,7 @@ def settings():
 
             # Validate the language input
             if not ["nl", "en"] in language.lower():
-                return render_template("settings.html", error="Invalid language selected.")
+                return render_template("settings.html", error="Invalid language selected.", preferences=db.get_user_preferences(cookie))
 
             # Update user preferences in the database
             db.set_user_preferences(cookie, dark_mode, large_font, language)
@@ -148,12 +148,7 @@ def settings():
 
             return render_template("settings.html", msg="Successfully updated settings.", preferences=user_preferences)
 
-        # Fetch user preferences from the database
-        user_preferences = db.get_user_preferences(cookie)
-
-        print(user_preferences, 1)
-
-        return render_template("settings.html", preferences=user_preferences)
+        return render_template("settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/login")
 
@@ -173,7 +168,7 @@ def admin_settings():
 
             # Validate the language input
             if not ["nl", "en"] in language.lower():
-                return render_template("settings.html", error="Invalid language selected.")
+                return render_template("settings.html", error="Invalid language selected.", preferences=db.get_user_preferences(cookie))
 
             # Update user preferences in the database
             db.set_user_preferences(cookie, dark_mode, large_font, language)
@@ -205,7 +200,7 @@ def admin_login():
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
         # Render the home.html
-        return render_template('admin_home.html')
+        return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
     else:
         # If user is not logged in, redirects to login page
         return redirect('/admin/login')
@@ -233,7 +228,7 @@ def admin_patient_list():
         return "Patients not found", 404
 
     # Render the patient details page
-    return render_template('admin_patients.html', patient=patient_details)
+    return render_template('admin_patients.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/patients/<patient_id>', methods=['GET'])
@@ -252,7 +247,7 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     # Render the patient details page
-    return render_template('admin_patient_details.html', patient=patient_details)
+    return render_template('admin_patient_details.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -338,7 +333,7 @@ def change_email():
     new_email = request.form.get('new_email', '').strip()
 
     if not new_email:
-        return render_template('profile.html', user=session['user'], message="Email cannot be empty.")
+        return render_template('profile.html', user=session['user'], message="Email cannot be empty.", preferences=db.get_user_preferences(cookie))
 
     # Update the user's email in the database
     db.change_user_email(cookie, new_email)
@@ -346,7 +341,7 @@ def change_email():
     # Update the session data
     session['user']['email'] = new_email
 
-    return render_template('profile.html', user=session['user'], message="Email updated successfully.")
+    return render_template('profile.html', user=session['user'], message="Email updated successfully.", preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/api/get-patients', methods=['GET'])

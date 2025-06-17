@@ -149,12 +149,12 @@ button:hover {
     padding: 20px;
   }
 
-  .card {
+  .patient-card, .addPatient-card {
     width: 90%;
     max-width: 400px;
   }
 
-  .card h3 {
+  .patient-card, .addPatient-card h3 {
     font-size: 1.25em;
   }
 

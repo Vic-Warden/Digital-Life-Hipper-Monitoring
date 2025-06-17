@@ -382,3 +382,8 @@ The JavaScript file for the admin patients page contains the function that enabl
       });
     });
 ```
+
+### References
+- A youtube video that helped with understand jinja2 was used [Link to video on jinja2](https://www.youtube.com/watch?v=4yaG-jFfePc&t=113s)
+
+**Chatgpt was used to clean up the written code**

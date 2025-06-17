@@ -1,5 +1,3 @@
-
-
 from flask import request, jsonify
 import os  # Import os for .env centralized settings
 # Import Flask

@@ -525,3 +525,26 @@ class Database:
 
         if result and len(result) > 0:
             return result[0][0]
+
+    def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, language: str) -> bool:
+        """
+        ### Set user preferences based on user ID.
+        Returns True if the preferences were updated successfully, False otherwise.
+
+        ### How to use:
+        ```python
+        success = set_user_preferences(cookie, dark_mode=True, large_font=False, language='en')
+        ```
+        ### Returns:
+        - True if the preferences were updated successfully.
+        - False if the update failed.
+        """
+        query = """
+            UPDATE User
+            SET dark_mode = %s, large_font = %s, language = %s
+            WHERE cookies = %s;
+        """
+        params = (dark_mode, large_font, language, cookie)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None

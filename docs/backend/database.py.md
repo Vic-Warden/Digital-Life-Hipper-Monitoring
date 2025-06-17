@@ -21,6 +21,8 @@ remove_cookie()         # Deletes a cookie from the database
 change_user_email()     # Changes the users email based on session token
 get_log_for_mac()       # Get the last time data was pulled from a specific sensor, by looking at the mac address
 update_log_timestamps() # Update the last time data was pulled from a specific sensor, by looking at the mac address
+therapist_id_from_cookie() # Retrieves the therapist's ID associated with a given session cookie.
+connect_patient_to_therapist() # Creates an association between a patient and a therapist in the database.
 ```
 
 ### How to execute queries
@@ -214,3 +216,42 @@ Returns
     True if the update was successful.
 
     False if no update was performed.
+
+
+### therapist_id_from_cookie
+
+This function retrieves the therapist's ID associated with a given session cookie.
+
+```python
+    def therapist_id_from_cookie(self, cookie: str) -> int | bool:
+        """
+        
+        """
+        try:
+            insert_query = """
+            SELECT fk_therapist_id FROM User WHERE cookies = %s;
+            """
+            params = (cookie,)
+            result = self.do_query(insert_query, params)
+            return result[0][0]
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
+        return False
+```
+
+### connect_patient_to_therapist
+
+This function creates an association between a patient and a therapist in the database.
+
+```python
+    def connect_patient_to_therapist(self, patient_id: int, therapist_id: int):
+        """
+        text
+        """
+        query = """
+            INSERT INTO Patient_has_Therapist VALUES (%s, %s);
+        """
+        params = (patient_id, therapist_id)
+        self.do_query(query, params, fetch=False)
+```

@@ -45,6 +45,18 @@
             <p>Last 7 days</p>
         `;
 
+        // Displays the usual routine if it exists  
+        if (data.usual_slots && data.usual_slots.length > 0) {
+            let routineHTML = "<h3>Usual Routine</h3><ul>";
+            data.usual_slots.forEach(slot => {
+                routineHTML += `<li>${slot.hour_slot}h: ${slot.total_steps} average steps</li>`;
+            });
+            routineHTML += "</ul>";
+            document.getElementById("usualRoutine").innerHTML = routineHTML;
+        } else {
+            document.getElementById("usualRoutine").innerHTML = "<p>No routine data found.</p>";
+        }
+
 
     </script>
 </body>

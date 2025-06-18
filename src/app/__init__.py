@@ -43,10 +43,20 @@ def home():
     # if connected
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
-        # Render the home.html
-        return render_template('home.html')
+        user_query = "SELECT id FROM User WHERE cookies = %s"
+        result = db.do_query(user_query, (cookie,))
+
+        if result:
+            # Result returns a legitmate row containing the cookie
+            device_id = result[0][0]  # result is a list of tuples
+            data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
+            patient_data = db.do_query(data_query, (device_id,))
+            calculated_data = db.calculate_average_data(patient_data)
+
+            return render_template('home.html', patient=patient_data, calculated=calculated_data, preferences=db.get_user_preferences(cookie))
+        else:
+            return redirect('/login')
     else:
-        # If user is not logged in, redirects to login page
         return redirect('/login')
 
 # Request the user & the password with GET and POST methods
@@ -115,19 +125,45 @@ def admin_logout():
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    if db.verify_cookie(cookie)[0]:
+    if not db.verify_cookie(cookie)[0]:
+        return redirect('/login')
 
-        if request.method == "POST":
-            # TODO: Add logic for handling settings updates
-            #  - Change email
-            #  - Change password etc...
-            pass
+    if request.method == "POST":
+        # Expecting JSON
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-        return render_template("settings.html")
+        # Extract values
+        dark_mode = data.get('dark_mode', 0)
+        large_font = data.get('large_font', 0)
+        language = data.get('language', 'nl')
 
-    return redirect("/login")
+        # Validate language
+        if language.lower() not in ["nl", "en"]:
+            return jsonify({"error": "Language not supported."}), 400
+
+        # Convert to boolean
+        dark_mode = (dark_mode == 1)
+        large_font = (large_font == 1)
+
+        # Save preferences
+        db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+        return jsonify({
+            "msg": "Settings updated successfully.",
+            "preferences": {
+                "dark_mode": dark_mode,
+                "large_font": large_font,
+                "language": language
+            }
+        }), 200
+
+    # If GET request, render the settings page
+    return render_template("settings.html", preferences=db.get_user_preferences(cookie))
 
 # Handle the admin settings
+
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 def admin_settings():
@@ -135,18 +171,43 @@ def admin_settings():
     if db.verify_cookie(cookie)[0]:
 
         if request.method == "POST":
-            # TODO: Add logic for handling settings updates
-            #  - Change email
-            #  - Change password etc...
-            pass
+            # Expecting JSON
+            data = request.get_json()
+            if not data:
+                return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
+
+            # Extract values
+            dark_mode = data.get('dark_mode', 0)
+            large_font = data.get('large_font', 0)
+            language = data.get('language', 'nl')
+
+            # Validate language
+            if language.lower() not in ["nl", "en"]:
+                return jsonify({"error": "Language not supported."}), 400
+
+            # Convert to boolean
+            dark_mode = (dark_mode == 1)
+            large_font = (large_font == 1)
+
+            # Save preferences
+            db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+            return jsonify({
+                "msg": "Settings updated successfully.",
+                "preferences": {
+                    "dark_mode": dark_mode,
+                    "large_font": large_font,
+                    "language": language
+                }
+            }), 200
+
+
         if db.is_super_user(cookie):
-            return render_template("super_admin_settings.html")
+            return render_template("super_admin_settings.html", preferences=db.get_user_preferences(cookie))
 
-
-        return render_template("admin_settings.html")
+        return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
-
 
 
 # Handle the admin login page
@@ -158,7 +219,7 @@ def admin_login():
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
         # Render the home.html
-        return render_template('admin_home.html')
+        return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
     else:
         # If user is not logged in, redirects to login page
         return redirect('/admin/login')
@@ -173,20 +234,44 @@ def admin_patient_list():
     if not valid:
         return redirect('/admin/login')
 
-    # Fetch patient details from the database
-    # TODO: Fix database
-    # patient_details = db.get_patients()
+    therapist_id = db.therapist_id_from_cookie(cookie)
+    print(therapist_id)
 
-    patient_details = {
-        "name": "John Doe",
-        "email": "john.doe@gmail.com",
-    }
+    # Extended list with 6 patients
+    patient_details = db.get_patients(therapist_id)
+    print(patient_details)
 
     if not patient_details:
         return "Patients not found", 404
 
-    # Render the patient details page
-    return render_template('admin_patients.html', patient=patient_details)
+    return render_template('admin_patients.html', patients=patient_details)
+
+
+@app.route('/api/add-patient', methods=['POST'])
+def admin_add_patient():
+    # Get data from form
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Check if user is authorized to add patient
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Validate required data
+    if not all([name, email, password, cookie]):
+        return "Missing required fields", 400
+
+    # Call DB logic to insert the patient
+    success = db.add_patient(name, email, password, cookie)
+
+    if not success:
+        return "Failed to add patient", 400
+
+    return redirect('/admin/patients')
 
 
 @app.route('/admin/patients/<patient_id>', methods=['GET'])
@@ -205,7 +290,7 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     # Render the patient details page
-    return render_template('admin_patient_details.html', patient=patient_details)
+    return render_template('admin_patient_details.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -291,7 +376,7 @@ def change_email():
     new_email = request.form.get('new_email', '').strip()
 
     if not new_email:
-        return render_template('profile.html', user=session['user'], message="Email cannot be empty.")
+        return render_template('profile.html', user=session['user'], message="Email cannot be empty.", preferences=db.get_user_preferences(cookie))
 
     # Update the user's email in the database
     db.change_user_email(cookie, new_email)
@@ -299,7 +384,7 @@ def change_email():
     # Update the session data
     session['user']['email'] = new_email
 
-    return render_template('profile.html', user=session['user'], message="Email updated successfully.")
+    return render_template('profile.html', user=session['user'], message="Email updated successfully.", preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/api/get-patients', methods=['GET'])
@@ -428,39 +513,12 @@ def upload_pam_data():
     # Assuming pam_data is a JSON string, you might need to parse it
     pam_data = json.loads(pam_data)
 
-    # TODO: Implement the actual upload logic
-    # success = db.upload_pam_data(patient_id, pam_data)
+    success = db.upload_pam_data(patient_id, pam_data)
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500
 
     return {"message": "PAM data uploaded successfully"}, 200
-
-
-# @app.route('/api/last-update-period', methods=['GET'])
-# def last_update_period():
-#     """
-#     API endpoint to get the last update period for a patient.
-#     Returns a JSON response with the last update period and status code.
-#     """
-#     # TODO: Change this to auth_token
-#     # TODO: Change this to auth_token
-#     # TODO: Change this to auth_token
-#     cookie = request.cookies.get('auth_cookie')
-#     valid, user_data = db.verify_cookie(cookie)
-
-#     if not valid:
-#         return {"error": "Invalid or expired cookie"}, 401
-
-#     device_mac_addr = request.args.get('device_mac_addr')
-#     if not device_mac_addr:
-#         return {"error": "Device MAC address is required"}, 400
-
-#     last_update = db.get_last_update_period(device_mac_addr)
-#     if not last_update:
-#         return {"error": "No updates found for this patient"}, 404
-
-#     return {"last_update": last_update}, 200
 
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
@@ -500,12 +558,12 @@ def routine_form():
     if request.method == 'POST':
         data = request.get_json()
         patient_id = data.get("patient_id")
-        
+
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
         usual_slots = db.get_usual_active_slots(patient_id)
-        
+
         if not usual_slots:
             return {"disruptions": []}, 200
 
@@ -513,7 +571,6 @@ def routine_form():
 
         return {"disruptions": disruptions}, 200
     return render_template('routine_form.html')
-
 
 
 # Start the Flask application

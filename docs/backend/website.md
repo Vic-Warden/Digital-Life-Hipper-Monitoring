@@ -16,7 +16,9 @@ This is a Flask web application that provides routes for users and admin access,
 * `/change-email`
 * `/admin/home`
 * `/admin/login`
+* `/admin/patients`
 * `/api/routine-disruption`
+* `/api/add-patient`
 
 ---
 
@@ -60,7 +62,8 @@ db = Database(
 
 ## 2. Root and Home Routes
 
-Redirects the root `/` to `/home`. The `/home` route checks for a valid authentication cookie.
+Redirects the root `/` to `/home`. The `/home` route checks for a valid authentication cookie. 
+Besides that the patient data is being exposed and made ready for use. Same for the calculated data which will be shown in the historical graphs on the home page.
 
 ```python
 @app.route('/')
@@ -71,9 +74,22 @@ def redirect_to_home():
 def home():
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
-        return render_template('home.html')
+        user_query = "SELECT id FROM User WHERE cookies = %s"
+        result = db.do_query(user_query, (cookie,))
+
+        if result:
+            # Result returns a legitmate row containing the cookie
+            device_id = result[0][0]  # result is a list of tuples
+            data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
+            patient_data = db.do_query(data_query, (device_id,))
+            calculated_data = db.calculate_average_data(patient_data)
+
+            return render_template('home.html', patient=patient_data, calculated=calculated_data)
+        else:
+            return redirect('/login')
     else:
         return redirect('/login')
+
 ```
 
 ---
@@ -122,29 +138,50 @@ def logout():
 
 Displays and updates user profile information.
 
+By pressing the save button on the website it sends the preferences to the back.end which interprets them and writes them to the database.
+
+On a page refresh, they are retreived from the database and are sent to the front-end.
+
 ```python
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
-
-    if 'user' not in session:
+    if not db.verify_cookie(cookie)[0]:
         return redirect('/login')
 
-    if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
-        therapist = request.form.get('therapist', '').strip()
+    if request.method == "POST":
+        # Expecting JSON
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
 
-        if not username or not email:
-            message = "Names, e-mails and the therapist is required"
-            return render_template('profile.html', user=session['user'], message=message)
+        # Extract values
+        dark_mode = data.get('dark_mode', 0)
+        large_font = data.get('large_font', 0)
+        language = data.get('language', 'nl')
 
-        session['user']['username'] = username
-        session['user']['email'] = email
-        session['user']['therapist'] = therapist
+        # Validate language
+        if language.lower() not in ["nl", "en"]:
+            return jsonify({"error": "Language not supported."}), 400
 
-        return render_template('profile.html', user=session['user'], message=message)
+        # Convert to boolean
+        dark_mode = (dark_mode == 1)
+        large_font = (large_font == 1)
+
+        # Save preferences
+        db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+        return jsonify({
+            "msg": "Settings updated successfully.",
+            "preferences": {
+                "dark_mode": dark_mode,
+                "large_font": large_font,
+                "language": language
+            }
+        }), 200
+
+    # If GET request, render the settings page
+    return render_template("settings.html", preferences=db.get_user_preferences(cookie))
 ```
 
 ---
@@ -245,7 +282,34 @@ def admin_login():
         return redirect('/admin/login')
 ```
 
-## 10. Patients
+## 10. Admin Patients
+
+Admin users (therapists) can see there patient a list of their patients.
+
+```python
+@app.route('/admin/patients', methods=['GET'])
+def admin_patient_list():
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid, user_data = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+    
+    therapist_id = db.therapist_id_from_cookie(cookie)
+    print(therapist_id)
+
+    # Extended list with 6 patients
+    patient_details = db.get_patients(therapist_id)
+    print(patient_details)
+
+    if not patient_details:
+        return "Patients not found", 404
+
+    return render_template('admin_patients.html', patients=patient_details)
+```
+
+## 11. Patients
 
 `get_patients(therapist_id: int)` returns a list of all the patients connected to a therapist.
 
@@ -269,7 +333,7 @@ def get_patients():
     return {"patients": patients}, 200
 ```
 
-## 11. Patient Data
+## 12. Patient Data
 
 `get_patient_details(patient_id: int)` returns the details from a single patient.
 
@@ -297,11 +361,13 @@ def get_patient_data():
     return patient_data, 200
 ```
 
-## 12. Upload PAM Data
+## 13. Upload PAM Data
 
 `upload_pam_data()` is an API endpoint reserved for uploading movement data in JSON format to the server.
 
 It checks the cookies to make sure the user is authenticated and then uses the request.args.get() function to receive the patient_id and the pam_data.
+
+The upload pam data route also uses an authentication token (otherwise known as an api token) and can only communicate if that token is provided with the request.
 
 ```python
 @app.route('/api/upload-pam-data', methods=['GET'])
@@ -309,15 +375,15 @@ def upload_pam_data():
     """
     API endpoint to upload PAM data.
     Returns a JSON response with success status and status code.
-    """
+    """a
     token = request.cookies.get('auth_token')
-    valid, reason = db.verify_token(token)
-
+    valid, reason = db.verify_auth_token(token)
     if not valid:
         return {"error": reason}, 401
 
     patient_id = request.args.get('patient_id')
     pam_data = request.args.get('pam_data')
+    device_mac_addr = request.args.get('device_mac_addr')
 
     if not patient_id or not pam_data:
         return {"error": "Patient ID and PAM data are required"}, 400
@@ -326,7 +392,7 @@ def upload_pam_data():
     pam_data = json.loads(pam_data)
 
     # TODO: Implement the actual upload logic
-    # success = db.upload_pam_data(patient_id, pam_data)
+    success = db.upload_pam_data(patient_id, pam_data)
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500
@@ -334,7 +400,7 @@ def upload_pam_data():
     return {"message": "PAM data uploaded successfully"}, 200
 ```
 
-## 13. Get the last update period
+## 14. Get the last update period
 
 ## 📄 Device Update Period Functions
 
@@ -358,7 +424,7 @@ def get_last_update_period(self, device_mac_addr: str):
     return None
 ```
 
-## 14. Admin logout
+## 15. Admin logout
 
 Removes the auth cookie and redirects to admin login.
 
@@ -370,7 +436,7 @@ def logout():
     return redirect('/admin/login')
 ```
 
-## 15. Token Authentication
+## 16. Token Authentication
 
 Checks the authentication token of the base station for communication with the api.
 
@@ -448,8 +514,85 @@ Detects if a patient has not been active in his usual time slots for a certain n
 }
 ```
 
+## 19. Add Patient
 
-## 19. Running the App
+This route adds a new patient into the database.
+
+```python
+@app.route('/api/add-patient', methods=['POST'])
+def admin_add_patient():
+    # Get data from form
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Check if user is authorized to add patient
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    # Validate required data
+    if not all([name, email, password, cookie]):
+        return "Missing required fields", 400
+
+    # Call DB logic to insert the patient
+    success = db.add_patient(name, email, password, cookie)
+
+    if not success:
+        return "Failed to add patient", 400
+
+    return redirect('/admin/patients')
+```
+## Admin settings
+
+The admin settings back-end is almost identical to the user settings back-end. It saves the admin's preferences and loads them when the page is refreshed or requested.
+
+```python
+@app.route('/admin/settings', methods=['GET', 'POST'])
+def admin_settings():
+    cookie = request.cookies.get('auth_cookie')
+    if db.verify_cookie(cookie)[0]:
+
+        if request.method == "POST":
+            # Expecting JSON
+            data = request.get_json()
+            if not data:
+                return jsonify({"error": "An error has occurred, please contact your administrator."}), 400
+
+            # Extract values
+            dark_mode = data.get('dark_mode', 0)
+            large_font = data.get('large_font', 0)
+            language = data.get('language', 'nl')
+
+            # Validate language
+            if language.lower() not in ["nl", "en"]:
+                return jsonify({"error": "Language not supported."}), 400
+
+            # Convert to boolean
+            dark_mode = (dark_mode == 1)
+            large_font = (large_font == 1)
+
+            # Save preferences
+            db.set_user_preferences(cookie, dark_mode, large_font, language)
+
+            return jsonify({
+                "msg": "Settings updated successfully.",
+                "preferences": {
+                    "dark_mode": dark_mode,
+                    "large_font": large_font,
+                    "language": language
+                }
+            }), 200
+
+        return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
+
+    return redirect("/admin/login")
+```
+
+
+## 20. Running the App
 
 ```python
 if __name__ == "__main__":

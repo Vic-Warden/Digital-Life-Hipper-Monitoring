@@ -1,4 +1,5 @@
 import os  # Import os for .env centralized settings
+import pandas as pd
 import mysql.connector
 from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
@@ -43,7 +44,7 @@ class Database:
             # and print some server information
             if connection.is_connected():
                 # Get the server information
-                db_info = connection.get_server_info()
+                db_info = connection.server_info
                 print("Connected to MySQL Server version", db_info)
                 # Get the database name
                 cursor = connection.cursor()
@@ -128,24 +129,45 @@ class Database:
             return True
         return False
 
-    def add_patient(self, name: str, email: str, password: str) -> tuple[bool, str]:
+    def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """
-        ### Add a new patient to the database.
+        add a new patient linked to a therapist.
 
-        Returns:
-        - A tuple (True, "") if the patient was added successfully.
-        - A tuple (False, "Email already registered.") if the email is already in use.
+        Returns True if successful, False otherwise.
         """
-        if self.check_email(email):
-            return (False, "Email already registered.")
-        query = "INSERT INTO User (name, email, password, is_therapist) VALUES (%s, %s, %s, %s);"
-        params = (name, email, password, 0)  # is_therapist = 0 for patients
-        result = self.do_query(query, params)
-        return (result is not None, "")
+        # Get therapist id
+        therapist_id = self.therapist_id_from_cookie(cookie)
+        if not therapist_id:
+            return False
+        try:
+            # Insert user into db
+            insert_query = """
+                INSERT INTO User (name, email, password, cookies, is_therapist, fk_therapist_id)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                RETURNING id;
+            """
+            params = (name, email, password, '', 0,
+                      therapist_id)  # '' for empty cookie, 0 for no therapist
+            patient_id = self.do_query(insert_query, params)[0][0]
 
-    def assign_patient_to_therapist(self, patient_id: int, therapist_id: int) -> bool:
-        print("HAS YET TO BE IMPLEMENTED")
+            # Add patient id to Patient_has_Therapist table
+            self.connect_patient_to_therapist(patient_id, therapist_id)
+
+            return True
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
         return False
+
+    def connect_patient_to_therapist(self, patient_id: int, therapist_id: int):
+        """
+        text
+        """
+        query = """
+            INSERT INTO Patient_has_Therapist VALUES (%s, %s);
+        """
+        params = (patient_id, therapist_id)
+        self.do_query(query, params, fetch=False)
 
     def remove_patient(self, email: str) -> tuple[bool, str]:
         """
@@ -336,38 +358,6 @@ class Database:
             return (True, result[0][0])
         return (False, "Invalid token")
 
-    # def get_last_update_period(self, device_mac_addr: str):
-    #     """
-    #     ### Get the last update period for a device based on its MAC address.
-
-    #     Returns the last update period as a string.
-    #     """
-    #     query = "SELECT last_update_period FROM Device WHERE device_mac_addr = %s;"
-    #     params = (device_mac_addr,)
-    #     result = self.do_query(query, params, fetch=True)
-
-    #     if result and len(result) > 0:
-    #         return result[0][0]
-    #     return None
-
-    # def set_last_update_period(self, device_mac_addr: str) -> bool:
-    #     """
-    #     ### Set the last update period for a device based on its MAC address.
-
-    #     Returns True if the update was successful, False otherwise.
-    #     """
-    #     # Get current time
-    #     now = datetime.now()
-
-    #     # Format as MySQL-compatible DATETIME string
-    #     current_time = now.strftime('%Y-%m-%d %H:%M:%S')
-
-    #     # Update the last_data_pull for the device
-    #     query = "UPDATE Device SET last_data_pull = %s WHERE device_mac_addr = %s;"
-    #     params = (current_time, device_mac_addr)
-    #     result = self.do_query(query, params, fetch=False)
-    #     return result is not None
-
     def get_log_for_mac(self, mac_address):
         query = "SELECT last_activity_pull, last_day_data_pull FROM Device WHERE device_mac_addr=%s"
         params = (mac_address,)
@@ -429,7 +419,6 @@ class Database:
             return []
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
-
     def is_super_user(self, cookie: int) -> bool:
         """
         ### Check whether the given user is a super‑user.
@@ -443,3 +432,175 @@ class Database:
             return False
         # result[0][0] will be 0 or 1
         return bool(result[0][0])
+
+    def device_id_from_patient_id(self, patient_id: int) -> int:
+        """
+        Get the device ID associated with a patient ID.
+        Returns the device ID or None if not found.
+        """
+        query = "SELECT device_id FROM Device WHERE patient_id_device = %s;"
+        params = (patient_id,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0]
+        return None
+
+    def upload_minute_data(self, patient_id: int, pam_data: list):
+        """
+        Upload PAM data for a patient.
+        Expects pam_data to be a list of dictionaries with keys:
+        - 'timestamp'
+        - 'steps'
+        - 'pam_score'
+        - 'zone'
+        - 'data_label'
+        """
+        device_id = self.device_id_from_patient_id(patient_id)
+
+        if not pam_data:
+            return False
+
+        query = """
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+            VALUES (%s, %s, %s, %s, %s, %s);
+        """
+        params = [
+            (device_id, data['timestamp'], data['steps'],
+             data['pam_score'], data['zone'], data['data_label'])
+            for data in pam_data
+        ]
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.executemany(query, params)
+            self._connection.commit()
+            return True
+        except Error as e:
+            print("Error while uploading PAM data:", e)
+            return False
+        finally:
+            cursor.close()
+
+    def upload_day_data(self, patient_id: int, day_data: list):
+        """
+        Upload daily PAM data for a patient.
+        Expects day_data to be a list of dictionaries with keys:
+        - 'timestamp'
+        - 'steps'
+        - 'pam_score'
+        """
+        device_id = self.device_id_from_patient_id(patient_id)
+
+        if not day_data:
+            return False
+
+        query = """
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score)
+            VALUES (%s, %s, %s, %s);
+        """
+        params = [
+            (device_id, data['timestamp'], data['steps'],
+             data['pam_score'])
+            for data in day_data
+        ]
+
+        try:
+            cursor = self._connection.cursor()
+            cursor.executemany(query, params)
+            self._connection.commit()
+            return True
+        except Error as e:
+            print("Error while uploading daily PAM data:", e)
+            return False
+        finally:
+            cursor.close()
+
+    def calculate_average_data(self, data):
+        # Create a DataFrame taken from db `Data` structure
+        df = pd.DataFrame(data, columns=[
+                          'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+
+        # Ensure timestamp is datetime
+        df['timestamp'] = pd.to_datetime(
+            df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+
+        # Resample and calculate means
+        hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
+        daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
+        weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
+        monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
+
+        return {
+            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
+            'daily': daily_avg.reset_index().to_dict(orient='records'),
+            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
+            'monthly': monthly_avg.reset_index().to_dict(orient='records')
+        }
+
+    def therapist_id_from_cookie(self, cookie: str) -> int | bool:
+        """
+
+        """
+        try:
+            insert_query = """
+            SELECT fk_therapist_id FROM User WHERE cookies = %s;
+            """
+            params = (cookie,)
+            result = self.do_query(insert_query, params)
+            return result[0][0]
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
+        return False
+
+    def get_user_preferences(self, cookie: str) -> dict:
+        """
+        ### Get user preferences based on user ID.
+        Returns a dictionary containing user preferences or None if not found.
+
+        ### How to use:
+        ```python
+        preferences = get_user_preferences(cookie)
+        ```
+        ### Returns:
+        - A dictionary containing user preferences.
+        """
+        query = "SELECT dark_mode, large_font, language FROM User WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return_dict = {
+                "dark_mode": result[0][0],
+                "large_font": result[0][1],
+                "language": result[0][2]
+            }
+            return return_dict
+        return {}
+
+    def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, language: str) -> bool:
+        """
+        ### Set user preferences based on user ID.
+        Returns True if the preferences were updated successfully, False otherwise.
+
+        ### How to use:
+        ```python
+        success = set_user_preferences(cookie, dark_mode=True, large_font=False, language='en')
+        ```
+        ### Returns:
+        - True if the preferences were updated successfully.
+        - False if the update failed.
+        """
+        query = """
+            UPDATE User
+            SET dark_mode = %s, large_font = %s, language = %s
+            WHERE cookies = %s;
+        """
+        params = (dark_mode, large_font, language, cookie)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None

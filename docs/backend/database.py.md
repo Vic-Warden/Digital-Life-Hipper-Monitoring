@@ -21,6 +21,8 @@ remove_cookie()         # Deletes a cookie from the database
 change_user_email()     # Changes the users email based on session token
 get_log_for_mac()       # Get the last time data was pulled from a specific sensor, by looking at the mac address
 update_log_timestamps() # Update the last time data was pulled from a specific sensor, by looking at the mac address
+therapist_id_from_cookie() # Retrieves the therapist's ID associated with a given session cookie.
+connect_patient_to_therapist() # Creates an association between a patient and a therapist in the database.
 ```
 
 ### How to execute queries
@@ -237,3 +239,224 @@ Returns
     True if the update was successful.
 
     False if no update was performed.
+
+### Get device id from patient id
+
+This function is provided to get the device_id (base station device id) associated with a patient.
+
+```python
+def device_id_from_patient_id(self, patient_id: int) -> int:
+    """
+    Get the device ID associated with a patient ID.
+    Returns the device ID or None if not found.
+    """
+    query = "SELECT device_id FROM Device WHERE patient_id_device = %s;"
+    params = (patient_id,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result) > 0:
+        return result[0][0]
+    return None
+```
+
+### Upload minute data
+
+Uploads minute data to the database using the patient_id.
+
+```python
+def upload_minute_data(self, patient_id: int, minute_data: list):
+    """
+    Upload PAM data for a patient.
+    Expects pam_data to be a list of dictionaries with keys:
+    - 'timestamp'
+    - 'steps'
+    - 'pam_score'
+    - 'zone'
+    - 'data_label'
+    """
+    device_id = self.device_id_from_patient_id(patient_id)
+
+    if not pam_data:
+        return False
+
+    query = """
+        INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+        VALUES (%s, %s, %s, %s, %s, %s);
+    """
+    params = [
+        (device_id, data['timestamp'], data['steps'],
+        data['pam_score'], data['zone'], data['data_label'])
+        for data in minute_data
+    ]
+
+    try:
+        cursor = self._connection.cursor()
+        cursor.executemany(query, params)
+        self._connection.commit()
+        return True
+    except Error as e:
+        print("Error while uploading PAM data:", e)
+        return False
+    finally:
+        cursor.close()
+```
+
+### Upload day data
+
+Uploads day data to the database using patient_id.
+
+```python
+def upload_day_data(self, patient_id: int, day_data: list):
+    """
+    Upload daily PAM data for a patient.
+    Expects day_data to be a list of dictionaries with keys:
+    - 'timestamp'
+    - 'steps'
+    - 'pam_score' 
+    """
+    device_id = self.device_id_from_patient_id(patient_id)
+
+    if not day_data:
+        return False
+
+    query = """
+        INSERT INTO Data (device_id, timestamp, steps, PAM_score)
+        VALUES (%s, %s, %s, %s);
+    """
+    params = [
+        (device_id, data['timestamp'], data['steps'],
+            data['pam_score'])
+        for data in day_data
+    ]
+
+    try:
+        cursor = self._connection.cursor()
+        cursor.executemany(query, params)
+        self._connection.commit()
+        return True
+    except Error as e:
+        print("Error while uploading daily PAM data:", e)
+        return False
+    finally:
+        cursor.close()
+```
+
+### therapist_id_from_cookie
+
+This function retrieves the therapist's ID associated with a given session cookie.
+
+```python
+    def therapist_id_from_cookie(self, cookie: str) -> int | bool:
+        """
+        
+        """
+        try:
+            insert_query = """
+            SELECT fk_therapist_id FROM User WHERE cookies = %s;
+            """
+            params = (cookie,)
+            result = self.do_query(insert_query, params)
+            return result[0][0]
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
+        return False
+```
+
+### connect_patient_to_therapist
+
+This function creates an association between a patient and a therapist in the database.
+
+```python
+    def connect_patient_to_therapist(self, patient_id: int, therapist_id: int):
+        """
+        text
+        """
+        query = """
+            INSERT INTO Patient_has_Therapist VALUES (%s, %s);
+        """
+        params = (patient_id, therapist_id)
+        self.do_query(query, params, fetch=False)
+```
+
+### Data averages for historical graph
+
+```python
+    def calculate_average_data(self, data):
+        # Create a DataFrame taken from db `Data` structure
+        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+
+        # Ensure timestamp is datetime
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+
+        # Resample and calculate means
+        hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
+        daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
+        weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
+        monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
+
+        return {
+            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
+            'daily': daily_avg.reset_index().to_dict(orient='records'),
+            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
+            'monthly': monthly_avg.reset_index().to_dict(orient='records')
+        } 
+```
+
+The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly.
+
+Parameters:
+* data: list of records containing id, device_id, timestamp, steps, PAM_score, zone, and data_label.
+
+Returns:
+* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly'.
+Each contains a list of records with average steps and PAM_score for the corresponding time period.
+
+Key Steps:
+> Converts data to a DataFrame.
+
+> Parses timestamps and sets as index.
+
+> Resamples data by time intervals.
+
+> Computes mean values and formats results as dictionaries.
+
+### Get user preferences
+
+Returns the user preferences such as dark_mode, large_font, and language, by using the cookie (active session) of the player.
+
+```python
+    def get_user_preferences(self, cookie: str) -> dict:
+        query = "SELECT dark_mode, large_font, language FROM User WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return_dict = {
+                "dark_mode": result[0][0],
+                "large_font": result[0][1],
+                "language": result[0][2]
+            }
+            return return_dict
+        return {}
+```
+
+### Set user preferences
+
+Sets the user preferences using the cookie (active session) of the player.
+
+```python
+def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, language: str) -> bool:
+    query = """
+        UPDATE User
+        SET dark_mode = %s, large_font = %s, language = %s
+        WHERE cookies = %s;
+    """
+    params = (dark_mode, large_font, language, cookie)
+    result = self.do_query(query, params, fetch=False)
+
+    return result is not None
+```

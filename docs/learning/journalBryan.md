@@ -437,6 +437,23 @@ def receive_data():
     return jsonify({"message": "Data received securely"}), 200
 ```
 
+Example code for raspberry pi:
+```python
+import requests
+
+url = "https://192.168.172.141:5000/api/data"
+headers = {
+    "Authorization": "abc123xyzTOKEN"
+}
+data = {
+    "day_date": NOW(),
+    "time_date": NOW()
+}
+
+response = requests.post(url, json=data, headers=headers)
+print(response.json())
+
+```
 Using this, my system can:
 
     Ensure that only known and authorized devices can send data.

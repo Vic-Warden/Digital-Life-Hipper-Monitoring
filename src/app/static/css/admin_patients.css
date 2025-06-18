@@ -11,3 +11,160 @@ body {
   min-height: 100vh;
   color: #333;
 }
+
+.container {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 225px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Card styling */
+.patient-card {
+  border: 3px solid #74a6d4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 450px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.patient-card-box {
+  border: 1px solid #74a6d4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 305px;
+  box-sizing: border-box;
+  background: white;
+  margin-bottom: 10px;
+}
+
+.addPatient-card {
+  border: 3px solid #74a6d4;
+  border-radius: 10px;
+  padding: 20px;
+  width: 450px;
+  box-sizing: border-box;
+  background: white;
+}
+
+
+.patient-card h3 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+}
+
+.addPatient-card h3 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+}
+
+.display-box {
+  max-height: 310px; /* Adjust this height depending on your card size */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 5px; /* Optional: give room for scrollbar */
+}
+
+#search {
+	width: 100%;
+	border: 1px solid #74a6d4;
+  border-radius: 6px;
+	min-height: 30px;
+  background-color: #fff;
+  box-sizing: border-box;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+.patient-card-box {
+  border: 3px solid #74a6d4;
+  border-radius: 10px;
+  padding: 20px;
+  background: white;
+  width: 100%; /* or set a fixed width */
+  box-sizing: border-box;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-size: 1em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #74a6d4;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.patient-button {
+  padding: 10px;
+  background-color: white;
+  border: 2px solid #74a6d4;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #74a6d4;
+}
+
+
+/* ✅ Mobile-specific styles */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .patient-card, .addPatient-card {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .patient-card, .addPatient-card h3 {
+    font-size: 1.25em;
+  }
+
+  .display-box {
+    font-size: 0.95em;
+    padding: 0.6em;
+  }
+
+  label {
+    font-size: 0.95em;
+  }
+
+}

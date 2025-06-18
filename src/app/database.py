@@ -129,24 +129,45 @@ class Database:
             return True
         return False
 
-    def add_patient(self, name: str, email: str, password: str) -> tuple[bool, str]:
+    def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """
-        ### Add a new patient to the database.
+        add a new patient linked to a therapist.
 
-        Returns:
-        - A tuple (True, "") if the patient was added successfully.
-        - A tuple (False, "Email already registered.") if the email is already in use.
+        Returns True if successful, False otherwise.
         """
-        if self.check_email(email):
-            return (False, "Email already registered.")
-        query = "INSERT INTO User (name, email, password, is_therapist) VALUES (%s, %s, %s, %s);"
-        params = (name, email, password, 0)  # is_therapist = 0 for patients
-        result = self.do_query(query, params)
-        return (result is not None, "")
+        # Get therapist id
+        therapist_id = self.therapist_id_from_cookie(cookie)
+        if not therapist_id:
+            return False
+        try:
+            # Insert user into db
+            insert_query = """
+                INSERT INTO User (name, email, password, cookies, is_therapist, fk_therapist_id)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                RETURNING id;
+            """
+            params = (name, email, password, '', 0,
+                      therapist_id)  # '' for empty cookie, 0 for no therapist
+            patient_id = self.do_query(insert_query, params)[0][0]
 
-    def assign_patient_to_therapist(self, patient_id: int, therapist_id: int) -> bool:
-        print("HAS YET TO BE IMPLEMENTED")
+            # Add patient id to Patient_has_Therapist table
+            self.connect_patient_to_therapist(patient_id, therapist_id)
+
+            return True
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
         return False
+
+    def connect_patient_to_therapist(self, patient_id: int, therapist_id: int):
+        """
+        text
+        """
+        query = """
+            INSERT INTO Patient_has_Therapist VALUES (%s, %s);
+        """
+        params = (patient_id, therapist_id)
+        self.do_query(query, params, fetch=False)
 
     def remove_patient(self, email: str) -> tuple[bool, str]:
         """
@@ -506,6 +527,22 @@ class Database:
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
             'monthly': monthly_avg.reset_index().to_dict(orient='records')
         }
+
+    def therapist_id_from_cookie(self, cookie: str) -> int | bool:
+        """
+
+        """
+        try:
+            insert_query = """
+            SELECT fk_therapist_id FROM User WHERE cookies = %s;
+            """
+            params = (cookie,)
+            result = self.do_query(insert_query, params)
+            return result[0][0]
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
+        return False
 
     def get_user_preferences(self, cookie: str) -> dict:
         """

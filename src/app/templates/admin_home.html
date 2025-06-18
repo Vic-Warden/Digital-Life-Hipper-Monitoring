@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
   <title>Hipper Therapeutics - Dashboard</title>
-  <link rel="stylesheet" href="../static/css/therapist.css" />
-  <link rel="stylesheet" href="../static/css/admin_navbar.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/therapist.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_navbar.css') }}"></link>
+  
   <!-- Chart.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
@@ -159,7 +160,9 @@
     </div>
   </div>
 
-  <script src="../static/js/therapist.js"></script>
-  <script src="../static/js/admin_navbar.js"></script>
+  <script src="{{ url_for('static', filename='js/admin_navbar.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/therapist.js') }}"></script>
+
+  
 </body>
 </html>

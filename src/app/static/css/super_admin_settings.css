@@ -253,6 +253,27 @@ label {
   pointer-events: none;
 }
 
+.display-box-superusers {
+  max-height: 200px;       /* adjust to taste */
+  overflow-y: auto;
+  border: 1px solid #74a6d4;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+}
+
+.superuser-item {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f9f9f9;
+  font-size: 0.95em;
+}
+
+
 @media (max-width: 768px) {
   .return-message {
     width: 70%;

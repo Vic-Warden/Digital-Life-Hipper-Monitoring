@@ -64,6 +64,10 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 The difference maker is `- FLASK_DEBUG=1`. Now everything works as expected!
 
+#292 As a student, I want to learn how to link the database to the front-end, so that updated data can be displayed on a graph.
+
+
+
 ## Journal
 
 ### 5/7/2025

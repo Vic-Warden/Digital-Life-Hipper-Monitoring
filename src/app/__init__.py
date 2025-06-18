@@ -564,13 +564,12 @@ def routine_form():
 
         patient_query = "SELECT name FROM User WHERE id = %s"
         patient_result = db.do_query(patient_query, (patient_id,))
-        patient_name = patient_result[0][0] if patient_result else "inconnu"
+        patient_name = patient_result[0][0] if patient_result else "Unknown"
 
         usual_slots = db.get_usual_active_slots(patient_id)
 
         disruptions = db.get_disruptions(patient_id, usual_slots)
-
-
+        
         return {
             "patient_name": patient_name,
             "usual_slots": usual_slots,

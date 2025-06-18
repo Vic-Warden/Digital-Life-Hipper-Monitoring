@@ -399,6 +399,21 @@ This implementation ensures there is no double data collected from a single sens
 
 As a student, I want to learn how to use authentication tokens when sending data from a Raspberry Pi to my backend, so that I can make sure only trusted devices can send or access data.
 
+### Learned
+Originally, my backend accepted any data coming in from any client. This was a big problem — anyone could send fake data to my system if they knew the endpoint. I realized this was insecure, especially since my devices (like the Raspberry Pi) are meant to operate over public or semi-public networks.
+
+To fix this:
+
+    I generated a unique token for each authorized device and stored it in the database.
+
+    The Raspberry Pi includes this token in the Authorization header when making a request to the backend.
+
+    On the backend, I created a middleware-style function that checks if the token is valid before processing the request.
+
+    If the token is missing or invalid, the request is rejected with a 401 Unauthorized.
+
+
+
 <br /> <br />
 
 # Sources

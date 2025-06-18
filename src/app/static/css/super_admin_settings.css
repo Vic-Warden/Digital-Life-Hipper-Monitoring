@@ -92,17 +92,7 @@ label {
   font-size: 1em;
   word-break: break-word;
 }
-.display-box-add-super-user {
-  border: 1px solid #74a6d4;
-  border-radius: 6px;
-  padding: 8px;
-  min-height: 30px;
-  background-color: #fff;
-  box-sizing: border-box;
-  width: 70%;
-  font-size: 1em;
-  word-break: break-word;
-}
+
 
 .display-box {
   border: 1px solid #74a6d4;

@@ -34,6 +34,17 @@
 
         const data = await response.json();
         
+        // Displays patient information
+        document.getElementById("patientInfo").innerHTML = `
+            <h2>Patient Information</h2>
+            <p>Name: ${data.patient_name || "unknown"}</p>
+        `;
+
+        document.getElementById("analysisPeriod").innerHTML = `
+            <h3>Analyzed Period</h3>
+            <p>Last 7 days</p>
+        `;
+
 
     </script>
 </body>

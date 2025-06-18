@@ -381,7 +381,8 @@ class Database:
 
         from datetime import datetime, timedelta
 
-    
+        start_date = datetime(2025, 6, 1).date()
+        end_date = datetime(2025, 6, 12).date()
 
         query = """
             SELECT HOUR(timestamp) AS hour_slot, SUM(steps) AS total_steps
@@ -396,8 +397,9 @@ class Database:
         result = self.do_query(query, (patient_id, start_date, end_date))
 
         if not result:
-
-
+            print("→ patient_id:", patient_id)
+            print("→ start_date:", start_date)
+            print("→ end_date:", end_date)
             return []
   
 

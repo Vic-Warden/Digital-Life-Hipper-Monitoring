@@ -573,6 +573,7 @@ def routine_form():
     return render_template('routine_form.html')
 
 
+
 # Start the Flask application
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True, port=6001)

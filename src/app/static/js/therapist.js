@@ -1,10 +1,23 @@
 // Chart data based on the screenshot
 const chartData = {
-  dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
-  steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
-  pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
-  inactiveDays: [0, 1, 4, 6] // indices of inactive days (red background)
+  // Weekly data
+  weekly: {
+    dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
+    steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
+    pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
+    inactiveDays: [0, 1, 6] // indices of inactive days (red background)
+  },
+  // Daily data (hourly breakdown for today - 2025-05-23)
+  daily: {
+    hours: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+    steps: [5, 2, 0, 0, 0, 8, 120, 450, 680, 820, 950, 1100, 1350, 1580, 1750, 1920, 2100, 2350, 2580, 2750, 2900, 3100, 15, 3],
+    pamScores: [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.5, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.3, 2.1, 1.8, 0.1, 0.0],
+    inactiveHours: [0, 1, 2, 3, 4, 5, 22, 23] // indices of sleeping/inactive hours
+  }
 };
+
+// Current view mode
+let currentView = 'daily';
 
 // Inactive period management
 let inactivePeriod = {
@@ -31,11 +44,44 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeChart() {
   const ctx = document.getElementById('activityChart').getContext('2d');
   
-  // Prepare data for Chart.js
-  const labels = chartData.dates.map(date => {
-    const d = new Date(date);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  });
+  // Start with daily view and set the daily button as active
+  updateChart('daily');
+  
+  // Set the daily button as active on load
+  const dailyButton = Array.from(document.querySelectorAll('.time-btn')).find(btn => 
+    btn.textContent.toLowerCase().trim() === 'daily'
+  );
+  if (dailyButton) {
+    document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+    dailyButton.classList.add('active');
+  }
+}
+
+// Update chart based on view mode
+function updateChart(viewMode) {
+  const ctx = document.getElementById('activityChart').getContext('2d');
+  
+  let labels, stepsData, pamData, inactiveIndices;
+  
+  if (viewMode === 'weekly') {
+    labels = chartData.weekly.dates.map(date => {
+      const d = new Date(date);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+    stepsData = chartData.weekly.steps;
+    pamData = chartData.weekly.pamScores;
+    inactiveIndices = chartData.weekly.inactiveDays;
+  } else {
+    labels = chartData.daily.hours;
+    stepsData = chartData.daily.steps;
+    pamData = chartData.daily.pamScores;
+    inactiveIndices = chartData.daily.inactiveHours;
+  }
+
+  // Destroy existing chart if it exists
+  if (activityChart) {
+    activityChart.destroy();
+  }
 
   activityChart = new Chart(ctx, {
     type: 'bar',
@@ -44,19 +90,19 @@ function initializeChart() {
       datasets: [
         {
           label: 'Steps',
-          data: chartData.steps,
-          backgroundColor: chartData.dates.map((_, index) => 
-            chartData.inactiveDays.includes(index) ? '#ffcccb' : '#4a90e2'
+          data: stepsData,
+          backgroundColor: labels.map((_, index) => 
+            inactiveIndices.includes(index) ? '#ffcccb' : '#4a90e2'
           ),
-          borderColor: chartData.dates.map((_, index) => 
-            chartData.inactiveDays.includes(index) ? '#ff6b6b' : '#357abd'
+          borderColor: labels.map((_, index) => 
+            inactiveIndices.includes(index) ? '#ff6b6b' : '#357abd'
           ),
           borderWidth: 1,
           yAxisID: 'y'
         },
         {
           label: 'PAM Score',
-          data: chartData.pamScores,
+          data: pamData,
           type: 'line',
           borderColor: '#b8e986',
           backgroundColor: 'rgba(184, 233, 134, 0.1)',
@@ -89,6 +135,13 @@ function initializeChart() {
           borderColor: 'rgba(255, 255, 255, 0.1)',
           borderWidth: 1,
           callbacks: {
+            title: function(context) {
+              if (viewMode === 'daily') {
+                return `Hour: ${context[0].label}`;
+              } else {
+                return `Date: ${context[0].label}`;
+              }
+            },
             label: function(context) {
               if (context.datasetIndex === 0) {
                 return `Steps: ${context.parsed.y.toLocaleString()}`;
@@ -105,7 +158,8 @@ function initializeChart() {
             display: false
           },
           ticks: {
-            color: '#666'
+            color: '#666',
+            maxRotation: viewMode === 'daily' ? 45 : 0
           }
         },
         y: {
@@ -157,9 +211,14 @@ function initializeEventHandlers() {
       timeButtons.forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       
-      // Here you could update the chart based on the selected time period
-      // For now, we'll just log the selection
-      console.log('Time period selected:', this.textContent);
+      // Get the view mode from button text
+      const viewMode = this.textContent.toLowerCase().trim();
+      
+      if (viewMode === 'daily' || viewMode === 'weekly') {
+        currentView = viewMode;
+        updateChart(currentView);
+        console.log('Time period selected:', viewMode);
+      }
     });
   });
 

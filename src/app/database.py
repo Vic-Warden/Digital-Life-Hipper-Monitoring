@@ -401,7 +401,8 @@ class Database:
             print("→ start_date:", start_date)
             print("→ end_date:", end_date)
             return []
-  
+
+        print("SQL Result (usual slots):", result)
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
 

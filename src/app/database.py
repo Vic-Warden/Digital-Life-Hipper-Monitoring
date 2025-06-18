@@ -376,12 +376,12 @@ class Database:
 
     def get_usual_active_slots(self, patient_id: int, days: int = 7) -> list[dict]:
         """
-        Display hours when the patient don't do activity
+        Retrieves the time slots (by hour) when the patient is usually active
         """
+
         from datetime import datetime, timedelta
 
-        end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=days)
+    
 
         query = """
             SELECT HOUR(timestamp) AS hour_slot, SUM(steps) AS total_steps
@@ -392,12 +392,17 @@ class Database:
             GROUP BY hour_slot
             ORDER BY hour_slot;
         """
+
         result = self.do_query(query, (patient_id, start_date, end_date))
 
         if not result:
+
+
             return []
+  
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+
     
     def get_disruptions(self, patient_id: int, usual_slots: list[int], alert_days: int = 3) -> list[dict]:
         from datetime import datetime, timedelta
@@ -424,7 +429,8 @@ class Database:
         pivot_df = df.pivot_table(index="date", columns="hour", values="total_steps", fill_value=0)
 
         alerts = []
-        for hour_slot in usual_slots:
+        for slot in usual_slots:
+            hour_slot = slot["hour_slot"]
             if hour_slot not in pivot_df.columns:
                 continue
 

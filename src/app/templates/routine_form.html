@@ -19,6 +19,21 @@
     <div id="disruptionsResult"></div>
     <div id="summary"></div>
 
+    <script>
+    async function sendRequest(event) {
+        event.preventDefault();
+        const patientId = document.getElementById("patient_id").value;
+
+        const response = await fetch("/routine-form", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ patient_id: patientId })
+        });
+
+        const data = await response.json();
+        
 
     </script>
 </body>

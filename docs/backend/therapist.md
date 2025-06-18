@@ -357,11 +357,11 @@ Each list indicates the total number of steps taken in a given hour across. This
 
 - `get_disruptions`
 
-Description
+## Description
 
 This function checks if the patient has been inactive during their usual activity hours for 3 or more consecutive days, indicating a disruption in their routine
 
-Returns
+## Returns
 
 A list of disruptions
 
@@ -375,7 +375,7 @@ A list of disruptions
 
 ```
 
-How It Works
+## How It Works
 
 - Aggregates step counts by hour for each day over the past 7 days
 

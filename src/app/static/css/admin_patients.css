@@ -76,6 +76,7 @@ body {
   padding-right: 5px; /* Optional: give room for scrollbar */
 }
 
+/* search bar for patient-list styling */
 #search {
 	width: 100%;
 	border: 1px solid #74a6d4;
@@ -114,6 +115,7 @@ form label {
   font-family: Arial, sans-serif;
 }
 
+/* patient form input styling */
 form input[type="text"],
 form input[type="email"],
 form input[type="password"] {
@@ -125,6 +127,7 @@ form input[type="password"] {
   width: 100%;
 }
 
+/* Styling for the button of add patient form */
 .patient-button {
   padding: 10px;
   background-color: white;

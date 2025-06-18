@@ -107,3 +107,7 @@ Today I finished my learning story about docker. This was actually way easier th
 ### 6/6/2025
 
 Today I have my second expert review with Raymond. I achieved a meets expectation, although he had some criticism on the way I formed my user story. He explained that it looked too much like a developer story. I agreed with him. Thanks to his clear explanation he set me up in a way where I should now be able to do everything correctly for the final expert review with Gerald. 
+
+### 6/18/2025
+
+Today I had my expert review with Gerald which went really well. It went so well that it was worth an "Above Expectation". Now for the remaining week and a half the goal is to finish up the final user stories and create usable documentation for when the project is delivered. Other students or developers should be able to pick up from where we as a team left off. 

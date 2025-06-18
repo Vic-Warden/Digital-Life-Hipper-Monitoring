@@ -56,6 +56,21 @@
         } else {
             document.getElementById("usualRoutine").innerHTML = "<p>No routine data found.</p>";
         }
+        // Displays breaks if present
+        if (data.disruptions.length === 0) {
+            document.getElementById("disruptionsResult").innerHTML = "<p><strong>No disruptions detected.</strong></p>";
+        } else {
+            let html = "<h3>Detected Disruptions</h3><ul>";
+            data.disruptions.forEach(d => {
+                html += `<li><strong>${d.hour_slot}h</strong>: inactivity on the following days:<ul>`;
+                d.inactive_days.forEach(day => {
+                    html += `<li>${day}</li>`;
+                });
+                html += "</ul></li>";
+            });
+            html += "</ul>";
+            document.getElementById("disruptionsResult").innerHTML = html;
+        }
 
 
     </script>

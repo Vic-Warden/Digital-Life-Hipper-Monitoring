@@ -395,6 +395,85 @@ This taught me how to:
 Using this I can now use multiple basestations in the same area, because they all have the same generalised location where they check wat time and date data was pulled for the last time from a specific sensor. 
 This implementation ensures there is no double data collected from a single sensor.
 
+## Learning story
+
+As a student, I want to learn how to use authentication tokens when sending data from a Raspberry Pi to my backend, so that I can make sure only trusted devices can send or access data.
+
+### Learned
+Originally, my backend accepted any data coming in from any client. This was a big problem — anyone could send fake data to my system if they knew the endpoint. I realized this was insecure, especially since my devices (like the Raspberry Pi) are meant to operate over public or semi-public networks.
+
+To fix this:
+
+1. I generated a unique token for each authorized device and stored it in the database.
+
+2. The Raspberry Pi includes this token in the Authorization header when making a request to the backend.
+
+3. On the backend, I created a middleware-style function that checks if the token is valid before processing the request.
+
+4. If the token is missing or invalid, the request is rejected with a 401 Unauthorized.
+
+```python
+from flask import request, jsonify
+
+# Dictionary of valid tokens for example purposes (in production, use DB)
+VALID_TOKENS = {
+    "raspberrypi-001": "abc123xyzTOKEN",
+    "raspberrypi-002": "def456TOKENzzz"
+}
+
+def validate_token():
+    token = request.headers.get("Authorization")
+    if not token or token not in VALID_TOKENS.values():
+        return False
+    return True
+
+@app.route('/api/data', methods=['POST'])
+def receive_data():
+    if not validate_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    # Save to database...
+    return jsonify({"message": "Data received securely"}), 200
+```
+
+Example code for raspberry pi:
+```python
+import requests
+
+url = "https://192.168.172.141:5000/api/data"
+headers = {
+    "Authorization": "abc123xyzTOKEN"
+}
+data = {
+    "day_date": NOW(),
+    "time_date": NOW()
+}
+
+response = requests.post(url, json=data, headers=headers)
+print(response.json())
+
+```
+Using this, my system can:
+
+1. Ensure that only known and authorized devices can send data.
+
+2. Prevent malicious actors from spamming or tampering with my backend.
+
+3. Keep logs of which token/device sent what data for easier debugging.
+
+This taught me how to:
+
+1. Design and use token-based authentication in embedded-backend systems.
+
+2. Secure endpoints in a stateless and lightweight way (suitable for IoT).
+
+3. Combine basic cybersecurity principles with real-world embedded systems.
+
+4. Store and manage per-device secrets securely (or use Key Vaults in future).
+
+Now, I can safely deploy multiple Raspberry Pi devices in the field without worrying about spoofed or unauthorized data submissions.
+
 <br /> <br />
 
 # Sources

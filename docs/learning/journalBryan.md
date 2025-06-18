@@ -395,6 +395,10 @@ This taught me how to:
 Using this I can now use multiple basestations in the same area, because they all have the same generalised location where they check wat time and date data was pulled for the last time from a specific sensor. 
 This implementation ensures there is no double data collected from a single sensor.
 
+## Learning story
+
+As a student, I want to learn how to use authentication tokens when sending data from a Raspberry Pi to my backend, so that I can make sure only trusted devices can send or access data.
+
 <br /> <br />
 
 # Sources

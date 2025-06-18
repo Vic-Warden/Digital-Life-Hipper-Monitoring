@@ -489,7 +489,7 @@ def anomaly_form():
     return render_template('form.html')
 
 
-@app.route('/api/upload-pam-data', methods=['GET'])
+@app.route('/api/upload-day-data', methods=['GET'])
 def upload_pam_data():
     """
     API endpoint to upload PAM data.
@@ -511,7 +511,37 @@ def upload_pam_data():
     pam_data = json.loads(pam_data)
 
     # TODO: Implement the actual upload logic
-    success = db.upload_pam_data(patient_id, pam_data)
+    success = db.upload_day_data(patient_id, pam_data)
+    success = True
+    if not success:
+        return {"error": "Failed to upload PAM data"}, 500
+
+    return {"message": "PAM data uploaded successfully"}, 200
+
+
+@app.route('/api/upload-minute-data', methods=['GET'])
+def upload_pam_data():
+    """
+    API endpoint to upload PAM data.
+    Returns a JSON response with success status and status code.
+    """
+    token = request.cookies.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return {"error": reason}, 401
+
+    patient_id = request.args.get('patient_id')
+    pam_data = request.args.get('pam_data')
+    device_mac_addr = request.args.get('device_mac_addr')
+
+    if not patient_id or not pam_data:
+        return {"error": "Patient ID and PAM data are required"}, 400
+
+    # Assuming pam_data is a JSON string, you might need to parse it
+    pam_data = json.loads(pam_data)
+
+    # TODO: Implement the actual upload logic
+    success = db.upload_minute_data(patient_id, pam_data)
     success = True
     if not success:
         return {"error": "Failed to upload PAM data"}, 500

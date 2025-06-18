@@ -303,3 +303,87 @@ In this file you will find all the css code that is used to style is page.
 - Figma is used to help with making the design for the website.
 
 **Chatgpt was used to clean up the written code**
+
+## admin_patients
+
+The admin patients is used for therapist to view all their patients and also add new patients if needed.
+
+**Figma Design**
+![FigmaDesignPatientsPage](/docs/assets/AdminPatientsPageDesign.png)
+
+**Design Used**
+![FigmaDesignPatientsPage](/docs/assets/AdminPatientsPage.png)
+
+### admin_patients.html
+In the html file for the admin patients page you will find the code for injected admin-navbar, the patient-card and the addPatient-card.
+
+The patient card is used to display the patients assigned to a therapist. Inside the card, there is a search bar to filter patients by name and a list of patients below it.
+
+The patient data is fetched from the backend before the page is rendered, using Jinja2 to loop through the list. Jinja2 calls Flask's url_for() to generate links to patient detail pages, which are connected to specific Flask routes.
+
+```html
+    <div class="patient-card">
+      <h3>Patients</h3>
+      <input type="text" id="search" placeholder="Search patients by name..." />
+      <div id="patient-list" class="display-box">
+        {% for patient in patients %}
+          <div class="patient-card-item" data-name="{{ patient.name | lower }}">
+            <div class="patient-card-box">
+              <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}" style="text-decoration: none; color: inherit;">
+              <strong>{{ patient.name }}</strong><br>
+              Email: {{ patient.email }}
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div> 
+    </div>
+```
+The Add Patient card allows a therapist to register a new patient via a form. The form includes required fields for the patient's name, email, and password.
+
+When the form is submitted, it sends a POST request to the backend route '/api/add-patient', which is connected to the Flask function admin_add_patient().
+
+```html
+    <div class="addPatient-card">
+      <h3>Add Patient</h3>
+      <form action="{{ url_for('admin_add_patient') }}" method="POST">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+    
+        <button type="submit" class="patient-button">Add Patient</button>
+      </form>
+    </div>
+```
+### admin_patients.css
+In this file you will find all the css code that is used to style is page.
+
+### admin_patients.js
+The JavaScript file for the admin patients page contains the function that enables search functionality in the patient list.
+
+```javascript
+    // Filter patients based on search
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById("search");
+      const patientItems = document.querySelectorAll(".patient-card-item");
+  
+      searchInput.addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+  
+        patientItems.forEach(item => {
+          const name = item.dataset.name;
+          item.style.display = name.includes(query) ? "block" : "none";
+        });
+      });
+    });
+```
+
+### References
+- A youtube video that helped with understand jinja2 was used [Link to video on jinja2](https://www.youtube.com/watch?v=4yaG-jFfePc&t=113s)
+
+**Chatgpt was used to clean up the written code**

@@ -489,34 +489,64 @@ def anomaly_form():
     return render_template('form.html')
 
 
-@app.route('/api/upload-pam-data', methods=['GET'])
-def upload_pam_data():
+@app.route('/api/upload-day-data', methods=['POST'])
+def upload_day_data():
     """
-    API endpoint to upload PAM data.
-    Returns a JSON response with success status and status code.
+    API endpoint to upload PAM day-level data.
+    Expects POST form data including auth_token, patient_id, pam_data, and optionally device_mac_addr.
     """
-    token = request.cookies.get('auth_token')
+    token = request.form.get('auth_token')
     valid, reason = db.verify_auth_token(token)
     if not valid:
-        return {"error": reason}, 401
+        return jsonify({"error": reason}), 401
 
-    patient_id = request.args.get('patient_id')
-    pam_data = request.args.get('pam_data')
-    device_mac_addr = request.args.get('device_mac_addr')
+    patient_id = request.form.get('patient_id')
+    pam_data = request.form.get('pam_data')
+    device_mac_addr = request.form.get('device_mac_addr')
 
     if not patient_id or not pam_data:
-        return {"error": "Patient ID and PAM data are required"}, 400
+        return jsonify({"error": "Patient ID and PAM data are required"}), 400
 
-    # Assuming pam_data is a JSON string, you might need to parse it
-    pam_data = json.loads(pam_data)
+    try:
+        pam_data = json.loads(pam_data)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON in pam_data"}), 400
 
-    # TODO: Implement the actual upload logic
-    success = db.upload_pam_data(patient_id, pam_data)
-    success = True
+    success = db.upload_day_data(patient_id, pam_data)
     if not success:
-        return {"error": "Failed to upload PAM data"}, 500
+        return jsonify({"error": "Failed to upload PAM data"}), 500
 
-    return {"message": "PAM data uploaded successfully"}, 200
+    return jsonify({"message": "PAM day data uploaded successfully"}), 200
+
+
+@app.route('/api/upload-minute-data', methods=['POST'])
+def upload_minute_data():
+    """
+    API endpoint to upload PAM minute-level data.
+    Expects POST form data including auth_token, patient_id, pam_data, and optionally device_mac_addr.
+    """
+    token = request.form.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return jsonify({"error": reason}), 401
+
+    patient_id = request.form.get('patient_id')
+    pam_data = request.form.get('pam_data')
+    device_mac_addr = request.form.get('device_mac_addr')
+
+    if not patient_id or not pam_data:
+        return jsonify({"error": "Patient ID and PAM data are required"}), 400
+
+    try:
+        pam_data = json.loads(pam_data)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON in pam_data"}), 400
+
+    success = db.upload_minute_data(patient_id, pam_data)
+    if not success:
+        return jsonify({"error": "Failed to upload PAM data"}), 500
+
+    return jsonify({"message": "PAM minute data uploaded successfully"}), 200
 
 
 # @app.route('/api/last-update-period', methods=['GET'])

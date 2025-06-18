@@ -32,18 +32,18 @@
               <button class="super-save-button" onclick="saveSettings()">Make super user</button>
             </div>
           <label>Active Super Users:</label>
-<div class="display-box-superusers">
-  {% if superusers %}
-    {% for su in superusers %}
-      <div class="superuser-item">
-        <strong>{{ su.name }}</strong><br>
-        {{ su.email }}
+      <div class="display-box-superusers">
+        {% if superusers %}
+          {% for su in superusers %}
+            <div class="superuser-item">
+              <strong>{{ su.name }}</strong><br>
+              {{ su.email }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="superuser-item">No super users found.</div>
+        {% endif %}
       </div>
-    {% endfor %}
-  {% else %}
-    <div class="superuser-item">No super users found.</div>
-  {% endif %}
-</div>
     </div>
 
     <div class="card_admin_user">

@@ -254,8 +254,7 @@ label {
 }
 
 .display-box-superusers {
-  max-height: 200px;       /* adjust to taste */
-  overflow-y: auto;
+  max-height: 150px;       /* adjust to taste */
   border: 1px solid #74a6d4;
   border-radius: 6px;
   padding: 10px;

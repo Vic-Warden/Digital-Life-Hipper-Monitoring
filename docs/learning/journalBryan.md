@@ -404,13 +404,13 @@ Originally, my backend accepted any data coming in from any client. This was a b
 
 To fix this:
 
-    I generated a unique token for each authorized device and stored it in the database.
+1. I generated a unique token for each authorized device and stored it in the database.
 
-    The Raspberry Pi includes this token in the Authorization header when making a request to the backend.
+2. The Raspberry Pi includes this token in the Authorization header when making a request to the backend.
 
-    On the backend, I created a middleware-style function that checks if the token is valid before processing the request.
+3. On the backend, I created a middleware-style function that checks if the token is valid before processing the request.
 
-    If the token is missing or invalid, the request is rejected with a 401 Unauthorized.
+4. If the token is missing or invalid, the request is rejected with a 401 Unauthorized.
 
 ```python
 from flask import request, jsonify
@@ -456,21 +456,21 @@ print(response.json())
 ```
 Using this, my system can:
 
-    Ensure that only known and authorized devices can send data.
+1. Ensure that only known and authorized devices can send data.
 
-    Prevent malicious actors from spamming or tampering with my backend.
+2. Prevent malicious actors from spamming or tampering with my backend.
 
-    Keep logs of which token/device sent what data for easier debugging.
+3. Keep logs of which token/device sent what data for easier debugging.
 
 This taught me how to:
 
-    Design and use token-based authentication in embedded-backend systems.
+1. Design and use token-based authentication in embedded-backend systems.
 
-    Secure endpoints in a stateless and lightweight way (suitable for IoT).
+2. Secure endpoints in a stateless and lightweight way (suitable for IoT).
 
-    Combine basic cybersecurity principles with real-world embedded systems.
+3. Combine basic cybersecurity principles with real-world embedded systems.
 
-    Store and manage per-device secrets securely (or use Key Vaults in future).
+4. Store and manage per-device secrets securely (or use Key Vaults in future).
 
 Now, I can safely deploy multiple Raspberry Pi devices in the field without worrying about spoofed or unauthorized data submissions.
 

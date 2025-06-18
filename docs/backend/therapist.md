@@ -300,3 +300,32 @@ Activity Pattern Recognition by Deep Learning
 **Data :** raw acceleration vectors or series of steps/zone per hour
 
 **Complexity :** high level (need for volume and labels)
+
+---
+
+## Routine Change Detection
+
+This feature identifies when a patient breaks their usual daily rhythm 
+
+- Detects most active hours during the past 7 days
+- Flags inactivity at usual active hours over 3+ consecutive days
+- Provides both an API and a simple web interface
+
+### Web Form
+
+- URL: `/routine-form`
+- Input: Patient ID
+- Output:
+  - Patient details
+  - Usual activity slots
+  - Period of analysis
+  - List of detected disruptions
+
+### Flask Endpoints
+
+- `POST /routine-form`: returns usual activity hours + detected disruptions
+- `GET /routine-form`: shows a web form
+
+
+- `get_usual_active_slots`: aggregates steps per hour over the past 7 days to find activity routine
+- `get_disruptions`: checks inactivity during usual active hours over last 3 days

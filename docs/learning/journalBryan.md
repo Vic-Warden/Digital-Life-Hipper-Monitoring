@@ -412,6 +412,30 @@ To fix this:
 
     If the token is missing or invalid, the request is rejected with a 401 Unauthorized.
 
+```python
+from flask import request, jsonify
+
+# Dictionary of valid tokens for example purposes (in production, use DB)
+VALID_TOKENS = {
+    "raspberrypi-001": "abc123xyzTOKEN",
+    "raspberrypi-002": "def456TOKENzzz"
+}
+
+def validate_token():
+    token = request.headers.get("Authorization")
+    if not token or token not in VALID_TOKENS.values():
+        return False
+    return True
+
+@app.route('/api/data', methods=['POST'])
+def receive_data():
+    if not validate_token():
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    # Save to database...
+    return jsonify({"message": "Data received securely"}), 200
+```
 
 
 <br /> <br />

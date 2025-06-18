@@ -202,9 +202,15 @@ def admin_settings():
             }), 200
 
 
-        if db.is_super_user(cookie):
-            return render_template("super_admin_settings.html", preferences=db.get_user_preferences(cookie))
+        # if db.is_super_user(cookie):
+        #     return render_template("super_admin_settings.html", preferences=db.get_user_preferences(cookie))
+        if db.is_super_user(cookie):# fetch super‑users for both GET and POST renders
+            superusers = db.get_superusers()
 
+            return render_template(
+                "super_admin_settings.html",
+                preferences = db.get_user_preferences(cookie),
+                superusers = superusers)
         return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
@@ -572,6 +578,26 @@ def routine_form():
         return {"disruptions": disruptions}, 200
     return render_template('routine_form.html')
 
+@app.route('/api/get-superusers', methods=['GET'])
+def get_superusers(self):
+    """
+    Returns:
+      - A list of dicts {id, name, email} of every user where is_superuser = 1,
+      - Or None if the query failed.
+    """
+    query = """
+      SELECT * 
+FROM `hipperdb`.`User`
+WHERE `is_superuser` = 1;
+    """
+    rows = self.do_query(query)
+    if rows is None:
+        return None
+
+    return [
+      {"id": r[0], "name": r[1], "email": r[2]}
+      for r in rows
+    ]
 
 
 # Start the Flask application

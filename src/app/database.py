@@ -604,3 +604,20 @@ class Database:
         result = self.do_query(query, params, fetch=False)
 
         return result is not None
+
+    def get_superusers(self):
+        """
+        Return a list of all users where is_superuser = 1,
+        each as a dict with id, name, and email.
+        """
+        query = """
+          SELECT id, name, email
+          FROM User
+          WHERE is_superuser = 1
+        """
+        rows = self.do_query(query)
+        if rows is None:
+            return None
+        # transform into list of dicts for easy JSON / Jinja use
+        return [{"id": r[0], "name": r[1], "email": r[2]} for r in rows]
+

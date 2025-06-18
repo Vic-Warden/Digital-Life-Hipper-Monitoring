@@ -329,3 +329,57 @@ This feature identifies when a patient breaks their usual daily rhythm
 
 - `get_usual_active_slots`: aggregates steps per hour over the past 7 days to find activity routine
 - `get_disruptions`: checks inactivity during usual active hours over last 3 days
+
+## Routine Change Detection
+
+This module helps therapists identify when a patient breaks their usual daily rhythm by analyzing their activity hours and detecting periods of inactivity during those hours
+
+- `get_usual_active_slots`
+
+## Description
+
+This function identifies the hours during which a patient is usually active, based on their step count over a fixed time window
+
+## Returns
+
+A list, each containing :
+
+```json
+[
+  {
+    "hour_slot": 15,
+    "total_steps": 2230
+  },
+]
+```
+
+Each list indicates the total number of steps taken in a given hour across. This function could be extended to make start_date and end_date dynamic or based on the days parameter
+
+- `get_disruptions`
+
+Description
+
+This function checks if the patient has been inactive during their usual activity hours for 3 or more consecutive days, indicating a disruption in their routine
+
+Returns
+
+A list of disruptions
+
+```json
+[
+  {
+    "hour_slot": 15,
+    "inactive_days": ["2025-06-10", "2025-06-11", "2025-06-12"]
+  },
+]
+
+```
+
+How It Works
+
+- Aggregates step counts by hour for each day over the past 7 days
+
+- For each of the usual active hours, detects streaks of inactivity
+
+- If a streak reaches alert_days, it is added to the list of alerts
+

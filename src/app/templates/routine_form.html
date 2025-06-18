@@ -72,6 +72,16 @@
             document.getElementById("disruptionsResult").innerHTML = html;
         }
 
+        // Final summary
+        const nbDisruptions = data.disruptions.length;
+        const comment = nbDisruptions === 0
+            ? "No alerts – stable routine."
+            : `Warning: ${nbDisruptions} disruption(s) detected.`;
+        document.getElementById("summary").innerHTML = `
+            <h3>Summary</h3>
+            <p>${comment}</p>
+        `;
+    }
 
     </script>
 </body>

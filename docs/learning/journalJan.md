@@ -66,6 +66,7 @@ The difference maker is `- FLASK_DEBUG=1`. Now everything works as expected!
 
 #292 As a student, I want to learn how to link the database to the front-end, so that updated data can be displayed on a graph.
 
+Going into this I actually had no clue how to approach it. Thanks to Indigo he told me where to look and how it should be implemented from a general perspective. Knowing that, I first went to `ChatGPT` and asked for some examples. That way I sort of knew what my implementation was going to look like. So first I decided to start working on the python function that converts the database data to averag values for my frontend graph to process it. This was easier than thought thanks to the python library `pandas`. That lib has many useful functions for data conversion. Then I went to `__init__.py` to add onto the homepage function. Via that way I could expose the average data into a html file. Then through Indigo's knowledge I used Jinja to have the data be displayed in a dynamic way in my html file. 
 
 
 ## Journal

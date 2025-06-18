@@ -621,3 +621,35 @@ class Database:
         # transform into list of dicts for easy JSON / Jinja use
         return [{"id": r[0], "name": r[1], "email": r[2]} for r in rows]
 
+    def set_superuser_flag(self, user_id: int, is_super: bool) -> bool:
+        """
+        Sets `is_superuser` = 1 if is_super True, else 0.
+        Returns True on success.
+        """
+        val = 1 if is_super else 0
+        query = "UPDATE User SET is_superuser = %s WHERE id = %s"
+        try:
+            self.do_query(query, (val, user_id))
+            return True
+        except Exception:
+            return False
+
+    def get_user_by_email(self, email):
+        """
+        Returns a dict of {id, name, email, is_therapist}, or None if not found.
+        """
+        query = "SELECT id, name, email, is_therapist FROM User WHERE LOWER(email) = %s"
+        rows = self.do_query(query, (email,))
+        if not rows:
+            return None
+        r = rows[0]
+        return {"id": r[0], "name": r[1], "email": r[2], "is_therapist": bool(r[3])}
+
+    def set_superuser_flag(self, user_id: int, is_super: bool) -> bool:
+        val = 1 if is_super else 0
+        query = "UPDATE User SET is_superuser = %s WHERE id = %s"
+        try:
+            self.do_query(query, (val, user_id))
+            return True
+        except:
+            return False

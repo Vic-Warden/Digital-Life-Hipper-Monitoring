@@ -437,6 +437,25 @@ def receive_data():
     return jsonify({"message": "Data received securely"}), 200
 ```
 
+Using this, my system can:
+
+    Ensure that only known and authorized devices can send data.
+
+    Prevent malicious actors from spamming or tampering with my backend.
+
+    Keep logs of which token/device sent what data for easier debugging.
+
+This taught me how to:
+
+    Design and use token-based authentication in embedded-backend systems.
+
+    Secure endpoints in a stateless and lightweight way (suitable for IoT).
+
+    Combine basic cybersecurity principles with real-world embedded systems.
+
+    Store and manage per-device secrets securely (or use Key Vaults in future).
+
+Now, I can safely deploy multiple Raspberry Pi devices in the field without worrying about spoofed or unauthorized data submissions.
 
 <br /> <br />
 

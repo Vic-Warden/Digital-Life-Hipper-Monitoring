@@ -49,6 +49,23 @@
   box-sizing: border-box;
   background: white;
 }
+.card_admin_user {
+  border: 2px solid #74a6d4;
+  border-radius: 6px;
+  padding: 20px;
+  width: 500px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.card_superuser {
+  border: 2px solid #74a6d4;
+  border-radius: 6px;
+  padding: 20px;
+  width: 500px;
+  box-sizing: border-box;
+  background: white;
+}
 
 .card h3 {
   text-align: center;
@@ -62,6 +79,29 @@ label {
   margin-top: 10px;
   margin-bottom: 4px;
   font-size: 1em;
+}
+
+.display-box-add-admin-user {
+  border: 1px solid #74a6d4;
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 30px;
+  background-color: #fff;
+  box-sizing: border-box;
+  width: 70%;
+  font-size: 1em;
+  word-break: break-word;
+}
+.display-box-add-super-user {
+  border: 1px solid #74a6d4;
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 30px;
+  background-color: #fff;
+  box-sizing: border-box;
+  width: 70%;
+  font-size: 1em;
+  word-break: break-word;
 }
 
 .display-box {
@@ -143,6 +183,26 @@ label {
     font-size: 0.95em;
     line-height: 32px;
   }
+}
+
+.super-save-button {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  background-color: #9aceff;
+  color: black;
+  border: 2px solid #74a6d4;
+  border-radius: 5px;
+
+  left: 115%;
+  transform: translateX(-50%);
+
+  cursor: pointer;
 }
 
 .save-button {

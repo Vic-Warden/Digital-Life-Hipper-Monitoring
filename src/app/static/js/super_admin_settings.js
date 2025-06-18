@@ -37,6 +37,7 @@ async function removeSuperuser(userId, btn) {
         alert("Could not demote user: " + err.message);
         console.error(err);
     }
+    location.reload();
 }
 
 

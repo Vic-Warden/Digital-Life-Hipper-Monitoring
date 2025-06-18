@@ -598,6 +598,62 @@ WHERE `is_superuser` = 1;
       {"id": r[0], "name": r[1], "email": r[2]}
       for r in rows
     ]
+@app.route('/api/remove-superuser', methods=['POST'])
+def api_remove_superuser():
+    """
+    API endpoint to remove super‑user status.
+    Expects JSON { user_id: <int> }.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not user_id:
+        return jsonify({"error": "Missing user_id"}), 400
+
+    # Call into your Database layer to flip the bit
+    success = db.set_superuser_flag(user_id, False)
+    if not success:
+        return jsonify({"error": "Database update failed"}), 500
+
+    return jsonify({"msg": "User demoted"}), 200
+
+@app.route('/api/add-superuser', methods=['POST'])
+def api_add_superuser():
+    """
+    Promote a therapist user to super‑user.
+    Expects JSON: { "email": "<therapist_email>" }
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    # only existing super‑admins can promote
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    email = (data or {}).get('email', '').strip().lower()
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    # 1️⃣ lookup user by email & check is_therapist
+    user = db.get_user_by_email(email)
+    if not user:
+        return jsonify({"error": "No such user"}), 404
+    if not user.get('is_therapist'):
+        return jsonify({"error": "User is not a therapist"}), 400
+
+    # 2️⃣ promote them
+    success = db.set_superuser_flag(user['id'], True)
+    if not success:
+        return jsonify({"error": "Database update failed"}), 500
+
+    return jsonify({
+      "msg": f"{user['name']} is now a super‑user",
+      "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
+    }), 200
 
 
 # Start the Flask application

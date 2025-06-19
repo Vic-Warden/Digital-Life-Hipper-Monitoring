@@ -7,7 +7,7 @@ from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
 from datetime import datetime
 from zoneinfo import ZoneInfo
-
+from werkzeug.security import generate_password_hash
 
 class Database:
     def __init__(self, host, port, user, password, database):
@@ -732,3 +732,75 @@ class Database:
         if result and len(result) > 0:
             return result[0][0], result[0][1]
         return None
+
+    def get_therapists(self) -> list[dict]:
+        """Return all therapists (is_therapist=1)."""
+        rows = self.do_query(
+            "SELECT id,name,email FROM User WHERE is_therapist = 1;", fetch=True)
+        return [{"id": r[0], "name": r[1], "email": r[2]} for r in rows] if rows else []
+
+    # def add_therapist(self, name: str, email: str, password: str) -> bool:
+    #     """Insert a new therapist user."""
+    #     try:
+    #         hashed = generate_password_hash(password)  # you already import werkzeug
+    #         params = (name, email, hashed, None, 1, None, 0, 0, 0, 'NL')
+    #         # name,email,password,cookies,is_therapist,fk_therapist,is_super,dark,large,lang
+    #         query = """
+    #             INSERT INTO User
+    #               (name,email,password,cookies,is_therapist,fk_therapist_id,
+    #                is_superuser,dark_mode,large_font,language)
+    #             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);
+    #         """
+    #         self.do_query(query, params, fetch=False)
+    #         return True
+    #     except Exception as e:
+    #         print("add_therapist error:", e)
+    #         return False
+    def add_therapist(self, name: str, email: str, password: str) -> bool:
+        """
+        Create a new therapist:
+         1. Insert into Therapist(name) → get therapist_id
+         2. Insert into User with is_therapist=1, fk_therapist_id, is_superuser
+        """
+        try:
+            cursor = self._connection.cursor()
+
+            # 1️⃣ Insert into Therapist
+            cursor.execute(
+                "INSERT INTO Therapist (name) VALUES (%s);",
+                (name,)
+            )
+            therapist_id = cursor.lastrowid
+
+            # 2️⃣ Insert into User (only the 7 specified columns)
+
+            cursor.execute("""
+                INSERT INTO `User`
+                  (`name`, `email`, `password`, `cookies`,
+                   `is_therapist`, `fk_therapist_id`, `is_superuser`)
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
+            """, (
+                name,
+                email,
+                password,
+                None,
+                1,
+                therapist_id,
+                0  # or 0 if you don't want them super immediately
+            ))
+
+            self._connection.commit()
+            cursor.close()
+            return True
+
+        except Exception as e:
+            print("add_therapist error:", e)
+            return False
+
+    def remove_therapist_by_id(self, therapist_id: int) -> bool:
+        """Delete a therapist (and cascade relationships)."""
+        result = self.do_query(
+            "DELETE FROM User WHERE id = %s AND is_therapist = 1;", (therapist_id,), fetch=False)
+        # fetch=False returns [("Query executed successfully",)] on success
+        return result is not None
+

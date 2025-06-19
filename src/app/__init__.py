@@ -660,6 +660,44 @@ def api_add_superuser():
       "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
     }), 200
 
+# Get all therapists
+@app.route('/api/therapists', methods=['GET'])
+def api_list_therapists():
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error":"Unauthorized"}), 401
+    therapists = db.get_therapists()
+    return jsonify({"therapists": therapists}), 200
+
+# Add a therapist
+@app.route('/api/therapists', methods=['POST'])
+def api_add_therapist():
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error":"Unauthorized"}), 401
+    data = request.get_json() or {}
+    name = data.get('name','').strip()
+    email = data.get('email','').strip().lower()
+    password = data.get('password','').strip()
+    if not all([name,email,password]):
+        return jsonify({"error":"Missing fields"}), 400
+    if db.check_email(email):
+        return jsonify({"error":"Email already exists"}), 400
+    success = db.add_therapist(name,email,password)
+    return (jsonify({"msg":"Therapist added"}),200) if success else (jsonify({"error":"DB error"}),500)
+
+# Delete a therapist
+@app.route('/api/therapists/<int:therapist_id>', methods=['DELETE'])
+def api_delete_therapist(therapist_id):
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error":"Unauthorized"}), 401
+    success = db.remove_therapist_by_id(therapist_id)
+    return (jsonify({"msg":"Deleted"}),200) if success else (jsonify({"error":"Not found"}),404)
+
 
 # Start the Flask application
 if __name__ == "__main__":

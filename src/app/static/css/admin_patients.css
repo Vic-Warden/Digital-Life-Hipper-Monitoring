@@ -5,12 +5,20 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  min-height: 100vh;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: linear-gradient(135deg, #a8d8f0 0%, #e6f3ff 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   color: #333;
 }
+
 
 .container {
   display: flex;
@@ -76,6 +84,7 @@ body {
   padding-right: 5px; /* Optional: give room for scrollbar */
 }
 
+/* search bar for patient-list styling */
 #search {
 	width: 100%;
 	border: 1px solid #74a6d4;
@@ -114,6 +123,7 @@ form label {
   font-family: Arial, sans-serif;
 }
 
+/* patient form input styling */
 form input[type="text"],
 form input[type="email"],
 form input[type="password"] {
@@ -125,6 +135,7 @@ form input[type="password"] {
   width: 100%;
 }
 
+/* Styling for the button of add patient form */
 .patient-button {
   padding: 10px;
   background-color: white;
@@ -147,24 +158,65 @@ button:hover {
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    gap: 20px;
   }
 
-  .patient-card, .addPatient-card {
-    width: 90%;
+  .patient-card,
+  .addPatient-card {
+    width: 100%;
     max-width: 400px;
   }
 
-  .patient-card, .addPatient-card h3 {
+  .patient-card h3,
+  .addPatient-card h3 {
     font-size: 1.25em;
   }
 
   .display-box {
     font-size: 0.95em;
     padding: 0.6em;
+    max-height: 250px;
   }
 
   label {
     font-size: 0.95em;
   }
 
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="password"] {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .patient-button {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  #search {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .patient-card,
+  .addPatient-card {
+    padding: 15px;
+  }
+
+  .patient-card h3,
+  .addPatient-card h3 {
+    font-size: 1.1em;
+  }
+
+  .patient-button {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  #search {
+    font-size: 13px;
+  }
 }

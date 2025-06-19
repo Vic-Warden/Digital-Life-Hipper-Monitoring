@@ -382,12 +382,14 @@ This function creates an association between a patient and a therapist in the da
 ### Data averages for historical graph
 
 ```python
-    def calculate_average_data(self, data):
+    def calculate_patient_data(self, data):
         # Create a DataFrame taken from db `Data` structure
-        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+        df = pd.DataFrame(data, columns=[
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone_1', 'zone_2', 'zone_3', 'patient_id'])
 
-        # Ensure timestamp is datetime
-        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+        # Ensure timestamp is datetime and localized
+        df['timestamp'] = pd.to_datetime(
+            df['timestamp']).dt.tz_localize('Europe/Amsterdam')
 
         # Set timestamp as index
         df.set_index('timestamp', inplace=True)
@@ -398,22 +400,41 @@ This function creates an association between a patient and a therapist in the da
         weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
         monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
 
+        # Get the current date in Europe/Amsterdam timezone
+        now = datetime.now(ZoneInfo('Europe/Amsterdam'))
+        today = now.date()
+        # Filter today's data
+        today_steps = df[df.index.date == today]['steps'].sum()
+
+        # Get the last timestamp of available data
+        last_data_pull = df.index.max()
+
+        if pd.isna(last_data_pull):
+            last_data_pull_ago = "No data available"
+        else:
+            delta = now - last_data_pull
+            hours, remainder = divmod(delta.total_seconds(), 3600)
+            minutes = remainder // 60
+            last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
+
         return {
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
-            'monthly': monthly_avg.reset_index().to_dict(orient='records')
-        } 
+            'monthly': monthly_avg.reset_index().to_dict(orient='records'),
+            'last_data_pull_ago': last_data_pull_ago,
+            'total_steps_today': int(today_steps)
+    }
 ```
 
-The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly.
+The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly. It also calculates the latest data pulled and total steps of the day.
 
 Parameters:
 * data: list of records containing id, device_id, timestamp, steps, PAM_score, zone, and data_label.
 
 Returns:
-* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly'.
-Each contains a list of records with average steps and PAM_score for the corresponding time period.
+* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly', 'last_data_pull_ago', 'total_steps_today'.
+These all contain data which is then usable to parse to html using the `__init__.py` file. 
 
 Key Steps:
 > Converts data to a DataFrame.

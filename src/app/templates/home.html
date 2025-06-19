@@ -162,7 +162,7 @@
                     </div>
                 </div>
                 <div class="day-label">
-                    {% set week = ((entry.timestamp.day + entry.timestamp.replace(day=1).weekday() - 1) // 7) + 1 %}
+                {% set week = ((entry.timestamp.day + entry.timestamp.replace(day=1).weekday() - 1) // 7) %}
 Week {{ week }} of {{ entry.timestamp.strftime('%B') }}
                 </div>
                 </div>

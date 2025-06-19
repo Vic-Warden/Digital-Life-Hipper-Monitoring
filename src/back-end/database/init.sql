@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `dark_mode` INT NOT NULL DEFAULT 0,
   `large_font` INT NOT NULL DEFAULT 0,
   `language` VARCHAR(3) NOT NULL DEFAULT 'NL',
+  `is_superuser` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_therapist_id_idx` (`fk_therapist_id` ASC) VISIBLE,
   CONSTRAINT `fk_therapist_id`
@@ -174,6 +175,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (1, 'hans');
+INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (2, 'super');
 
 COMMIT;
 
@@ -184,7 +186,9 @@ COMMIT;
 START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL, 0, NULL, 0, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1, 1, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1, 0, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`,`is_superuser`,  `dark_mode`, `large_font`, `language`) VALUES (3, 'super', 'super@gmail.com', 'super', NULL, 1, 2, 1, DEFAULT, DEFAULT, DEFAULT);
+
 
 COMMIT;
 
@@ -215,7 +219,7 @@ COMMIT;
 START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`Data` (`device_id`, `timestamp`, `steps`, `PAM_score`, `zone_1`, `zone_2`, `zone_3`, `patient_id`)
-VALUES 
+VALUES
   (1, '2025-06-16 12:00:00', 100, 73.4, 30, 40, 30, 1),
   (1, '2025-06-16 12:01:00', 120, 75.0, 35, 45, 40, 1),
   (1, '2025-06-16 12:02:00', 110, 74.0, 32, 38, 40, 1),

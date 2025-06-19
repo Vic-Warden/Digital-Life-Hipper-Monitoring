@@ -426,6 +426,19 @@ class Database:
         print("SQL Result (usual slots):", result)
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+    def is_super_user(self, cookie: int) -> bool:
+        """
+        ### Check whether the given user is a super‑user.
+
+        Returns True if `is_super_user` = 1, False if 0 or user not found.
+        """
+        query = "SELECT is_superuser FROM `User` WHERE cookies = %s;"
+        result = self.do_query(query, (cookie,), fetch=True)
+        if not result:
+            # no such user
+            return False
+        # result[0][0] will be 0 or 1
+        return bool(result[0][0])
 
     def get_disruptions(self, patient_id: int, usual_slots: list[int], alert_days: int = 3) -> list[dict]:
         from datetime import datetime, timedelta
@@ -653,6 +666,55 @@ class Database:
         result = self.do_query(query, params, fetch=False)
 
         return result is not None
+
+    def get_superusers(self):
+        """
+        Return a list of all users where is_superuser = 1,
+        each as a dict with id, name, and email.
+        """
+        query = """
+          SELECT id, name, email
+          FROM User
+          WHERE is_superuser = 1
+        """
+        rows = self.do_query(query)
+        if rows is None:
+            return None
+        # transform into list of dicts for easy JSON / Jinja use
+        return [{"id": r[0], "name": r[1], "email": r[2]} for r in rows]
+
+    def set_superuser_flag(self, user_id: int, is_super: bool) -> bool:
+        """
+        Sets `is_superuser` = 1 if is_super True, else 0.
+        Returns True on success.
+        """
+        val = 1 if is_super else 0
+        query = "UPDATE User SET is_superuser = %s WHERE id = %s"
+        try:
+            self.do_query(query, (val, user_id))
+            return True
+        except Exception:
+            return False
+
+    def get_user_by_email(self, email):
+        """
+        Returns a dict of {id, name, email, is_therapist, is_superuser}, or None if not found.
+        """
+        query = "SELECT id, name, email, is_therapist, is_superuser FROM User WHERE LOWER(email) = %s"
+        rows = self.do_query(query, (email,))
+        if not rows:
+            return None
+        r = rows[0]
+        return {"id": r[0], "name": r[1], "email": r[2], "is_therapist": bool(r[3]), "is_superuser": bool(r[4])}
+
+    def set_superuser_flag(self, user_id: int, is_super: bool) -> bool:
+        val = 1 if is_super else 0
+        query = "UPDATE User SET is_superuser = %s WHERE id = %s"
+        try:
+            self.do_query(query, (val, user_id))
+            return True
+        except:
+            return False
 
     def patient_id_and_device_id_from_mac_address(self, mac_address: str) -> tuple[int, int] | None:
         """

@@ -1,4 +1,3 @@
-from flask import request, jsonify
 import os  # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response, jsonify
@@ -202,6 +201,16 @@ def admin_settings():
                 }
             }), 200
 
+
+        # if db.is_super_user(cookie):
+        #     return render_template("super_admin_settings.html", preferences=db.get_user_preferences(cookie))
+        if db.is_super_user(cookie):# fetch super‑users for both GET and POST renders
+            superusers = db.get_superusers()
+
+            return render_template(
+                "super_admin_settings.html",
+                preferences = db.get_user_preferences(cookie),
+                superusers = superusers)
         return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
@@ -513,32 +522,6 @@ def upload_minute_data():
 
     return jsonify({"message": "PAM minute data uploaded successfully"}), 200
 
-
-# @app.route('/api/last-update-period', methods=['GET'])
-# def last_update_period():
-#     """
-#     API endpoint to get the last update period for a patient.
-#     Returns a JSON response with the last update period and status code.
-#     """
-#     # TODO: Change this to auth_token
-#     # TODO: Change this to auth_token
-#     # TODO: Change this to auth_token
-#     cookie = request.cookies.get('auth_cookie')
-#     valid, user_data = db.verify_cookie(cookie)
-
-#     if not valid:
-#         return {"error": "Invalid or expired cookie"}, 401
-
-#     device_mac_addr = request.args.get('device_mac_addr')
-#     if not device_mac_addr:
-#         return {"error": "Device MAC address is required"}, 400
-
-#     last_update = db.get_last_update_period(device_mac_addr)
-#     if not last_update:
-#         return {"error": "No updates found for this patient"}, 404
-
-#     return {"last_update": last_update}, 200
-
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
     mac = mac_address.upper()
@@ -596,6 +579,86 @@ def routine_form():
         }, 200
 
     return render_template("routine_form.html")
+
+@app.route('/api/get-superusers', methods=['GET'])
+def get_superusers(self):
+    """
+    Returns:
+      - A list of dicts {id, name, email} of every user where is_superuser = 1,
+      - Or None if the query failed.
+    """
+    query = """
+      SELECT * 
+FROM `hipperdb`.`User`
+WHERE `is_superuser` = 1;
+    """
+    rows = self.do_query(query)
+    if rows is None:
+        return None
+
+    return [
+      {"id": r[0], "name": r[1], "email": r[2]}
+      for r in rows
+    ]
+@app.route('/api/remove-superuser', methods=['POST'])
+def api_remove_superuser():
+    """
+    API endpoint to remove super‑user status.
+    Expects JSON { user_id: <int> }.
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    user_id = data.get('user_id')
+    if not user_id:
+        return jsonify({"error": "Missing user_id"}), 400
+
+    # Call into your Database layer to flip the bit
+    success = db.set_superuser_flag(user_id, False)
+    if not success:
+        return jsonify({"error": "Database update failed"}), 500
+
+    return jsonify({"msg": "User demoted"}), 200
+
+@app.route('/api/add-superuser', methods=['POST'])
+def api_add_superuser():
+    """
+    Promote a therapist user to super‑user.
+    Expects JSON: { "email": "<therapist_email>" }
+    """
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+    # only existing super‑admins can promote
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    email = (data or {}).get('email', '').strip().lower()
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    # 1️⃣ lookup user by email & check is_therapist
+    user = db.get_user_by_email(email)
+    if not user:
+        return jsonify({"error": "No such user"}), 404
+        # ← NEW CHECK:
+    if not user.get('is_therapist'):
+        return jsonify({"error": "User is not a therapist"}), 400
+    if user.get('is_superuser'):
+        return jsonify({"error": "User is already a superuser"}), 400
+
+    # 2️⃣ promote them
+    success = db.set_superuser_flag(user['id'], True)
+    if not success:
+        return jsonify({"error": "Database update failed"}), 500
+
+    return jsonify({
+      "msg": f"{user['name']} is now a super‑user",
+      "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
+    }), 200
 
 
 # Start the Flask application

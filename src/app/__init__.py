@@ -619,15 +619,23 @@ def routine_form():
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
+        patient_query = "SELECT name FROM User WHERE id = %s"
+        patient_result = db.do_query(patient_query, (patient_id,))
+        patient_name = patient_result[0][0] if patient_result else "Unknown"
+
         usual_slots = db.get_usual_active_slots(patient_id)
 
-        if not usual_slots:
-            return {"disruptions": []}, 200
-
         disruptions = db.get_disruptions(patient_id, usual_slots)
+        
+        return {
+            "patient_name": patient_name,
+            "usual_slots": usual_slots,
+            "disruptions": disruptions
+        }, 200
 
-        return {"disruptions": disruptions}, 200
-    return render_template('routine_form.html')
+    return render_template("routine_form.html")
+
+
 
 
 # Start the Flask application

@@ -1,43 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Routine's check</title>
+    <title>Check Break Routine</title>
 </head>
 <body>
-  <h2>Check break's routine</h2>
-  <form id="routineForm">
-    <label>Patient ID :</label>
-    <input type="number" id="patient_id" required><br><br>
-    <button type="submit">Check</button>
-  </form>
+    <h1>Check Break Routine</h1>
 
-  <div id="result"></div>
+    <form method="post" onsubmit="sendRequest(event)">
+        <label for="patient_id">Patient ID:</label>
+        <input type="number" id="patient_id" name="patient_id" value="1">
+        <button type="submit">Check</button>
+    </form>
 
-  <script>
-    document.getElementById('routineForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const patientId = document.getElementById('patient_id').value;
+    <!-- Patient form -->
+    <div id="patientInfo"></div>
+    <div id="analysisPeriod"></div>
+    <div id="usualRoutine"></div>
+    <div id="disruptionsResult"></div>
+    <div id="summary"></div>
 
-      const response = await fetch('/routine-form', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ patient_id: patientId })
-      });
+    <script>
+    async function sendRequest(event) {
+        event.preventDefault();
+        const patientId = document.getElementById("patient_id").value;
 
-      const data = await response.json();
-      const resultDiv = document.getElementById('result');
-
-      if (!data.disruptions || data.disruptions.length === 0) {
-        resultDiv.innerHTML = "<p><strong>Aucune rupture détectée.</strong></p>";
-      } else {
-        let html = "<h3>Activity's break detected :</h3><ul>";
-        data.disruptions.forEach(d => {
-          html += `<li>Slot ${d.hour_slot}h : days ${d.inactive_days.join(', ')}</li>`;
+        const response = await fetch("/routine-form", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ patient_id: patientId })
         });
-        html += "</ul>";
-        resultDiv.innerHTML = html;
-      }
-    });
-  </script>
+
+        const data = await response.json();
+        
+        // Displays patient information
+        document.getElementById("patientInfo").innerHTML = `
+            <h2>Patient Information</h2>
+            <p>Name: ${data.patient_name || "unknown"}</p>
+        `;
+
+        document.getElementById("analysisPeriod").innerHTML = `
+            <h3>Analyzed Period</h3>
+            <p>Last 7 days</p>
+        `;
+
+        // Displays the usual routine if it exists  
+        if (data.usual_slots && data.usual_slots.length > 0) {
+            let routineHTML = "<h3>Usual Routine</h3><ul>";
+            data.usual_slots.forEach(slot => {
+                routineHTML += `<li>${slot.hour_slot}h: ${slot.total_steps} average steps</li>`;
+            });
+            routineHTML += "</ul>";
+            document.getElementById("usualRoutine").innerHTML = routineHTML;
+        } else {
+            document.getElementById("usualRoutine").innerHTML = "<p>No routine data found.</p>";
+        }
+        // Displays breaks if present
+        if (data.disruptions.length === 0) {
+            document.getElementById("disruptionsResult").innerHTML = "<p><strong>No disruptions detected.</strong></p>";
+        } else {
+            let html = "<h3>Detected Disruptions</h3><ul>";
+            data.disruptions.forEach(d => {
+                html += `<li><strong>${d.hour_slot}h</strong>: inactivity on the following days:<ul>`;
+                d.inactive_days.forEach(day => {
+                    html += `<li>${day}</li>`;
+                });
+                html += "</ul></li>";
+            });
+            html += "</ul>";
+            document.getElementById("disruptionsResult").innerHTML = html;
+        }
+
+        // Final summary
+        const nbDisruptions = data.disruptions.length;
+        const comment = nbDisruptions === 0
+            ? "No alerts – stable routine."
+            : `Warning: ${nbDisruptions} disruption(s) detected.`;
+        document.getElementById("summary").innerHTML = `
+            <h3>Summary</h3>
+            <p>${comment}</p>
+        `;
+    }
+
+    </script>
 </body>
 </html>

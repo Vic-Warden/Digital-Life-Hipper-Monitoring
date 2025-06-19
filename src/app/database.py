@@ -492,7 +492,7 @@ class Database:
             return result[0][0]
         return None
 
-    def upload_minute_data(self, patient_id: int, pam_data: list):
+    def upload_minute_data(self, mac_address: str, pam_data: list):
         """
         Upload PAM data for a patient.
         Expects pam_data to be a list of dictionaries with keys:
@@ -502,7 +502,8 @@ class Database:
         - 'zone'
         - 'data_label'
         """
-        device_id = self.device_id_from_patient_id(patient_id)
+        patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+            mac_address)
 
         if not pam_data:
             return False
@@ -528,15 +529,16 @@ class Database:
         finally:
             cursor.close()
 
-    def upload_day_data(self, patient_id: int, day_data: list):
+    def upload_day_data(self, mac_address: str, day_data: list):
         """
         Upload daily PAM data for a patient.
         Expects day_data to be a list of dictionaries with keys:
         - 'timestamp'
         - 'steps'
-        - 'pam_score' 
+        - 'pam_score'
         """
-        device_id = self.device_id_from_patient_id(patient_id)
+        patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+            mac_address)
 
         if not day_data:
             return False
@@ -565,7 +567,7 @@ class Database:
     def calculate_average_data(self, data):
         # Create a DataFrame taken from db `Data` structure
         df = pd.DataFrame(data, columns=[
-                          'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
 
         # Ensure timestamp is datetime
         df['timestamp'] = pd.to_datetime(
@@ -635,7 +637,8 @@ class Database:
 
         ### How to use:
         ```python
-        success = set_user_preferences(cookie, dark_mode=True, large_font=False, language='en')
+        success = set_user_preferences(
+            cookie, dark_mode=True, large_font=False, language='en')
         ```
         ### Returns:
         - True if the preferences were updated successfully.
@@ -650,3 +653,20 @@ class Database:
         result = self.do_query(query, params, fetch=False)
 
         return result is not None
+
+    def patient_id_and_device_id_from_mac_address(self, mac_address: str) -> tuple[int, int] | None:
+        """
+        Get the patient ID and device ID associated with a MAC address.
+        Returns a tuple (patient_id, device_id) or None if not found.
+        """
+        query = """
+            SELECT patient_id_device, device_id
+            FROM Device
+            WHERE device_mac_addr = %s;
+        """
+        params = (mac_address,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0], result[0][1]
+        return None

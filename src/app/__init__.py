@@ -642,8 +642,11 @@ def api_add_superuser():
     user = db.get_user_by_email(email)
     if not user:
         return jsonify({"error": "No such user"}), 404
+        # ← NEW CHECK:
     if not user.get('is_therapist'):
         return jsonify({"error": "User is not a therapist"}), 400
+    if user.get('is_superuser'):
+        return jsonify({"error": "User is already a superuser"}), 400
 
     # 2️⃣ promote them
     success = db.set_superuser_flag(user['id'], True)

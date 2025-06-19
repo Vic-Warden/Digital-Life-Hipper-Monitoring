@@ -643,7 +643,7 @@ class Database:
         if not rows:
             return None
         r = rows[0]
-        return {"id": r[0], "name": r[1], "email": r[2], "is_therapist": bool(r[3])}
+        return {"id": r[0], "name": r[1], "email": r[2], "is_therapist": bool(r[3]), "is_superuser": bool(r[-1])}
 
     def set_superuser_flag(self, user_id: int, is_super: bool) -> bool:
         val = 1 if is_super else 0

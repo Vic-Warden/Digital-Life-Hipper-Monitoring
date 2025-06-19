@@ -397,12 +397,13 @@ class Database:
 
     def get_usual_active_slots(self, patient_id: int, days: int = 7) -> list[dict]:
         """
-        Display hours when the patient don't do activity
+        Retrieves the time slots (by hour) when the patient is usually active
         """
+
         from datetime import datetime, timedelta
 
-        end_date = datetime.now().date()
-        start_date = end_date - timedelta(days=days)
+        start_date = datetime(2025, 6, 1).date()
+        end_date = datetime(2025, 6, 12).date()
 
         query = """
             SELECT HOUR(timestamp) AS hour_slot, SUM(steps) AS total_steps
@@ -413,12 +414,70 @@ class Database:
             GROUP BY hour_slot
             ORDER BY hour_slot;
         """
+
         result = self.do_query(query, (patient_id, start_date, end_date))
 
         if not result:
+            print("→ patient_id:", patient_id)
+            print("→ start_date:", start_date)
+            print("→ end_date:", end_date)
             return []
 
+        print("SQL Result (usual slots):", result)
+
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+
+    def get_disruptions(self, patient_id: int, usual_slots: list[int], alert_days: int = 3) -> list[dict]:
+        from datetime import datetime, timedelta
+        import pandas as pd
+
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=7)
+
+        query = """
+            SELECT DATE(timestamp) AS date, HOUR(timestamp) AS hour, SUM(steps) AS total_steps
+            FROM Data
+            INNER JOIN Device ON Data.device_id = Device.id
+            WHERE Device.patient_id_device = %s
+            AND timestamp BETWEEN %s AND %s
+            GROUP BY date, hour
+            ORDER BY date, hour;
+        """
+        rows = self.do_query(query, (patient_id, start_date, end_date))
+
+        if not rows:
+            return []
+
+        df = pd.DataFrame(rows, columns=["date", "hour", "total_steps"])
+        pivot_df = df.pivot_table(
+            index="date", columns="hour", values="total_steps", fill_value=0)
+
+        alerts = []
+        for slot in usual_slots:
+            hour_slot = slot["hour_slot"]
+            if hour_slot not in pivot_df.columns:
+                continue
+
+            is_active = pivot_df[hour_slot] > 0
+            current_streak = []
+            inactive_streaks = []
+
+            for date, active in is_active.items():
+                if not active:
+                    current_streak.append(str(date))
+                else:
+                    if len(current_streak) >= alert_days:
+                        inactive_streaks.append(current_streak)
+                    current_streak = []
+
+            if len(current_streak) >= alert_days:
+                inactive_streaks.append(current_streak)
+
+            for streak in inactive_streaks:
+                alerts.append(
+                    {"hour_slot": hour_slot, "inactive_days": streak})
+
+        return alerts
 
     def device_id_from_patient_id(self, patient_id: int) -> int:
         """
@@ -449,12 +508,12 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
-            VALUES (%s, %s, %s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], data['zone'], data['data_label'])
+             data['pam_score'], data['zone'], data['data_label'], patient_id)
             for data in pam_data
         ]
 
@@ -483,12 +542,12 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score)
-            VALUES (%s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, patient_id)
+            VALUES (%s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'])
+             data['pam_score'], patient_id)
             for data in day_data
         ]
 

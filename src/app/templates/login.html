@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +8,7 @@
   <title>login</title>
   <link rel="stylesheet" href="../static/css/login.css" />
 </head>
+
 <body>
   <header>
     <div class="header-content">
@@ -15,25 +17,25 @@
       </div>
     </div>
   </header>
-  
+
   <main class="container">
     <section class="login-box">
       <h2>Welcome Back</h2>
       <form action="/login" method="POST">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required />
-      
+
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required />
-      
-<!--        <div class="remember">-->
-<!--          <input type="checkbox" id="remember" name="remember" />-->
-<!--          <label for="remember">Remember me</label>-->
-<!--        </div>-->
-      
+
+        <!--        <div class="remember">-->
+        <!--          <input type="checkbox" id="remember" name="remember" />-->
+        <!--          <label for="remember">Remember me</label>-->
+        <!--        </div>-->
+
         <button type="submit">Sign in</button>
       </form>
-      
+
     </section>
 
     <section class="image-box">
@@ -45,4 +47,5 @@
 
   <script src="../static/js/login.js"></script>
 </body>
+
 </html>

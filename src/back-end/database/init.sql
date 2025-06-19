@@ -103,11 +103,12 @@ DROP TABLE IF EXISTS `hipperdb`.`Data` ;
 CREATE TABLE IF NOT EXISTS `hipperdb`.`Data` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `device_id` INT NOT NULL,
-  `timestamp` DATETIME NULL,
-  `steps` INT NULL DEFAULT CURRENT_TIMESTAMP,
-  `PAM_score` FLOAT NULL,
-  `zone` INT NULL,
-  `data_label` VARCHAR(45) NULL,
+  `timestamp` DATETIME NOT NULL,
+  `steps` INT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `PAM_score` FLOAT NOT NULL,
+  `zone` INT NOT NULL,
+  `data_label` VARCHAR(45) NOT NULL,
+  `patient_id` INT NOT NULL,
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_device_id`
@@ -150,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
   `timestamp` DATETIME NOT NULL,
   `steps` INT NOT NULL,
   `pam_score` DECIMAL(1) NOT NULL,
+  `patient_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   CONSTRAINT `device_id_fk`

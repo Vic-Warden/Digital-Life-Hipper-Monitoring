@@ -262,6 +262,9 @@ def admin_add_patient():
     if not all([name, email, password, cookie]):
         return "Missing required fields", 400
 
+    if not db.check_email(email):
+        return "Email already exists", 400
+
     # Call DB logic to insert the patient
     success = db.add_patient(name, email, password, cookie)
 
@@ -323,42 +326,6 @@ def admin_login_page():
     else:
         # Render the admin_login.html
         return render_template('admin_login.html')
-
-# Reset-password's route with GET & POST
-
-
-@app.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    if request.method == 'POST':
-
-        # Retrieve form
-        email = request.form.get('email')
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
-
-        # Every field is full
-        if not email or not new_password or not confirm_password:
-            return render_template('reset_password.html', error="Please fill in all the fields.")
-
-        # Verify that passwords
-        if new_password != confirm_password:
-            return render_template('reset_password.html', error="Passwords do not match.")
-
-        # Verify the user
-        user_exists = db.check_user_exists(email)
-        if not user_exists:
-            return render_template('reset_password.html', error="User not found.")
-
-        # Hash the new password
-        hashed_password = generate_password_hash(new_password)
-
-        # Update the new password
-        db.update_user_password(email, hashed_password)
-
-        return redirect('/login')
-
-    # rentder the reset_password.html
-    return render_template('reset_password.html')
 
 
 @app.route('/change-email', methods=['POST'])
@@ -453,7 +420,7 @@ def detect_anomalies_endpoint():
     cursor = connection.cursor()
 
     query = f"""
-        SELECT 
+        SELECT
             DATE(timestamp) AS date,
             steps
         FROM Data
@@ -616,15 +583,23 @@ def routine_form():
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
+        patient_query = "SELECT name FROM User WHERE id = %s"
+        patient_result = db.do_query(patient_query, (patient_id,))
+        patient_name = patient_result[0][0] if patient_result else "Unknown"
+
         usual_slots = db.get_usual_active_slots(patient_id)
 
-        if not usual_slots:
-            return {"disruptions": []}, 200
-
         disruptions = db.get_disruptions(patient_id, usual_slots)
+        
+        return {
+            "patient_name": patient_name,
+            "usual_slots": usual_slots,
+            "disruptions": disruptions
+        }, 200
 
-        return {"disruptions": disruptions}, 200
-    return render_template('routine_form.html')
+    return render_template("routine_form.html")
+
+
 
 
 # Start the Flask application

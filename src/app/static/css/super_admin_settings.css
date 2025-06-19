@@ -24,6 +24,53 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.add-therapist-form,
+.search-therapist-form {
+  margin-bottom: 1rem;
+}
+.add-therapist-form input,
+.search-therapist-form input {
+  margin-right: 0.5rem;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.btn-delete,
+#btn-add-therapist {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-delete:hover,
+#btn-add-therapist:hover {
+  background-color: #c0392b;
+}
+.therapist-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+.therapist-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+}
+.therapist-item:last-child {
+  border-bottom: none;
+}
+.feedback {
+  margin-left: 0.5rem;
+  color: green;
+  font-size: 0.9rem;
+}
+
 .empty-box{
   padding-top: 85px;
   width: 100%;

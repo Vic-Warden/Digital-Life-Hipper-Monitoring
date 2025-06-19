@@ -636,7 +636,7 @@ class Database:
 
     def get_user_by_email(self, email):
         """
-        Returns a dict of {id, name, email, is_therapist}, or None if not found.
+        Returns a dict of {id, name, email, is_therapist, is_superuser}, or None if not found.
         """
         query = "SELECT id, name, email, is_therapist, is_superuser FROM User WHERE LOWER(email) = %s"
         rows = self.do_query(query, (email,))

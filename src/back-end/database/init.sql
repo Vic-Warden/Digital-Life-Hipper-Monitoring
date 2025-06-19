@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `dark_mode` INT NOT NULL DEFAULT 0,
   `large_font` INT NOT NULL DEFAULT 0,
   `language` VARCHAR(3) NOT NULL DEFAULT 'NL',
+  `is_superuser` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_therapist_id_idx` (`fk_therapist_id` ASC) VISIBLE,
   CONSTRAINT `fk_therapist_id`
@@ -106,8 +107,9 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`Data` (
   `timestamp` DATETIME NOT NULL,
   `steps` INT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `PAM_score` FLOAT NOT NULL,
-  `zone` INT NOT NULL,
-  `data_label` VARCHAR(45) NOT NULL,
+  `zone_1` INT NOT NULL,
+  `zone_2` INT NOT NULL,
+  `zone_3` INT NOT NULL,
   `patient_id` INT NOT NULL,
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
@@ -151,6 +153,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
   `timestamp` DATETIME NOT NULL,
   `steps` INT NOT NULL,
   `pam_score` DECIMAL(1) NOT NULL,
+  `data_label` VARCHAR(45) NOT NULL,
   `patient_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
@@ -172,6 +175,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (1, 'hans');
+INSERT INTO `hipperdb`.`Therapist` (`id`, `name`) VALUES (2, 'super');
 
 COMMIT;
 
@@ -182,7 +186,9 @@ COMMIT;
 START TRANSACTION;
 USE `hipperdb`;
 INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (1, 'Henk Man', 'henk.man@gmail.com', 'admin', NULL, 0, NULL, 0, DEFAULT, DEFAULT, DEFAULT);
-INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1, 1, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`, `is_superuser`, `dark_mode`, `large_font`, `language`) VALUES (2, 'hans', 'hans@gmail.com', 'admin', NULL, 1, 1, 0, DEFAULT, DEFAULT, DEFAULT);
+INSERT INTO `hipperdb`.`User` (`id`, `name`, `email`, `password`, `cookies`, `is_therapist`, `fk_therapist_id`,`is_superuser`,  `dark_mode`, `large_font`, `language`) VALUES (3, 'super', 'super@gmail.com', 'super', NULL, 1, 2, 1, DEFAULT, DEFAULT, DEFAULT);
+
 
 COMMIT;
 
@@ -212,20 +218,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Data` (`device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`, `patient_id`)
-VALUES 
-  (1, '2025-06-16 12:00:00', 100, 73.4, 2, 'testlabel', 1),
-  (1, '2025-06-16 13:00:00', 47, 28.9, 2, 'testlabel', 1),
-  (1, '2025-06-16 14:00:00', 139, 42.1, 2, 'testlabel', 1),
-  (1, '2025-06-16 15:00:00', 70, 27.7, 2, 'testlabel', 1),
-  (1, '2025-06-16 16:00:00', 39, 40.8, 2, 'testlabel', 1),
-  (1, '2025-06-17 17:00:00', 145, 64.8, 2, 'testlabel', 1),
-  (1, '2025-06-18 18:00:00', 94, 19.4, 2, 'testlabel', 1),
-  (1, '2025-06-19 17:00:00', 145, 64.8, 2, 'testlabel', 1),
-  (1, '2025-06-20 00:00:00', 128, 60.8, 2, 'testlabel', 1),
-  (1, '2025-06-20 01:00:00', 100, 69.8, 2, 'testlabel', 1),
-  (1, '2025-06-20 02:00:00', 95, 64.8, 2, 'testlabel', 1),
-  (1, '2025-06-20 03:00:00', 94, 19.4, 2, 'testlabel', 1);
+INSERT INTO `hipperdb`.`Data` (`device_id`, `timestamp`, `steps`, `PAM_score`, `zone_1`, `zone_2`, `zone_3`, `patient_id`)
+VALUES
+  (1, '2025-06-16 12:00:00', 100, 73.4, 30, 40, 30, 1),
+  (1, '2025-06-16 12:01:00', 120, 75.0, 35, 45, 40, 1),
+  (1, '2025-06-16 12:02:00', 110, 74.0, 32, 38, 40, 1),
+  (1, '2025-06-16 12:03:00', 130, 76.0, 33, 47, 50, 1);
   
 
 COMMIT;
@@ -246,6 +244,6 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`, `patient_id`) VALUES (1, 1, '2025-06-02 14:30:00', 10, 1.3, 1);
+INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`, `data_label`, `patient_id`) VALUES (1, 1, '2025-06-02 14:30:00', 10, 1.3, 'test', 1);
 
 COMMIT;

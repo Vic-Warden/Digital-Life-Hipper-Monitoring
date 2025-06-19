@@ -53,10 +53,10 @@ class EntryPredictor:
 
 
 # usage example:
-# predictor = EntryPredictor('./static/HipperLabeler.joblib')
-# label = predictor.predict_entry(
-#     timestamp='2025-06-04 14:00:00',
-#     steps=86,
-#     pam_score=6
-# )
-# print(label)
+predictor = EntryPredictor('./static/HipperLabeler.joblib')
+label = predictor.predict_entry(
+    timestamp='2025-06-04 14:00:00',
+    steps=86,
+    pam_score=6
+)
+print(label)

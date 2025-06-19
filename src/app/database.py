@@ -440,7 +440,6 @@ class Database:
         # result[0][0] will be 0 or 1
         return bool(result[0][0])
 
-    
     def get_disruptions(self, patient_id: int, usual_slots: list[int], alert_days: int = 3) -> list[dict]:
         from datetime import datetime, timedelta
         import pandas as pd
@@ -463,7 +462,8 @@ class Database:
             return []
 
         df = pd.DataFrame(rows, columns=["date", "hour", "total_steps"])
-        pivot_df = df.pivot_table(index="date", columns="hour", values="total_steps", fill_value=0)
+        pivot_df = df.pivot_table(
+            index="date", columns="hour", values="total_steps", fill_value=0)
 
         alerts = []
         for slot in usual_slots:
@@ -487,10 +487,10 @@ class Database:
                 inactive_streaks.append(current_streak)
 
             for streak in inactive_streaks:
-                alerts.append({"hour_slot": hour_slot, "inactive_days": streak})
+                alerts.append(
+                    {"hour_slot": hour_slot, "inactive_days": streak})
 
         return alerts
-
 
     def device_id_from_patient_id(self, patient_id: int) -> int:
         """
@@ -505,7 +505,7 @@ class Database:
             return result[0][0]
         return None
 
-    def upload_minute_data(self, patient_id: int, pam_data: list):
+    def upload_minute_data(self, mac_address: str, pam_data: list):
         """
         Upload PAM data for a patient.
         Expects pam_data to be a list of dictionaries with keys:
@@ -515,18 +515,19 @@ class Database:
         - 'zone'
         - 'data_label'
         """
-        device_id = self.device_id_from_patient_id(patient_id)
+        patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+            mac_address)
 
         if not pam_data:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
-            VALUES (%s, %s, %s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], data['zone'], data['data_label'])
+             data['pam_score'], data['zone'], data['data_label'], patient_id)
             for data in pam_data
         ]
 
@@ -541,7 +542,7 @@ class Database:
         finally:
             cursor.close()
 
-    def upload_day_data(self, patient_id: int, day_data: list):
+    def upload_day_data(self, mac_address: str, day_data: list):
         """
         Upload daily PAM data for a patient.
         Expects day_data to be a list of dictionaries with keys:
@@ -549,18 +550,19 @@ class Database:
         - 'steps'
         - 'pam_score'
         """
-        device_id = self.device_id_from_patient_id(patient_id)
+        patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+            mac_address)
 
         if not day_data:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score)
-            VALUES (%s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, patient_id)
+            VALUES (%s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'])
+             data['pam_score'], patient_id)
             for data in day_data
         ]
 
@@ -578,7 +580,7 @@ class Database:
     def calculate_average_data(self, data):
         # Create a DataFrame taken from db `Data` structure
         df = pd.DataFrame(data, columns=[
-                          'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
 
         # Ensure timestamp is datetime
         df['timestamp'] = pd.to_datetime(
@@ -648,7 +650,8 @@ class Database:
 
         ### How to use:
         ```python
-        success = set_user_preferences(cookie, dark_mode=True, large_font=False, language='en')
+        success = set_user_preferences(
+            cookie, dark_mode=True, large_font=False, language='en')
         ```
         ### Returns:
         - True if the preferences were updated successfully.
@@ -712,3 +715,20 @@ class Database:
             return True
         except:
             return False
+
+    def patient_id_and_device_id_from_mac_address(self, mac_address: str) -> tuple[int, int] | None:
+        """
+        Get the patient ID and device ID associated with a MAC address.
+        Returns a tuple (patient_id, device_id) or None if not found.
+        """
+        query = """
+            SELECT patient_id_device, device_id
+            FROM Device
+            WHERE device_mac_addr = %s;
+        """
+        params = (mac_address,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0], result[0][1]
+        return None

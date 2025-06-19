@@ -336,42 +336,6 @@ def admin_login_page():
         # Render the admin_login.html
         return render_template('admin_login.html')
 
-# Reset-password's route with GET & POST
-
-
-@app.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    if request.method == 'POST':
-
-        # Retrieve form
-        email = request.form.get('email')
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
-
-        # Every field is full
-        if not email or not new_password or not confirm_password:
-            return render_template('reset_password.html', error="Please fill in all the fields.")
-
-        # Verify that passwords
-        if new_password != confirm_password:
-            return render_template('reset_password.html', error="Passwords do not match.")
-
-        # Verify the user
-        user_exists = db.check_user_exists(email)
-        if not user_exists:
-            return render_template('reset_password.html', error="User not found.")
-
-        # Hash the new password
-        hashed_password = generate_password_hash(new_password)
-
-        # Update the new password
-        db.update_user_password(email, hashed_password)
-
-        return redirect('/login')
-
-    # rentder the reset_password.html
-    return render_template('reset_password.html')
-
 
 @app.route('/change-email', methods=['POST'])
 def change_email():
@@ -512,19 +476,18 @@ def upload_day_data():
     if not valid:
         return jsonify({"error": reason}), 401
 
-    patient_id = request.form.get('patient_id')
+    mac_address = request.form.get('mac_address')
     pam_data = request.form.get('pam_data')
-    device_mac_addr = request.form.get('device_mac_addr')
 
-    if not patient_id or not pam_data:
-        return jsonify({"error": "Patient ID and PAM data are required"}), 400
+    if not mac_address or not pam_data:
+        return jsonify({"error": "Mac Address and PAM data are required"}), 400
 
     try:
         pam_data = json.loads(pam_data)
     except json.JSONDecodeError:
         return jsonify({"error": "Invalid JSON in pam_data"}), 400
 
-    success = db.upload_day_data(patient_id, pam_data)
+    success = db.upload_day_data(mac_address, pam_data)
     if not success:
         return jsonify({"error": "Failed to upload PAM data"}), 500
 
@@ -542,21 +505,18 @@ def upload_minute_data():
     if not valid:
         return jsonify({"error": reason}), 401
 
-    patient_id = request.form.get('patient_id')
+    mac_address = request.form.get('mac_address')
     pam_data = request.form.get('pam_data')
-    device_mac_addr = request.form.get('device_mac_addr')
 
-    if not patient_id or not pam_data:
-        return jsonify({"error": "Patient ID and PAM data are required"}), 400
+    if not mac_address or not pam_data:
+        return jsonify({"error": "Mac Address and PAM data are required"}), 400
 
     try:
         pam_data = json.loads(pam_data)
     except json.JSONDecodeError:
         return jsonify({"error": "Invalid JSON in pam_data"}), 400
 
-    success = db.upload_minute_data(patient_id, pam_data)
-    success = db.upload_pam_data(patient_id, pam_data)
-    success = True
+    success = db.upload_minute_data(mac_address, pam_data)
     if not success:
         return jsonify({"error": "Failed to upload PAM data"}), 500
 
@@ -699,8 +659,6 @@ def api_add_superuser():
       "msg": f"{user['name']} is now a super‑user",
       "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
     }), 200
-
-
 
 
 # Start the Flask application

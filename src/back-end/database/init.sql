@@ -104,11 +104,13 @@ DROP TABLE IF EXISTS `hipperdb`.`Data` ;
 CREATE TABLE IF NOT EXISTS `hipperdb`.`Data` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `device_id` INT NOT NULL,
-  `timestamp` DATETIME NULL,
-  `steps` INT NULL DEFAULT CURRENT_TIMESTAMP,
-  `PAM_score` FLOAT NULL,
-  `zone` INT NULL,
-  `data_label` VARCHAR(45) NULL,
+  `timestamp` DATETIME NOT NULL,
+  `steps` INT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `PAM_score` FLOAT NOT NULL,
+  `zone_1` INT NOT NULL,
+  `zone_2` INT NOT NULL,
+  `zone_3` INT NOT NULL,
+  `patient_id` INT NOT NULL,
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_device_id`
@@ -151,6 +153,8 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
   `timestamp` DATETIME NOT NULL,
   `steps` INT NOT NULL,
   `pam_score` DECIMAL(1) NOT NULL,
+  `data_label` VARCHAR(45) NOT NULL,
+  `patient_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   CONSTRAINT `device_id_fk`
@@ -214,21 +218,13 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Data` (`device_id`, `timestamp`, `steps`, `PAM_score`, `zone`, `data_label`)
+INSERT INTO `hipperdb`.`Data` (`device_id`, `timestamp`, `steps`, `PAM_score`, `zone_1`, `zone_2`, `zone_3`, `patient_id`)
 VALUES
-  (1, '2025-06-16 12:00:00', 100, 73.4, 2, 'testlabel'),
-  (1, '2025-06-16 13:00:00', 47, 28.9, 2, 'testlabel'),
-  (1, '2025-06-16 14:00:00', 139, 42.1, 2, 'testlabel'),
-  (1, '2025-06-16 15:00:00', 70, 27.7, 2, 'testlabel'),
-  (1, '2025-06-16 16:00:00', 39, 40.8, 2, 'testlabel'),
-  (1, '2025-06-17 17:00:00', 145, 64.8, 2, 'testlabel'),
-  (1, '2025-06-18 18:00:00', 94, 19.4, 2, 'testlabel'),
-  (1, '2025-06-19 17:00:00', 145, 64.8, 2, 'testlabel'),
-  (1, '2025-06-20 00:00:00', 128, 60.8, 2, 'testlabel'),
-  (1, '2025-06-20 01:00:00', 100, 69.8, 2, 'testlabel'),
-  (1, '2025-06-20 02:00:00', 95, 64.8, 2, 'testlabel'),
-  (1, '2025-06-20 03:00:00', 94, 19.4, 2, 'testlabel');
-
+  (1, '2025-06-16 12:00:00', 100, 73.4, 30, 40, 30, 1),
+  (1, '2025-06-16 12:01:00', 120, 75.0, 35, 45, 40, 1),
+  (1, '2025-06-16 12:02:00', 110, 74.0, 32, 38, 40, 1),
+  (1, '2025-06-16 12:03:00', 130, 76.0, 33, 47, 50, 1);
+  
 
 COMMIT;
 
@@ -248,6 +244,6 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`) VALUES (1, 1, '2025-06-02 14:30:00', 10, 1.3);
+INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`, `data_label`, `patient_id`) VALUES (1, 1, '2025-06-02 14:30:00', 10, 1.3, 'test', 1);
 
 COMMIT;

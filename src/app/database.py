@@ -578,12 +578,12 @@ class Database:
         finally:
             cursor.close()
 
-    def calculate_average_data(self, data):
+    def calculate_patient_data(self, data):
         # Create a DataFrame taken from db `Data` structure
         df = pd.DataFrame(data, columns=[
             'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone_1', 'zone_2', 'zone_3', 'patient_id'])
 
-        # Ensure timestamp is datetime
+        # Ensure timestamp is datetime and localized
         df['timestamp'] = pd.to_datetime(
             df['timestamp']).dt.tz_localize('Europe/Amsterdam')
 
@@ -596,12 +596,31 @@ class Database:
         weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
         monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
 
+        # Get the current date in Europe/Amsterdam timezone
+        now = datetime.now(ZoneInfo('Europe/Amsterdam'))
+        today = now.date()
+        # Filter today's data
+        today_steps = df[df.index.date == today]['steps'].sum()
+
+        # Get the last timestamp of available data
+        last_data_pull = df.index.max()
+
+        if pd.isna(last_data_pull):
+            last_data_pull_ago = "No data available"
+        else:
+            delta = now - last_data_pull
+            hours, remainder = divmod(delta.total_seconds(), 3600)
+            minutes = remainder // 60
+            last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
+
         return {
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
-            'monthly': monthly_avg.reset_index().to_dict(orient='records')
-        }
+            'monthly': monthly_avg.reset_index().to_dict(orient='records'),
+            'last_data_pull_ago': last_data_pull_ago,
+            'total_steps_today': int(today_steps)
+    }
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """

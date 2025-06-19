@@ -7,7 +7,7 @@ This file contains the learning journal with the learning story's of Victor.
 
 [Python](https://pythoneatstail.com/fr/overview-all-articles-fr/signup-and-password-reset-email-verification-allauth-django-fr/)
 
-So today I learned how to find a way to easily reset a password without to be able to reset a password of anyone. That why during my research I found a way to easily to do it, but when Indigo told me he could break the " systems " I want to use, so next time I need to find a way to secure a password I should use to send an email for that
+So today I learned how to find a way to easily reset a password without to be able to reset a password of anyone. That why during my research I found a way to easily to do it, but when Indigo told me he could break the " systems " I want to use, so next time I need to find a way to secure a password I should use to send an email for that.
 
 ## Learning Story #280
 

@@ -469,7 +469,6 @@ def upload_day_data():
 
     mac_address = request.form.get('mac_address')
     pam_data = request.form.get('pam_data')
-    device_mac_addr = request.form.get('device_mac_addr')
 
     if not mac_address or not pam_data:
         return jsonify({"error": "Mac Address and PAM data are required"}), 400
@@ -497,19 +496,18 @@ def upload_minute_data():
     if not valid:
         return jsonify({"error": reason}), 401
 
-    patient_id = request.form.get('patient_id')
+    mac_address = request.form.get('mac_address')
     pam_data = request.form.get('pam_data')
-    device_mac_addr = request.form.get('device_mac_addr')
 
-    if not patient_id or not pam_data:
-        return jsonify({"error": "Patient ID and PAM data are required"}), 400
+    if not mac_address or not pam_data:
+        return jsonify({"error": "Mac Address and PAM data are required"}), 400
 
     try:
         pam_data = json.loads(pam_data)
     except json.JSONDecodeError:
         return jsonify({"error": "Invalid JSON in pam_data"}), 400
 
-    success = db.upload_minute_data(patient_id, pam_data)
+    success = db.upload_minute_data(mac_address, pam_data)
     if not success:
         return jsonify({"error": "Failed to upload PAM data"}), 500
 

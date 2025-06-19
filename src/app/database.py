@@ -427,7 +427,6 @@ class Database:
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
 
-    
     def get_disruptions(self, patient_id: int, usual_slots: list[int], alert_days: int = 3) -> list[dict]:
         from datetime import datetime, timedelta
         import pandas as pd
@@ -450,7 +449,8 @@ class Database:
             return []
 
         df = pd.DataFrame(rows, columns=["date", "hour", "total_steps"])
-        pivot_df = df.pivot_table(index="date", columns="hour", values="total_steps", fill_value=0)
+        pivot_df = df.pivot_table(
+            index="date", columns="hour", values="total_steps", fill_value=0)
 
         alerts = []
         for slot in usual_slots:
@@ -474,10 +474,10 @@ class Database:
                 inactive_streaks.append(current_streak)
 
             for streak in inactive_streaks:
-                alerts.append({"hour_slot": hour_slot, "inactive_days": streak})
+                alerts.append(
+                    {"hour_slot": hour_slot, "inactive_days": streak})
 
         return alerts
-
 
     def device_id_from_patient_id(self, patient_id: int) -> int:
         """
@@ -508,12 +508,12 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
-            VALUES (%s, %s, %s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], data['zone'], data['data_label'])
+             data['pam_score'], data['zone'], data['data_label'], patient_id)
             for data in pam_data
         ]
 
@@ -542,12 +542,12 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score)
-            VALUES (%s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, patient_id)
+            VALUES (%s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'])
+             data['pam_score'], patient_id)
             for data in day_data
         ]
 

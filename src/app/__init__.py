@@ -327,42 +327,6 @@ def admin_login_page():
         # Render the admin_login.html
         return render_template('admin_login.html')
 
-# Reset-password's route with GET & POST
-
-
-@app.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    if request.method == 'POST':
-
-        # Retrieve form
-        email = request.form.get('email')
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
-
-        # Every field is full
-        if not email or not new_password or not confirm_password:
-            return render_template('reset_password.html', error="Please fill in all the fields.")
-
-        # Verify that passwords
-        if new_password != confirm_password:
-            return render_template('reset_password.html', error="Passwords do not match.")
-
-        # Verify the user
-        user_exists = db.check_user_exists(email)
-        if not user_exists:
-            return render_template('reset_password.html', error="User not found.")
-
-        # Hash the new password
-        hashed_password = generate_password_hash(new_password)
-
-        # Update the new password
-        db.update_user_password(email, hashed_password)
-
-        return redirect('/login')
-
-    # rentder the reset_password.html
-    return render_template('reset_password.html')
-
 
 @app.route('/change-email', methods=['POST'])
 def change_email():

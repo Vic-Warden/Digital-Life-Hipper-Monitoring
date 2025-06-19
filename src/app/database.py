@@ -567,7 +567,7 @@ class Database:
     def calculate_average_data(self, data):
         # Create a DataFrame taken from db `Data` structure
         df = pd.DataFrame(data, columns=[
-            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone_1', 'zone_2', 'zone_3', 'patient_id'])
 
         # Ensure timestamp is datetime
         df['timestamp'] = pd.to_datetime(

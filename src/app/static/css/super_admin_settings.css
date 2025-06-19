@@ -24,6 +24,11 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.empty-box{
+  padding-top: 85px;
+  width: 100%;
+}
+
 .super-user-box {
   position: relative;
   width: fit-content;
@@ -53,7 +58,7 @@ body {
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-top: 225px;
+  padding-top: 85px;
   padding-bottom: 50px;
   padding-left: 225px;
   padding-right: 225px;

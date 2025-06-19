@@ -15,7 +15,7 @@
   <!-- Content goes here -->
   <div id="admin-navbar"></div>
 
-  <div class="super-user-box"><H2>You are a super user</H2></div>
+  <div class="super-user-box"><H2>You are a super user, This means that you can manage all other super users and therapists!</H2></div>
 
   <div class="parent-container">
     {% if message %}
@@ -27,6 +27,8 @@
 
       <div class="card_superuser">
         <H3>Manage Super Users:</H3>
+        </br>
+        <H5>Promote therapist to super user:</H5>
 <!--          <label>Make therapist into superUser by email:</label>-->
 <!--            <div id="display-box-add-super-user" class="display-box-add-super-user">Hans-->
 <!--              <button class="super-save-button" onclick="saveSettings()">Make super user</button>-->
@@ -46,10 +48,6 @@
       <div class="display-box-superusers">
         {% if superusers %}
           {% for su in superusers %}
-<!--            <div class="superuser-item">-->
-<!--              <strong>{{ su.name }}</strong><br>-->
-<!--              {{ su.email }}-->
-<!--            </div>-->
             <div class="superuser-item" data-id="{{ su.id }}">
               <div class="superuser-info">
                 <strong>{{ su.name }}</strong><br>
@@ -71,7 +69,20 @@
       <H3>Manage Admin Users:</H3>
         <label>Add super user email:</label>
           <div id="display-box-add-admin-user" class="display-box-add-admin-user">Hans</div>
+        <!--      #TODO
+        box to enter therapist name
+        box to enter therapist email
+        box to enter therapist password
+        button to confirm these settings and make a new therapist with them
+
+        box that shows all therapists
+            with buttons to delete therapists
+
+        box to enter a therapist name or email and show only those therapists instead of all therapists
+
+        -->
     </div>
+      <div class="empty-box"></div>
 
       <div class="card">
         <h3>Profile</h3>

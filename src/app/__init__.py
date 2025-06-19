@@ -234,7 +234,7 @@ def admin_patient_list():
     therapist_id = db.therapist_id_from_cookie(cookie)
     print(therapist_id)
 
-    # Extended list with 6 patients
+    # list with patients
     patient_details = db.get_patients(therapist_id)
     print(patient_details)
 

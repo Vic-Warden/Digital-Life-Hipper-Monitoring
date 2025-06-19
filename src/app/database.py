@@ -564,10 +564,10 @@ class Database:
         finally:
             cursor.close()
 
-    def calculate_average_data(self, data):
+    def calculate_patient_data(self, data):
         # Create a DataFrame taken from db `Data` structure
         df = pd.DataFrame(data, columns=[
-            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label', 'patient_id'])
 
         # Ensure timestamp is datetime
         df['timestamp'] = pd.to_datetime(

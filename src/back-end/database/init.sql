@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `cookies` VARCHAR(256) NULL,
   `is_therapist` INT NOT NULL,
   `fk_therapist_id` INT NULL,
-  `is_superuser` INT NOT NULL DEFAULT 0,
   `dark_mode` INT NOT NULL DEFAULT 0,
   `large_font` INT NOT NULL DEFAULT 0,
   `language` VARCHAR(3) NOT NULL DEFAULT 'NL',

@@ -426,7 +426,7 @@ class Database:
         print("SQL Result (usual slots):", result)
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
-    def is_super_user(self, cookie: int) -> bool:
+    def is_super_user(self, cookie: str) -> bool:
         """
         ### Check whether the given user is a super‑user.
 

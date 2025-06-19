@@ -64,6 +64,11 @@ So using common sense I was able to switch over his SQL docker file to the main 
 
 The difference maker is `- FLASK_DEBUG=1`. Now everything works as expected!
 
+#292 As a student, I want to learn how to link the database to the front-end, so that updated data can be displayed on a graph.
+
+Going into this I actually had no clue how to approach it. Thanks to Indigo he told me where to look and how it should be implemented from a general perspective. Knowing that, I first went to `ChatGPT` and asked for some examples. That way I sort of knew what my implementation was going to look like. So first I decided to start working on the python function that converts the database data to averag values for my frontend graph to process it. This was easier than thought thanks to the python library `pandas`. That lib has many useful functions for data conversion. Then I went to `__init__.py` to add onto the homepage function. Via that way I could expose the average data into a html file. Then through Indigo's knowledge I used Jinja to have the data be displayed in a dynamic way in my html file. 
+
+
 ## Journal
 
 ### 5/7/2025
@@ -107,3 +112,7 @@ Today I finished my learning story about docker. This was actually way easier th
 ### 6/6/2025
 
 Today I have my second expert review with Raymond. I achieved a meets expectation, although he had some criticism on the way I formed my user story. He explained that it looked too much like a developer story. I agreed with him. Thanks to his clear explanation he set me up in a way where I should now be able to do everything correctly for the final expert review with Gerald. 
+
+### 6/18/2025
+
+Today I had my expert review with Gerald which went really well. It went so well that it was worth an "Above Expectation". Now for the remaining week and a half the goal is to finish up the final user stories and create usable documentation for when the project is delivered. Other students or developers should be able to pick up from where we as a team left off. 

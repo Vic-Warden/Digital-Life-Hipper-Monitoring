@@ -66,21 +66,39 @@
     </div>
 
     <div class="card_admin_user">
-      <H3>Manage Admin Users:</H3>
-        <label>Add super user email:</label>
-          <div id="display-box-add-admin-user" class="display-box-add-admin-user">Hans</div>
-        <!--      #TODO
-        box to enter therapist name
-        box to enter therapist email
-        box to enter therapist password
-        button to confirm these settings and make a new therapist with them
+        <h3>Manage Therapists:</h3>
 
-        box that shows all therapists
-            with buttons to delete therapists
+    <!-- Add Therapist Form -->
+    <div class="add-therapist-form">
+      <h5>Add New Therapist</h5>
+      <input type="text"    id="therapist-name"     placeholder="Name" />
+      <input type="email"   id="therapist-email"    placeholder="Email" />
+      <input type="password"id="therapist-password" placeholder="Password" />
+      <button id="btn-add-therapist" onclick="addTherapist()">Add Therapist</button>
+      <span id="add-therapist-feedback" class="feedback"></span>
+    </div>
 
-        box to enter a therapist name or email and show only those therapists instead of all therapists
+    <!-- Search Box -->
 
-        -->
+    <label>Search for therapist by name or email:</label>
+    <div class="search-therapist-form">
+      <input type="text" id="search-therapist" placeholder="Search therapists…" oninput="filterTherapists()" />
+    </div>
+
+    <label>All Therapists:</label>
+      <div class="therapist-list display-box">
+        {% for therapist in therapists %}
+          <div class="therapist-item" data-id="{{ therapist.id }}">
+            <div class="therapist-info">
+              <strong>{{ therapist.name }}</strong><br>
+              {{ therapist.email }}
+            </div>
+            <button class="btn-delete" onclick="removeTherapist({{ therapist.id }}, this)">Delete</button>
+          </div>
+        {% else %}
+          <div class="therapist-item">No therapists found.</div>
+        {% endfor %}
+      </div>
     </div>
       <div class="empty-box"></div>
 

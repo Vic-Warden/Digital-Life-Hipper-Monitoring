@@ -175,3 +175,105 @@ function saveSettings() {
             }, 6000);
         })
 };
+
+// Fetch and render therapists on load
+async function loadTherapists() {
+  const res = await fetch('/api/therapists', { credentials: 'include' });
+  const data = await res.json();
+  const list = document.querySelector('.therapist-list');
+  list.innerHTML = '';
+  if (!data.therapists || !data.therapists.length) {
+    list.innerHTML = '<div class="therapist-item">No therapists found.</div>';
+    return;
+  }
+  data.therapists.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'therapist-item';
+    div.dataset.id = t.id;
+    div.innerHTML = `
+      <div class="therapist-info">
+        <strong>${t.name}</strong><br>${t.email}
+      </div>
+      <button class="btn-delete" onclick="removeTherapist(${t.id}, this)">Delete</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function isValidEmail(email) {
+  // Basic email format: some@domain.tld
+  const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  return emailRegex.test(email);
+}
+
+async function addTherapist() {
+  const name = document.getElementById("therapist-name").value.trim();
+  const email = document.getElementById("therapist-email").value.trim();
+  const password = document.getElementById("therapist-password").value.trim();
+
+  const feedback = document.getElementById("add-therapist-feedback");
+  feedback.textContent = "";
+  feedback.style.color = "green";
+
+  if (!name || !email || !password) {
+    feedback.textContent = "All fields are required.";
+    feedback.style.color = "red";
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    feedback.textContent = "Invalid email format.";
+    feedback.style.color = "red";
+    return;
+  }
+
+  const res = await fetch('/api/therapists', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  });
+
+  if (res.ok) {
+    feedback.textContent = 'Added!';
+    // clear inputs
+    document.getElementById('therapist-name').value = '';
+    document.getElementById('therapist-email').value = '';
+    document.getElementById('therapist-password').value = '';
+    // reload list
+    loadTherapists();
+  } else {
+    const err = await res.json();
+    feedback.textContent = err.error || err.msg || 'Error';
+    feedback.style.color = "red";
+    console.error('Add therapist error:', err);
+  }
+}
+
+
+// Delete therapist
+async function removeTherapist(id, btn) {
+  if (!confirm('Really delete therapist?')) return;
+  const res = await fetch(`/api/therapists/${id}`, {
+    method: 'DELETE',
+    credentials: 'include'
+  });
+  if (res.ok) {
+    btn.closest('.therapist-item').remove();
+  } else {
+    alert('Failed to delete');
+  }
+}
+
+// Filter live
+function filterTherapists() {
+  const term = document.getElementById('search-therapist').value.toLowerCase();
+  document.querySelectorAll('.therapist-item').forEach(div => {
+    const txt = div.querySelector('.therapist-info').innerText.toLowerCase();
+    div.style.display = txt.includes(term) ? '' : 'none';
+  });
+}
+
+// initialize
+document.addEventListener('DOMContentLoaded', loadTherapists);
+window.onload = loadTherapists;

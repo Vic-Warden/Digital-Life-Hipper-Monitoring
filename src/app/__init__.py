@@ -262,6 +262,9 @@ def admin_add_patient():
     if not all([name, email, password, cookie]):
         return "Missing required fields", 400
 
+    if not db.check_email(email):
+        return "Email already exists", 400
+
     # Call DB logic to insert the patient
     success = db.add_patient(name, email, password, cookie)
 
@@ -453,7 +456,7 @@ def detect_anomalies_endpoint():
     cursor = connection.cursor()
 
     query = f"""
-        SELECT 
+        SELECT
             DATE(timestamp) AS date,
             steps
         FROM Data

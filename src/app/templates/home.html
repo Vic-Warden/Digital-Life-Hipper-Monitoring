@@ -25,15 +25,15 @@
                 <div class="activity-item">
                     <div class="activity-icon steps-icon">👟</div>
                     <div class="activity-info">
-                        <div class="activity-number">1,663</div>
+                        <div class="activity-number"> {{ calculated.total_steps_today }}</div>
                         <div class="activity-label">steps</div>
                     </div>
                 </div>
                 <div class="activity-item">
                     <div class="activity-icon time-icon">⏱️</div>
                     <div class="activity-info">
-                        <div class="activity-number">18</div>
-                        <div class="activity-label">minutes</div>
+                        <div class="activity-number"> {{ calculated.last_data_pull_ago }}</div>
+                        <div class="activity-label">since last reported activity</div>
                     </div>
                 </div>
             </div>

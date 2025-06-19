@@ -638,12 +638,12 @@ class Database:
         """
         Returns a dict of {id, name, email, is_therapist}, or None if not found.
         """
-        query = "SELECT id, name, email, is_therapist FROM User WHERE LOWER(email) = %s"
+        query = "SELECT id, name, email, is_therapist, is_superuser FROM User WHERE LOWER(email) = %s"
         rows = self.do_query(query, (email,))
         if not rows:
             return None
         r = rows[0]
-        return {"id": r[0], "name": r[1], "email": r[2], "is_therapist": bool(r[3]), "is_superuser": bool(r[-1])}
+        return {"id": r[0], "name": r[1], "email": r[2], "is_therapist": bool(r[3]), "is_superuser": bool(r[4])}
 
     def set_superuser_flag(self, user_id: int, is_super: bool) -> bool:
         val = 1 if is_super else 0

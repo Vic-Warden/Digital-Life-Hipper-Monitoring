@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,10 +9,11 @@
   <link rel="stylesheet" href="../static/css/admin_patients.css" />
   <link rel="stylesheet" href="../static/css/admin_navbar.css" />
 </head>
+
 <body>
 
-    <!-- Navbar will be dynamically injected via JavaScript -->
-    <div id="admin-navbar"></div>
+  <!-- Navbar will be dynamically injected via JavaScript -->
+  <div id="admin-navbar"></div>
 
   <div class="container">
     <!-- Displays a list of patients for a therapist; supports name filtering via search bar. Data is rendered using Jinja2 -->
@@ -19,17 +21,22 @@
       <h3>Patients</h3>
       <input type="text" id="search" placeholder="Search patients by name..." />
       <div id="patient-list" class="display-box">
+        {% if patients %}
         {% for patient in patients %}
-          <div class="patient-card-item" data-name="{{ patient.name | lower }}">
-            <div class="patient-card-box">
-              <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}" style="text-decoration: none; color: inherit;">
+        <div class="patient-card-item" data-name="{{ patient.name | lower }}">
+          <div class="patient-card-box">
+            <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}"
+              style="text-decoration: none; color: inherit;">
               <strong>{{ patient.name }}</strong><br>
               Email: {{ patient.email }}
-              </a>
-            </div>
+            </a>
           </div>
+        </div>
         {% endfor %}
-      </div> 
+        {% else %}
+        <p>No patients found.</p>
+        {% endif %}
+      </div>
     </div>
     <!-- Form to add a new patient -->
     <div class="addPatient-card">
@@ -40,17 +47,18 @@
 
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required />
-      
+
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required />
-    
+
         <button type="submit" class="patient-button">Add Patient</button>
       </form>
     </div>
   </div>
 
-  
+
   <script src="../static/js/admin_patients.js"></script>
   <script src="../static/js/admin_navbar.js"></script>
 </body>
+
 </html>

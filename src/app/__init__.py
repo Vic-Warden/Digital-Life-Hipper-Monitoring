@@ -239,7 +239,7 @@ def admin_patient_list():
     print(patient_details)
 
     if not patient_details:
-        return "Patients not found", 404
+        return render_template('admin_patients.html', patients=[], message="No patients found.")
 
     return render_template('admin_patients.html', patients=patient_details)
 

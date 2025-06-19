@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
    <div class="logo-container">
     <div class="logo-line"></div>
-    <span class="hippertext">Hipper Therapeutics</span>
+    <a href="/home" class="hippertext">Hipper Therapeutics</a>
     <div class="logo-line"></div>
   </div>
 

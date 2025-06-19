@@ -590,10 +590,14 @@ class Database:
 
         # Get the last timestamp of available data
         last_data_pull = df.index.max()
-        delta = now - last_data_pull
-        hours, remainder = divmod(delta.total_seconds(), 3600)
-        minutes = remainder // 60
-        last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
+
+        if pd.isna(last_data_pull):
+            last_data_pull_ago = "No data available"
+        else:
+            delta = now - last_data_pull
+            hours, remainder = divmod(delta.total_seconds(), 3600)
+            minutes = remainder // 60
+            last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
 
         return {
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),

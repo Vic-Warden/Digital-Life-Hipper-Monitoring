@@ -112,7 +112,7 @@ class Database:
         query = "SELECT COUNT(*) FROM User WHERE email = %s"
         params = (email,)
         result = self.do_query(query, params)
-        if result and 0 < result[0][0] < 2:
+        if result[0][0] > 0:
             return True
         return False
 
@@ -426,6 +426,7 @@ class Database:
         print("SQL Result (usual slots):", result)
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
+
     def is_super_user(self, cookie: int) -> bool:
         """
         ### Check whether the given user is a super‑user.

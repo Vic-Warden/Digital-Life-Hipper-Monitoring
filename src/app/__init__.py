@@ -243,7 +243,7 @@ def admin_patient_list():
     therapist_id = db.therapist_id_from_cookie(cookie)
     print(therapist_id)
 
-    # Extended list with 6 patients
+    # list with patients
     patient_details = db.get_patients(therapist_id)
     print(patient_details)
 
@@ -270,6 +270,9 @@ def admin_add_patient():
     # Validate required data
     if not all([name, email, password, cookie]):
         return "Missing required fields", 400
+
+    if not db.check_email(email):
+        return "Email already exists", 400
 
     # Call DB logic to insert the patient
     success = db.add_patient(name, email, password, cookie)
@@ -462,7 +465,7 @@ def detect_anomalies_endpoint():
     cursor = connection.cursor()
 
     query = f"""
-        SELECT 
+        SELECT
             DATE(timestamp) AS date,
             steps
         FROM Data
@@ -498,33 +501,66 @@ def anomaly_form():
     return render_template('form.html')
 
 
-@app.route('/api/upload-pam-data', methods=['GET'])
-def upload_pam_data():
+@app.route('/api/upload-day-data', methods=['POST'])
+def upload_day_data():
     """
-    API endpoint to upload PAM data.
-    Returns a JSON response with success status and status code.
+    API endpoint to upload PAM day-level data.
+    Expects POST form data including auth_token, patient_id, pam_data, and optionally device_mac_addr.
     """
-    token = request.cookies.get('auth_token')
+    token = request.form.get('auth_token')
     valid, reason = db.verify_auth_token(token)
     if not valid:
-        return {"error": reason}, 401
+        return jsonify({"error": reason}), 401
 
-    patient_id = request.args.get('patient_id')
-    pam_data = request.args.get('pam_data')
-    device_mac_addr = request.args.get('device_mac_addr')
+    patient_id = request.form.get('patient_id')
+    pam_data = request.form.get('pam_data')
+    device_mac_addr = request.form.get('device_mac_addr')
 
     if not patient_id or not pam_data:
-        return {"error": "Patient ID and PAM data are required"}, 400
+        return jsonify({"error": "Patient ID and PAM data are required"}), 400
 
-    # Assuming pam_data is a JSON string, you might need to parse it
-    pam_data = json.loads(pam_data)
+    try:
+        pam_data = json.loads(pam_data)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON in pam_data"}), 400
 
+    success = db.upload_day_data(patient_id, pam_data)
+    if not success:
+        return jsonify({"error": "Failed to upload PAM data"}), 500
+
+    return jsonify({"message": "PAM day data uploaded successfully"}), 200
+
+
+@app.route('/api/upload-minute-data', methods=['POST'])
+def upload_minute_data():
+    """
+    API endpoint to upload PAM minute-level data.
+    Expects POST form data including auth_token, patient_id, pam_data, and optionally device_mac_addr.
+    """
+    token = request.form.get('auth_token')
+    valid, reason = db.verify_auth_token(token)
+    if not valid:
+        return jsonify({"error": reason}), 401
+
+    patient_id = request.form.get('patient_id')
+    pam_data = request.form.get('pam_data')
+    device_mac_addr = request.form.get('device_mac_addr')
+
+    if not patient_id or not pam_data:
+        return jsonify({"error": "Patient ID and PAM data are required"}), 400
+
+    try:
+        pam_data = json.loads(pam_data)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON in pam_data"}), 400
+
+    success = db.upload_minute_data(patient_id, pam_data)
     success = db.upload_pam_data(patient_id, pam_data)
     success = True
     if not success:
-        return {"error": "Failed to upload PAM data"}, 500
+        return jsonify({"error": "Failed to upload PAM data"}), 500
 
-    return {"message": "PAM data uploaded successfully"}, 200
+    return jsonify({"message": "PAM minute data uploaded successfully"}), 200
 
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
@@ -568,15 +604,21 @@ def routine_form():
         if not patient_id:
             return {"error": "Missing patient_id"}, 400
 
-        usual_slots = db.get_usual_active_slots(patient_id)
+        patient_query = "SELECT name FROM User WHERE id = %s"
+        patient_result = db.do_query(patient_query, (patient_id,))
+        patient_name = patient_result[0][0] if patient_result else "Unknown"
 
-        if not usual_slots:
-            return {"disruptions": []}, 200
+        usual_slots = db.get_usual_active_slots(patient_id)
 
         disruptions = db.get_disruptions(patient_id, usual_slots)
 
-        return {"disruptions": disruptions}, 200
-    return render_template('routine_form.html')
+        return {
+            "patient_name": patient_name,
+            "usual_slots": usual_slots,
+            "disruptions": disruptions
+        }, 200
+
+    return render_template("routine_form.html")
 
 @app.route('/api/get-superusers', methods=['GET'])
 def get_superusers(self):
@@ -657,6 +699,8 @@ def api_add_superuser():
       "msg": f"{user['name']} is now a super‑user",
       "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
     }), 200
+
+
 
 
 # Start the Flask application

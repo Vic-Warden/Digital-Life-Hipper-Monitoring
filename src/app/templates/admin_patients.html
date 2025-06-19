@@ -9,9 +9,12 @@
   <link rel="stylesheet" href="../static/css/admin_navbar.css" />
 </head>
 <body>
+
+    <!-- Navbar will be dynamically injected via JavaScript -->
     <div id="admin-navbar"></div>
 
   <div class="container">
+    <!-- Displays a list of patients for a therapist; supports name filtering via search bar. Data is rendered using Jinja2 -->
     <div class="patient-card">
       <h3>Patients</h3>
       <input type="text" id="search" placeholder="Search patients by name..." />
@@ -28,6 +31,7 @@
         {% endfor %}
       </div> 
     </div>
+    <!-- Form to add a new patient -->
     <div class="addPatient-card">
       <h3>Add Patient</h3>
       <form action="{{ url_for('admin_add_patient') }}" method="POST">

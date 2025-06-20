@@ -15,6 +15,13 @@
   flex: 0 0 auto;
 }
 
+.hippertext {
+  text-decoration: none; /* Removes underline */
+  color: inherit;        /* Makes it use the surrounding text color */
+  font: inherit;         /* Optional: inherits font size and style */
+  cursor: pointer;       /* Optional: keeps the pointer for UX */
+}
+
 /* Center stays in the middle */
 .nav-center {
   position: absolute;

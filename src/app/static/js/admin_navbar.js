@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
  
    <div class="logo-container">
     <div class="logo-line"></div>
-    <span class="hippertext">Hipper Therapeutics</span>
+    <a href="/admin/home" class="hippertext">Hipper Therapeutics</a>
     <div class="logo-line"></div>
   </div>
 
@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="dropdown-content">
       <a href="/admin/home" class="nav-link">Home</a>
       <a href="/admin/patients" class="nav-link">Patients</a>
+      <a href="/admin/manage-devices" class="nav-link">Manage Devices</a>
       <a href="/admin/settings" class="nav-link">Settings</a>
       <a href="/admin/logout" class="nav-link">Logout</a>
     </div>
@@ -33,14 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Insert the navbar HTML into the page
   document.getElementById("admin-navbar").innerHTML = navbar;
 
-// Highlight current page in dropdown
-// Have to check if this works when we work on local server: extension vscode can't find the paths!
-const currentPath = window.location.pathname;
-document.querySelectorAll(".nav-link").forEach(link => {
-  if (link.getAttribute("href") === currentPath) {
-    link.classList.add("active-link");
-  }
-});
+  // Highlight current page in dropdown
+  // Have to check if this works when we work on local server: extension vscode can't find the paths!
+  const currentPath = window.location.pathname;
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if (link.getAttribute("href") === currentPath) {
+      link.classList.add("active-link");
+    }
+  });
 
   // Optional: Add toggle behavior if you later implement mobile nav
   const menuButton = document.getElementById("menu-button");

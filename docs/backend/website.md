@@ -591,6 +591,104 @@ def admin_settings():
     return redirect("/admin/login")
 ```
 
+## Manage Devices
+
+This route allows a therapist to manage the hipper devices and bind/unbind them to patients.
+
+```python
+@app.route('/admin/manage-devices', methods=['GET', 'POST'])
+def admin_manage_devices():
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(cookie)
+    therapist_id = db.therapist_id_from_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    if request.method == 'POST':
+        # Handle device addition
+        mac_address = request.form.get('mac_address')
+        patient_id = request.form.get('patient_id')
+
+        if not mac_address or not patient_id:
+            return "Missing required fields", 400
+
+        # success = db.add_device(mac_address, patient_id)
+        success = True
+
+        if not success:
+            return "Failed to add device", 400
+
+        return
+
+    return render_template('admin_manage_devices.html',
+                           preferences=db.get_user_preferences(cookie),
+                           devices=db.get_devices(),
+                           patients=db.get_patients(therapist_id))
+```
+
+## API Bind device to patient
+
+This endpoint binds a hipper device to a patient based on the `device_id` and `patient_id`
+
+```python
+@app.route('/api/bind_device_to_patient', methods=['POST'])
+def add_device_to_patient():
+    """
+    API endpoint to add a device to a patient.
+    Expects JSON with 'mac_address' and 'patient_id'.
+    """
+    token = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(token)
+    if not valid:
+        return jsonify({"error": "Not authorized"}), 401
+
+    data = request.get_json()
+    device_id = data.get('device_id')
+    patient_id = data.get('patient_id')
+
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
+
+    success = db.bind_device_to_patient(
+        device_id=device_id, patient_id=patient_id)
+    if not success:
+        return jsonify({"error": "Failed to bind device"}), 500
+
+    return jsonify({"message": "Successfully bound device to patient"}), 200
+```
+
+## API Unbind device from patients
+
+This endpoint unbinds a hipper device to a patient based on the `device_id`
+
+```python
+@app.route('/api/unbind_device_to_patient', methods=['POST'])
+def remove_device_to_patient():
+    """
+    API endpoint to remove a device to a patient.
+    Expects JSON with 'mac_address' and 'patient_id'.
+    """
+    token = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(token)
+    if not valid:
+        return jsonify({"error": "Not authorized"}), 401
+
+    data = request.get_json()
+    device_id = data.get('device_id')
+    patient_id = data.get('patient_id')
+
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
+
+    success = db.unbind_device_from_patient(
+        device_id=device_id)
+    if not success:
+        return jsonify({"error": "Failed to unbind device"}), 500
+
+    return jsonify({"message": "Successfully removed device to patient"}), 200
+```
 
 ## 20. Running the App
 

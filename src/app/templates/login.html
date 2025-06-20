@@ -21,6 +21,11 @@
   <main class="container">
     <section class="login-box">
       <h2>Welcome Back</h2>
+
+      {% if error %}
+        <p>{{ error }}</p>
+      {% endif %}
+
       <form action="/login" method="POST">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required />
@@ -28,13 +33,12 @@
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required />
 
-        <!--        <div class="remember">-->
-        <!--          <input type="checkbox" id="remember" name="remember" />-->
-        <!--          <label for="remember">Remember me</label>-->
-        <!--        </div>-->
-
         <button type="submit">Sign in</button>
       </form>
+
+      <div class="adminLogin-link">
+        <p>If you are a therapist: <a href="/admin/login" class="adminLoginButton"><b>Click here</b></a></p>
+      </div>
 
     </section>
 

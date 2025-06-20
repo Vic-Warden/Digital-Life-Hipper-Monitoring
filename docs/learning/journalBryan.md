@@ -474,6 +474,63 @@ This taught me how to:
 
 Now, I can safely deploy multiple Raspberry Pi devices in the field without worrying about spoofed or unauthorized data submissions.
 
+## Learning story
+As a student, I want to learn how to parse CSV files with different data formats so I can accurately prepare data for backend APIs, ensuring that the data I send is complete, correct, and properly formatted.
+
+### Learned
+At first, I was simply opening CSV files and trying to send raw data to the backend, but this quickly led to errors and mismatches between what my backend expected and what I actually sent. Different CSV files had different columns and formats — for example, minute-level data had timestamps with steps and PAM scores, while day-level data included zones and aggregated activity scores.
+
+To fix this:
+
+1. I carefully studied the CSV file structures and identified which columns were required for each data type.
+
+2. I wrote dedicated parsing functions for each CSV format. These functions read the CSV, convert timestamps to ISO format, cast values to the correct types (int, float), and handled any missing or malformed rows gracefully.
+
+3. I added extra fields to the parsed data as needed, such as a data_label or patient_id, to ensure the backend received all the context it needed.
+
+4. I tested these functions thoroughly by running them on sample CSV files and verifying the output before sending it to the backend API.
+
+```python
+import csv
+from datetime import datetime
+
+def minute_csv_to_json(filepath, label_id):
+    data = []
+    with open(filepath, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            try:
+                data.append({
+                    "timestamp": datetime.strptime(row["Timestamp"], "%Y-%m-%d %H:%M:%S").isoformat(),
+                    "steps": int(row["Steps"]),
+                    "pam_score": float(row["PAM Score"]),
+                    "data_label": label_id
+                })
+            except Exception as e:
+                print(f"Skipping row due to error: {e} — row: {row}")
+    return data
+```
+
+Using this, my system can:
+
+1. Ensure data integrity by sending correctly formatted JSON to the backend.
+
+2. Automatically handle multiple CSV formats without manual intervention.
+
+3. Avoid backend errors caused by bad or missing data fields.
+
+This taught me how to:
+
+1. Work with CSV files programmatically using Python’s csv module.
+
+2. Perform robust error handling during data parsing to avoid crashes.
+
+3. Convert and format timestamps properly for API compatibility.
+
+4. Prepare and structure data correctly for downstream database insertion.
+
+Now, I can reliably convert diverse CSV data into backend-ready JSON payloads, forming a solid foundation for my data that I send to the back-end.
+
 <br /> <br />
 
 # Sources

@@ -19,21 +19,21 @@
             <div class="activity-section">
                 <div class="mood-section">
                     <div class="mood-emoji">😊</div>
-                    <div class="activity-title">Raymond's Daily Activity</div>
+                    <div class="activity-title">Today's Activity | {{ name or "User" }}</div>
                 </div>
 
                 <div class="activity-item">
                     <div class="activity-icon steps-icon">👟</div>
                     <div class="activity-info">
-                        <div class="activity-number">1,663</div>
-                        <div class="activity-label">steps</div>
+                        <div class="activity-number"> {{ calculated.total_steps_today }}</div>
+                        <div class="activity-label">steps taken</div>
                     </div>
                 </div>
                 <div class="activity-item">
                     <div class="activity-icon time-icon">⏱️</div>
                     <div class="activity-info">
-                        <div class="activity-number">18</div>
-                        <div class="activity-label">minutes</div>
+                        <div class="activity-number"> {{ calculated.last_data_pull_ago }}</div>
+                        <div class="activity-label">since last reported activity</div>
                     </div>
                 </div>
             </div>
@@ -111,10 +111,10 @@
                 <div class="chart-day">
                 <div class="bars">
                     <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
-                    <div class="bar-value">{{ steps }}</div>
+                    <div class="bar-value">{{ '0' if steps != steps else steps }}</div>
                     </div>
                     <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
-                    <div class="bar-value">{{ pam }}</div>
+                    <div class="bar-value">{{ '0' if pam != pam else pam }}</div>
                     </div>
                 </div>
                 <div class="day-label">
@@ -133,10 +133,10 @@
                 <div class="chart-day">
                 <div class="bars">
                     <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
-                    <div class="bar-value">{{ steps }}</div>
+                    <div class="bar-value">{{ '0' if steps != steps else steps }}</div>
                     </div>
                     <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
-                    <div class="bar-value">{{ pam }}</div>
+                    <div class="bar-value">{{ '0' if pam != pam else pam }}</div>
                     </div>
                 </div>
                 <div class="day-label">
@@ -155,10 +155,10 @@
                 <div class="chart-day">
                 <div class="bars">
                     <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
-                    <div class="bar-value">{{ steps }}</div>
+                    <div class="bar-value">{{ '0' if steps != steps else steps }}</div>
                     </div>
                     <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
-                    <div class="bar-value">{{ pam }}</div>
+                    <div class="bar-value">{{ '0' if pam != pam else pam }}</div>
                     </div>
                 </div>
                 <div class="day-label">
@@ -178,10 +178,10 @@ Week {{ week }} of {{ entry.timestamp.strftime('%B') }}
                 <div class="chart-day">
                 <div class="bars">
                     <div class="bar steps-bar" style="height: {{ steps ~ 'px' }};" data-value="{{ steps }}">
-                    <div class="bar-value">{{ steps }}</div>
+                    <div class="bar-value">{{ '0' if steps != steps else steps }}</div>
                     </div>
                     <div class="bar pam-bar" style="height: {{ pam ~ 'px' }};" data-value="{{ pam }}">
-                    <div class="bar-value">{{ pam }}</div>
+                    <div class="bar-value">{{ '0' if pam != pam else pam }}</div>
                     </div>
                 </div>
                 <div class="day-label">

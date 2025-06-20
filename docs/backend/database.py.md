@@ -23,6 +23,8 @@ get_log_for_mac()       # Get the last time data was pulled from a specific sens
 update_log_timestamps() # Update the last time data was pulled from a specific sensor, by looking at the mac address
 therapist_id_from_cookie() # Retrieves the therapist's ID associated with a given session cookie.
 connect_patient_to_therapist() # Creates an association between a patient and a therapist in the database.
+upload_day_data()       # Uploads day data from the basestation to the database
+upload_minute_data()    # Uploads minute, or activity data to the databse
 ```
 
 ### How to execute queries
@@ -264,29 +266,29 @@ def device_id_from_patient_id(self, patient_id: int) -> int:
 Uploads minute data to the database using the patient_id.
 
 ```python
-def upload_minute_data(self, patient_id: int, minute_data: list):
+def upload_minute_data(self, mac_address: str, pam_data: list):
     """
     Upload PAM data for a patient.
     Expects pam_data to be a list of dictionaries with keys:
     - 'timestamp'
     - 'steps'
     - 'pam_score'
-    - 'zone'
     - 'data_label'
     """
-    device_id = self.device_id_from_patient_id(patient_id)
+    patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+        mac_address)
 
     if not pam_data:
         return False
 
     query = """
-        INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+        INSERT INTO MinuteData (device_id, timestamp, steps, PAM_score, data_label, patient_id)
         VALUES (%s, %s, %s, %s, %s, %s);
     """
     params = [
         (device_id, data['timestamp'], data['steps'],
-        data['pam_score'], data['zone'], data['data_label'])
-        for data in minute_data
+            data['pam_score'], data['data_label'], patient_id)
+        for data in pam_data
     ]
 
     try:
@@ -306,28 +308,38 @@ def upload_minute_data(self, patient_id: int, minute_data: list):
 Uploads day data to the database using patient_id.
 
 ```python
-def upload_day_data(self, patient_id: int, day_data: list):
+ def upload_day_data(self, mac_address: str, day_data: list):
     """
     Upload daily PAM data for a patient.
     Expects day_data to be a list of dictionaries with keys:
     - 'timestamp'
     - 'steps'
-    - 'pam_score' 
+    - 'pam_score'
+    - 'zone_1'
+    - 'zone_2'
+    - 'zone_3'
     """
-    device_id = self.device_id_from_patient_id(patient_id)
+    patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+        mac_address)
 
     if not day_data:
         return False
 
     query = """
-        INSERT INTO Data (device_id, timestamp, steps, PAM_score)
-        VALUES (%s, %s, %s, %s);
+        INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone_1, zone_2, zone_3, patient_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
     params = [
-        (device_id, data['timestamp'], data['steps'],
-            data['pam_score'])
-        for data in day_data
-    ]
+        (
+            device_id,
+            data['timestamp'],
+            data['steps'],
+            data['pam_score'],
+            data['zone_1'],
+            data['zone_2'],
+            data['zone_3'],
+            patient_id
+        ) for data in day_data]
 
     try:
         cursor = self._connection.cursor()
@@ -382,12 +394,14 @@ This function creates an association between a patient and a therapist in the da
 ### Data averages for historical graph
 
 ```python
-    def calculate_average_data(self, data):
+    def calculate_patient_data(self, data):
         # Create a DataFrame taken from db `Data` structure
-        df = pd.DataFrame(data, columns=['id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone', 'data_label'])
+        df = pd.DataFrame(data, columns=[
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone_1', 'zone_2', 'zone_3', 'patient_id'])
 
-        # Ensure timestamp is datetime
-        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+        # Ensure timestamp is datetime and localized
+        df['timestamp'] = pd.to_datetime(
+            df['timestamp']).dt.tz_localize('Europe/Amsterdam')
 
         # Set timestamp as index
         df.set_index('timestamp', inplace=True)
@@ -398,22 +412,41 @@ This function creates an association between a patient and a therapist in the da
         weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
         monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
 
+        # Get the current date in Europe/Amsterdam timezone
+        now = datetime.now(ZoneInfo('Europe/Amsterdam'))
+        today = now.date()
+        # Filter today's data
+        today_steps = df[df.index.date == today]['steps'].sum()
+
+        # Get the last timestamp of available data
+        last_data_pull = df.index.max()
+
+        if pd.isna(last_data_pull):
+            last_data_pull_ago = "No data available"
+        else:
+            delta = now - last_data_pull
+            hours, remainder = divmod(delta.total_seconds(), 3600)
+            minutes = remainder // 60
+            last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
+
         return {
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
-            'monthly': monthly_avg.reset_index().to_dict(orient='records')
-        } 
+            'monthly': monthly_avg.reset_index().to_dict(orient='records'),
+            'last_data_pull_ago': last_data_pull_ago,
+            'total_steps_today': int(today_steps)
+    }
 ```
 
-The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly.
+The function seen above processes activity data and calculates average steps and PAM_score over different time intervals: hourly, daily, weekly, and monthly. It also calculates the latest data pulled and total steps of the day.
 
 Parameters:
 * data: list of records containing id, device_id, timestamp, steps, PAM_score, zone, and data_label.
 
 Returns:
-* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly'.
-Each contains a list of records with average steps and PAM_score for the corresponding time period.
+* A dictionary with keys: 'hourly', 'daily', 'weekly', 'monthly', 'last_data_pull_ago', 'total_steps_today'.
+These all contain data which is then usable to parse to html using the `__init__.py` file. 
 
 Key Steps:
 > Converts data to a DataFrame.
@@ -456,6 +489,89 @@ def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, l
         WHERE cookies = %s;
     """
     params = (dark_mode, large_font, language, cookie)
+    result = self.do_query(query, params, fetch=False)
+
+    return result is not None
+```
+
+### Is therapist
+
+`is_therapist(self, cookie: str) -> bool`
+
+Checks to see if the user is a therapist based on the cookie
+
+```python
+def is_therapist(self, cookie: str) -> bool:
+    """
+    Check if the user is a therapist based on their cookie.
+
+    Returns True if the user is a therapist, False otherwise.
+    """
+    query = "SELECT is_therapist FROM User WHERE cookies = %s;"
+    params = (cookie,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result) > 0:
+        return result[0][0] == 1
+    return False
+```
+
+### Get devices
+
+`get_devices(self) -> list[dict] | None`
+
+Gets all the devices in the database.
+
+```python
+def get_devices(self) -> list[dict] | None:
+    """
+    Get a list of all devices in the database.
+    Returns a list of dictionaries containing device details or None if not found.
+    """
+    query = """
+        SELECT patient_id_device, device_label, device_id
+        FROM Device;
+    """
+    result = self.do_query(query, fetch=True)
+
+    if result:
+        return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+    return None
+```
+
+### Bind device to patient
+
+`bind_device_to_patient(self, device_id: int, patient_id: int) -> bool`
+
+Binds a hipper device to a patient using the `device_id` and the `patient_id`
+
+```python
+def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:
+    """
+    Bind a device to a patient by updating the patient_id_device field.
+    Returns True if successful, False otherwise.
+    """
+    query = "UPDATE Device SET patient_id_device = %s WHERE device_id = %s;"
+    params = (patient_id, device_id)
+    result = self.do_query(query, params, fetch=False)
+
+    return result is not None
+```
+
+### Unbind device from patient
+
+`unbind_device_from_patient(self, device_id: int) -> bool`
+
+Unbinds a hipper device from a patient using the `device_id`
+
+```python
+def unbind_device_from_patient(self, device_id: int) -> bool:
+    """
+    Unbind a device from its current patient by setting patient_id_device to NULL.
+    Returns True if successful, False otherwise.
+    """
+    query = "UPDATE Device SET patient_id_device = NULL WHERE device_id = %s;"
+    params = (device_id,)
     result = self.do_query(query, params, fetch=False)
 
     return result is not None

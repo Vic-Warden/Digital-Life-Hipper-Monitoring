@@ -78,6 +78,8 @@ class Database:
         if not self._connection:
             print("No connection to the database.")
             return None
+
+        cursor = None
         # Execute the query and fetch the results
         try:
             self._connection.autocommit = True
@@ -93,7 +95,8 @@ class Database:
             return None
         # At the end, close the cursor
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
 
     def check_valid_table(self, table_name: str) -> bool:
         """
@@ -766,3 +769,18 @@ class Database:
         if result and len(result) > 0:
             return result[0][0] == 1
         return False
+
+    def get_devices(self) -> list[dict] | None:
+        """
+        Get a list of all devices in the database.
+        Returns a list of dictionaries containing device details or None if not found.
+        """
+        query = """
+            SELECT patient_id_device, device_label, device_id
+            FROM Device;
+        """
+        result = self.do_query(query, fetch=True)
+
+        if result:
+            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+        return None

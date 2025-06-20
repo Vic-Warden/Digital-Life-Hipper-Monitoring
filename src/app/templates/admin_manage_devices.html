@@ -22,6 +22,69 @@
         </div>
         {% endif %}
         <div class="container">
+            <!-- Displays a list of patients for a therapist; supports name filtering via search bar. Data is rendered using Jinja2 -->
+            <div class="patient-card">
+                <h3>Patients</h3>
+                <input type="text" id="search" placeholder="Search patients by name..." />
+                <div id="patient-list" class="display-box">
+                    {% if patients %}
+                    {% for patient in patients %}
+                    <div class="patient-card-item" data-name="{{ patient.name | lower }}">
+                        <div class="patient-card-box">
+                            <strong>Patient ID: {{ patient.id }}</strong><br>
+                            Name: {{ patient.name }}<br>
+                            Email: {{ patient.email }}
+                            <!-- If the patient has a device bound, print it. -->
+                            {% for device in devices %}
+                            {% if device.patient_id == patient.id %}
+                            {% if patient.id == device.patient_id %}
+                            <br>Bound to Device: {{ device.device_label }}
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No patients found.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Form to add a new patient -->
+            <div class="addPatient-card">
+                <h3>(Un)bind device to patient</h3>
+                <label for="patient_id_input">Patient ID</label>
+                <input class="input-text" type="text" id="patient_id_input" name="patient_id" required />
+
+                <label for="device_id_input">Device ID</label>
+                <input class="input-text" type="text" id="device_id_input" name="device_label" required />
+
+                <button type="button" class="patient-button" onclick="sendDeviceBinding()">Bind</button>
+                <button type="button" class="patient-button" onclick="unbindDeviceFromPatient()">Unbind</button>
+            </div>
+            <div class="patient-card">
+                <h3>Devices</h3>
+                <input type="text" id="search-device" placeholder="Search devices by label..." />
+                <button type="button" class="occupied-button" id="toggle-unoccupied-devices">Show Only Unoccupied
+                    Devices</button>
+                <div id="patient-list" class="display-box">
+                    {% if devices %}
+                    {% for device in devices %}
+                    <div class="device-card-item" data-name="{{ device.device_label | lower }}"
+                        data-occupied="{{ 'true' if device.patient_id else 'false' }}">
+                        <div class="patient-card-box">
+                            <strong>Device ID: {{ device.device_id }}</strong><br>
+                            Device Label: {{ device.device_label }}<br>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p>No patients found.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 

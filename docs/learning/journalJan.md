@@ -70,6 +70,7 @@ Going into this I actually had no clue how to approach it. Thanks to Indigo he t
 
 #306 As a student, I want to learn whether I need to create an extra python func for my extra data which needs to be in a html file.
 
+Yesterday I looked into if I needed to create an extra function for the thing I wanted to be able to do. I like writing clean code, so it was worth investigating if this was the case. And yes, I was correct. Since I am already parsing data the the patient page via a func, I decided I can easily expand that function so that I can send more data to the patient front page. So I looked into the data I also needed, threw it in the `database.py` and done. That was indeed the correct move.
 
 ## Journal
 

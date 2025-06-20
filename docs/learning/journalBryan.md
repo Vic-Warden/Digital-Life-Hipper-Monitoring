@@ -477,6 +477,9 @@ Now, I can safely deploy multiple Raspberry Pi devices in the field without worr
 ## Learning story
 As a student, I want to learn how to parse CSV files with different data formats so I can accurately prepare data for backend APIs, ensuring that the data I send is complete, correct, and properly formatted.
 
+### Learned
+At first, I was simply opening CSV files and trying to send raw data to the backend, but this quickly led to errors and mismatches between what my backend expected and what I actually sent. Different CSV files had different columns and formats — for example, minute-level data had timestamps with steps and PAM scores, while day-level data included zones and aggregated activity scores.
+
 <br /> <br />
 
 # Sources

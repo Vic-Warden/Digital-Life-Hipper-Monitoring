@@ -53,12 +53,12 @@ def home():
             client_name = result[0][1]
             data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
             patient_data = db.do_query(data_query, (device_id,))
-            calculated_data = db.calculate_patient_data(patient_data)
+            calculated_data = db.calculate_patient_data(patient_data, device_id)
 
-            return render_template('home.html', calculated=calculated_data,
+            return render_template('home.html', 
+                                   calculated=calculated_data,
                                    preferences=db.get_user_preferences(cookie), 
-                                   name=client_name,
-                                   goals=db.get_patient_details(device_id))
+                                   name=client_name)
         else:
             return redirect('/login')
     else:

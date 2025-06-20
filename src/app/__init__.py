@@ -344,7 +344,6 @@ def admin_manage_devices():
     cookie = request.cookies.get('auth_cookie')
     valid = db.is_therapist(cookie)
     therapist_id = db.therapist_id_from_cookie(cookie)
-    patients = db.get_patients(therapist_id)
 
     if not valid:
         return redirect('/admin/login')
@@ -368,7 +367,7 @@ def admin_manage_devices():
     return render_template('admin_manage_devices.html',
                            preferences=db.get_user_preferences(cookie),
                            devices=db.get_devices(),
-                           patients=patients)
+                           patients=db.get_patients(therapist_id))
 
 
 @app.route('/change-email', methods=['POST'])

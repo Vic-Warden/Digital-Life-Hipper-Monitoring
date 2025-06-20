@@ -531,6 +531,9 @@ This taught me how to:
 
 Now, I can reliably convert diverse CSV data into backend-ready JSON payloads, forming a solid foundation for my data that I send to the back-end.
 
+## Learning story
+As a student, I want to learn how to handle and validate JSON data in Python so I can ensure data integrity before inserting data into a database or sending it to backend APIs.
+
 <br /> <br />
 
 # Sources

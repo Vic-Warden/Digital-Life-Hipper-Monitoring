@@ -513,7 +513,6 @@ class Database:
         - 'timestamp'
         - 'steps'
         - 'pam_score'
-        - 'zone'
         - 'data_label'
         """
         patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
@@ -523,12 +522,12 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label, patient_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s);
+            INSERT INTO MinuteData (device_id, timestamp, steps, PAM_score, data_label, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], data['zone'], data['data_label'], patient_id)
+             data['pam_score'], data['data_label'], patient_id)
             for data in pam_data
         ]
 
@@ -558,14 +557,20 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, patient_id)
-            VALUES (%s, %s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone_1, zone_2, zone_3, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
         """
         params = [
-            (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], patient_id)
-            for data in day_data
-        ]
+            (
+                device_id,
+                data['timestamp'],
+                data['steps'],
+                data['pam_score'],
+                data['zone_1'],
+                data['zone_2'],
+                data['zone_3'],
+                patient_id
+            ) for data in day_data]
 
         try:
             cursor = self._connection.cursor()

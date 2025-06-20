@@ -474,3 +474,5 @@ In the code snippet you will see I used jinja2 to call a flask backend route and
           </div>
         </div>
 ```
+### References
+- A youtube video that helped with understand jinja2 was used [Link to video on jinja2](https://www.youtube.com/watch?v=4yaG-jFfePc&t=113s)

@@ -752,3 +752,15 @@ class Database:
         if result and len(result) > 0:
             return result[0][0], result[0][1]
         return None
+    
+    def delete_patient(self, patient_id):
+        try:
+            query = "DELETE FROM User WHERE id = %s AND is_therapist = 0"
+            self.do_query(query, (patient_id,))
+            return True
+        except Exception as e:
+            print("Error deleting patient:", e)
+        return False
+
+
+

@@ -23,6 +23,8 @@ get_log_for_mac()       # Get the last time data was pulled from a specific sens
 update_log_timestamps() # Update the last time data was pulled from a specific sensor, by looking at the mac address
 therapist_id_from_cookie() # Retrieves the therapist's ID associated with a given session cookie.
 connect_patient_to_therapist() # Creates an association between a patient and a therapist in the database.
+upload_day_data()       # Uploads day data from the basestation to the database
+upload_minute_data()    # Uploads minute, or activity data to the databse
 ```
 
 ### How to execute queries
@@ -264,29 +266,29 @@ def device_id_from_patient_id(self, patient_id: int) -> int:
 Uploads minute data to the database using the patient_id.
 
 ```python
-def upload_minute_data(self, patient_id: int, minute_data: list):
+def upload_minute_data(self, mac_address: str, pam_data: list):
     """
     Upload PAM data for a patient.
     Expects pam_data to be a list of dictionaries with keys:
     - 'timestamp'
     - 'steps'
     - 'pam_score'
-    - 'zone'
     - 'data_label'
     """
-    device_id = self.device_id_from_patient_id(patient_id)
+    patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+        mac_address)
 
     if not pam_data:
         return False
 
     query = """
-        INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label)
+        INSERT INTO MinuteData (device_id, timestamp, steps, PAM_score, data_label, patient_id)
         VALUES (%s, %s, %s, %s, %s, %s);
     """
     params = [
         (device_id, data['timestamp'], data['steps'],
-        data['pam_score'], data['zone'], data['data_label'])
-        for data in minute_data
+            data['pam_score'], data['data_label'], patient_id)
+        for data in pam_data
     ]
 
     try:

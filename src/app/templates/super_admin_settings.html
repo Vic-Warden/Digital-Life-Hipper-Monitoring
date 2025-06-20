@@ -66,7 +66,7 @@
     </div>
 
     <div class="card_admin_user">
-        <h3>Manage Therapists:</h3>
+        <h3>Manage Therapists:</h3><br>
 
     <!-- Add Therapist Form -->
     <div class="add-therapist-form">
@@ -99,6 +99,26 @@
           <div class="therapist-item">No therapists found.</div>
         {% endfor %}
       </div>
+      <br>
+      <!-- Password Reset Form -->
+      <div class="password-reset-form">
+        <h5>Reset Therapist Password</h5>
+        <input
+          type="email"
+          id="reset-email"
+          placeholder="Therapist’s email…"
+        />
+        <input
+          type="password"
+          id="reset-password"
+          placeholder="New password…"
+        />
+        <button id="btn-reset-password" onclick="resetTherapistPassword()">
+          Reset Password
+        </button>
+        <span id="reset-feedback" class="feedback"></span>
+      </div>
+      <!-- end Password Reset Form -->
     </div>
       <div class="empty-box"></div>
 

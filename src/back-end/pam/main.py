@@ -2,13 +2,38 @@ import asyncio
 import json
 import os
 import aiohttp
-
+import requests
+from minute_csv_to_json import minute_csv_to_json
 from datetime import datetime, timedelta
 from bleak import BleakScanner
 from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
-BACKEND_URL = "http://192.168.138.161:5000/api"
+BACKEND_URL = "http://192.168.178.223:5000"
+
+LOG_FILE = "log.json"
+PAM_DEVICES_FILE = "PAM_devices.json"
+OUTPUT_DIR = "output"
+SCAN_INTERVAL_SECONDS = 10
+DEVICE_LABEL_START = 9240  # Starting number for PAM device labels
+MAX_PULL_HOURS = 12  # Maximum hours to pull for activity data (max request option is LAST_12_HOURS)
+
+# Ensure output directory exists
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# Load or initialize the log data
+if os.path.exists(LOG_FILE):
+    with open(LOG_FILE, "r") as log_file:
+        log_data = json.load(log_file)
+else:
+    log_data = {}
+
+# Load or initialize PAM devices data
+if os.path.exists(PAM_DEVICES_FILE):
+    with open(PAM_DEVICES_FILE, "r") as devices_file:
+        pam_devices_data = json.load(devices_file)
+else:
+    pam_devices_data = {}
 
 async def fetch_log(mac_address):
     # print(f"[fetch_log] Fetching log for MAC: {mac_address}")
@@ -24,7 +49,7 @@ async def fetch_log(mac_address):
                     # print(f"[fetch_log] No log entry found for {mac_address}, returning empty dict.")
                     return {}  # If no log exists
     except Exception as e:
-        # print(f"[fetch_log] Error fetching log for {mac_address}: {e}")
+        print(f"[fetch_log] Error fetching log for {mac_address}: {e}")
         return {}
 
 async def update_log(mac_address, activity=False, day_data=False):
@@ -38,9 +63,9 @@ async def update_log(mac_address, activity=False, day_data=False):
             async with session.post(f"{BACKEND_URL}/log/{mac_address}", json=payload) as resp:
                 # print(f"[update_log] HTTP POST {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
                 if resp.status != 200:
-                    # print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
+                    print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
     except Exception as e:
-        # print(f"[update_log] Error updating log for {mac_address}: {e}")
+        print(f"[update_log] Error updating log for {mac_address}: {e}")
 
 async def get_days_since_last_day_pull(mac_address):
     # print(f"[get_days_since_last_day_pull] Checking days since last day_data pull for {mac_address}")
@@ -74,30 +99,6 @@ async def get_hours_since_last_activity(mac_address):
     delta_hours = (datetime.now() - last_activity).total_seconds() / 3600
     # print(f"[get_hours_since_last_activity] Last activity pull was {delta_hours:.2f} hours ago.")
     return delta_hours
-
-LOG_FILE = "log.json"
-PAM_DEVICES_FILE = "PAM_devices.json"
-OUTPUT_DIR = "output"
-SCAN_INTERVAL_SECONDS = 10
-DEVICE_LABEL_START = 9240  # Starting number for PAM device labels
-MAX_PULL_HOURS = 12  # Maximum hours to pull for activity data (max request option is LAST_12_HOURS)
-
-# Ensure output directory exists
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# Load or initialize the log data
-if os.path.exists(LOG_FILE):
-    with open(LOG_FILE, "r") as log_file:
-        log_data = json.load(log_file)
-else:
-    log_data = {}
-
-# Load or initialize PAM devices data
-if os.path.exists(PAM_DEVICES_FILE):
-    with open(PAM_DEVICES_FILE, "r") as devices_file:
-        pam_devices_data = json.load(devices_file)
-else:
-    pam_devices_data = {}
 
 # Create reverse mapping from MAC address to label ID (int)
 mac_to_label_id = {
@@ -141,6 +142,26 @@ def generate_new_label():
     ]
     next_label_number = max(existing_label_numbers) + 1 if existing_label_numbers else DEVICE_LABEL_START
     return f"label_{next_label_number}"
+
+def send_data_to_backend(api_url, auth_token, mac_address, pam_data):
+    """
+    Sends PAM data to the Flask backend.
+    """
+    payload = {
+        "auth_token": auth_token,
+        "mac_address": mac_address,
+        "pam_data": json.dumps(pam_data)  # Needs to be a JSON string
+    }
+
+    try:
+        response = requests.post(api_url, data=payload)
+        print(f"Status Code: {response.status_code}")
+        print("Response:", response.json())
+        return response.status_code == 200
+    except Exception as e:
+        print("Error sending data to backend:", e)
+        return False
+
 
 async def main_loop():
     """Main async loop to scan and process PAM devices."""
@@ -198,12 +219,29 @@ async def main_loop():
                     for attempt in range(3):
                         try:
                             activity_downloader = ActivityDownload(
-                                filename=os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}"),
+                                filename=os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}.csv"),
                                 filelength=get_detailed_request(request_name),
                                 label_id=label_id,
                             )
                             await activity_downloader.run()
                             await update_log(mac_address, activity=True)
+                            
+                            filepath = os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}.csv")
+                            pam_data = minute_csv_to_json(filepath, label_id)
+                            if pam_data:
+                                success = send_data_to_backend(
+                                    api_url= BACKEND_URL + "/api/upload-minute-data",
+                                    auth_token="1234567890",
+                                    mac_address=mac_address,
+                                    pam_data=pam_data
+                                )
+                                if success:
+                                    print("✅ Data successfully uploaded to backend.")
+                                else:
+                                    print("❌ Failed to upload data.")
+                            else:
+                                print("⚠️ No data to send.")
+    
                             pulled_data = True
                             break
                         except (asyncio.TimeoutError, BleakError, Exception) as error:

@@ -56,7 +56,9 @@ def home():
             calculated_data = db.calculate_patient_data(patient_data)
 
             return render_template('home.html', calculated=calculated_data,
-                                   preferences=db.get_user_preferences(cookie), name=client_name)
+                                   preferences=db.get_user_preferences(cookie), 
+                                   name=client_name,
+                                   goals=db.get_patient_details(device_id))
         else:
             return redirect('/login')
     else:

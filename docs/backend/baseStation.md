@@ -73,7 +73,7 @@ For any information about the backend and how this connection is handled, go to 
 
 ### Data Sent
 
-The contents of the file that used to be saved locally are now also as JSON in the body of the API request. This ensures that both the local log and the backend database stay in sync.
+The contents of the file that used to be saved locally are now also as JSON in the body of the API request. This ensures that both the local log and the backend database stay in sync. This is done by converting the csv formatted files to json in src/back-end/pam/day_csv_to_json.py and src/back-end/pam/minute_csv_to_json.py. After converting it the data is sent to the backend to the endpoints: `/api/upload-day-data` and `/api/upload-minute-data`. The backend takes care of everything else like putting the data in the Data or MinuteData table. 
 
 The API takes care of:
 

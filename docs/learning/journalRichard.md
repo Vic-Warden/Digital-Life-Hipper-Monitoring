@@ -456,3 +456,21 @@ as a student, i want to learn how to call routes with jinja2 in html, so I can u
 
 ### What I have learned
 In a Flask application using Jinja2, backend functions are not called directly from HTML templates. Instead, user actions in the HTML, such as submitting a form or clicking a button, trigger Flask routes, which are mapped to specific backend functions. Jinja2 is purely a templating engine, meaning its role is to display data that the backend passes to it — it doesn’t run Python code itself. To connect the frontend and backend, we use the url_for() function inside Jinja2 templates to dynamically generate URLs for the appropriate routes. Forms in HTML use methods like POST or GET to send data to these routes, which allows the backend to process user input and return a response. This response is usually a new template rendered with Jinja2, which can display messages or data back to the user. This separation of concerns is important for building maintainable and dynamic web applications.
+
+### How I used it in the project
+In the code snippet you will see I used jinja2 to call a flask backend route and display patient details on frontend
+
+```html
+      <div id="patient-list" class="display-box">
+        {% if patients %}
+        {% for patient in patients %}
+        <div class="patient-card-item" data-name="{{ patient.name | lower }}">
+          <div class="patient-card-box">
+            <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}"
+              style="text-decoration: none; color: inherit;">
+              <strong>{{ patient.name }}</strong><br>
+              Email: {{ patient.email }}
+            </a>
+          </div>
+        </div>
+```

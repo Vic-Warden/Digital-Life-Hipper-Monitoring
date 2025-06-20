@@ -754,7 +754,7 @@ def api_add_therapist():
 
     if not all([name,email,password]):
         return jsonify({"error":"Missing fields"}), 400
-    if db.check_email(email):
+    if not db.check_email(email):
         return jsonify({"error":"Email already exists"}), 400
     success = db.add_therapist(name,email,password)
 

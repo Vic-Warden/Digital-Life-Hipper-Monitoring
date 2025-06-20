@@ -41,14 +41,14 @@
 
         <div class="card">
             <div class="score-section">
-                <div class="score-title">Weekly Movement Score</div>
+                <div class="score-title"> {{ calculated.goal_data.available_type }} Movement Score</div>
                 <div class="score-circle">
                     <div class="score-bg">
                         <div class="score-fill" id="scoreFill"></div>
                     </div>
                     <div class="score-inner">
-                        <div class="score-number">370</div>
-                        <div class="score-total">/ 600</div>
+                        <div class="score-number"> {{ calculated.goal_data.steps_for_goal_period }}</div>
+                        <div class="score-total"> {{ calculated.goal_data.goals[0][2] }}</div>
                     </div>
                 </div>
             </div>

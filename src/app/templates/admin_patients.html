@@ -37,6 +37,13 @@
               <button type="submit" title="Delete patient" style="color: red;">Delete</button>
             </form>
 
+            <!-- More details -->
+            <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}"
+              style="text-decoration: none; color: inherit;">
+              <strong>{{ patient.name }}</strong><br>
+              Email: {{ patient.email }}
+            </a>
+          </div>
 
         </div>
         {% endfor %}

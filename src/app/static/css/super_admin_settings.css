@@ -19,6 +19,53 @@ body {
   color: #333;
 }
 
+/* Password Reset Form */
+.password-reset-form {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.password-reset-form h5 {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.password-reset-form input[type="email"],
+.password-reset-form input[type="password"] {
+  display: block;
+  width: calc(100% - 1rem);
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.password-reset-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.password-reset-form button:hover {
+  background-color: #0056b3;
+}
+
+.password-reset-form .feedback {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #d9534f; /* red for errors; you can override in JS on success */
+}
+
+
 .card,
 .card * {
   font-family: Arial, sans-serif;
@@ -317,7 +364,7 @@ label {
 }
 
 .display-box-superusers {
-  max-height: 150px;       /* adjust to taste */
+  max-height: 300px;       /* adjust to taste */
   overflow-y: auto;
   border: 1px solid #74a6d4;
   border-radius: 6px;

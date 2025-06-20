@@ -31,6 +31,13 @@
               <button type="submit" title="Change password">Change password</button>
             </form>
 
+            <!-- Delete Patient -->
+            <form action="{{ url_for('admin_delete_patient', patient_id=patient.id) }}" method="POST"
+                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce patient ?');">
+              <button type="submit" title="Delete patient" style="color: red;">Delete</button>
+            </form>
+
+
         </div>
         {% endfor %}
         {% else %}

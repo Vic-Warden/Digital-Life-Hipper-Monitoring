@@ -44,7 +44,7 @@ body {
   }
   
   .patientLogin-link {
-    padding-left: 90px;
+    padding-left: 150px;
     font-size: 18px;
     user-select: none;
   }
@@ -64,6 +64,7 @@ body {
   form {
     display: flex;
     flex-direction: column;
+    padding-left: 150px;
   }
   
   form label {

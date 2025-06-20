@@ -549,6 +549,28 @@ To fix this:
 
 5. I tested my validation logic with a variety of JSON samples — valid, incomplete, or malformed — to ensure robustness.
 
+```python
+import json
+
+def validate_pam_json(json_string):
+    try:
+        data = json.loads(json_string)
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON: {e}")
+        return None
+
+    required_keys = {"timestamp", "steps", "pam_score"}
+    for entry in data:
+        if not required_keys.issubset(entry.keys()):
+            print(f"Missing keys in entry: {entry}")
+            return None
+        if not isinstance(entry["steps"], int) or not isinstance(entry["pam_score"], (float, int)):
+            print(f"Incorrect data types in entry: {entry}")
+            return None
+
+    return data
+```
+
 <br /> <br />
 
 # Sources

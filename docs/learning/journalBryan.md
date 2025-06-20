@@ -490,6 +490,27 @@ To fix this:
 
 4. I tested these functions thoroughly by running them on sample CSV files and verifying the output before sending it to the backend API.
 
+```python
+import csv
+from datetime import datetime
+
+def minute_csv_to_json(filepath, label_id):
+    data = []
+    with open(filepath, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            try:
+                data.append({
+                    "timestamp": datetime.strptime(row["Timestamp"], "%Y-%m-%d %H:%M:%S").isoformat(),
+                    "steps": int(row["Steps"]),
+                    "pam_score": float(row["PAM Score"]),
+                    "data_label": label_id
+                })
+            except Exception as e:
+                print(f"Skipping row due to error: {e} — row: {row}")
+    return data
+```
+
 <br /> <br />
 
 # Sources

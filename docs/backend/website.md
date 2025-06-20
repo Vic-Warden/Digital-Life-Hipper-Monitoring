@@ -284,29 +284,46 @@ def admin_login():
 
 ## 10. Admin Patients
 
-Admin users (therapists) can see there patient a list of their patients.
+Admin users (therapists) can see there patient a list of their patients. Super users (Accounts that can manage everything) will see all patients registered.
 
 ```python
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
-    # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
 
     if not valid:
         return redirect('/admin/login')
-    
-    therapist_id = db.therapist_id_from_cookie(cookie)
-    print(therapist_id)
 
-    # Extended list with 6 patients
-    patient_details = db.get_patients(therapist_id)
-    print(patient_details)
+    # Determine if user is a super admin
+    is_super_admin = db.is_super_user(cookie)
 
+    # Optional: fetch user UI preferences
+    preferences = db.get_user_preferences(cookie)
+
+    # Fetch patients based on role
+    if is_super_admin:
+        patient_details = db.get_all_patients()
+    else:
+        therapist_id = db.therapist_id_from_cookie(cookie)
+        patient_details = db.get_patients(therapist_id)
+
+    # Render template, empty or with patients
     if not patient_details:
-        return "Patients not found", 404
+        return render_template(
+            'admin_patients.html',
+            patients=[],
+            message="No patients found.",
+            is_super_admin=is_super_admin,
+            preferences=preferences
+        )
 
-    return render_template('admin_patients.html', patients=patient_details)
+    return render_template(
+        'admin_patients.html',
+        patients=patient_details,
+        is_super_admin=is_super_admin,
+        preferences=preferences
+    )
 ```
 
 ## 11. Patients

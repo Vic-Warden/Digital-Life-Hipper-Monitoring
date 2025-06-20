@@ -474,6 +474,9 @@ This taught me how to:
 
 Now, I can safely deploy multiple Raspberry Pi devices in the field without worrying about spoofed or unauthorized data submissions.
 
+## Learning story
+As a student, I want to learn how to parse CSV files with different data formats so I can accurately prepare data for backend APIs, ensuring that the data I send is complete, correct, and properly formatted.
+
 <br /> <br />
 
 # Sources

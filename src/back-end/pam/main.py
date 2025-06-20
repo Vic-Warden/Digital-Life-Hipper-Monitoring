@@ -165,7 +165,7 @@ def send_minute_data_to_backend(api_url, auth_token, mac_address, pam_data):
 
 def send_day_data_to_backend(api_url, auth_token, mac_address, pam_data):
     """
-    Sends PAM day-level data to the Flask backend.
+    Sends PAM day data to the Flask backend.
     """
     payload = {
         "auth_token": auth_token,
@@ -219,6 +219,23 @@ async def main_loop():
                             )
                             await day_data_downloader.run()
                             await update_log(mac_address, day_data=True)
+                            
+                            filepath = os.path.join(OUTPUT_DIR, f"day_data_{mac_address.replace(':', '')}.csv")
+                            pam_data = day_csv_to_json(filepath, label_id)
+                            if pam_data:
+                                success = send_day_data_to_backend(
+                                    api_url= BACKEND_URL + "/api/upload-day-data",
+                                    auth_token="1234567890",
+                                    mac_address=mac_address,
+                                    pam_data=pam_data
+                                )
+                                if success:
+                                    print("✅ Day Data successfully uploaded to backend.")
+                                else:
+                                    print("❌ Failed to upload Day data.")
+                            else:
+                                print("⚠️ No Day data to send.")
+                            
                             pulled_data = True
                             break
                         except (asyncio.TimeoutError, BleakError, Exception) as error:
@@ -256,11 +273,11 @@ async def main_loop():
                                     pam_data=pam_data
                                 )
                                 if success:
-                                    print("✅ Data successfully uploaded to backend.")
+                                    print("✅ Minute Data successfully uploaded to backend.")
                                 else:
-                                    print("❌ Failed to upload data.")
+                                    print("❌ Failed to upload Minute data.")
                             else:
-                                print("⚠️ No data to send.")
+                                print("⚠️ No Minute data to send.")
     
                             pulled_data = True
                             break

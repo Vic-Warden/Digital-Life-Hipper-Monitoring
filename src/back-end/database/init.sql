@@ -198,7 +198,11 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) VALUES (1, 1, 150, 'daily', 0);
+INSERT INTO `hipperdb`.`Goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) 
+VALUES 
+  (1, 1, 150, 'daily', 0),
+  (2, 1, 600, 'weekly', 0),
+  (3, 1, 2000, 'monthly', 0);
 
 COMMIT;
 

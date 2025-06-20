@@ -7,6 +7,7 @@ from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from werkzeug.security import check_password_hash
 
 
 class Database:
@@ -122,12 +123,11 @@ class Database:
 
         Returns True if the credentials are valid, False otherwise.
         """
-        query = "SELECT COUNT(*) FROM User WHERE email = %s AND password = %s"
-        params = (email, password)
-        result = self.do_query(query, params)
-        if result and result[0][0] == 1:
-            return True
-        return False
+        query = "SELECT password FROM User WHERE email = %s"
+        result = self.do_query(query, (email,))
+        if result:
+            stored_hashed_password = result[0][0]
+            return check_password_hash(stored_hashed_password, password)
 
     def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """

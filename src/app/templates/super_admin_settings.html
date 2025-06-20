@@ -15,7 +15,7 @@
   <!-- Content goes here -->
   <div id="admin-navbar"></div>
 
-  <div class="super-user-box"><H2>You are a super user</H2></div>
+  <div class="super-user-box"><H2>You are a super user, This means that you can manage all other super users and therapists!</H2></div>
 
   <div class="parent-container">
     {% if message %}
@@ -27,6 +27,8 @@
 
       <div class="card_superuser">
         <H3>Manage Super Users:</H3>
+        </br>
+        <H5>Promote therapist to super user:</H5>
 <!--          <label>Make therapist into superUser by email:</label>-->
 <!--            <div id="display-box-add-super-user" class="display-box-add-super-user">Hans-->
 <!--              <button class="super-save-button" onclick="saveSettings()">Make super user</button>-->
@@ -46,10 +48,6 @@
       <div class="display-box-superusers">
         {% if superusers %}
           {% for su in superusers %}
-<!--            <div class="superuser-item">-->
-<!--              <strong>{{ su.name }}</strong><br>-->
-<!--              {{ su.email }}-->
-<!--            </div>-->
             <div class="superuser-item" data-id="{{ su.id }}">
               <div class="superuser-info">
                 <strong>{{ su.name }}</strong><br>
@@ -68,13 +66,62 @@
     </div>
 
     <div class="card_admin_user">
-      <H3>Manage Admin Users:</H3>
-        <label>Add super user email:</label>
-          <div id="display-box-add-admin-user" class="display-box-add-admin-user">Hans</div>
+        <h3>Manage Therapists:</h3><br>
+
+    <!-- Add Therapist Form -->
+    <div class="add-therapist-form">
+      <h5>Add New Therapist</h5>
+      <input type="text"    id="therapist-name"     placeholder="Name" />
+      <input type="email"   id="therapist-email"    placeholder="Email" />
+      <input type="password"id="therapist-password" placeholder="Password" />
+      <button id="btn-add-therapist" onclick="addTherapist()">Add Therapist</button>
+      <span id="add-therapist-feedback" class="feedback"></span>
     </div>
 
-    <div class="container">
+    <!-- Search Box -->
+
+    <label>Search for therapist by name or email:</label>
+    <div class="search-therapist-form">
+      <input type="text" id="search-therapist" placeholder="Search therapists…" oninput="filterTherapists()" />
     </div>
+
+    <label>All Therapists:</label>
+      <div class="therapist-list display-box">
+        {% for therapist in therapists %}
+          <div class="therapist-item" data-id="{{ therapist.id }}">
+            <div class="therapist-info">
+              <strong>{{ therapist.name }}</strong><br>
+              {{ therapist.email }}
+            </div>
+            <button class="btn-delete" onclick="removeTherapist({{ therapist.id }}, this)">Delete</button>
+          </div>
+        {% else %}
+          <div class="therapist-item">No therapists found.</div>
+        {% endfor %}
+      </div>
+      <br>
+      <!-- Password Reset Form -->
+      <div class="password-reset-form">
+        <h5>Reset Therapist Password</h5>
+        <input
+          type="email"
+          id="reset-email"
+          placeholder="Therapist’s email…"
+        />
+        <input
+          type="password"
+          id="reset-password"
+          placeholder="New password…"
+        />
+        <button id="btn-reset-password" onclick="resetTherapistPassword()">
+          Reset Password
+        </button>
+        <span id="reset-feedback" class="feedback"></span>
+      </div>
+      <!-- end Password Reset Form -->
+    </div>
+      <div class="empty-box"></div>
+
       <div class="card">
         <h3>Profile</h3>
         <label>Name:</label>

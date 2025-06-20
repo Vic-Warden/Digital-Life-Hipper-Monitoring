@@ -430,7 +430,7 @@ class Database:
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
 
-    def is_super_user(self, cookie: int) -> bool:
+    def is_super_user(self, cookie: str) -> bool:
         """
         ### Check whether the given user is a super‑user.
 
@@ -811,3 +811,83 @@ class Database:
         result = self.do_query(query, params, fetch=False)
 
         return result is not None
+
+    def get_therapists(self) -> list[dict]:
+        """Return all therapists (is_therapist=1)."""
+        rows = self.do_query(
+            "SELECT id,name,email FROM User WHERE is_therapist = 1;", fetch=True)
+        return [{"id": r[0], "name": r[1], "email": r[2]} for r in rows] if rows else []
+
+
+    def add_therapist(self, name: str, email: str, password: str) -> bool:
+        """
+        Create a new therapist:
+         1. Insert into Therapist(name) → get therapist_id
+         2. Insert into User with is_therapist=1, fk_therapist_id, is_superuser
+        """
+        try:
+            cursor = self._connection.cursor()
+
+            # 1️⃣ Insert into Therapist
+            cursor.execute(
+                "INSERT INTO Therapist (name) VALUES (%s);",
+                (name,)
+            )
+            therapist_id = cursor.lastrowid
+
+            # 2️⃣ Insert into User (only the 7 specified columns)
+
+            cursor.execute("""
+                INSERT INTO `User`
+                  (`name`, `email`, `password`, `cookies`,
+                   `is_therapist`, `fk_therapist_id`, `is_superuser`)
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
+            """, (
+                name,
+                email,
+                password,
+                None,
+                1,
+                therapist_id,
+                0  # or 0 if you don't want them super immediately
+            ))
+
+            self._connection.commit()
+            cursor.close()
+            return True
+
+        except Exception as e:
+            print("add_therapist error:", e)
+            return False
+
+    def remove_therapist_by_id(self, therapist_id: int) -> bool:
+        """Delete a therapist (and cascade relationships)."""
+        result = self.do_query(
+            "DELETE FROM User WHERE id = %s AND is_therapist = 1;", (therapist_id,), fetch=False)
+        # fetch=False returns [("Query executed successfully",)] on success
+        return result is not None
+
+    def reset_therapist_password(self, email: str, new_password: str) -> bool:
+        """
+        Update the password for a therapist identified by email.
+        Returns True if exactly one row was updated.
+        """
+        # 1) Lookup the user and confirm they're a therapist
+        user = self.get_user_by_email(email)
+        if not user or not user.get('is_therapist'):
+            return False
+
+        # 2) Run the UPDATE against the PK, then commit and check rowcount
+        query = "UPDATE `User` SET password = %s WHERE id = %s"
+        try:
+            cursor = self._connection.cursor()
+            cursor.execute(query, (new_password, user['id']))
+            self._connection.commit()
+            affected = cursor.rowcount
+            cursor.close()
+            # Return True only if exactly one row was updated
+            return affected == 1
+        except Error as e:
+            print("reset_therapist_password error:", e)
+            return False
+

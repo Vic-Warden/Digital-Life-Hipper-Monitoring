@@ -511,6 +511,26 @@ def minute_csv_to_json(filepath, label_id):
     return data
 ```
 
+Using this, my system can:
+
+1. Ensure data integrity by sending correctly formatted JSON to the backend.
+
+2. Automatically handle multiple CSV formats without manual intervention.
+
+3. Avoid backend errors caused by bad or missing data fields.
+
+This taught me how to:
+
+1. Work with CSV files programmatically using Python’s csv module.
+
+2. Perform robust error handling during data parsing to avoid crashes.
+
+3. Convert and format timestamps properly for API compatibility.
+
+4. Prepare and structure data correctly for downstream database insertion.
+
+Now, I can reliably convert diverse CSV data into backend-ready JSON payloads, forming a solid foundation for my data that I send to the back-end.
+
 <br /> <br />
 
 # Sources

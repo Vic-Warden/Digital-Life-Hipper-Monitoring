@@ -531,6 +531,66 @@ This taught me how to:
 
 Now, I can reliably convert diverse CSV data into backend-ready JSON payloads, forming a solid foundation for my data that I send to the back-end.
 
+## Learning story
+As a student, I want to learn how to handle and validate JSON data in Python so I can ensure data integrity before inserting data into a database or sending it to backend APIs.
+
+### Learned
+At first, I was simply accepting JSON data and sending it directly to the backend without any validation, which caused errors or corrupted data when the JSON was malformed or missing required fields. I need a way I can ensure the JSON data is valid to prevent this. 
+
+To fix this:
+
+1. I learned how to safely parse JSON strings using Python’s built-in json module and handle exceptions such as JSONDecodeError.
+
+2. I studied how to validate the structure of JSON data by checking for the presence of required keys and ensuring values have the correct data types before further processing.
+
+3. I implemented helper functions that perform these validation checks and log or report errors clearly if the data does not meet expectations.
+
+4. I added error handling around JSON parsing and validation so the program can gracefully skip bad data or alert the user instead of crashing.
+
+5. I tested my validation logic with a variety of JSON samples — valid, incomplete, or malformed — to ensure robustness.
+
+```python
+import json
+
+def validate_pam_json(json_string):
+    try:
+        data = json.loads(json_string)
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON: {e}")
+        return None
+
+    required_keys = {"timestamp", "steps", "pam_score"}
+    for entry in data:
+        if not required_keys.issubset(entry.keys()):
+            print(f"Missing keys in entry: {entry}")
+            return None
+        if not isinstance(entry["steps"], int) or not isinstance(entry["pam_score"], (float, int)):
+            print(f"Incorrect data types in entry: {entry}")
+            return None
+
+    return data
+```
+
+Using this, my system can:
+
+1. Prevent invalid or incomplete data from reaching the backend or database.
+
+2. Provide clear feedback on what is wrong with the JSON data, aiding debugging.
+
+3. Safely handle unexpected data formats or errors without crashing.
+
+This taught me how to:
+
+1. Use Python’s json module effectively for parsing and serializing data.
+
+2. Perform structural and type validations on JSON data.
+
+3. Write defensive code that anticipates bad input and handles it gracefully.
+
+4. Improve the reliability and robustness of data processing pipelines involving JSON.
+
+Now, I can confidently process JSON data in my projects, ensuring it is clean, validated, and ready for backend or storage.
+
 <br /> <br />
 
 # Sources

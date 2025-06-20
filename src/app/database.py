@@ -79,6 +79,7 @@ class Database:
             print("No connection to the database.")
             return None
         # Execute the query and fetch the results
+        cursor = None
         try:
             self._connection.autocommit = True
             cursor = self._connection.cursor()
@@ -93,7 +94,8 @@ class Database:
             return None
         # At the end, close the cursor
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
 
     def check_valid_table(self, table_name: str) -> bool:
         """
@@ -803,4 +805,28 @@ class Database:
             "DELETE FROM User WHERE id = %s AND is_therapist = 1;", (therapist_id,), fetch=False)
         # fetch=False returns [("Query executed successfully",)] on success
         return result is not None
+
+    def reset_therapist_password(self, email: str, new_password: str) -> bool:
+        """
+        Update the password for a therapist identified by email.
+        Returns True if exactly one row was updated.
+        """
+        # 1) Lookup the user and confirm they're a therapist
+        user = self.get_user_by_email(email)
+        if not user or not user.get('is_therapist'):
+            return False
+
+        # 2) Run the UPDATE against the PK, then commit and check rowcount
+        query = "UPDATE `User` SET password = %s WHERE id = %s"
+        try:
+            cursor = self._connection.cursor()
+            cursor.execute(query, (new_password, user['id']))
+            self._connection.commit()
+            affected = cursor.rowcount
+            cursor.close()
+            # Return True only if exactly one row was updated
+            return affected == 1
+        except Error as e:
+            print("reset_therapist_password error:", e)
+            return False
 

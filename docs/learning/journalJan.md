@@ -68,6 +68,9 @@ The difference maker is `- FLASK_DEBUG=1`. Now everything works as expected!
 
 Going into this I actually had no clue how to approach it. Thanks to Indigo he told me where to look and how it should be implemented from a general perspective. Knowing that, I first went to `ChatGPT` and asked for some examples. That way I sort of knew what my implementation was going to look like. So first I decided to start working on the python function that converts the database data to averag values for my frontend graph to process it. This was easier than thought thanks to the python library `pandas`. That lib has many useful functions for data conversion. Then I went to `__init__.py` to add onto the homepage function. Via that way I could expose the average data into a html file. Then through Indigo's knowledge I used Jinja to have the data be displayed in a dynamic way in my html file. 
 
+#306 As a student, I want to learn whether I need to create an extra python func for my extra data which needs to be in a html file.
+
+Yesterday I looked into if I needed to create an extra function for the thing I wanted to be able to do. I like writing clean code, so it was worth investigating if this was the case. And yes, I was correct. Since I am already parsing data the the patient page via a func, I decided I can easily expand that function so that I can send more data to the patient front page. So I looked into the data I also needed, threw it in the `database.py` and done. That was indeed the correct move.
 
 ## Journal
 

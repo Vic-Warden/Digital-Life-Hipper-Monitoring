@@ -31,12 +31,6 @@
               <button type="submit" title="Change password">Change password</button>
             </form>
 
-            <!-- Delete Patient -->
-            <form action="{{ url_for('admin_delete_patient', patient_id=patient.id) }}" method="POST"
-                  onsubmit="return confirm('Voulez-vous vraiment supprimer ce patient ?');">
-              <button type="submit" title="Delete patient" style="color: red;">Delete</button>
-            </form>
-
             <!-- More details -->
             <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}"
               style="text-decoration: none; color: inherit;">
@@ -68,6 +62,21 @@
         <button type="submit" class="patient-button">Add Patient</button>
       </form>
     </div>
+
+        <!-- Manual Password Change using Email -->
+    <div class="addPatient-card">
+      <h3>Manual Password Change</h3>
+      <form action="{{ url_for('admin_change_patient_password') }}" method="POST">
+        <label for="reset-email">Patient Email</label>
+        <input type="email" id="reset-email" name="email" required />
+
+        <label for="reset-password">New Password</label>
+        <input type="password" id="reset-password" name="new_password" required />
+
+        <button type="submit" class="patient-button">Confirm Password Change</button>
+      </form>
+    </div>
+
   </div>
 
 

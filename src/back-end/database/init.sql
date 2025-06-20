@@ -78,7 +78,7 @@ DROP TABLE IF EXISTS `hipperdb`.`Device` ;
 
 CREATE TABLE IF NOT EXISTS `hipperdb`.`Device` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `patient_id_device` INT NOT NULL,
+  `patient_id_device` INT NULL,
   `device_label` VARCHAR(10) NOT NULL,
   `device_id` INT NOT NULL,
   `auth_token` VARCHAR(32) NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
   INDEX `device_id_idx` (`device_id` ASC) VISIBLE,
   CONSTRAINT `device_id_fk`
     FOREIGN KEY (`device_id`)
-    REFERENCES `hipperdb`.`Device` (`patient_id_device`)
+    REFERENCES `hipperdb`.`Device` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;

@@ -493,3 +493,86 @@ def set_user_preferences(self, cookie: str, dark_mode: bool, large_font: bool, l
 
     return result is not None
 ```
+
+### Is therapist
+
+`is_therapist(self, cookie: str) -> bool`
+
+Checks to see if the user is a therapist based on the cookie
+
+```python
+def is_therapist(self, cookie: str) -> bool:
+    """
+    Check if the user is a therapist based on their cookie.
+
+    Returns True if the user is a therapist, False otherwise.
+    """
+    query = "SELECT is_therapist FROM User WHERE cookies = %s;"
+    params = (cookie,)
+    result = self.do_query(query, params, fetch=True)
+
+    if result and len(result) > 0:
+        return result[0][0] == 1
+    return False
+```
+
+### Get devices
+
+`get_devices(self) -> list[dict] | None`
+
+Gets all the devices in the database.
+
+```python
+def get_devices(self) -> list[dict] | None:
+    """
+    Get a list of all devices in the database.
+    Returns a list of dictionaries containing device details or None if not found.
+    """
+    query = """
+        SELECT patient_id_device, device_label, device_id
+        FROM Device;
+    """
+    result = self.do_query(query, fetch=True)
+
+    if result:
+        return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+    return None
+```
+
+### Bind device to patient
+
+`bind_device_to_patient(self, device_id: int, patient_id: int) -> bool`
+
+Binds a hipper device to a patient using the `device_id` and the `patient_id`
+
+```python
+def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:
+    """
+    Bind a device to a patient by updating the patient_id_device field.
+    Returns True if successful, False otherwise.
+    """
+    query = "UPDATE Device SET patient_id_device = %s WHERE device_id = %s;"
+    params = (patient_id, device_id)
+    result = self.do_query(query, params, fetch=False)
+
+    return result is not None
+```
+
+### Unbind device from patient
+
+`unbind_device_from_patient(self, device_id: int) -> bool`
+
+Unbinds a hipper device from a patient using the `device_id`
+
+```python
+def unbind_device_from_patient(self, device_id: int) -> bool:
+    """
+    Unbind a device from its current patient by setting patient_id_device to NULL.
+    Returns True if successful, False otherwise.
+    """
+    query = "UPDATE Device SET patient_id_device = NULL WHERE device_id = %s;"
+    params = (device_id,)
+    result = self.do_query(query, params, fetch=False)
+
+    return result is not None
+```

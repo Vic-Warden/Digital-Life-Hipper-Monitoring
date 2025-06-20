@@ -78,6 +78,8 @@ class Database:
         if not self._connection:
             print("No connection to the database.")
             return None
+
+        cursor = None
         # Execute the query and fetch the results
         try:
             self._connection.autocommit = True
@@ -93,7 +95,8 @@ class Database:
             return None
         # At the end, close the cursor
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
 
     def check_valid_table(self, table_name: str) -> bool:
         """
@@ -625,7 +628,7 @@ class Database:
             'monthly': monthly_avg.reset_index().to_dict(orient='records'),
             'last_data_pull_ago': last_data_pull_ago,
             'total_steps_today': int(today_steps)
-    }
+        }
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """
@@ -757,3 +760,54 @@ class Database:
         if result and len(result) > 0:
             return result[0][0], result[0][1]
         return None
+
+    def is_therapist(self, cookie: str) -> bool:
+        """
+        Check if the user is a therapist based on their cookie.
+
+        Returns True if the user is a therapist, False otherwise.
+        """
+        query = "SELECT is_therapist FROM User WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0] == 1
+        return False
+
+    def get_devices(self) -> list[dict] | None:
+        """
+        Get a list of all devices in the database.
+        Returns a list of dictionaries containing device details or None if not found.
+        """
+        query = """
+            SELECT patient_id_device, device_label, device_id
+            FROM Device;
+        """
+        result = self.do_query(query, fetch=True)
+
+        if result:
+            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+        return None
+
+    def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:
+        """
+        Bind a device to a patient by updating the patient_id_device field.
+        Returns True if successful, False otherwise.
+        """
+        query = "UPDATE Device SET patient_id_device = %s WHERE device_id = %s;"
+        params = (patient_id, device_id)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None
+
+    def unbind_device_from_patient(self, device_id: int) -> bool:
+        """
+        Unbind a device from its current patient by setting patient_id_device to NULL.
+        Returns True if successful, False otherwise.
+        """
+        query = "UPDATE Device SET patient_id_device = NULL WHERE device_id = %s;"
+        params = (device_id,)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None

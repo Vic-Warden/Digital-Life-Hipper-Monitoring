@@ -25,12 +25,12 @@
         {% for patient in patients %}
         <div class="patient-card-item" data-name="{{ patient.name | lower }}">
           <div class="patient-card-box">
-            <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}"
-              style="text-decoration: none; color: inherit;">
-              <strong>{{ patient.name }}</strong><br>
-              Email: {{ patient.email }}
-            </a>
-          </div>
+            <!-- Change password-->
+            <form action="{{ url_for('admin_update_patient_password', patient_id=patient.id) }}" method="POST" style="margin-bottom: 5px;">
+              <input type="password" name="new_password" placeholder="New password" required style="width: 140px;" />
+              <button type="submit" title="Change password">Change password</button>
+            </form>
+
         </div>
         {% endfor %}
         {% else %}

@@ -620,7 +620,7 @@ class Database:
             'monthly': monthly_avg.reset_index().to_dict(orient='records'),
             'last_data_pull_ago': last_data_pull_ago,
             'total_steps_today': int(today_steps)
-    }
+        }
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """
@@ -752,3 +752,17 @@ class Database:
         if result and len(result) > 0:
             return result[0][0], result[0][1]
         return None
+
+    def is_therapist(self, cookie: str) -> bool:
+        """
+        Check if the user is a therapist based on their cookie.
+
+        Returns True if the user is a therapist, False otherwise.
+        """
+        query = "SELECT is_therapist FROM User WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0] == 1
+        return False

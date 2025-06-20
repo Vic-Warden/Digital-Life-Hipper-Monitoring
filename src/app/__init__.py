@@ -49,13 +49,13 @@ def home():
         if result:
             # Result returns a legitmate row containing the cookie
             device_id = result[0][0]  # result is a list of tuples
-            client_name = result[0][1] 
+            client_name = result[0][1]
             data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
             patient_data = db.do_query(data_query, (device_id,))
             calculated_data = db.calculate_patient_data(patient_data)
 
             return render_template('home.html', calculated=calculated_data,
-             preferences=db.get_user_preferences(cookie), name=client_name)
+                                   preferences=db.get_user_preferences(cookie), name=client_name)
         else:
             return redirect('/login')
     else:
@@ -203,16 +203,15 @@ def admin_settings():
                 }
             }), 200
 
-
         # if db.is_super_user(cookie):
         #     return render_template("super_admin_settings.html", preferences=db.get_user_preferences(cookie))
-        if db.is_super_user(cookie):# fetch super‑users for both GET and POST renders
+        if db.is_super_user(cookie):  # fetch super‑users for both GET and POST renders
             superusers = db.get_superusers()
 
             return render_template(
                 "super_admin_settings.html",
-                preferences = db.get_user_preferences(cookie),
-                superusers = superusers)
+                preferences=db.get_user_preferences(cookie),
+                superusers=superusers)
         return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
@@ -337,6 +336,34 @@ def admin_login_page():
     else:
         # Render the admin_login.html
         return render_template('admin_login.html')
+
+
+@app.route('/admin-manage-devices', methods=['GET', 'POST'])
+def admin_manage_devices():
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    if request.method == 'POST':
+        # Handle device addition
+        mac_address = request.form.get('mac_address')
+        patient_id = request.form.get('patient_id')
+
+        if not mac_address or not patient_id:
+            return "Missing required fields", 400
+
+        # success = db.add_device(mac_address, patient_id)
+        success = True
+
+        if not success:
+            return "Failed to add device", 400
+
+        return
+
+    return render_template('admin_manage_devices.html', preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/change-email', methods=['POST'])
@@ -524,6 +551,7 @@ def upload_minute_data():
 
     return jsonify({"message": "PAM minute data uploaded successfully"}), 200
 
+
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
     mac = mac_address.upper()
@@ -582,6 +610,7 @@ def routine_form():
 
     return render_template("routine_form.html")
 
+
 @app.route('/api/get-superusers', methods=['GET'])
 def get_superusers(self):
     """
@@ -599,9 +628,11 @@ WHERE `is_superuser` = 1;
         return None
 
     return [
-      {"id": r[0], "name": r[1], "email": r[2]}
-      for r in rows
+        {"id": r[0], "name": r[1], "email": r[2]}
+        for r in rows
     ]
+
+
 @app.route('/api/remove-superuser', methods=['POST'])
 def api_remove_superuser():
     """
@@ -624,6 +655,7 @@ def api_remove_superuser():
         return jsonify({"error": "Database update failed"}), 500
 
     return jsonify({"msg": "User demoted"}), 200
+
 
 @app.route('/api/add-superuser', methods=['POST'])
 def api_add_superuser():
@@ -658,8 +690,8 @@ def api_add_superuser():
         return jsonify({"error": "Database update failed"}), 500
 
     return jsonify({
-      "msg": f"{user['name']} is now a super‑user",
-      "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
+        "msg": f"{user['name']} is now a super‑user",
+        "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
     }), 200
 
 

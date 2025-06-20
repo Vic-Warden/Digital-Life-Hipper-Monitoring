@@ -1,0 +1,203 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    min-height: 100vh;
+}
+
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #a8d8f0 0%, #e6f3ff 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #333;
+}
+
+.card,
+.card * {
+    font-family: Arial, sans-serif;
+}
+
+/* Base layout for larger screens */
+.container {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 225px;
+    padding-bottom: 50px;
+    padding-left: 225px;
+    padding-right: 225px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Card styling */
+.card {
+    border: 2px solid #74a6d4;
+    border-radius: 6px;
+    padding: 20px;
+    width: 250px;
+    box-sizing: border-box;
+    background: white;
+}
+
+.card h3 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 1em;
+}
+
+.display-box {
+    border: 1px solid #74a6d4;
+    border-radius: 6px;
+    padding: 8px;
+    min-height: 30px;
+    background-color: #fff;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 1em;
+    word-break: break-word;
+}
+
+.setting {
+    margin-bottom: 20px;
+}
+
+.toggle-bar {
+    display: flex;
+    height: 32px;
+    border: 1px solid #74a6d4;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 180px;
+}
+
+.half {
+    width: 50%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+    line-height: 32px;
+    font-size: 1em;
+}
+
+.light {
+    background: white;
+}
+
+.dark {
+    background: #87BAE8;
+    color: white;
+}
+
+/* ✅ Mobile-specific styles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .card {
+        width: 90%;
+        max-width: 400px;
+    }
+
+    .card h3 {
+        font-size: 1.25em;
+    }
+
+    .display-box {
+        font-size: 0.95em;
+        padding: 0.6em;
+    }
+
+    label {
+        font-size: 0.95em;
+    }
+
+    .toggle-bar {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .half {
+        font-size: 0.95em;
+        line-height: 32px;
+    }
+}
+
+.save-button {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    background-color: #9aceff;
+    color: black;
+    border: 2px solid #74a6d4;
+    border-radius: 5px;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    cursor: pointer;
+}
+
+.save-button:hover {
+    background-color: #74a6d4;
+    color: white;
+}
+
+.return-message {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    height: fit-content;
+    padding: 20px 50px;
+    text-align: center;
+    background-color: rgb(150, 255, 150);
+    color: black;
+    border: 2px solid #000000;
+    border-radius: 5px;
+    opacity: 1;
+    transition: opacity 1s ease-out;
+    z-index: 9999;
+}
+
+.return-message.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .return-message {
+        width: 70%;
+        padding: 10px 20px;
+        top: 80px;
+    }
+}

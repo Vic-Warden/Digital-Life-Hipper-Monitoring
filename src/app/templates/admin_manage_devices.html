@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/admin_manage_devices.css" />
+    <link rel="stylesheet" href="../static/css/admin_navbar.css" />
+</head>
+
+<body>
+
+    <!-- Content goes here -->
+    <div id="admin-navbar"></div>
+
+    <div class="parent-container">
+        {% if message %}
+        <div class="return-message">
+            <p>{{ message }}</p>
+        </div>
+        {% endif %}
+        <div class="container">
+        </div>
+    </div>
+
+    <script src="../static/js/admin_manage_devices.js"></script>
+    <script src="../static/js/admin_navbar.js"></script>
+</body>
+
+</html>

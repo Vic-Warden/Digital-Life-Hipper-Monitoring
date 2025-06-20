@@ -308,28 +308,38 @@ def upload_minute_data(self, mac_address: str, pam_data: list):
 Uploads day data to the database using patient_id.
 
 ```python
-def upload_day_data(self, patient_id: int, day_data: list):
+ def upload_day_data(self, mac_address: str, day_data: list):
     """
     Upload daily PAM data for a patient.
     Expects day_data to be a list of dictionaries with keys:
     - 'timestamp'
     - 'steps'
-    - 'pam_score' 
+    - 'pam_score'
+    - 'zone_1'
+    - 'zone_2'
+    - 'zone_3'
     """
-    device_id = self.device_id_from_patient_id(patient_id)
+    patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
+        mac_address)
 
     if not day_data:
         return False
 
     query = """
-        INSERT INTO Data (device_id, timestamp, steps, PAM_score)
-        VALUES (%s, %s, %s, %s);
+        INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone_1, zone_2, zone_3, patient_id)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
     params = [
-        (device_id, data['timestamp'], data['steps'],
-            data['pam_score'])
-        for data in day_data
-    ]
+        (
+            device_id,
+            data['timestamp'],
+            data['steps'],
+            data['pam_score'],
+            data['zone_1'],
+            data['zone_2'],
+            data['zone_3'],
+            patient_id
+        ) for data in day_data]
 
     try:
         cursor = self._connection.cursor()

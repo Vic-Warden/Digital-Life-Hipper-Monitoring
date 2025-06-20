@@ -235,24 +235,42 @@ def admin_login():
 
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
-    # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
 
     if not valid:
         return redirect('/admin/login')
 
-    therapist_id = db.therapist_id_from_cookie(cookie)
-    print(therapist_id)
+    # Determine if user is a super admin
+    is_super_admin = db.is_super_user(cookie)
 
-    # list with patients
-    patient_details = db.get_patients(therapist_id)
-    print(patient_details)
+    # Optional: fetch user UI preferences
+    preferences = db.get_user_preferences(cookie)
 
+    # Fetch patients based on role
+    if is_super_admin:
+        patient_details = db.get_all_patients()
+    else:
+        therapist_id = db.therapist_id_from_cookie(cookie)
+        patient_details = db.get_patients(therapist_id)
+
+    # Render template, empty or with patients
     if not patient_details:
-        return render_template('admin_patients.html', patients=[], message="No patients found.")
+        return render_template(
+            'admin_patients.html',
+            patients=[],
+            message="No patients found.",
+            is_super_admin=is_super_admin,
+            preferences=preferences
+        )
 
-    return render_template('admin_patients.html', patients=patient_details)
+    return render_template(
+        'admin_patients.html',
+        patients=patient_details,
+        is_super_admin=is_super_admin,
+        preferences=preferences
+    )
+
 
 
 @app.route('/api/add-patient', methods=['POST'])

@@ -25,6 +25,7 @@ therapist_id_from_cookie() # Retrieves the therapist's ID associated with a give
 connect_patient_to_therapist() # Creates an association between a patient and a therapist in the database.
 upload_day_data()       # Uploads day data from the basestation to the database
 upload_minute_data()    # Uploads minute, or activity data to the databse
+get_all_patients()      # Gets all patients registered
 ```
 
 ### How to execute queries
@@ -575,4 +576,25 @@ def unbind_device_from_patient(self, device_id: int) -> bool:
     result = self.do_query(query, params, fetch=False)
 
     return result is not None
+```
+
+### Get all patients
+
+this function gets all users from the database that are patients.
+
+```python
+def get_all_patients(self) -> list[dict] | None:
+    """
+    Get a list of all users who are patients (not therapists).
+    """
+    query = """
+        SELECT id, name, email
+        FROM User
+        WHERE is_therapist = 0;
+    """
+    result = self.do_query(query, fetch=True)
+
+    if result:
+        return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
+    return None 
 ```

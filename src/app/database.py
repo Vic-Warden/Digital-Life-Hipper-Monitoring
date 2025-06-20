@@ -325,6 +325,22 @@ class Database:
             "devices": devices,
             "goals": goals
         }
+    
+    def get_all_patients(self) -> list[dict] | None:
+        """
+        Get a list of all users who are patients (not therapists).
+        """
+        query = """
+            SELECT id, name, email
+            FROM User
+            WHERE is_therapist = 0;
+        """
+        result = self.do_query(query, fetch=True)
+
+        if result:
+            return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
+        return None  # Now correctly outside the if-block
+
 
     def get_patients(self, therapeut_id: int) -> list[dict] | None:
         """

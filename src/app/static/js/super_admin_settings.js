@@ -248,6 +248,7 @@ async function addTherapist() {
     feedback.style.color = "red";
     console.error('Add therapist error:', err);
   }
+  location.reload();
 }
 
 
@@ -263,6 +264,8 @@ async function removeTherapist(id, btn) {
   } else {
     alert('Failed to delete');
   }
+
+  location.reload();
 }
 
 // Filter live

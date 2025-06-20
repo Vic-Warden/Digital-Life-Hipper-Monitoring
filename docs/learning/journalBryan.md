@@ -480,6 +480,16 @@ As a student, I want to learn how to parse CSV files with different data formats
 ### Learned
 At first, I was simply opening CSV files and trying to send raw data to the backend, but this quickly led to errors and mismatches between what my backend expected and what I actually sent. Different CSV files had different columns and formats — for example, minute-level data had timestamps with steps and PAM scores, while day-level data included zones and aggregated activity scores.
 
+To fix this:
+
+1. I carefully studied the CSV file structures and identified which columns were required for each data type.
+
+2. I wrote dedicated parsing functions for each CSV format. These functions read the CSV, convert timestamps to ISO format, cast values to the correct types (int, float), and handled any missing or malformed rows gracefully.
+
+3. I added extra fields to the parsed data as needed, such as a data_label or patient_id, to ensure the backend received all the context it needed.
+
+4. I tested these functions thoroughly by running them on sample CSV files and verifying the output before sending it to the backend API.
+
 <br /> <br />
 
 # Sources

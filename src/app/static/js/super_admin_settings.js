@@ -277,6 +277,47 @@ function filterTherapists() {
   });
 }
 
+/**
+ * Prompt for confirmation and call API to reset a therapist's password.
+ */
+async function resetTherapistPassword() {
+  const emailEl = document.getElementById('reset-email');
+  const pwdEl   = document.getElementById('reset-password');
+  const fb      = document.getElementById('reset-feedback');
+
+  const email = emailEl.value.trim().toLowerCase();
+  const newPassword = pwdEl.value;
+
+  if (!email || !newPassword) {
+    fb.textContent = 'Email and new password are required.';
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to reset password for ${email}?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/reset-therapist-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, new_password: newPassword })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      fb.textContent = 'Password reset successfully.';
+      emailEl.value = '';
+      pwdEl.value = '';
+    } else {
+      fb.textContent = data.error || 'Failed to reset password.';
+    }
+  } catch (err) {
+    fb.textContent = 'Network error.';
+  }
+}
+
+
 // initialize
 document.addEventListener('DOMContentLoaded', loadTherapists);
 window.onload = loadTherapists;

@@ -247,13 +247,13 @@ In this file you will find all the css code that is used to style is page.
 **Chatgpt was used to clean up the written code**
 
 ## admin_login
-The admin login is used by therapist to login to their account and see their personal information, but also see the data from their patients. The styling of this page is the same as the login page for the patients. The only difference is that it wil send you to a home page only accessible to therapists.
+The admin login is used by therapist to login to their account and see their personal information, but also see the data from their patients. The styling of this page is the same as the login page for the patients. The only difference is that it wil send you to a home page only accessible to therapists. On both login pages there is a button that will redirect you to /admin/login on patient page or /login on admin page. In this way it is easy for users to go to the login page that is made for them.
 
 **Figma design:**
 ![FigmaLogin](/docs/assets/Figma/LoginPage.png)
 
 **Actual design:**
-![FigmaLogin](/docs/assets/ActualLoginPage.png)
+![FigmaLogin](/docs/assets/newLoginPage.png)
 
 ### admin_login html
 In the html file for the login page you will find the code for the login form and the image box. In the login form the /admin/login endpoint which has a POST method is also called. In the image box you will find the image of the Hipper logo. 

@@ -42,10 +42,28 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
   }
-  
+
+  .adminLogin-link {
+    padding-left: 150px;
+    font-size: 18px;
+    user-select: none;
+  }
+
+  .adminLoginButton {
+    color: #126bbe;
+    width: 90px;
+    margin-bottom: 6px;
+    text-decoration: none;
+  }
+
+  .p {
+    color: #000;
+  }
+
   form {
     display: flex;
     flex-direction: column;
+    padding-left: 150px;
   }
   
   form label {

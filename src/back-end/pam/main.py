@@ -4,6 +4,7 @@ import os
 import aiohttp
 import requests
 from minute_csv_to_json import minute_csv_to_json
+from day_csv_to_json import day_csv_to_json
 from datetime import datetime, timedelta
 from bleak import BleakScanner
 from bleak.exc import BleakError
@@ -145,7 +146,7 @@ def generate_new_label():
 
 def send_minute_data_to_backend(api_url, auth_token, mac_address, pam_data):
     """
-    Sends PAM data to the Flask backend.
+    Sends minute PAM data to the Flask backend.
     """
     payload = {
         "auth_token": auth_token,
@@ -160,6 +161,25 @@ def send_minute_data_to_backend(api_url, auth_token, mac_address, pam_data):
         return response.status_code == 200
     except Exception as e:
         print("Error sending data to backend:", e)
+        return False
+
+def send_day_data_to_backend(api_url, auth_token, mac_address, pam_data):
+    """
+    Sends PAM day-level data to the Flask backend.
+    """
+    payload = {
+        "auth_token": auth_token,
+        "mac_address": mac_address,
+        "pam_data": json.dumps(pam_data)
+    }
+
+    try:
+        response = requests.post(api_url, data=payload)
+        print(f"📤 Status Code: {response.status_code}")
+        print("🧾 Response:", response.json())
+        return response.status_code == 200
+    except Exception as e:
+        print("❌ Error sending day-level data to backend:", e)
         return False
 
 

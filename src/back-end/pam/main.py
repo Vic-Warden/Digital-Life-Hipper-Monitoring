@@ -143,7 +143,7 @@ def generate_new_label():
     next_label_number = max(existing_label_numbers) + 1 if existing_label_numbers else DEVICE_LABEL_START
     return f"label_{next_label_number}"
 
-def send_data_to_backend(api_url, auth_token, mac_address, pam_data):
+def send_minute_data_to_backend(api_url, auth_token, mac_address, pam_data):
     """
     Sends PAM data to the Flask backend.
     """
@@ -229,7 +229,7 @@ async def main_loop():
                             filepath = os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}.csv")
                             pam_data = minute_csv_to_json(filepath, label_id)
                             if pam_data:
-                                success = send_data_to_backend(
+                                success = send_minute_data_to_backend(
                                     api_url= BACKEND_URL + "/api/upload-minute-data",
                                     auth_token="1234567890",
                                     mac_address=mac_address,

@@ -762,5 +762,12 @@ class Database:
             print("Error deleting patient:", e)
         return False
 
-
+    def update_patient_password(self, patient_id, hashed_password):
+        try:
+            query = "UPDATE User SET password = %s WHERE id = %s AND is_therapist = 0"
+            self.do_query(query, (hashed_password, patient_id))
+            return True
+        except Exception as e:
+            print("Error updating password:", e)
+            return False
 

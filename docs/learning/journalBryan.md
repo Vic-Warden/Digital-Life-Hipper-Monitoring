@@ -537,6 +537,18 @@ As a student, I want to learn how to handle and validate JSON data in Python so 
 ### Learned
 At first, I was simply accepting JSON data and sending it directly to the backend without any validation, which caused errors or corrupted data when the JSON was malformed or missing required fields. I need a way I can ensure the JSON data is valid to prevent this. 
 
+To fix this:
+
+1. I learned how to safely parse JSON strings using Python’s built-in json module and handle exceptions such as JSONDecodeError.
+
+2. I studied how to validate the structure of JSON data by checking for the presence of required keys and ensuring values have the correct data types before further processing.
+
+3. I implemented helper functions that perform these validation checks and log or report errors clearly if the data does not meet expectations.
+
+4. I added error handling around JSON parsing and validation so the program can gracefully skip bad data or alert the user instead of crashing.
+
+5. I tested my validation logic with a variety of JSON samples — valid, incomplete, or malformed — to ensure robustness.
+
 <br /> <br />
 
 # Sources

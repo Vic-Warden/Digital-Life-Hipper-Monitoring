@@ -556,20 +556,6 @@ def update_log(mac_address):
 
     return {"message": "Log updated"}, 200
 
-@app.route('/admin/delete-patient/<int:patient_id>', methods=['POST'])
-def admin_delete_patient(patient_id):
-    cookie = request.cookies.get('auth_cookie')
-    valid, _ = db.verify_cookie(cookie)
-
-    if not valid:
-        return redirect('/admin/login')
-
-    success = db.delete_patient(patient_id)
-    if not success:
-        return "Error delete", 500
-
-    return redirect('/admin/patients')
-
 @app.route('/admin/update-password/<int:patient_id>', methods=['POST'])
 def admin_update_patient_password(patient_id):
     cookie = request.cookies.get('auth_cookie')

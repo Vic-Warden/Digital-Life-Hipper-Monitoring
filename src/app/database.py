@@ -110,14 +110,14 @@ class Database:
         """
         ### Check if the email is already registered in the database.
 
-        Returns True if the email exists, False otherwise.
+        Returns False if the email exists, True otherwise.
         """
         query = "SELECT COUNT(*) FROM User WHERE email = %s"
         params = (email,)
         result = self.do_query(query, params)
         if result[0][0] > 0:
-            return True
-        return False
+            return False
+        return True
 
     def check_credentials(self, email: str, password: str) -> bool:
         """

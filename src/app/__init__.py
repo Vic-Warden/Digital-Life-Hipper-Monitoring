@@ -4,7 +4,8 @@ from flask import Flask, render_template, redirect, request, session, make_respo
 from database import Database
 import json
 from dotenv import load_dotenv
-
+import re
+EMAIL_REGEX = r"^[^@]+@[^@]+\.[^@]+$"
 
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
@@ -272,8 +273,14 @@ def admin_add_patient():
     if not all([name, email, password, cookie]):
         return "Missing required fields", 400
 
+    # 2) Email format check
+    if not re.match(EMAIL_REGEX, email):
+        return "Invalid email address.", 400
+
+    # Check if email exists
     if not db.check_email(email):
         return "Email already exists", 400
+
 
     # Call DB logic to insert the patient
     success = db.add_patient(name, email, password, cookie)

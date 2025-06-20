@@ -450,3 +450,6 @@ I learned how to clearly define a user story by focusing on the user’s role, o
 - I talked about how I could refine the user story for a better grade with my team members.
 
 **AI tools like ChatGPT were used for language refinement.**
+
+## Learning story 302
+as a student, i want to learn how to call endpoints with jinja2 in html, so I can use it in the project.

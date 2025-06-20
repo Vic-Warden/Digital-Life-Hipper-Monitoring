@@ -602,14 +602,15 @@ class Database:
         finally:
             cursor.close()
 
-    def calculate_patient_data(self, data):
+    def calculate_patient_data(self, data, patient_id_goal: int):
         # Create a DataFrame taken from db `Data` structure
         df = pd.DataFrame(data, columns=[
-            'id', 'device_id', 'timestamp', 'steps', 'PAM_score', 'zone_1', 'zone_2', 'zone_3', 'patient_id'])
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
+            'zone_1', 'zone_2', 'zone_3', 'patient_id'
+        ])
 
         # Ensure timestamp is datetime and localized
-        df['timestamp'] = pd.to_datetime(
-            df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
 
         # Set timestamp as index
         df.set_index('timestamp', inplace=True)
@@ -637,14 +638,52 @@ class Database:
             minutes = remainder // 60
             last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
 
+        # --- Fetch goal data based on availability priority ---
+        goal_data = {"message": "No goal data available for the given patient ID."}
+        goal_types = ['daily', 'weekly', 'monthly']
+
+        for goal_type in goal_types:
+            query = """
+                SELECT
+                    id AS goal_id,
+                    patient_id_goal,
+                    patient_goal,
+                    type AS goal_type,
+                    reached
+                FROM Goal
+                WHERE patient_id_goal = %s AND type = %s;
+            """
+            results = self.do_query(query, (patient_id_goal, goal_type), fetch=True)
+            if results:
+                # Calculate total steps for the selected goal type
+                if goal_type == 'daily':
+                    steps_total = df[df.index.date == today]['steps'].sum()
+                elif goal_type == 'weekly':
+                    start_of_week = now - pd.to_timedelta(now.weekday(), unit='d')
+                    steps_total = df[df.index.date >= start_of_week.date()]['steps'].sum()
+                elif goal_type == 'monthly':
+                    start_of_month = now.replace(day=1)
+                    steps_total = df[df.index.date >= start_of_month.date()]['steps'].sum()
+                else:
+                    steps_total = 0
+
+                goal_data = {
+                    "available_type": goal_type.capitalize(),
+                    "goals": results,
+                    "steps_for_goal_period": int(steps_total)
+                }
+                break
+
         return {
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
             'monthly': monthly_avg.reset_index().to_dict(orient='records'),
             'last_data_pull_ago': last_data_pull_ago,
-            'total_steps_today': int(today_steps)
+            'total_steps_today': int(today_steps),
+            'goal_data': goal_data
         }
+
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """

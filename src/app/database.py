@@ -784,3 +784,25 @@ class Database:
         if result:
             return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
         return None
+
+    def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:
+        """
+        Bind a device to a patient by updating the patient_id_device field.
+        Returns True if successful, False otherwise.
+        """
+        query = "UPDATE Device SET patient_id_device = %s WHERE device_id = %s;"
+        params = (patient_id, device_id)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None
+
+    def unbind_device_from_patient(self, device_id: int) -> bool:
+        """
+        Unbind a device from its current patient by setting patient_id_device to NULL.
+        Returns True if successful, False otherwise.
+        """
+        query = "UPDATE Device SET patient_id_device = NULL WHERE device_id = %s;"
+        params = (device_id,)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None

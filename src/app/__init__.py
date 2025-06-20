@@ -712,14 +712,14 @@ def add_device_to_patient():
         return jsonify({"error": "Not authorized"}), 401
 
     data = request.get_json()
-    mac_address = data.get('device_id')
+    device_id = data.get('device_id')
     patient_id = data.get('patient_id')
 
-    if not mac_address or not patient_id:
-        return jsonify({"error": "Mac Address and Patient ID are required"}), 400
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
 
-    # success = db.add_device(mac_address, patient_id)
-    success = True  # Simulating success for now
+    success = db.bind_device_to_patient(
+        device_id=device_id, patient_id=patient_id)
     if not success:
         return jsonify({"error": "Failed to bind device"}), 500
 
@@ -738,14 +738,14 @@ def remove_device_to_patient():
         return jsonify({"error": "Not authorized"}), 401
 
     data = request.get_json()
-    mac_address = data.get('device_id')
+    device_id = data.get('device_id')
     patient_id = data.get('patient_id')
 
-    if not mac_address or not patient_id:
+    if not device_id or not patient_id:
         return jsonify({"error": "Device ID and Patient ID are required"}), 400
 
-    # success = db.add_device(mac_address, patient_id)
-    success = True
+    success = db.unbind_device_from_patient(
+        device_id=device_id)
     if not success:
         return jsonify({"error": "Failed to unbind device"}), 500
 

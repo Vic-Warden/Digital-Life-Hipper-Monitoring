@@ -149,7 +149,7 @@ class Database:
                 VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING id;
             """
-            params = (name, email, password, '', 0,
+            params = (name, email, password, None, 0,
                       therapist_id)  # '' for empty cookie, 0 for no therapist
             patient_id = self.do_query(insert_query, params)[0][0]
 

@@ -50,9 +50,7 @@ def home():
             # Result returns a legitmate id containing the cookie
             device_id = db.device_id_from_patient_id(result[0][0])  # result is a list of tuples
             patient_data = db.get_patient_details(device_id)
-            print(patient_data)
             calculated_data = db.calculate_patient_data(patient_data)
-            print(calculated_data)
 
             return render_template('home.html', 
                                    calculated=calculated_data,

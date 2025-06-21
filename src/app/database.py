@@ -5,7 +5,7 @@ from mysql.connector import Error  # Error handling module
 from mysql.connector import MySQLConnection  # MySQL connection type
 from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 
@@ -283,10 +283,12 @@ class Database:
                 Data.timestamp,
                 Data.steps,
                 Data.PAM_score,
-                Data.zone,
-                Data.data_label
+                Data.zone_1, 
+                Data.zone_2, 
+                Data.zone_3,
+                Data.patient_id
             FROM Data
-            INNER JOIN Device ON Data.device_id = Device.id
+            INNER JOIN Device ON Data.device_id = Device.device_id
             WHERE Device.patient_id_device = %s;
         """
         data = self.do_query(query_data, (patient_id,), fetch=True)
@@ -602,32 +604,42 @@ class Database:
         finally:
             cursor.close()
 
-    def calculate_patient_data(self, data, patient_id_goal: int):
-        # Create a DataFrame taken from db `Data` structure
+    def calculate_patient_data(self, dataset: dict):
+        patient = dataset['patient_details']
+        data = dataset['data']
+        goals = dataset['goals']
+
         df = pd.DataFrame(data, columns=[
             'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
             'zone_1', 'zone_2', 'zone_3', 'patient_id'
         ])
 
-        # Ensure timestamp is datetime and localized
-        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
+        if df.empty:
+            return {
+                'hourly': [],
+                'daily': [],
+                'weekly': [],
+                'monthly': [],
+                'last_data_pull_ago': "No data available",
+                'total_steps_today': 0,
+                'combined_goal_completion_percent': None,
+                'goal_completion_details': []
+            }
 
-        # Set timestamp as index
+        patient_id = df['patient_id'].iloc[0]
+
+        df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
         df.set_index('timestamp', inplace=True)
 
-        # Resample and calculate means
         hourly_avg = df.resample('h')[['steps', 'PAM_score']].mean()
         daily_avg = df.resample('D')[['steps', 'PAM_score']].mean()
         weekly_avg = df.resample('W')[['steps', 'PAM_score']].mean()
         monthly_avg = df.resample('ME')[['steps', 'PAM_score']].mean()
 
-        # Get the current date in Europe/Amsterdam timezone
         now = datetime.now(ZoneInfo('Europe/Amsterdam'))
         today = now.date()
-        # Filter today's data
-        today_steps = df[df.index.date == today]['steps'].sum()
 
-        # Get the last timestamp of available data
+        today_steps = df[df.index.date == today]['steps'].sum()
         last_data_pull = df.index.max()
 
         if pd.isna(last_data_pull):
@@ -638,51 +650,130 @@ class Database:
             minutes = remainder // 60
             last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
 
-        # --- Fetch goal data based on availability priority ---
-        goal_data = {"message": "No goal data available for the given patient ID."}
-        goal_types = ['daily', 'weekly', 'monthly']
+        combined_completion = None
+        goal_completion_details = []
 
-        for goal_type in goal_types:
-            query = """
-                SELECT
-                    id AS goal_id,
-                    patient_id_goal,
-                    patient_goal,
-                    type AS goal_type,
-                    reached
-                FROM Goal
-                WHERE patient_id_goal = %s AND type = %s;
-            """
-            results = self.do_query(query, (patient_id_goal, goal_type), fetch=True)
-            if results:
-                # Calculate total steps for the selected goal type
+        patient_goals = [g for g in goals if g[1] == patient_id]
+
+        if patient_goals:
+            total_percent = 0
+            count = 0
+
+            for goal in patient_goals:
+                goal_id, patient_id_goal, target, goal_type, _ = goal
+                if not target:
+                    continue
+
                 if goal_type == 'daily':
-                    steps_total = df[df.index.date == today]['steps'].sum()
+                    steps = df[df.index.date == today]['steps'].sum()
                 elif goal_type == 'weekly':
                     start_of_week = now - pd.to_timedelta(now.weekday(), unit='d')
-                    steps_total = df[df.index.date >= start_of_week.date()]['steps'].sum()
+                    steps = df[df.index.date >= start_of_week.date()]['steps'].sum()
                 elif goal_type == 'monthly':
                     start_of_month = now.replace(day=1)
-                    steps_total = df[df.index.date >= start_of_month.date()]['steps'].sum()
+                    steps = df[df.index.date >= start_of_month.date()]['steps'].sum()
                 else:
-                    steps_total = 0
+                    continue
 
-                goal_data = {
-                    "available_type": goal_type.capitalize(),
-                    "goals": results,
-                    "steps_for_goal_period": int(steps_total)
-                }
-                break
+                percent = min((steps / target) * 100, 100)
+                total_percent += percent
+                count += 1
+
+                # 🔁 Update goal reached
+                if percent >= 100:
+                    self.update_goal_reached(1, patient_id_goal, goal_id, goal_type)
+                else:
+                    self.update_goal_reached(0, patient_id_goal, goal_id, goal_type)
+
+                # 🔍 Fetch current `reached` value
+                queryGet = """
+                    SELECT reached FROM Goal
+                    WHERE patient_id_goal = %s AND id = %s;
+                """
+                result = self.do_query(queryGet, (patient_id_goal, goal_id), fetch=True)
+                reached_count = result[0][0] if result else None
+
+                goal_completion_details.append({
+                    'goal_type': goal_type,
+                    'target': target,
+                    'steps': int(steps),
+                    'percent_completed': round(percent, 2),
+                    'reached': reached_count
+                })
+
+            combined_completion = round(total_percent / count, 1) if count > 0 else None
 
         return {
+            'name': patient[0][1],
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),
             'monthly': monthly_avg.reset_index().to_dict(orient='records'),
             'last_data_pull_ago': last_data_pull_ago,
             'total_steps_today': int(today_steps),
-            'goal_data': goal_data
+            'combined_goal_completion_percent': combined_completion,
+            'goal_completion_details': goal_completion_details
         }
+    
+    def update_goal_reached(self, reached, patient_id_goal, id, goal_type):
+        """
+        Updates the 'reached' count based on whether the goal was met for the period.
+        Prevents multiple updates within the same day/week/month depending on goal type.
+        """
+        now = datetime.now(ZoneInfo('Europe/Amsterdam'))
+
+        # Determine current period identifier
+        if goal_type == 'daily':
+            current_period = now.date()
+        elif goal_type == 'weekly':
+            current_period = (now - timedelta(days=now.weekday())).date()
+        elif goal_type == 'monthly':
+            current_period = now.date().replace(day=1)
+        else:
+            return False  # Unknown goal type
+
+        # Fetch existing goal
+        queryGet = """
+            SELECT reached, last_updated FROM Goal
+            WHERE patient_id_goal = %s AND id = %s;
+        """
+        getParams = (patient_id_goal, id)
+        getResult = self.do_query(queryGet, getParams, fetch=True)
+
+        if not getResult:
+            return False
+
+        currentReached, last_updated = getResult[0]
+
+        if last_updated is not None:
+            last_updated = last_updated.astimezone(ZoneInfo('Europe/Amsterdam'))
+
+            if goal_type == 'daily':
+                last_period = last_updated.date()
+            elif goal_type == 'weekly':
+                last_period = (last_updated - timedelta(days=last_updated.weekday())).date()
+            elif goal_type == 'monthly':
+                last_period = last_updated.date().replace(day=1)
+            else:
+                return False
+
+            # Skip if already updated for this period
+            if last_period == current_period:
+                return False
+
+        # Update reached count
+        newReached = currentReached + 1 if reached == 1 else 0
+
+        # Update the goal record
+        queryUpdate = """
+            UPDATE Goal
+            SET reached = %s, last_updated = %s
+            WHERE patient_id_goal = %s AND id = %s;
+        """
+        setParams = (newReached, now, patient_id_goal, id)
+        setResult = self.do_query(queryUpdate, setParams, fetch=True)
+
+        return setResult is not None
 
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
@@ -696,6 +787,22 @@ class Database:
             params = (cookie,)
             result = self.do_query(insert_query, params)
             return result[0][0]
+
+        except Exception as e:
+            print(f"Error inserting patient: {e}")
+        return False
+    
+    def user_id_from_cookie(self, cookie: str) -> int | bool:
+        """
+
+        """
+        try:
+            insert_query = """
+            SELECT id FROM User WHERE cookies = %s;
+            """
+            params = (cookie,)
+            result = self.do_query(insert_query, params)
+            return result
 
         except Exception as e:
             print(f"Error inserting patient: {e}")

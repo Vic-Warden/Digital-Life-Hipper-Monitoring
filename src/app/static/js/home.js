@@ -11,7 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Animate circular progress
     const scoreFill = document.getElementById('scoreFill');
-    const progress = (370 / 600) * 360; // Convert to degrees
+
+    // Get the actual step value from the HTML
+    const currentSteps = parseInt(document.querySelector('.score-number').textContent.trim());
+
+    // Calculate the progress in degrees
+    const progress = (currentSteps / 100) * 360;
     scoreFill.style.setProperty('--progress', progress + 'deg');
 
     // Animate chart bars

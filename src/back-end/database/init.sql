@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`Goal` (
   `patient_goal` INT NOT NULL,
   `type` ENUM('daily', 'weekly', 'monthly') NOT NULL,
   `reached` TINYINT NOT NULL DEFAULT 0,
+  `last_updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `patient_id_goal_idx` (`patient_id_goal` ASC) VISIBLE,
   CONSTRAINT `fk_patient_id_goal`
@@ -198,7 +199,11 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) VALUES (1, 1, 150, 'daily', 0);
+INSERT INTO `hipperdb`.`Goal` (`id`, `patient_id_goal`, `patient_goal`, `type`, `reached`) 
+VALUES 
+  (1, 1, 150, 'daily', 0),
+  (2, 1, 600, 'weekly', 0),
+  (3, 1, 2000, 'monthly', 0);
 
 COMMIT;
 

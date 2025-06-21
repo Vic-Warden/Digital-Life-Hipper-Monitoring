@@ -19,7 +19,7 @@
             <div class="activity-section">
                 <div class="mood-section">
                     <div class="mood-emoji">😊</div>
-                    <div class="activity-title">Today's Activity | {{ name or "User" }}</div>
+                    <div class="activity-title">Today's Activity | {{ calculated.name or "User" }}</div>
                 </div>
 
                 <div class="activity-item">
@@ -41,14 +41,14 @@
 
         <div class="card">
             <div class="score-section">
-                <div class="score-title">Weekly Movement Score</div>
+                <div class="score-title"> Combined Goal Completion</div>
                 <div class="score-circle">
                     <div class="score-bg">
                         <div class="score-fill" id="scoreFill"></div>
                     </div>
                     <div class="score-inner">
-                        <div class="score-number">370</div>
-                        <div class="score-total">/ 600</div>
+                        <div class="score-number"> {{ calculated.combined_goal_completion_percent }}%</div>
+                        <div class="score-total"></div>
                     </div>
                 </div>
             </div>
@@ -56,38 +56,38 @@
 
         <div class="card">
             <div class="goals-section">
-                <h3>Personal Goals</h3>
+                <h3>Personal Goals - Steps</h3>
 
-                <div class="goal-item">
-                    <div class="goal-header">
-                        <span class="goal-name">Daily Goal</span>
-                        <span class="goal-streak">🔥3 day streak</span>
-                        <span class="goal-progress">40 / 85</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" data-progress="47"></div>
-                    </div>
-                </div>
-
-                <div class="goal-item">
-                    <div class="goal-header">
-                        <span class="goal-name">Weekly Goal</span>
-                        <span class="goal-progress">153 / 600</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" data-progress="25"></div>
-                    </div>
-                </div>
-
-                <div class="goal-item">
-                    <div class="goal-header">
-                        <span class="goal-name">Monthly Goal</span>
-                        <span class="goal-progress">153 / 2400</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" data-progress="6"></div>
-                    </div>
-                </div>
+                {% if calculated.goal_completion_details %}
+                    {% for goal in calculated.goal_completion_details %}
+                        <div class="goal-item">
+                            <div class="goal-header">
+                                <span class="goal-name">{{ goal.goal_type | capitalize }} Goal</span>
+                                {% if goal.reached > 0 %}
+                                    <span class="goal-streak">
+                                        🔥{{ goal.reached }}
+                                        {% if goal.goal_type == 'daily' %}
+                                            day
+                                        {% elif goal.goal_type == 'weekly' %}
+                                            week
+                                        {% elif goal.goal_type == 'monthly' %}
+                                            month
+                                        {% else %}
+                                            goal
+                                        {% endif %}
+                                        streak
+                                    </span>
+                                {% endif %}
+                                <span class="goal-progress">{{ goal.steps }} / {{ goal.target }}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-progress="{{ goal.percent_completed | round(0, 'floor') }}"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No goals have been set. Consult your therapist!</p>
+                {% endif %}
             </div>
         </div>
 

@@ -632,16 +632,8 @@ class Database:
             cursor.close()
 
     def calculate_patient_data(self, dataset: dict):
-        patient = dataset['patient_details']
-        data = dataset['data']
-        goals = dataset['goals']
 
-        df = pd.DataFrame(data, columns=[
-            'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
-            'zone_1', 'zone_2', 'zone_3', 'patient_id'
-        ])
-
-        if df.empty:
+        if not isinstance(dataset, dict) or dataset.get('patient_details') is None:
             return {
                 'hourly': [],
                 'daily': [],
@@ -652,6 +644,15 @@ class Database:
                 'combined_goal_completion_percent': None,
                 'goal_completion_details': []
             }
+                
+        patient = dataset['patient_details']
+        data = dataset['data']
+        goals = dataset['goals']
+
+        df = pd.DataFrame(data, columns=[
+            'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
+            'zone_1', 'zone_2', 'zone_3', 'patient_id'
+        ])
 
         patient_id = df['patient_id'].iloc[0]
 

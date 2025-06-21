@@ -325,7 +325,7 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     # Render the patient details page
-    return render_template('admin_patient_details.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
+    return render_template('admin_home.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])

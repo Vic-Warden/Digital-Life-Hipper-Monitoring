@@ -134,33 +134,52 @@ class Database:
 
     def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """
-        add a new patient linked to a therapist.
+        add a new patient linked to a therapist,
+        and initialize their daily/weekly/monthly goals to 0.
 
         Returns True if successful, False otherwise.
         """
-        # Get therapist id
+        # 1) find the current therapist from their cookie
         therapist_id = self.therapist_id_from_cookie(cookie)
         if not therapist_id:
             return False
+
         try:
-            # Insert user into db
-            insert_query = """
-                INSERT INTO User (name, email, password, cookies, is_therapist, fk_therapist_id)
+            # 2) Insert new patient record
+            insert_user_sql = """
+                INSERT INTO `User` 
+                    (name, email, password, cookies, is_therapist, fk_therapist_id)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING id;
             """
-            params = (name, email, password, '', 0,
-                      therapist_id)  # '' for empty cookie, 0 for no therapist
-            patient_id = self.do_query(insert_query, params)[0][0]
+            params = (name, email, password, None, 0, therapist_id)
+            patient_id = self.do_query(insert_user_sql, params)[0][0]
 
-            # Add patient id to Patient_has_Therapist table
+            # 3) Link patient ↔ therapist
             self.connect_patient_to_therapist(patient_id, therapist_id)
+
+            # 4) Seed the patient's goals to zero
+            insert_goal_sql = """
+                INSERT INTO `Goal`
+                    (patient_id_goal, patient_goal, type, reached)
+                VALUES (%s, %s, %s, %s);
+            """
+            for period in ('daily', 'weekly', 'monthly'):
+                self.do_query(insert_goal_sql, (patient_id, 0, period, 0))
+
+            # 5) Seed other tables here, e.g. Data or MinuteData:
+            insert_data_sql = """
+                INSERT INTO `Data`
+                    (device_id, timestamp, steps, PAM_score, zone_1, zone_2, zone_3, patient_id)
+                VALUES (%s, NOW(), %s, %s, %s, %s, %s, %s);
+            """
+            self.do_query(insert_data_sql, (0, 0, 0.0, 0, 0, 0, patient_id))
 
             return True
 
         except Exception as e:
-            print(f"Error inserting patient: {e}")
-        return False
+            print(f"Error inserting patient and initializing data: {e}")
+            return False
 
     def connect_patient_to_therapist(self, patient_id: int, therapist_id: int):
         """

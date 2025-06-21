@@ -7,7 +7,6 @@ from flask import Flask, jsonify, request  # Flask
 from crypto import Cookie
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from werkzeug.security import check_password_hash
 
 
 class Database:
@@ -126,12 +125,12 @@ class Database:
 
         Returns True if the credentials are valid, False otherwise.
         """
-        query = "SELECT password FROM User WHERE email = %s"
-        result = self.do_query(query, (email,))
-        if not result:
-            return False
-        stored_hash = result[0][0]
-        return check_password_hash(stored_hash, password)
+        query = "SELECT COUNT(*) FROM User WHERE email = %s AND password = %s"
+        params = (email, password)
+        result = self.do_query(query, params)
+        if result and result[0][0] == 1:
+            return True
+        return False
 
     def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """
@@ -925,24 +924,5 @@ class Database:
             return affected == 1
         except Error as e:
             print("reset_therapist_password error:", e)
-            return False
-
-    
-    def delete_patient(self, patient_id):
-        try:
-            query = "DELETE FROM User WHERE id = %s AND is_therapist = 0"
-            self.do_query(query, (patient_id,))
-            return True
-        except Exception as e:
-            print("Error deleting patient:", e)
-        return False
-
-    def update_patient_password(self, patient_id, hashed_password):
-        try:
-            query = "UPDATE User SET password = %s WHERE id = %s AND is_therapist = 0"
-            self.do_query(query, (hashed_password, patient_id))
-            return True
-        except Exception as e:
-            print("Error updating password:", e)
             return False
 

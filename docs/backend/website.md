@@ -284,29 +284,46 @@ def admin_login():
 
 ## 10. Admin Patients
 
-Admin users (therapists) can see there patient a list of their patients.
+Admin users (therapists) can see there patient a list of their patients. Super users (Accounts that can manage everything) will see all patients registered.
 
 ```python
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
-    # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
 
     if not valid:
         return redirect('/admin/login')
-    
-    therapist_id = db.therapist_id_from_cookie(cookie)
-    print(therapist_id)
 
-    # Extended list with 6 patients
-    patient_details = db.get_patients(therapist_id)
-    print(patient_details)
+    # Determine if user is a super admin
+    is_super_admin = db.is_super_user(cookie)
 
+    # Optional: fetch user UI preferences
+    preferences = db.get_user_preferences(cookie)
+
+    # Fetch patients based on role
+    if is_super_admin:
+        patient_details = db.get_all_patients()
+    else:
+        therapist_id = db.therapist_id_from_cookie(cookie)
+        patient_details = db.get_patients(therapist_id)
+
+    # Render template, empty or with patients
     if not patient_details:
-        return "Patients not found", 404
+        return render_template(
+            'admin_patients.html',
+            patients=[],
+            message="No patients found.",
+            is_super_admin=is_super_admin,
+            preferences=preferences
+        )
 
-    return render_template('admin_patients.html', patients=patient_details)
+    return render_template(
+        'admin_patients.html',
+        patients=patient_details,
+        is_super_admin=is_super_admin,
+        preferences=preferences
+    )
 ```
 
 ## 11. Patients
@@ -591,39 +608,106 @@ def admin_settings():
     return redirect("/admin/login")
 ```
 
-## Patient Password Change
 
-This route allows an admin to change a patient's password by entering the patient's email address and a new password
+
+## Manage Devices
+
+This route allows a therapist to manage the hipper devices and bind/unbind them to patients.
 
 ```python
-@app.route('/admin/change-patient-password', methods=['POST'])
-def admin_change_patient_password():
+@app.route('/admin/manage-devices', methods=['GET', 'POST'])
+def admin_manage_devices():
+    # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
-    valid, _ = db.verify_cookie(cookie)
+    valid = db.is_therapist(cookie)
+    therapist_id = db.therapist_id_from_cookie(cookie)
 
     if not valid:
         return redirect('/admin/login')
 
-    email = request.form.get('email', '').strip().lower()
-    new_password = request.form.get('new_password', '').strip()
+    if request.method == 'POST':
+        # Handle device addition
+        mac_address = request.form.get('mac_address')
+        patient_id = request.form.get('patient_id')
 
-    if not email or not new_password:
-        return "Missing email or password", 400
+        if not mac_address or not patient_id:
+            return "Missing required fields", 400
 
-    user = db.get_user_by_email(email)
-    if not user or user.get("is_therapist") or user.get("is_superuser"):
-        return "Patient not found or invalid", 404
+        # success = db.add_device(mac_address, patient_id)
+        success = True
 
-    hashed_pw = generate_password_hash(new_password)
-    success = db.update_patient_password(user['id'], hashed_pw)
+        if not success:
+            return "Failed to add device", 400
 
-    if not success:
-        return "Password update failed", 500
+        return
 
-    return redirect('/admin/patients')
-
+    return render_template('admin_manage_devices.html',
+                           preferences=db.get_user_preferences(cookie),
+                           devices=db.get_devices(),
+                           patients=db.get_patients(therapist_id))
 ```
 
+## API Bind device to patient
+
+This endpoint binds a hipper device to a patient based on the `device_id` and `patient_id`
+
+```python
+@app.route('/api/bind_device_to_patient', methods=['POST'])
+def add_device_to_patient():
+    """
+    API endpoint to add a device to a patient.
+    Expects JSON with 'mac_address' and 'patient_id'.
+    """
+    token = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(token)
+    if not valid:
+        return jsonify({"error": "Not authorized"}), 401
+
+    data = request.get_json()
+    device_id = data.get('device_id')
+    patient_id = data.get('patient_id')
+
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
+
+    success = db.bind_device_to_patient(
+        device_id=device_id, patient_id=patient_id)
+    if not success:
+        return jsonify({"error": "Failed to bind device"}), 500
+
+    return jsonify({"message": "Successfully bound device to patient"}), 200
+```
+
+## API Unbind device from patients
+
+This endpoint unbinds a hipper device to a patient based on the `device_id`
+
+```python
+@app.route('/api/unbind_device_to_patient', methods=['POST'])
+def remove_device_to_patient():
+    """
+    API endpoint to remove a device to a patient.
+    Expects JSON with 'mac_address' and 'patient_id'.
+    """
+    token = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(token)
+    if not valid:
+        return jsonify({"error": "Not authorized"}), 401
+
+    data = request.get_json()
+    device_id = data.get('device_id')
+    patient_id = data.get('patient_id')
+
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
+
+    success = db.unbind_device_from_patient(
+        device_id=device_id)
+    if not success:
+        return jsonify({"error": "Failed to unbind device"}), 500
+
+    return jsonify({"message": "Successfully removed device to patient"}), 200
+```
 
 ## 20. Running the App
 

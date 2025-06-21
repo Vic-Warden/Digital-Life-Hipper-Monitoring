@@ -79,6 +79,8 @@ class Database:
         if not self._connection:
             print("No connection to the database.")
             return None
+
+        cursor = None
         # Execute the query and fetch the results
         try:
             self._connection.autocommit = True
@@ -94,7 +96,8 @@ class Database:
             return None
         # At the end, close the cursor
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
 
     def check_valid_table(self, table_name: str) -> bool:
         """
@@ -108,14 +111,14 @@ class Database:
         """
         ### Check if the email is already registered in the database.
 
-        Returns True if the email exists, False otherwise.
+        Returns False if the email exists, True otherwise.
         """
         query = "SELECT COUNT(*) FROM User WHERE email = %s"
         params = (email,)
         result = self.do_query(query, params)
         if result[0][0] > 0:
-            return True
-        return False
+            return False
+        return True
 
     def check_credentials(self, email: str, password: str) -> bool:
         """
@@ -132,33 +135,52 @@ class Database:
 
     def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """
-        add a new patient linked to a therapist.
+        add a new patient linked to a therapist,
+        and initialize their daily/weekly/monthly goals to 0.
 
         Returns True if successful, False otherwise.
         """
-        # Get therapist id
+        # 1) find the current therapist from their cookie
         therapist_id = self.therapist_id_from_cookie(cookie)
         if not therapist_id:
             return False
+
         try:
-            # Insert user into db
-            insert_query = """
-                INSERT INTO User (name, email, password, cookies, is_therapist, fk_therapist_id)
+            # 2) Insert new patient record
+            insert_user_sql = """
+                INSERT INTO `User` 
+                    (name, email, password, cookies, is_therapist, fk_therapist_id)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 RETURNING id;
             """
-            params = (name, email, password, '', 0,
-                      therapist_id)  # '' for empty cookie, 0 for no therapist
-            patient_id = self.do_query(insert_query, params)[0][0]
+            params = (name, email, password, None, 0, therapist_id)
+            patient_id = self.do_query(insert_user_sql, params)[0][0]
 
-            # Add patient id to Patient_has_Therapist table
+            # 3) Link patient ↔ therapist
             self.connect_patient_to_therapist(patient_id, therapist_id)
+
+            # 4) Seed the patient's goals to zero
+            insert_goal_sql = """
+                INSERT INTO `Goal`
+                    (patient_id_goal, patient_goal, type, reached)
+                VALUES (%s, %s, %s, %s);
+            """
+            for period in ('daily', 'weekly', 'monthly'):
+                self.do_query(insert_goal_sql, (patient_id, 0, period, 0))
+
+            # 5) Seed other tables here, e.g. Data or MinuteData:
+            insert_data_sql = """
+                INSERT INTO `Data`
+                    (device_id, timestamp, steps, PAM_score, zone_1, zone_2, zone_3, patient_id)
+                VALUES (%s, NOW(), %s, %s, %s, %s, %s, %s);
+            """
+            self.do_query(insert_data_sql, (0, 0, 0.0, 0, 0, 0, patient_id))
 
             return True
 
         except Exception as e:
-            print(f"Error inserting patient: {e}")
-        return False
+            print(f"Error inserting patient and initializing data: {e}")
+            return False
 
     def connect_patient_to_therapist(self, patient_id: int, therapist_id: int):
         """
@@ -323,6 +345,22 @@ class Database:
             "devices": devices,
             "goals": goals
         }
+    
+    def get_all_patients(self) -> list[dict] | None:
+        """
+        Get a list of all users who are patients (not therapists).
+        """
+        query = """
+            SELECT id, name, email
+            FROM User
+            WHERE is_therapist = 0;
+        """
+        result = self.do_query(query, fetch=True)
+
+        if result:
+            return [{"id": row[0], "name": row[1], "email": row[2]} for row in result]
+        return None  # Now correctly outside the if-block
+
 
     def get_patients(self, therapeut_id: int) -> list[dict] | None:
         """
@@ -428,7 +466,7 @@ class Database:
 
         return [{"hour_slot": row[0], "total_steps": row[1]} for row in result]
 
-    def is_super_user(self, cookie: int) -> bool:
+    def is_super_user(self, cookie: str) -> bool:
         """
         ### Check whether the given user is a super‑user.
 
@@ -514,7 +552,6 @@ class Database:
         - 'timestamp'
         - 'steps'
         - 'pam_score'
-        - 'zone'
         - 'data_label'
         """
         patient_id, device_id = self.patient_id_and_device_id_from_mac_address(
@@ -524,12 +561,12 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone, data_label, patient_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s);
+            INSERT INTO MinuteData (device_id, timestamp, steps, PAM_score, data_label, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s);
         """
         params = [
             (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], data['zone'], data['data_label'], patient_id)
+             data['pam_score'], data['data_label'], patient_id)
             for data in pam_data
         ]
 
@@ -559,14 +596,20 @@ class Database:
             return False
 
         query = """
-            INSERT INTO Data (device_id, timestamp, steps, PAM_score, patient_id)
-            VALUES (%s, %s, %s, %s, %s);
+            INSERT INTO Data (device_id, timestamp, steps, PAM_score, zone_1, zone_2, zone_3, patient_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
         """
         params = [
-            (device_id, data['timestamp'], data['steps'],
-             data['pam_score'], patient_id)
-            for data in day_data
-        ]
+            (
+                device_id,
+                data['timestamp'],
+                data['steps'],
+                data['pam_score'],
+                data['zone_1'],
+                data['zone_2'],
+                data['zone_3'],
+                patient_id
+            ) for data in day_data]
 
         try:
             cursor = self._connection.cursor()
@@ -621,7 +664,7 @@ class Database:
             'monthly': monthly_avg.reset_index().to_dict(orient='records'),
             'last_data_pull_ago': last_data_pull_ago,
             'total_steps_today': int(today_steps)
-    }
+        }
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """
@@ -753,6 +796,137 @@ class Database:
         if result and len(result) > 0:
             return result[0][0], result[0][1]
         return None
+
+    def is_therapist(self, cookie: str) -> bool:
+        """
+        Check if the user is a therapist based on their cookie.
+
+        Returns True if the user is a therapist, False otherwise.
+        """
+        query = "SELECT is_therapist FROM User WHERE cookies = %s;"
+        params = (cookie,)
+        result = self.do_query(query, params, fetch=True)
+
+        if result and len(result) > 0:
+            return result[0][0] == 1
+        return False
+
+    def get_devices(self) -> list[dict] | None:
+        """
+        Get a list of all devices in the database.
+        Returns a list of dictionaries containing device details or None if not found.
+        """
+        query = """
+            SELECT patient_id_device, device_label, device_id
+            FROM Device;
+        """
+        result = self.do_query(query, fetch=True)
+
+        if result:
+            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+        return None
+
+    def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:
+        """
+        Bind a device to a patient by updating the patient_id_device field.
+        Returns True if successful, False otherwise.
+        """
+        query = "UPDATE Device SET patient_id_device = %s WHERE device_id = %s;"
+        params = (patient_id, device_id)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None
+
+    def unbind_device_from_patient(self, device_id: int) -> bool:
+        """
+        Unbind a device from its current patient by setting patient_id_device to NULL.
+        Returns True if successful, False otherwise.
+        """
+        query = "UPDATE Device SET patient_id_device = NULL WHERE device_id = %s;"
+        params = (device_id,)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None
+
+    def get_therapists(self) -> list[dict]:
+        """Return all therapists (is_therapist=1)."""
+        rows = self.do_query(
+            "SELECT id,name,email FROM User WHERE is_therapist = 1;", fetch=True)
+        return [{"id": r[0], "name": r[1], "email": r[2]} for r in rows] if rows else []
+
+
+    def add_therapist(self, name: str, email: str, password: str) -> bool:
+        """
+        Create a new therapist:
+         1. Insert into Therapist(name) → get therapist_id
+         2. Insert into User with is_therapist=1, fk_therapist_id, is_superuser
+        """
+        try:
+            cursor = self._connection.cursor()
+
+            # 1️⃣ Insert into Therapist
+            cursor.execute(
+                "INSERT INTO Therapist (name) VALUES (%s);",
+                (name,)
+            )
+            therapist_id = cursor.lastrowid
+
+            # 2️⃣ Insert into User (only the 7 specified columns)
+
+            cursor.execute("""
+                INSERT INTO `User`
+                  (`name`, `email`, `password`, `cookies`,
+                   `is_therapist`, `fk_therapist_id`, `is_superuser`)
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
+            """, (
+                name,
+                email,
+                password,
+                None,
+                1,
+                therapist_id,
+                0  # or 0 if you don't want them super immediately
+            ))
+
+            self._connection.commit()
+            cursor.close()
+            return True
+
+        except Exception as e:
+            print("add_therapist error:", e)
+            return False
+
+    def remove_therapist_by_id(self, therapist_id: int) -> bool:
+        """Delete a therapist (and cascade relationships)."""
+        result = self.do_query(
+            "DELETE FROM User WHERE id = %s AND is_therapist = 1;", (therapist_id,), fetch=False)
+        # fetch=False returns [("Query executed successfully",)] on success
+        return result is not None
+
+    def reset_therapist_password(self, email: str, new_password: str) -> bool:
+        """
+        Update the password for a therapist identified by email.
+        Returns True if exactly one row was updated.
+        """
+        # 1) Lookup the user and confirm they're a therapist
+        user = self.get_user_by_email(email)
+        if not user or not user.get('is_therapist'):
+            return False
+
+        # 2) Run the UPDATE against the PK, then commit and check rowcount
+        query = "UPDATE `User` SET password = %s WHERE id = %s"
+        try:
+            cursor = self._connection.cursor()
+            cursor.execute(query, (new_password, user['id']))
+            self._connection.commit()
+            affected = cursor.rowcount
+            cursor.close()
+            # Return True only if exactly one row was updated
+            return affected == 1
+        except Error as e:
+            print("reset_therapist_password error:", e)
+            return False
+
     
     def delete_patient(self, patient_id):
         try:

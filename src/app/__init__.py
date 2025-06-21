@@ -4,7 +4,8 @@ from flask import Flask, render_template, redirect, request, session, make_respo
 from database import Database
 import json
 from dotenv import load_dotenv
-
+import re
+EMAIL_REGEX = r"^[^@]+@[^@]+\.[^@]+$"
 
 # Import Werkzeug for have the possibility to hash a password
 from werkzeug.security import generate_password_hash
@@ -49,13 +50,13 @@ def home():
         if result:
             # Result returns a legitmate row containing the cookie
             device_id = result[0][0]  # result is a list of tuples
-            client_name = result[0][1] 
+            client_name = result[0][1]
             data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
             patient_data = db.do_query(data_query, (device_id,))
             calculated_data = db.calculate_patient_data(patient_data)
 
             return render_template('home.html', calculated=calculated_data,
-             preferences=db.get_user_preferences(cookie), name=client_name)
+                                   preferences=db.get_user_preferences(cookie), name=client_name)
         else:
             return redirect('/login')
     else:
@@ -203,16 +204,15 @@ def admin_settings():
                 }
             }), 200
 
-
         # if db.is_super_user(cookie):
         #     return render_template("super_admin_settings.html", preferences=db.get_user_preferences(cookie))
-        if db.is_super_user(cookie):# fetch super‑users for both GET and POST renders
+        if db.is_super_user(cookie):  # fetch super‑users for both GET and POST renders
             superusers = db.get_superusers()
 
             return render_template(
                 "super_admin_settings.html",
-                preferences = db.get_user_preferences(cookie),
-                superusers = superusers)
+                preferences=db.get_user_preferences(cookie),
+                superusers=superusers)
         return render_template("admin_settings.html", preferences=db.get_user_preferences(cookie))
 
     return redirect("/admin/login")
@@ -235,24 +235,42 @@ def admin_login():
 
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
-    # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
     valid, user_data = db.verify_cookie(cookie)
 
     if not valid:
         return redirect('/admin/login')
 
-    therapist_id = db.therapist_id_from_cookie(cookie)
-    print(therapist_id)
+    # Determine if user is a super admin
+    is_super_admin = db.is_super_user(cookie)
 
-    # list with patients
-    patient_details = db.get_patients(therapist_id)
-    print(patient_details)
+    # Optional: fetch user UI preferences
+    preferences = db.get_user_preferences(cookie)
 
+    # Fetch patients based on role
+    if is_super_admin:
+        patient_details = db.get_all_patients()
+    else:
+        therapist_id = db.therapist_id_from_cookie(cookie)
+        patient_details = db.get_patients(therapist_id)
+
+    # Render template, empty or with patients
     if not patient_details:
-        return render_template('admin_patients.html', patients=[], message="No patients found.")
+        return render_template(
+            'admin_patients.html',
+            patients=[],
+            message="No patients found.",
+            is_super_admin=is_super_admin,
+            preferences=preferences
+        )
 
-    return render_template('admin_patients.html', patients=patient_details)
+    return render_template(
+        'admin_patients.html',
+        patients=patient_details,
+        is_super_admin=is_super_admin,
+        preferences=preferences
+    )
+
 
 
 @app.route('/api/add-patient', methods=['POST'])
@@ -273,8 +291,14 @@ def admin_add_patient():
     if not all([name, email, password, cookie]):
         return "Missing required fields", 400
 
+    # 2) Email format check
+    if not re.match(EMAIL_REGEX, email):
+        return "Invalid email address.", 400
+
+    # Check if email exists
     if not db.check_email(email):
         return "Email already exists", 400
+
 
     # Call DB logic to insert the patient
     success = db.add_patient(name, email, password, cookie)
@@ -301,7 +325,7 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     # Render the patient details page
-    return render_template('admin_patient_details.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
+    return render_template('admin_home.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -337,6 +361,38 @@ def admin_login_page():
     else:
         # Render the admin_login.html
         return render_template('admin_login.html')
+
+
+@app.route('/admin/manage-devices', methods=['GET', 'POST'])
+def admin_manage_devices():
+    # Verify the cookie
+    cookie = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(cookie)
+    therapist_id = db.therapist_id_from_cookie(cookie)
+
+    if not valid:
+        return redirect('/admin/login')
+
+    if request.method == 'POST':
+        # Handle device addition
+        mac_address = request.form.get('mac_address')
+        patient_id = request.form.get('patient_id')
+
+        if not mac_address or not patient_id:
+            return "Missing required fields", 400
+
+        # success = db.add_device(mac_address, patient_id)
+        success = True
+
+        if not success:
+            return "Failed to add device", 400
+
+        return
+
+    return render_template('admin_manage_devices.html',
+                           preferences=db.get_user_preferences(cookie),
+                           devices=db.get_devices(),
+                           patients=db.get_patients(therapist_id))
 
 
 @app.route('/change-email', methods=['POST'])
@@ -524,6 +580,7 @@ def upload_minute_data():
 
     return jsonify({"message": "PAM minute data uploaded successfully"}), 200
 
+
 @app.route('/log/<mac_address>', methods=['GET'])
 def get_log(mac_address):
     mac = mac_address.upper()
@@ -629,6 +686,7 @@ def routine_form():
 
     return render_template("routine_form.html")
 
+
 @app.route('/api/get-superusers', methods=['GET'])
 def get_superusers(self):
     """
@@ -646,9 +704,11 @@ WHERE `is_superuser` = 1;
         return None
 
     return [
-      {"id": r[0], "name": r[1], "email": r[2]}
-      for r in rows
+        {"id": r[0], "name": r[1], "email": r[2]}
+        for r in rows
     ]
+
+
 @app.route('/api/remove-superuser', methods=['POST'])
 def api_remove_superuser():
     """
@@ -671,6 +731,7 @@ def api_remove_superuser():
         return jsonify({"error": "Database update failed"}), 500
 
     return jsonify({"msg": "User demoted"}), 200
+
 
 @app.route('/api/add-superuser', methods=['POST'])
 def api_add_superuser():
@@ -705,9 +766,142 @@ def api_add_superuser():
         return jsonify({"error": "Database update failed"}), 500
 
     return jsonify({
-      "msg": f"{user['name']} is now a super‑user",
-      "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
+        "msg": f"{user['name']} is now a super‑user",
+        "superuser": {"id": user['id'], "name": user['name'], "email": user['email']}
     }), 200
+
+# Get all therapists
+@app.route('/api/therapists', methods=['GET'])
+def api_list_therapists():
+
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error":"Unauthorized"}), 401
+
+    therapists = db.get_therapists()
+
+    return jsonify({"therapists": therapists}), 200
+
+# Add a therapist
+@app.route('/api/therapists', methods=['POST'])
+def api_add_therapist():
+
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error":"Unauthorized"}), 401
+
+    data = request.get_json() or {}
+    name = data.get('name','').strip()
+    email = data.get('email','').strip().lower()
+    password = data.get('password','').strip()
+
+    if not all([name,email,password]):
+        return jsonify({"error":"Missing fields"}), 400
+    if not db.check_email(email):
+        return jsonify({"error":"Email already exists"}), 400
+    success = db.add_therapist(name,email,password)
+
+    return (jsonify({"msg":"Therapist added"}),200) if success else (jsonify({"error":"DB error"}),500)
+
+# Delete a therapist
+@app.route('/api/therapists/<int:therapist_id>', methods=['DELETE'])
+def api_delete_therapist(therapist_id):
+
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({"error":"Unauthorized"}), 401
+
+    success = db.remove_therapist_by_id(therapist_id)
+
+    return (jsonify({"msg":"Deleted"}),200) if success else (jsonify({"error":"Not found"}),404)
+
+# Reset a therapist’s password
+@app.route('/api/reset-therapist-password', methods=['POST'])
+def api_reset_therapist_password():
+
+    cookie = request.cookies.get('auth_cookie')
+    valid, _ = db.verify_cookie(cookie)
+
+    # only super‑users can reset
+    if not valid or not db.is_super_user(cookie):
+        return jsonify({ "error": "Unauthorized" }), 401
+
+    data = request.get_json() or {}
+    email = data.get('email', '').strip().lower()
+    new_password = data.get('new_password', '').strip()
+
+    if not email or not new_password:
+        return jsonify({ "error": "Missing email or new_password" }), 400
+
+    user = db.get_user_by_email(email)
+    if not user:
+        return jsonify({ "error": "No such user" }), 404
+    if not user.get('is_therapist'):
+        return jsonify({ "error": "User is not a therapist" }), 400
+
+    success = db.reset_therapist_password(email, new_password)
+    if not success:
+        return jsonify({ "error": "Database update failed" }), 500
+
+    return jsonify({ "msg": "Password reset successfully." }), 200
+
+
+@app.route('/api/bind_device_to_patient', methods=['POST'])
+def add_device_to_patient():
+    """
+    API endpoint to add a device to a patient.
+    Expects JSON with 'mac_address' and 'patient_id'.
+    """
+    token = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(token)
+    if not valid:
+        return jsonify({"error": "Not authorized"}), 401
+
+    data = request.get_json()
+    device_id = data.get('device_id')
+    patient_id = data.get('patient_id')
+
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
+
+    success = db.bind_device_to_patient(
+        device_id=device_id, patient_id=patient_id)
+    if not success:
+        return jsonify({"error": "Failed to bind device"}), 500
+
+    return jsonify({"message": "Successfully bound device to patient"}), 200
+
+
+@app.route('/api/unbind_device_to_patient', methods=['POST'])
+def remove_device_to_patient():
+    """
+    API endpoint to remove a device to a patient.
+    Expects JSON with 'mac_address' and 'patient_id'.
+    """
+    token = request.cookies.get('auth_cookie')
+    valid = db.is_therapist(token)
+    if not valid:
+        return jsonify({"error": "Not authorized"}), 401
+
+    data = request.get_json()
+    device_id = data.get('device_id')
+    patient_id = data.get('patient_id')
+
+    if not device_id or not patient_id:
+        return jsonify({"error": "Device ID and Patient ID are required"}), 400
+
+    success = db.unbind_device_from_patient(
+        device_id=device_id)
+    if not success:
+        return jsonify({"error": "Failed to unbind device"}), 500
+
+    return jsonify({"message": "Successfully removed device to patient"}), 200
 
 
 # Start the Flask application

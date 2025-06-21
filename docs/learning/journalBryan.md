@@ -474,6 +474,123 @@ This taught me how to:
 
 Now, I can safely deploy multiple Raspberry Pi devices in the field without worrying about spoofed or unauthorized data submissions.
 
+## Learning story
+As a student, I want to learn how to parse CSV files with different data formats so I can accurately prepare data for backend APIs, ensuring that the data I send is complete, correct, and properly formatted.
+
+### Learned
+At first, I was simply opening CSV files and trying to send raw data to the backend, but this quickly led to errors and mismatches between what my backend expected and what I actually sent. Different CSV files had different columns and formats — for example, minute-level data had timestamps with steps and PAM scores, while day-level data included zones and aggregated activity scores.
+
+To fix this:
+
+1. I carefully studied the CSV file structures and identified which columns were required for each data type.
+
+2. I wrote dedicated parsing functions for each CSV format. These functions read the CSV, convert timestamps to ISO format, cast values to the correct types (int, float), and handled any missing or malformed rows gracefully.
+
+3. I added extra fields to the parsed data as needed, such as a data_label or patient_id, to ensure the backend received all the context it needed.
+
+4. I tested these functions thoroughly by running them on sample CSV files and verifying the output before sending it to the backend API.
+
+```python
+import csv
+from datetime import datetime
+
+def minute_csv_to_json(filepath, label_id):
+    data = []
+    with open(filepath, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            try:
+                data.append({
+                    "timestamp": datetime.strptime(row["Timestamp"], "%Y-%m-%d %H:%M:%S").isoformat(),
+                    "steps": int(row["Steps"]),
+                    "pam_score": float(row["PAM Score"]),
+                    "data_label": label_id
+                })
+            except Exception as e:
+                print(f"Skipping row due to error: {e} — row: {row}")
+    return data
+```
+
+Using this, my system can:
+
+1. Ensure data integrity by sending correctly formatted JSON to the backend.
+
+2. Automatically handle multiple CSV formats without manual intervention.
+
+3. Avoid backend errors caused by bad or missing data fields.
+
+This taught me how to:
+
+1. Work with CSV files programmatically using Python’s csv module.
+
+2. Perform robust error handling during data parsing to avoid crashes.
+
+3. Convert and format timestamps properly for API compatibility.
+
+4. Prepare and structure data correctly for downstream database insertion.
+
+Now, I can reliably convert diverse CSV data into backend-ready JSON payloads, forming a solid foundation for my data that I send to the back-end.
+
+## Learning story
+As a student, I want to learn how to handle and validate JSON data in Python so I can ensure data integrity before inserting data into a database or sending it to backend APIs.
+
+### Learned
+At first, I was simply accepting JSON data and sending it directly to the backend without any validation, which caused errors or corrupted data when the JSON was malformed or missing required fields. I need a way I can ensure the JSON data is valid to prevent this. 
+
+To fix this:
+
+1. I learned how to safely parse JSON strings using Python’s built-in json module and handle exceptions such as JSONDecodeError.
+
+2. I studied how to validate the structure of JSON data by checking for the presence of required keys and ensuring values have the correct data types before further processing.
+
+3. I implemented helper functions that perform these validation checks and log or report errors clearly if the data does not meet expectations.
+
+4. I added error handling around JSON parsing and validation so the program can gracefully skip bad data or alert the user instead of crashing.
+
+5. I tested my validation logic with a variety of JSON samples — valid, incomplete, or malformed — to ensure robustness.
+
+```python
+import json
+
+def validate_pam_json(json_string):
+    try:
+        data = json.loads(json_string)
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON: {e}")
+        return None
+
+    required_keys = {"timestamp", "steps", "pam_score"}
+    for entry in data:
+        if not required_keys.issubset(entry.keys()):
+            print(f"Missing keys in entry: {entry}")
+            return None
+        if not isinstance(entry["steps"], int) or not isinstance(entry["pam_score"], (float, int)):
+            print(f"Incorrect data types in entry: {entry}")
+            return None
+
+    return data
+```
+
+Using this, my system can:
+
+1. Prevent invalid or incomplete data from reaching the backend or database.
+
+2. Provide clear feedback on what is wrong with the JSON data, aiding debugging.
+
+3. Safely handle unexpected data formats or errors without crashing.
+
+This taught me how to:
+
+1. Use Python’s json module effectively for parsing and serializing data.
+
+2. Perform structural and type validations on JSON data.
+
+3. Write defensive code that anticipates bad input and handles it gracefully.
+
+4. Improve the reliability and robustness of data processing pipelines involving JSON.
+
+Now, I can confidently process JSON data in my projects, ensuring it is clean, validated, and ready for backend or storage.
+
 <br /> <br />
 
 # Sources

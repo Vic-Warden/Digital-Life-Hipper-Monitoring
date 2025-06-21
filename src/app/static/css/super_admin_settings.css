@@ -1,6 +1,126 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #a8d8f0 0%, #e6f3ff 100%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #333;
+}
+
+/* Password Reset Form */
+.password-reset-form {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.password-reset-form h5 {
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.password-reset-form input[type="email"],
+.password-reset-form input[type="password"] {
+  display: block;
+  width: calc(100% - 1rem);
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.password-reset-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.password-reset-form button:hover {
+  background-color: #0056b3;
+}
+
+.password-reset-form .feedback {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #d9534f; /* red for errors; you can override in JS on success */
+}
+
+
 .card,
 .card * {
   font-family: Arial, sans-serif;
+}
+
+.add-therapist-form,
+.search-therapist-form {
+  margin-bottom: 1rem;
+}
+.add-therapist-form input,
+.search-therapist-form input {
+  margin-right: 0.5rem;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.btn-delete,
+#btn-add-therapist {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-delete:hover,
+#btn-add-therapist:hover {
+  background-color: #c0392b;
+}
+.therapist-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+.therapist-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+}
+.therapist-item:last-child {
+  border-bottom: none;
+}
+.feedback {
+  margin-left: 0.5rem;
+  color: green;
+  font-size: 0.9rem;
+}
+
+.empty-box{
+  padding-top: 85px;
+  width: 100%;
 }
 
 .super-user-box {
@@ -32,7 +152,7 @@
   justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-top: 225px;
+  padding-top: 85px;
   padding-bottom: 50px;
   padding-left: 225px;
   padding-right: 225px;
@@ -244,7 +364,7 @@ label {
 }
 
 .display-box-superusers {
-  max-height: 150px;       /* adjust to taste */
+  max-height: 300px;       /* adjust to taste */
   overflow-y: auto;
   border: 1px solid #74a6d4;
   border-radius: 6px;

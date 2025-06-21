@@ -15,11 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the actual step value from the HTML
     const currentSteps = parseInt(document.querySelector('.score-number').textContent.trim());
 
-    // Get the goal value from the HTML
-    const goalSteps = parseInt(document.querySelector('.score-total').textContent.trim());
-
     // Calculate the progress in degrees
-    const progress = (currentSteps / goalSteps) * 360;
+    const progress = (currentSteps / 100) * 360;
     scoreFill.style.setProperty('--progress', progress + 'deg');
 
     // Animate chart bars

@@ -125,9 +125,10 @@ class Database:
         """
         query = "SELECT password FROM User WHERE email = %s"
         result = self.do_query(query, (email,))
-        if result:
-            stored_hashed_password = result[0][0]
-            return check_password_hash(stored_hashed_password, password)
+        if not result:
+            return False
+        stored_hash = result[0][0]
+        return check_password_hash(stored_hash, password)
 
     def add_patient(self, name: str, email: str, password: str, cookie: str) -> bool:
         """

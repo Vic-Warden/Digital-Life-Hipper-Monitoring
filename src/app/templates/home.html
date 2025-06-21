@@ -56,7 +56,7 @@
 
         <div class="card">
             <div class="goals-section">
-                <h3>Personal Goals</h3>
+                <h3>Personal Goals - Steps</h3>
 
                 {% if calculated.goal_completion_details %}
                     {% for goal in calculated.goal_completion_details %}
@@ -64,7 +64,19 @@
                             <div class="goal-header">
                                 <span class="goal-name">{{ goal.goal_type | capitalize }} Goal</span>
                                 {% if goal.reached > 0 %}
-                                    <span class="goal-streak">🔥{{ goal.reached }} {{ goal.goal_type }} streak</span>
+                                    <span class="goal-streak">
+                                        🔥{{ goal.reached }}
+                                        {% if goal.goal_type == 'daily' %}
+                                            day
+                                        {% elif goal.goal_type == 'weekly' %}
+                                            week
+                                        {% elif goal.goal_type == 'monthly' %}
+                                            month
+                                        {% else %}
+                                            goal
+                                        {% endif %}
+                                        streak
+                                    </span>
                                 {% endif %}
                                 <span class="goal-progress">{{ goal.steps }} / {{ goal.target }}</span>
                             </div>

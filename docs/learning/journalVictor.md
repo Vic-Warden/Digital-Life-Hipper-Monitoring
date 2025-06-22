@@ -1,6 +1,17 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+## Learning Story #308
+
+I want to allow an admin t to securely update a patient's password,
+In order to ensure that authentication data is stored in hashed form and system security is maintained.
+
+What I learnt:
+
+How to use werkzeug.security.generate_password_hash to hash a password
+
+How to implement a secure route with Flask
+
 ## Learning Story #287
 
 [Youtube](https://www.youtube.com/watch?v=HMCJShcY9-g)

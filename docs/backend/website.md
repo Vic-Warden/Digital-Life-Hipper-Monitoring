@@ -645,6 +645,26 @@ def admin_manage_devices():
                            patients=db.get_patients(therapist_id))
 ```
 
+## Change password
+
+This route allows a therapist to change a password to a patient
+
+```python
+@app.route('/admin/change-patient-password', methods=['POST'])
+def change_patient_password():
+    email = request.form.get('email')
+    new_password = request.form.get('new_password')
+
+    if not email or not new_password:
+        return "Missing email or new password", 400
+
+    query = "UPDATE `User` SET password = %s WHERE email = %s AND is_therapist = 0"
+    params = (new_password, email)
+    db.do_query(query, params)
+
+    return redirect('/admin/patients')
+```
+
 ## API Bind device to patient
 
 This endpoint binds a hipper device to a patient based on the `device_id` and `patient_id`

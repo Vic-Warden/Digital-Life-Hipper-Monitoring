@@ -368,3 +368,20 @@ backgroundColor: labels.map((_, i) =>
 
 ---
 
+## 🎯 Result
+
+- You can set any number as the “step threshold”.
+- The chart shows red bars on days that didn’t meet it.
+- You can tailor inactivity definitions to each patient.
+
+---
+
+Want to go further? Add:
+
+```js
+localStorage.setItem('stepThreshold', newThreshold);
+```
+
+To remember it across sessions!
+
+---

@@ -285,3 +285,15 @@ By completing this learning story, I now know how to use JavaScript to compare t
 
 ---
 
+#  Step Threshold Feature – What I Learned, How I Learned It, and How to Implement It
+
+---
+
+##  What I Learned
+
+- I learned **how to define inactivity** based on daily step counts.
+- I now understand that **inactivity can be personalized** using a configurable step threshold.
+- I discovered how to **make charts highlight inactive days** with red bars.
+- I can allow therapists to control what “inactive” means for their patients.
+
+---

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
  
    <div class="logo-container">
     <div class="logo-line"></div>
-    <a href="/admin/home" class="hippertext">Hipper Therapeutics</a>
+    <a href="/admin/patients" class="hippertext">Hipper Therapeutics</a>
     <div class="logo-line"></div>
   </div>
 
@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     </button>
     <div class="dropdown-content">
-      <a href="/admin/home" class="nav-link">Home</a>
       <a href="/admin/patients" class="nav-link">Patients</a>
       <a href="/admin/manage-devices" class="nav-link">Manage Devices</a>
       <a href="/admin/settings" class="nav-link">Settings</a>

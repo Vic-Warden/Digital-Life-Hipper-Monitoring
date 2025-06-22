@@ -48,8 +48,7 @@ def home():
 
         if result:
             # Result returns a legitmate id containing the cookie
-            device_id = db.device_id_from_patient_id(result[0][0])  # result is a list of tuples
-            patient_data = db.get_patient_details(device_id)
+            patient_data = db.get_patient_details(result[0][0])
             calculated_data = db.calculate_patient_data(patient_data)
 
             return render_template('home.html', 
@@ -218,23 +217,33 @@ def admin_settings():
 
 # Handle the admin login page
 
-
-@app.route('/admin/home', methods=['GET', 'POST'])
-def admin_login():
-    # if connected
-    cookie = request.cookies.get('auth_cookie')
-    if db.verify_cookie(cookie)[0]:
-        # Render the home.html
-        return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
-    else:
-        # If user is not logged in, redirects to login page
-        return redirect('/admin/login')
+#@app.route('/admin/home/<patient_id>', methods=['GET', 'POST'])
+#def admin_home(patient_id):
+#    # Verify the cookie
+#    cookie = request.cookies.get('auth_cookie')
+#    valid = db.is_therapist(cookie)
+#
+#    if not valid:
+#        return redirect('/admin/login')
+#    
+#    print(patient_id)
+#    
+#    device_id = db.device_id_from_patient_id(patient_id)  # result is a list of tuples
+#    patient_data = db.get_patient_details(device_id)
+#    calculated_data = db.calculate_patient_data(patient_data) 
+#
+#    print(calculated_data)  
+#
+#     # Render the home.html
+#    return render_template('admin_home.html', 
+#                           calculated=calculated_data,
+#                           preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
+    valid = db.is_therapist(cookie)
 
     if not valid:
         return redirect('/admin/login')
@@ -311,7 +320,7 @@ def admin_add_patient():
 def admin_patient_details(patient_id):
     # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
+    valid = db.is_therapist(cookie)
 
     if not valid:
         return redirect('/admin/login')
@@ -322,8 +331,14 @@ def admin_patient_details(patient_id):
     if not patient_details:
         return "Patient not found", 404
 
-    # Render the patient details page
-    return render_template('admin_home.html', patient=patient_details, preferences=db.get_user_preferences(cookie))
+    device_id = db.device_id_from_patient_id(patient_id)  # result is a list of tuples
+    calculated_data = db.calculate_patient_data(patient_details) 
+
+    # Render the home.html
+    return render_template('therapist.html', 
+                           calculated=calculated_data, 
+                           device_id=device_id,
+                           preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -343,7 +358,7 @@ def admin_login_page():
                 return "Failed to create cookie", 500
 
             # Create response and set cookie
-            response = make_response(redirect('/admin/home'))
+            response = make_response(redirect('/admin/patients'))
             response.set_cookie(
                 'auth_cookie',            # Cookie name
                 cookie_value,             # Cookie value

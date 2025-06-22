@@ -632,7 +632,7 @@ class Database:
 
     def calculate_patient_data(self, dataset: dict):
 
-        if not isinstance(dataset, dict) or dataset.get('patient_details') is None:
+        if not isinstance(dataset, dict) or dataset.get('patient_details') is None or not dataset.get('data'):
             return {
                 'hourly': [],
                 'daily': [],
@@ -652,7 +652,7 @@ class Database:
             'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
             'zone_1', 'zone_2', 'zone_3', 'patient_id'
         ])
-
+        
         patient_id = df['patient_id'].iloc[0]
 
         df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
@@ -732,6 +732,7 @@ class Database:
 
         return {
             'name': patient[0][1],
+            'email': patient[0][2],
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),

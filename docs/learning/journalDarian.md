@@ -285,3 +285,103 @@ By completing this learning story, I now know how to use JavaScript to compare t
 
 ---
 
+#  Step Threshold Feature – What I Learned, How I Learned It, and How to Implement It
+
+---
+
+##  What I Learned
+
+- I learned **how to define inactivity** based on daily step counts.
+- I now understand that **inactivity can be personalized** using a configurable step threshold.
+- I discovered how to **make charts highlight inactive days** with red bars.
+- I can allow therapists to control what “inactive” means for their patients.
+
+---
+
+##  How I Learned It
+
+- I started with a UI requirement: "Let therapists decide what step count makes a day inactive."
+- I added an **HTML input** for the threshold and a button to apply it.
+- I modified the **JavaScript logic** to:
+  - Read the new threshold
+  - Recalculate which days are inactive
+  - Redraw the chart with red bars for those days
+- I tested by changing the threshold and watching the chart update.
+
+---
+
+
+##  How to Implement It
+
+### 1. HTML UI
+
+Place this **below your chart** in the historic activity panel:
+
+```html
+<div class="threshold-settings">
+  <label for="stepThreshold">Daily Step Threshold:</label>
+  <input type="number" id="stepThreshold" min="0" value="1000">
+  <button id="applyThresholdBtn">Apply</button>
+  <span id="thresholdStatus" class="threshold-status"></span>
+</div>
+```
+
+---
+
+### 2. JavaScript Logic
+
+Start with a default threshold:
+
+```js
+let inactivityStepThreshold = 1000;
+```
+
+Then, update when the button is clicked:
+
+```js
+document.getElementById('applyThresholdBtn').addEventListener('click', () => {
+  const input = document.getElementById('stepThreshold');
+  const newThreshold = parseInt(input.value);
+  inactivityStepThreshold = newThreshold;
+  updateInactivityFlags();
+  updateChart(currentView);
+});
+```
+
+Now, calculate which days are inactive:
+
+```js
+function updateInactivityFlags() {
+  chartData.weekly.inactiveDays = chartData.weekly.steps
+    .map((value, index) => value < inactivityStepThreshold ? index : -1)
+    .filter(index => index !== -1);
+}
+```
+
+Finally, color the bars red in your chart config:
+
+```js
+backgroundColor: labels.map((_, i) =>
+  inactiveIndices.includes(i) ? '#ffcccb' : '#4a90e2'
+)
+```
+
+---
+
+## 🎯 Result
+
+- You can set any number as the “step threshold”.
+- The chart shows red bars on days that didn’t meet it.
+- You can tailor inactivity definitions to each patient.
+
+---
+
+Want to go further? Add:
+
+```js
+localStorage.setItem('stepThreshold', newThreshold);
+```
+
+To remember it across sessions!
+
+---

@@ -1,6 +1,16 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
+## Learning Story #309
+
+I want to be able to search for a user in the database using their email address, in order to check their role and apply the appropriate modification rules
+
+What I've learnt :
+
+Write an SQL function to retrieve a user via email
+
+Understand how to extract user roles from the database
+
 ## Learning Story #287
 
 [Youtube](https://www.youtube.com/watch?v=HMCJShcY9-g)

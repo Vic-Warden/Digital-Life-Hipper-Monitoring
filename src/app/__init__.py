@@ -869,6 +869,21 @@ def remove_device_to_patient():
 
     return jsonify({"message": "Successfully removed device to patient"}), 200
 
+@app.route('/admin/change-patient-password', methods=['POST'])
+def change_patient_password():
+    email = request.form.get('email')
+    new_password = request.form.get('new_password')
+
+    if not email or not new_password:
+        return "Missing email or new password", 400
+
+    query = "UPDATE `User` SET password = %s WHERE email = %s AND is_therapist = 0"
+    params = (new_password, email)
+    db.do_query(query, params)
+
+    return redirect('/admin/patients')
+
+
 
 # Start the Flask application
 if __name__ == "__main__":

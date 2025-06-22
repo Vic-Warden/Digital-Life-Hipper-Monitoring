@@ -731,7 +731,8 @@ class Database:
             combined_completion = round(total_percent / count, 1) if count > 0 else None
 
         return {
-            'patient_details': patient,
+            'name': patient[0][1],
+            'email': patient[0][2],
             'hourly': hourly_avg.reset_index().to_dict(orient='records'),
             'daily': daily_avg.reset_index().to_dict(orient='records'),
             'weekly': weekly_avg.reset_index().to_dict(orient='records'),

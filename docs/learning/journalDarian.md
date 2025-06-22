@@ -328,3 +328,43 @@ Place this **below your chart** in the historic activity panel:
 
 ---
 
+### 2. JavaScript Logic
+
+Start with a default threshold:
+
+```js
+let inactivityStepThreshold = 1000;
+```
+
+Then, update when the button is clicked:
+
+```js
+document.getElementById('applyThresholdBtn').addEventListener('click', () => {
+  const input = document.getElementById('stepThreshold');
+  const newThreshold = parseInt(input.value);
+  inactivityStepThreshold = newThreshold;
+  updateInactivityFlags();
+  updateChart(currentView);
+});
+```
+
+Now, calculate which days are inactive:
+
+```js
+function updateInactivityFlags() {
+  chartData.weekly.inactiveDays = chartData.weekly.steps
+    .map((value, index) => value < inactivityStepThreshold ? index : -1)
+    .filter(index => index !== -1);
+}
+```
+
+Finally, color the bars red in your chart config:
+
+```js
+backgroundColor: labels.map((_, i) =>
+  inactiveIndices.includes(i) ? '#ffcccb' : '#4a90e2'
+)
+```
+
+---
+

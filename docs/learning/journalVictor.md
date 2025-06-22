@@ -1,16 +1,15 @@
 # Learning Journal
 This file contains the learning journal with the learning story's of Victor.
 
-## Learning Story #308
+## Learning Story #309
 
-I want to allow an admin t to securely update a patient's password,
-In order to ensure that authentication data is stored in hashed form and system security is maintained.
+I want to be able to search for a user in the database using their email address, in order to check their role and apply the appropriate modification rules
 
-What I learnt:
+What I've learnt :
 
-How to use werkzeug.security.generate_password_hash to hash a password
+Write an SQL function to retrieve a user via email
 
-How to implement a secure route with Flask
+Understand how to extract user roles from the database
 
 ## Learning Story #287
 

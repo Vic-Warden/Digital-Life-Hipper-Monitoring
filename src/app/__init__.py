@@ -221,20 +221,21 @@ def admin_settings():
 
 @app.route('/admin/home', methods=['GET', 'POST'])
 def admin_login():
-    # if connected
+    # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
-    if db.verify_cookie(cookie)[0]:
-        # Render the home.html
-        return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
-    else:
-        # If user is not logged in, redirects to login page
+    valid = db.is_therapist(cookie)
+
+    if not valid:
         return redirect('/admin/login')
+    
+        # Render the home.html
+    return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
     cookie = request.cookies.get('auth_cookie')
-    valid, user_data = db.verify_cookie(cookie)
+    valid = db.is_therapist(cookie)
 
     if not valid:
         return redirect('/admin/login')

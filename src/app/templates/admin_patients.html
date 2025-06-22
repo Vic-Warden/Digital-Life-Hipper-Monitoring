@@ -67,6 +67,20 @@
         <div id="error-msg" style="color: red; margin-top: 1em;"></div>
       </form>
     </div>
+    <!-- Form to change a patient's password -->
+<div class="changePassword-card">
+  <h3>Change Patient Password</h3>
+  <form id="change-password-form" action="/admin/change-patient-password" method="POST">
+    <label for="email">Patient Email</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="new_password">New Password</label>
+    <input type="text" id="new_password" name="new_password" required />
+
+    <button type="submit" class="patient-button">Change Password</button>
+  </form>
+</div>
+
   </div>
 
 

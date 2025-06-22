@@ -219,8 +219,8 @@ def admin_settings():
 # Handle the admin login page
 
 
-@app.route('/admin/home', methods=['GET', 'POST'])
-def admin_login():
+@app.route('/admin/home/<patient_id>', methods=['GET', 'POST'])
+def admin_home(patient_id):
     # Verify the cookie
     cookie = request.cookies.get('auth_cookie')
     valid = db.is_therapist(cookie)
@@ -228,8 +228,18 @@ def admin_login():
     if not valid:
         return redirect('/admin/login')
     
-        # Render the home.html
-    return render_template('admin_home.html', preferences=db.get_user_preferences(cookie))
+    print(patient_id)
+    
+    device_id = db.device_id_from_patient_id(patient_id)  # result is a list of tuples
+    patient_data = db.get_patient_details(device_id)
+    calculated_data = db.calculate_patient_data(patient_data) 
+
+    print(calculated_data)   
+
+     # Render the home.html
+    return render_template('admin_home.html', 
+                           calculated=calculated_data,
+                           preferences=db.get_user_preferences(cookie))
 
 
 @app.route('/admin/patients', methods=['GET'])

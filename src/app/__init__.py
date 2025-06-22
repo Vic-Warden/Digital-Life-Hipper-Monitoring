@@ -336,8 +336,6 @@ def admin_patient_details(patient_id):
     patient_data = db.get_patient_details(device_id)
     calculated_data = db.calculate_patient_data(patient_data) 
 
-    print(calculated_data)  
-
      # Render the home.html
     return render_template('therapist.html', 
                            calculated=calculated_data, 

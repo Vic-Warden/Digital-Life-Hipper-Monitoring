@@ -48,8 +48,7 @@ def home():
 
         if result:
             # Result returns a legitmate id containing the cookie
-            device_id = db.device_id_from_patient_id(result[0][0])  # result is a list of tuples
-            patient_data = db.get_patient_details(device_id)
+            patient_data = db.get_patient_details(result[0][0])
             calculated_data = db.calculate_patient_data(patient_data)
 
             return render_template('home.html', 
@@ -333,10 +332,9 @@ def admin_patient_details(patient_id):
         return "Patient not found", 404
 
     device_id = db.device_id_from_patient_id(patient_id)  # result is a list of tuples
-    patient_data = db.get_patient_details(device_id)
-    calculated_data = db.calculate_patient_data(patient_data) 
+    calculated_data = db.calculate_patient_data(patient_details) 
 
-     # Render the home.html
+    # Render the home.html
     return render_template('therapist.html', 
                            calculated=calculated_data, 
                            device_id=device_id,

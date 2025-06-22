@@ -298,7 +298,7 @@ By completing this learning story, I now know how to use JavaScript to compare t
 
 ---
 
-## 🧠 How I Learned It
+##  How I Learned It
 
 - I started with a UI requirement: "Let therapists decide what step count makes a day inactive."
 - I added an **HTML input** for the threshold and a button to apply it.
@@ -307,6 +307,24 @@ By completing this learning story, I now know how to use JavaScript to compare t
   - Recalculate which days are inactive
   - Redraw the chart with red bars for those days
 - I tested by changing the threshold and watching the chart update.
+
+---
+
+
+##  How to Implement It
+
+### 1. HTML UI
+
+Place this **below your chart** in the historic activity panel:
+
+```html
+<div class="threshold-settings">
+  <label for="stepThreshold">Daily Step Threshold:</label>
+  <input type="number" id="stepThreshold" min="0" value="1000">
+  <button id="applyThresholdBtn">Apply</button>
+  <span id="thresholdStatus" class="threshold-status"></span>
+</div>
+```
 
 ---
 

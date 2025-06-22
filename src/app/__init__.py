@@ -44,19 +44,17 @@ def home():
     # if connected
     cookie = request.cookies.get('auth_cookie')
     if db.verify_cookie(cookie)[0]:
-        user_query = "SELECT id, name FROM User WHERE cookies = %s"
-        result = db.do_query(user_query, (cookie,))
+        result = db.user_id_from_cookie(cookie)
 
         if result:
-            # Result returns a legitmate row containing the cookie
-            device_id = result[0][0]  # result is a list of tuples
-            client_name = result[0][1]
-            data_query = "SELECT * FROM hipperdb.Data WHERE device_id = %s"
-            patient_data = db.do_query(data_query, (device_id,))
+            # Result returns a legitmate id containing the cookie
+            device_id = db.device_id_from_patient_id(result[0][0])  # result is a list of tuples
+            patient_data = db.get_patient_details(device_id)
             calculated_data = db.calculate_patient_data(patient_data)
 
-            return render_template('home.html', calculated=calculated_data,
-                                   preferences=db.get_user_preferences(cookie), name=client_name)
+            return render_template('home.html', 
+                                   calculated=calculated_data,
+                                   preferences=db.get_user_preferences(cookie))
         else:
             return redirect('/login')
     else:
@@ -613,53 +611,6 @@ def update_log(mac_address):
 
     return {"message": "Log updated"}, 200
 
-@app.route('/admin/update-password/<int:patient_id>', methods=['POST'])
-def admin_update_patient_password(patient_id):
-    cookie = request.cookies.get('auth_cookie')
-    valid, _ = db.verify_cookie(cookie)
-
-    if not valid:
-        return redirect('/admin/login')
-
-    new_password = request.form.get('new_password')
-    if not new_password:
-        return "Password required", 400
-
-    hashed_pw = generate_password_hash(new_password)
-    success = db.update_patient_password(patient_id, hashed_pw)
-
-    if not success:
-        return "Error upddate", 500
-
-    return redirect('/admin/patients')
-
-@app.route('/admin/change-patient-password', methods=['POST'])
-def admin_change_patient_password():
-    cookie = request.cookies.get('auth_cookie')
-    valid, _ = db.verify_cookie(cookie)
-
-    if not valid:
-        return redirect('/admin/login')
-
-    email = request.form.get('email', '').strip().lower()
-    new_password = request.form.get('new_password', '').strip()
-
-    if not email or not new_password:
-        return "Missing email or password", 400
-
-    user = db.get_user_by_email(email)
-    if not user or user.get("is_therapist") or user.get("is_superuser"):
-        return "Patient not found or invalid", 404
-
-    hashed_pw = generate_password_hash(new_password)
-    success = db.update_patient_password(user['id'], hashed_pw)
-
-    if not success:
-        return "Password update failed", 500
-
-    return redirect('/admin/patients')
-
-
 
 @app.route('/routine-form', methods=['GET', 'POST'])
 def routine_form():
@@ -902,6 +853,21 @@ def remove_device_to_patient():
         return jsonify({"error": "Failed to unbind device"}), 500
 
     return jsonify({"message": "Successfully removed device to patient"}), 200
+
+@app.route('/admin/change-patient-password', methods=['POST'])
+def change_patient_password():
+    email = request.form.get('email')
+    new_password = request.form.get('new_password')
+
+    if not email or not new_password:
+        return "Missing email or new password", 400
+
+    query = "UPDATE `User` SET password = %s WHERE email = %s AND is_therapist = 0"
+    params = (new_password, email)
+    db.do_query(query, params)
+
+    return redirect('/admin/patients')
+
 
 
 # Start the Flask application

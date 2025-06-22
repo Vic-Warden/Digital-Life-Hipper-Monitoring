@@ -608,8 +608,6 @@ def admin_settings():
     return redirect("/admin/login")
 ```
 
-
-
 ## Manage Devices
 
 This route allows a therapist to manage the hipper devices and bind/unbind them to patients.
@@ -676,39 +674,6 @@ def add_device_to_patient():
         return jsonify({"error": "Failed to bind device"}), 500
 
     return jsonify({"message": "Successfully bound device to patient"}), 200
-```
-
-## Patient Password Change
-
-This route allows an admin to change a patient's password by entering the patient's email address and a new password
-
-```python
-@app.route('/admin/change-patient-password', methods=['POST'])
-def admin_change_patient_password():
-    cookie = request.cookies.get('auth_cookie')
-    valid, _ = db.verify_cookie(cookie)
-
-    if not valid:
-        return redirect('/admin/login')
-
-    email = request.form.get('email', '').strip().lower()
-    new_password = request.form.get('new_password', '').strip()
-
-    if not email or not new_password:
-        return "Missing email or password", 400
-
-    user = db.get_user_by_email(email)
-    if not user or user.get("is_therapist") or user.get("is_superuser"):
-        return "Patient not found or invalid", 404
-
-    hashed_pw = generate_password_hash(new_password)
-    success = db.update_patient_password(user['id'], hashed_pw)
-
-    if not success:
-        return "Password update failed", 500
-
-    return redirect('/admin/patients')
-
 ```
 
 ## API Unbind device from patients

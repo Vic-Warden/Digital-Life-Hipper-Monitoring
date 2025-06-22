@@ -297,3 +297,16 @@ By completing this learning story, I now know how to use JavaScript to compare t
 - I can allow therapists to control what “inactive” means for their patients.
 
 ---
+
+## 🧠 How I Learned It
+
+- I started with a UI requirement: "Let therapists decide what step count makes a day inactive."
+- I added an **HTML input** for the threshold and a button to apply it.
+- I modified the **JavaScript logic** to:
+  - Read the new threshold
+  - Recalculate which days are inactive
+  - Redraw the chart with red bars for those days
+- I tested by changing the threshold and watching the chart update.
+
+---
+

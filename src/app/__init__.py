@@ -339,8 +339,9 @@ def admin_patient_details(patient_id):
     print(calculated_data)  
 
      # Render the home.html
-    return render_template('admin_home.html', 
-                           calculated=calculated_data,
+    return render_template('therapist.html', 
+                           calculated=calculated_data, 
+                           device_id=device_id,
                            preferences=db.get_user_preferences(cookie))
 
 

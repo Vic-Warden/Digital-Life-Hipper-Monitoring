@@ -1,20 +1,21 @@
 // Chart data based on the screenshot
-const chartData = {
-  // Weekly data
-  weekly: {
-    dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
-    steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
-    pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
-    inactiveDays: [0, 1, 6] // indices of inactive days (red background)
-  },
-  // Daily data (hourly breakdown for today - 2025-05-23)
-  daily: {
-    hours: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
-    steps: [5, 2, 0, 0, 0, 8, 120, 450, 680, 820, 950, 1100, 1350, 1580, 1750, 1920, 2100, 2350, 2580, 2750, 2900, 3100, 15, 3],
-    pamScores: [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.5, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.3, 2.1, 1.8, 0.1, 0.0],
-    inactiveHours: [0, 1, 2, 3, 4, 5, 22, 23] // indices of sleeping/inactive hours
-  }
-};
+const chartData = window.chartData;
+//const chartData = {
+//  // Weekly data
+//  weekly: {
+//    dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
+//    steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
+//    pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
+//    inactiveDays: [0, 1, 6] // indices of inactive days (red background)
+//  },
+//  // Daily data (hourly breakdown for today - 2025-05-23)
+//  daily: {
+//    hours: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+//    steps: [5, 2, 0, 0, 0, 8, 120, 450, 680, 820, 950, 1100, 1350, 1580, 1750, 1920, 2100, 2350, 2580, 2750, 2900, 3100, 15, 3],
+//    pamScores: [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.5, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.3, 2.1, 1.8, 0.1, 0.0],
+//    inactiveHours: [0, 1, 2, 3, 4, 5, 22, 23] // indices of sleeping/inactive hours
+//  }
+//};
 
 // Current view mode
 let currentView = 'daily';
@@ -37,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeChart();
   initializeEventHandlers();
   updateCircularProgress();
-  initializeInactivePeriod();
 });
 
 // Initialize Chart.js chart
@@ -231,177 +231,22 @@ function initializeEventHandlers() {
   }
 }
 
-// Update circular progress
 function updateCircularProgress() {
+  const scoreCircle = document.querySelector('.score-circle');
   const circle = document.querySelector('.progress-ring-fill');
-  const current = 370;
-  const total = 600;
-  const percentage = (current / total) * 100;
+
+  const current = parseFloat(scoreCircle.dataset.current);
+  const total = parseFloat(scoreCircle.dataset.total);
   
+  const percentage = (current / total) * 100;
+
   // Circle calculations
   const radius = 90;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
-  
+
+  circle.style.strokeDasharray = `${circumference}`;
   circle.style.strokeDashoffset = offset;
-}
-
-// Initialize inactive period functionality
-function initializeInactivePeriod() {
-  const modal = document.getElementById('inactivePeriodModal');
-  const setPeriodBtn = document.getElementById('setPeriodBtn');
-  const closeModal = document.getElementById('closeModal');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const saveBtn = document.getElementById('saveBtn');
-  const removeBtn = document.getElementById('removeBtn');
-  const startTimeInput = document.getElementById('startTime');
-  const endTimeInput = document.getElementById('endTime');
-  const errorMessage = document.getElementById('errorMessage');
-
-  // Load saved period from localStorage (if available)
-  loadSavedPeriod();
-
-  // Event listeners
-  setPeriodBtn.addEventListener('click', openModal);
-  closeModal.addEventListener('click', closeModalHandler);
-  cancelBtn.addEventListener('click', closeModalHandler);
-  saveBtn.addEventListener('click', savePeriod);
-  removeBtn.addEventListener('click', removePeriod);
-
-  // Close modal when clicking outside
-  modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-      closeModalHandler();
-    }
-  });
-
-  // Real-time validation
-  startTimeInput.addEventListener('change', validateTimes);
-  endTimeInput.addEventListener('change', validateTimes);
-
-  function openModal() {
-    modal.classList.add('show');
-    
-    // If period is already set, populate the inputs and show remove button
-    if (inactivePeriod.isSet) {
-      startTimeInput.value = inactivePeriod.startTime;
-      endTimeInput.value = inactivePeriod.endTime;
-      removeBtn.style.display = 'inline-block';
-    } else {
-      startTimeInput.value = '';
-      endTimeInput.value = '';
-      removeBtn.style.display = 'none';
-    }
-    
-    errorMessage.textContent = '';
-  }
-
-  function closeModalHandler() {
-    modal.classList.remove('show');
-    errorMessage.textContent = '';
-  }
-
-  function validateTimes() {
-    const startTime = startTimeInput.value;
-    const endTime = endTimeInput.value;
-    
-    if (!startTime || !endTime) {
-      errorMessage.textContent = '';
-      return false;
-    }
-
-    if (startTime === endTime) {
-      errorMessage.textContent = 'Start time and end time cannot be the same.';
-      return false;
-    }
-
-    errorMessage.textContent = '';
-    return true;
-  }
-
-  function savePeriod() {
-    const startTime = startTimeInput.value;
-    const endTime = endTimeInput.value;
-
-    if (!startTime || !endTime) {
-      errorMessage.textContent = 'Please select both start and end times.';
-      return;
-    }
-
-    if (!validateTimes()) {
-      return;
-    }
-
-    // Save the period
-    inactivePeriod = {
-      startTime: startTime,
-      endTime: endTime,
-      isSet: true
-    };
-
-    // Save to localStorage (simulate backend saving)
-    savePeriodToBackend(inactivePeriod);
-
-    // Update UI
-    updatePeriodDisplay();
-    updateInactiveMinutes();
-    
-    closeModalHandler();
-    
-    // Show success message
-    showNotification('Inactive period saved successfully!', 'success');
-  }
-
-  function removePeriod() {
-    if (confirm('Are you sure you want to remove the inactive period?')) {
-      inactivePeriod = {
-        startTime: null,
-        endTime: null,
-        isSet: false
-      };
-
-      // Remove from localStorage
-      localStorage.removeItem('inactivePeriod');
-
-      // Update UI
-      updatePeriodDisplay();
-      updateInactiveMinutes();
-      
-      closeModalHandler();
-      
-      // Show success message
-      showNotification('Inactive period removed successfully!', 'success');
-    }
-  }
-}
-
-// Update the period display
-function updatePeriodDisplay() {
-  const currentPeriodElement = document.getElementById('currentPeriod');
-  
-  if (inactivePeriod.isSet) {
-    const startTime = formatTime(inactivePeriod.startTime);
-    const endTime = formatTime(inactivePeriod.endTime);
-    currentPeriodElement.textContent = `Active: ${startTime} - ${endTime}`;
-    currentPeriodElement.classList.add('active');
-  } else {
-    currentPeriodElement.textContent = 'No period set';
-    currentPeriodElement.classList.remove('active');
-  }
-}
-
-// Update inactive minutes based on set period
-function updateInactiveMinutes() {
-  const inactiveMinutesElement = document.getElementById('inactive-minutes-value');
-  
-  if (inactivePeriod.isSet) {
-    // Calculate excluded minutes (simplified calculation)
-    const excludedMinutes = calculateExcludedMinutes(inactivePeriod.startTime, inactivePeriod.endTime);
-    const adjustedMinutes = Math.max(0, originalInactiveMinutes - excludedMinutes);
-    inactiveMinutesElement.textContent = adjustedMinutes;
-  } else {
-    inactiveMinutesElement.textContent = originalInactiveMinutes;
-  }
 }
 
 // Calculate excluded minutes based on time period
@@ -633,3 +478,5 @@ if (!document.querySelector('#dynamic-animations')) {
   `;
   document.head.appendChild(style);
 }
+
+document.addEventListener('DOMContentLoaded', updateCircularProgress);

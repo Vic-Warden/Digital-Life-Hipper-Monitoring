@@ -33,24 +33,33 @@
 
       <!-- Inactive Minutes -->
       <div class="metric-card">
-        <div class="metric-icon inactive-icon">🏃‍♂️</div>
+        <div class="metric-icon inactive-icon">⏱️</div>
         <div class="metric-info">
-          <div class="metric-value" id="inactive-minutes-value">180</div>
-          <div class="metric-label">Inactive Minutes</div>
+          <div class="metric-value" id="inactive-minutes-value">Last Activity</div>
+          <div class="metric-label">{{ calculated.last_data_pull_ago }}</div>
+        </div>
+      </div>
+
+      <!-- Inactive Minutes -->
+      <div class="metric-card">
+        <div class="metric-icon inactive-icon">👣</div>
+        <div class="metric-info">
+          <div class="metric-value" id="inactive-minutes-value">Steps Today</div>
+          <div class="metric-label">{{ calculated.total_steps_today }}</div>
         </div>
       </div>
 
       <!-- Overall Monthly Score -->
       <div class="score-card">
-        <h3>Overall Monthly Score</h3>
+        <h3>Combined Goal Completion</h3>
         <div class="circular-progress">
           <svg class="progress-ring" width="200" height="200">
             <circle class="progress-ring-background" cx="100" cy="100" r="90" stroke="#e0e0e0" stroke-width="20" fill="none"></circle>
             <circle class="progress-ring-fill" cx="100" cy="100" r="90" stroke="#b8e986" stroke-width="20" fill="none" stroke-dasharray="565.48" stroke-dashoffset="188.16"></circle>
           </svg>
           <div class="score-text">
-            <div class="score-current">370</div>
-            <div class="score-total">/ 600</div>
+            <div class="score-current">{{ calculated.combined_goal_completion_percent }}%</div>
+            <div class="score-circle" data-current="{{ calculated.combined_goal_completion_percent }}" data-total="100">
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ from bleak import BleakScanner
 from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
-BACKEND_URL = "http://192.168.178.223:5000"
+BACKEND_URL = "http://192.168.43.149:5000"
 
 LOG_FILE = "log.json"
 PAM_DEVICES_FILE = "PAM_devices.json"

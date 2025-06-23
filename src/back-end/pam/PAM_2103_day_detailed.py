@@ -22,7 +22,7 @@ class PAM_2103_Day_Detailed():
             print("No label ID was provided. manually scanning.")
         elif adres is not None:
             self.adres = adres
-            print(f"Label ID provided, directly targetting ID {self.adres}")
+            # print(f"Label ID provided, directly targetting ID {self.adres}")
             self.directly_targetting_ID = True
 
     # callback for when a new block of bytes is received
@@ -30,7 +30,7 @@ class PAM_2103_Day_Detailed():
         block_number = int.from_bytes(data[:2], byteorder='little')
         payload = data[2:]
         self.received_blocks[block_number] = payload
-        print(f"Received block #{block_number} with {len(payload)} bytes")
+        # print(f"Received block #{block_number} with {len(payload)} bytes")
 
     def parse_detailed_data_blocks(self, blocks: dict[int, bytes]) -> list[tuple[int, int, int, float]]:
         """
@@ -92,7 +92,7 @@ class PAM_2103_Day_Detailed():
     # displays the records here
     def display_records(self, records, base_date):
 
-        print(records)
+        # print(records)
         # times 86400 to account for the amount of seconds for each day
         start_date = datetime.fromtimestamp(base_date * 86400)
 
@@ -112,49 +112,49 @@ class PAM_2103_Day_Detailed():
     async def run(self):
         adres = None
         if self.directly_targetting_ID == False:
-            print("Scanning for BLE devices...")
+            # print("Scanning for BLE devices...")
             devices = await BleakScanner.discover(timeout=5)
 
             pam_device = None
             for device in devices:
-                print(f"- {device.name} [{device.address}]")
+                # print(f"- {device.name} [{device.address}]")
                 if device.name and "Pam" in device.name:
                     pam_device = device
                     break
 
             if not pam_device:
-                print("Pam sensor not found.")
+                # print("Pam sensor not found.")
                 return
 
-            print(f"\nConnecting to {pam_device.name}...")
+            # print(f"\nConnecting to {pam_device.name}...")
             adres = pam_device.address
         elif self.directly_targetting_ID == True:
             adres = self.adres
 
         async with BleakClient(adres) as client:
-            print(" Connected to PAM device!")
+            # print(" Connected to PAM device!")
 
             await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)
             await asyncio.sleep(1)
 
             await client.write_gatt_char(self.ACTIVITY_FILE_UUID, self.REQUEST_AMOUNT_TYPE)
-            print("Requested activity file...")
+            # print("Requested activity file...")
 
             import time
-            print("waiting")
+            # print("waiting")
             time.sleep(30)
 
             await client.stop_notify(self.ACTIVITY_DOWNLOAD_UUID)
-            print("Download complete. Processing data...")
+            # print("Download complete. Processing data...")
 
             if 0 not in self.received_blocks:
-                print("Download failed; Missing file header.")
+                # print("Download failed; Missing file header.")
                 return
 
             header = self.received_blocks[0]
             base_date = int.from_bytes(header[2:4], byteorder='little')
-            print("Base date is: ", base_date)
-            print(self.received_blocks)
+            # print("Base date is: ", base_date)
+            # print(self.received_blocks)
 
             records = self.parse_detailed_data_blocks(self.received_blocks)
             self.display_records(records, base_date)

@@ -17,14 +17,14 @@ class PAM_2103_Day_Data():
             print("No label ID was provided. Manually scanning.")
         else:
             self.adres = adres
-            print(f"Label ID provided, directly targetting ID {self.adres}")
+            # print(f"Label ID provided, directly targetting ID {self.adres}")
             self.directly_targetting_ID = True
 
     def notification_handler(self, sender, data):
         block_number = int.from_bytes(data[:2], byteorder='little')
         payload = data[2:]
         self.received_blocks[block_number] = payload
-        print(f"Received block #{block_number} with {len(payload)} bytes \n {payload}")
+        # print(f"Received block #{block_number} with {len(payload)} bytes \n {payload}")
 
 
     def parse_detailed_data_blocks(self, received_blocks):
@@ -100,52 +100,52 @@ class PAM_2103_Day_Data():
 
                 writer.writerow(row)
 
-        print(f"All records have been written to {filename}")
+        # print(f"All records have been written to {filename}")
 
     async def run(self):
         if not self.directly_targetting_ID:
-            print("Scanning for BLE devices…")
+            # print("Scanning for BLE devices…")
             devices = await BleakScanner.discover(timeout=5)
             pam_device = None
             for device in devices:
-                print(f"- {device.name} [{device.address}]")
+                # print(f"- {device.name} [{device.address}]")
                 if device.name and "Pam" in device.name:
                     pam_device = device
                     break
             if not pam_device:
-                print("Pam sensor not found.")
+                # print("Pam sensor not found.")
                 return
-            print(f"\nConnecting to {pam_device.name}…")
+            # print(f"\nConnecting to {pam_device.name}…")
             adres = pam_device.address
         else:
             adres = self.adres
 
         async with BleakClient(adres) as client:
-            print("Connected to PAM device!")
+            # print("Connected to PAM device!")
 
             await client.start_notify(self.ACTIVITY_DOWNLOAD_UUID, self.notification_handler)
             await asyncio.sleep(1)
             time.sleep(5)
 
             await client.write_gatt_char(self.ACTIVITY_FILE_UUID, self.REQUEST_AMOUNT_TYPE)
-            print("Requested activity file…")
+            # print("Requested activity file…")
 
-            print("waiting")
+            # print("waiting")
             time.sleep(5)
 
             await client.stop_notify(self.ACTIVITY_DOWNLOAD_UUID)
-            print("Download complete. Processing data…")
+            # print("Download complete. Processing data…")
 
             if 0 not in self.received_blocks:
-                print("Download failed; Missing file header.")
+                # print("Download failed; Missing file header.")
                 return
 
             header = self.received_blocks[0]
             raw_days = int.from_bytes(header[2:4], byteorder='little')
             # Convert raw integer into a real date
             base_date = datetime(1970, 1, 1).date() + timedelta(days=raw_days)
-            print("Base date is:", base_date.isoformat())
-            print(self.received_blocks)
+            # print("Base date is:", base_date.isoformat())
+            # print(self.received_blocks)
 
             records = self.parse_detailed_data_blocks(self.received_blocks)
             self.display_records(records, base_date)

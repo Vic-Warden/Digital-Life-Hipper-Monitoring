@@ -21,6 +21,11 @@
   <main class="container">
     <section class="login-box">
       <h2>Welcome Back</h2>
+
+          {% if error %}
+      <div class="login-error">{{ error }}</div>
+          {% endif %}
+
       <form action="/admin/login" method="POST">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required />

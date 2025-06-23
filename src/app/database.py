@@ -1114,3 +1114,10 @@ class Database:
             print("reset_therapist_password error:", e)
             return False
 
+    def get_device_label_by_mac(self, mac_address):
+        query = "SELECT device_label FROM Device WHERE device_mac_addr=%s"
+        params = (mac_address.upper(),)
+        result = self.do_query(query, params, fetch=True)
+        if result and len(result) > 0:
+            return result[0][0]  # device_label is the first column
+        return None

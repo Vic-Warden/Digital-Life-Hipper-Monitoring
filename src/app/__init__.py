@@ -627,6 +627,15 @@ def update_log(mac_address):
     return {"message": "Log updated"}, 200
 
 
+@app.route('/log/device_label/<mac_address>', methods=['GET'])
+def device_label(mac_address):
+    label = db.get_device_label_by_mac(mac_address)
+    if label:
+        return {"device_label": label}, 200
+    else:
+        return {"error": "Device not found"}, 404
+
+
 @app.route('/routine-form', methods=['GET', 'POST'])
 def routine_form():
     if request.method == 'POST':

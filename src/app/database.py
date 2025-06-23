@@ -329,7 +329,7 @@ class Database:
                 MinuteData.PAM_score,
                 MinuteData.data_label, 
                 MinuteData.patient_id
-            FROM Data
+            FROM MinuteData
             INNER JOIN Device ON MinuteData.device_id = Device.device_id
             WHERE Device.patient_id_device = %s;
         """

@@ -86,37 +86,23 @@
 
     <!-- Right Panel - Client Goals -->
     <section class="client-goals-panel">
-      <h2>Client Goals</h2>
+      <h2>Client Goals - Steps</h2>
       
-      <!-- Weekly Goal -->
-      <div class="goal-item">
-        <div class="goal-header">
-          <span class="goal-label">Weekly Goal</span>
-          <div class="goal-actions">
-            <span class="goal-value">40 / 85</span>
-            <button class="edit-btn" onclick="editGoal(this)">✏️</button>
-            <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
+      {% for goal in calculated.goal_completion_details %}
+        <div class="goal-item">
+          <div class="goal-header">
+            <span class="goal-label">{{ goal.goal_type.capitalize() }} Goal</span>
+            <div class="goal-actions">
+              <span class="goal-value">{{ goal.steps }} / {{ goal.target }}</span>
+              <span class="streak-value">🔥{{ goal.reached }}</span>
+              <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
+            </div>
+          </div>
+          <div class="goal-progress">
+            <div class="goal-progress-fill" style="width: {{ goal.percent_completed }}%"></div>
           </div>
         </div>
-        <div class="goal-progress">
-          <div class="goal-progress-fill" style="width: 47%"></div>
-        </div>
-      </div>
-
-      <!-- Monthly Goal -->
-      <div class="goal-item">
-        <div class="goal-header">
-          <span class="goal-label">Monthly Goal</span>
-          <div class="goal-actions">
-            <span class="goal-value">153 / 600</span>
-            <button class="edit-btn" onclick="editGoal(this)">✏️</button>
-            <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
-          </div>
-        </div>
-        <div class="goal-progress">
-          <div class="goal-progress-fill" style="width: 26%"></div>
-        </div>
-      </div>
+      {% endfor %}
 
       <!-- Add Client Goals -->
       <div class="add-goal">

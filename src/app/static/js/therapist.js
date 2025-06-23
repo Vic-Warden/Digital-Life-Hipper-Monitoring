@@ -358,26 +358,6 @@ function showNotification(message, type = 'info') {
   }, 3000);
 }
 
-// Goal management functions
-function editGoal(button) {
-  const goalItem = button.closest('.goal-item');
-  const goalValue = goalItem.querySelector('.goal-value');
-  const currentValue = goalValue.textContent;
-  
-  const newValue = prompt('Enter new goal value:', currentValue);
-  if (newValue && newValue !== currentValue) {
-    goalValue.textContent = newValue;
-    
-    // Update progress bar if needed
-    const [current, total] = newValue.split(' / ').map(v => parseInt(v.trim()));
-    const percentage = (current / total) * 100;
-    const progressFill = goalItem.querySelector('.goal-progress-fill');
-    progressFill.style.width = `${Math.min(percentage, 100)}%`;
-    
-    showNotification('Goal updated successfully!', 'success');
-  }
-}
-
 function deleteGoal(button) {
   if (confirm('Are you sure you want to delete this goal?')) {
     const goalItem = button.closest('.goal-item');
@@ -414,7 +394,6 @@ function addNewGoal() {
       <span class="goal-label">${goalName}</span>
       <div class="goal-actions">
         <span class="goal-value">${goalCurrent} / ${goalTarget}</span>
-        <button class="edit-btn" onclick="editGoal(this)">✏️</button>
         <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
       </div>
     </div>

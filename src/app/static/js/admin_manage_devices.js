@@ -86,6 +86,37 @@ function unbindDeviceFromPatient() {
         });
 }
 
+    function addPamDevice() {
+    const label = document.getElementById('new_pam_label').value.trim();
+    const mac = document.getElementById('new_pam_mac').value.trim();
+
+    if (!label || !mac) {
+    alert('Please enter both PAM device label and MAC address.');
+    return;
+}
+
+    // Send data to backend using fetch (AJAX)
+    fetch('/admin/add_pam_device', {
+    method: 'POST',
+    headers: {
+    'Content-Type': 'application/json'
+},
+    body: JSON.stringify({
+    device_label: label,
+    device_mac_addr: mac
+})
+})
+    .then(response => {
+    if (response.ok) {
+    alert('PAM device added successfully!');
+    window.location.reload(); // Reload page to show new device
+} else {
+    response.text().then(text => alert('Error: ' + text));
+}
+})
+    .catch(err => alert('Request failed: ' + err));
+}
+
 document.getElementById('toggle-unoccupied-devices').addEventListener('click', function () {
     const items = document.querySelectorAll('.device-card-item');
     const showOnlyUnoccupied = this.dataset.filter !== 'on';

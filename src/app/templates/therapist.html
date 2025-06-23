@@ -198,19 +198,17 @@
       newGoal.className = 'goal-item';
       newGoal.style.animation = 'fadeIn 0.3s ease';
 
-      const percentage = (parseInt(goalCurrent) / parseInt(goalTarget)) * 100;
-
       newGoal.innerHTML = `
         <div class="goal-header">
           <span class="goal-label">${goalName.charAt(0).toUpperCase() + goalName.slice(1)} Goal</span>
           <div class="goal-actions">
-            <span class="goal-value">${goalCurrent} / ${goalTarget}</span>
+            <span class="goal-value">0 / ${goalTarget}</span>
             <span class="streak-value">🔥0</span>
             <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
           </div>
         </div>
         <div class="goal-progress">
-          <div class="goal-progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
+          <div class="goal-progress-fill" style="width: 0%"></div>
         </div>
       `;
 

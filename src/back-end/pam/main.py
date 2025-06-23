@@ -65,6 +65,8 @@ async def update_log(mac_address, activity=False, day_data=False):
                 # print(f"[update_log] HTTP POST {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
                 if resp.status != 200:
                     print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
+                elif resp.status == 200: 
+                    print(f"✅ Updated log")
     except Exception as e:
         print(f"[update_log] Error updating log for {mac_address}: {e}")
 
@@ -252,7 +254,6 @@ async def main_loop():
                                 label_id=label_id,
                             )
                             await day_data_downloader.run()
-                            await update_log(mac_address, day_data=True)
 
                             filepath = os.path.join(OUTPUT_DIR, f"day_data_{mac_address.replace(':', '')}.csv")
                             pam_data = day_csv_to_json(filepath, label_id)
@@ -264,7 +265,8 @@ async def main_loop():
                                     pam_data=pam_data
                                 )
                                 if success:
-                                    print("✅ Day Data successfully uploaded to backend.")
+                                    print("✅ Day Data successfully uploaded to backend. Updating log...")
+                                    await update_log(mac_address, day_data=True)
                                 else:
                                     print("❌ Failed to upload Day data.")
                             else:
@@ -294,7 +296,6 @@ async def main_loop():
                                 label_id=label_id,
                             )
                             await activity_downloader.run()
-                            await update_log(mac_address, activity=True)
 
                             filepath = os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}.csv")
                             pam_data = minute_csv_to_json(filepath, label_id)
@@ -306,7 +307,8 @@ async def main_loop():
                                     pam_data=pam_data
                                 )
                                 if success:
-                                    print("✅ Minute Data successfully uploaded to backend.")
+                                    print("✅ Minute Data successfully uploaded to backend. Updating log...")
+                                    await update_log(mac_address, activity=True)
                                 else:
                                     print("❌ Failed to upload Minute data.")
                             else:

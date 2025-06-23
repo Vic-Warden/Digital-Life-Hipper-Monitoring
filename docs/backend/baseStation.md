@@ -32,16 +32,17 @@ This will start up the service to run the code of the base station. All of the b
 
 The main code used for this base station makes use of the already existing [BLE commands](bleCommands.md) to pull the data of a full day, and of intervals of 1 hour. 
 
-The main code can be run using Python. It scans for any devices in the region at an interval of 10 seconds using low-powered Bluetooth, that correspond with a Hipper monitor. If it finds one that it does not recognize, it adds the MAC address with a generated label to `PAM_devices.json`:
+The main code can be run using Python. It scans for any devices in the region at an interval of 10 seconds using low-powered Bluetooth, that correspond with a Hipper monitor. It does this by checking the devices table in the database. If a pam device is found but is not in the database, it skips this device. If it is in the database it checks the local log: `PAM_devices.json`
 
 ```json
 {
-  "label_90243": "C1:08:00:01:12:33",
-  "label_90248": "C1:08:00:01:36:3A",
-  "label_90245": "C1:08:00:01:0E:9C",
-  "label_90242": "C1:08:00:01:23:B0"
+  "90243": "C1:08:00:01:12:33",
+  "90248": "C1:08:00:01:36:3A",
+  "90245": "C1:08:00:01:0E:9C",
+  "90242": "C1:08:00:01:23:B0"
 }
 ```
+It also updates this file if a label corresponding to a mac adress has changed or was not in the database yet. 
 
 After doing this, or if the device is already known, the code checks the log file to determine whether it needs to pull any data. If it has not pulled any data in the last hour, or has not pulled the day data file for that day, it uses the services from [BLE Commands](bleCommands.md) to pull the data. This then saves the data under the `output` folder as either `activity_macAddress` or `day_data_macAddress`. If the data has already been pulled, it skips this device.
 

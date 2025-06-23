@@ -649,11 +649,13 @@ class Database:
 
     def calculate_patient_data(self, dataset: dict):
 
-        if not isinstance(dataset, dict) or dataset.get('patient_details') is None or not dataset.get('data'):
+        if not isinstance(dataset, dict) or dataset.get('patient_details') is None or not dataset.get('minutedata'):
             return {
                 'hourly': [],
                 'daily': [],
+                'daily_therapist_sorted': [],
                 'weekly': [],
+                'weekly_therapist_sorted': [],
                 'monthly': [],
                 'last_data_pull_ago': "No data available",
                 'total_steps_today': 0,
@@ -693,6 +695,20 @@ class Database:
             hours, remainder = divmod(delta.total_seconds(), 3600)
             minutes = remainder // 60
             last_data_pull_ago = f"{int(hours)}h, {int(minutes)}min ago"
+
+            hourly = hourly_avg.reset_index().to_dict(orient='records')
+            daily = daily_avg.reset_index().to_dict(orient='records')
+            weekly = weekly_avg.reset_index().to_dict(orient='records')
+            monthly = monthly_avg.reset_index().to_dict(orient='records')
+
+            weekly_therapist = sorted(daily, key=lambda x: x['timestamp'])
+            daily_therapist = sorted(hourly, key=lambda x: x['timestamp'])
+
+            for entry in weekly_therapist:
+                entry['date_str'] = entry['timestamp'].strftime('%Y-%m-%d')
+
+            for entry in daily_therapist:
+                entry['hour_str'] = entry['timestamp'].strftime('%-H:00')
 
         combined_completion = None
         goal_completion_details = []
@@ -742,24 +758,11 @@ class Database:
                     'target': target,
                     'steps': int(steps),
                     'percent_completed': round(percent, 2),
-                    'reached': reached_count
+                    'reached': reached_count,
+                    'id': goal_id
                 })
 
             combined_completion = round(total_percent / count, 1) if count > 0 else None
-
-            hourly = hourly_avg.reset_index().to_dict(orient='records')
-            daily = daily_avg.reset_index().to_dict(orient='records')
-            weekly = weekly_avg.reset_index().to_dict(orient='records')
-            monthly = monthly_avg.reset_index().to_dict(orient='records')
-
-            weekly_therapist = sorted(daily, key=lambda x: x['timestamp'])
-            daily_therapist = sorted(hourly, key=lambda x: x['timestamp'])
-
-            for entry in weekly_therapist:
-                entry['date_str'] = entry['timestamp'].strftime('%Y-%m-%d')
-
-            for entry in daily_therapist:
-                entry['hour_str'] = entry['timestamp'].strftime('%-H:00')
 
         return {
             'name': patient[0][1],
@@ -836,6 +839,27 @@ class Database:
 
         return setResult is not None
 
+    def remove_goal_by_id(self, goal_id: int) -> bool:
+        """Delete a goal"""
+        result = self.do_query(
+            "DELETE FROM Goal WHERE id = %s;", (goal_id,), fetch=False)
+        # fetch=False returns [("Query executed successfully",)] on success
+        return result is not None
+
+    def submit_goal_by_id(self, user_id, goal_name, goal_target) -> bool:
+        """
+        ### Submit a goal for the current patient that is being viewed.
+        Returns True if the goal was added successfully, False otherwise.
+        """
+        query = """
+            INSERT INTO `hipperdb`.`Goal` (`patient_id_goal`, `patient_goal`, `type`, `reached`) 
+            VALUES 
+            (%s, %s, %s, 0);
+        """
+        params = (user_id, goal_target, goal_name)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None
 
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """
@@ -1114,3 +1138,10 @@ class Database:
             print("reset_therapist_password error:", e)
             return False
 
+    def get_device_label_by_mac(self, mac_address):
+        query = "SELECT device_label FROM Device WHERE device_mac_addr=%s"
+        params = (mac_address.upper(),)
+        result = self.do_query(query, params, fetch=True)
+        if result and len(result) > 0:
+            return result[0][0]  # device_label is the first column
+        return None

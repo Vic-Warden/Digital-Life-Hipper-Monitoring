@@ -630,6 +630,15 @@ def update_log(mac_address):
     return {"message": "Log updated"}, 200
 
 
+@app.route('/log/device_label/<mac_address>', methods=['GET'])
+def device_label(mac_address):
+    label = db.get_device_label_by_mac(mac_address)
+    if label:
+        return {"device_label": label}, 200
+    else:
+        return {"error": "Device not found"}, 404
+
+
 @app.route('/routine-form', methods=['GET', 'POST'])
 def routine_form():
     if request.method == 'POST':
@@ -885,6 +894,30 @@ def change_patient_password():
     db.do_query(query, params)
 
     return redirect('/admin/patients')
+
+# Delete a goal
+@app.route('/api/delete_goal', methods=['POST'])
+def delete_goal():
+    data = request.get_json()
+    goal_id = data.get('goal_id')
+
+    if not goal_id:
+        return jsonify({"error": "no goal id found"}), 401
+
+    success = db.remove_goal_by_id(goal_id)
+
+    return (jsonify({"msg": "Deleted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
+
+@app.route('/api/submit-goal', methods=['POST'])
+def submit_goal():
+    data = request.get_json()
+    user_id = data.get('userId')
+    goal_name = data.get('goalName')
+    goal_target = data.get('goalTarget')
+
+    success = db.submit_goal_by_id(user_id, goal_name, goal_target)
+
+    return (jsonify({"msg": "Goal submitted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
 
 @app.route('/admin/delete_pam_device', methods=['POST'])
 def delete_pam_device():

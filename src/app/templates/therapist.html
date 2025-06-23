@@ -86,37 +86,23 @@
 
     <!-- Right Panel - Client Goals -->
     <section class="client-goals-panel">
-      <h2>Client Goals</h2>
+      <h2>Client Goals - Steps</h2>
       
-      <!-- Weekly Goal -->
-      <div class="goal-item">
-        <div class="goal-header">
-          <span class="goal-label">Weekly Goal</span>
-          <div class="goal-actions">
-            <span class="goal-value">40 / 85</span>
-            <button class="edit-btn" onclick="editGoal(this)">✏️</button>
-            <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
+      {% for goal in calculated.goal_completion_details %}
+        <div class="goal-item">
+          <div class="goal-header">
+            <span class="goal-label">{{ goal.goal_type.capitalize() }} Goal</span>
+            <div class="goal-actions">
+              <span class="goal-value">{{ goal.steps }} / {{ goal.target }}</span>
+              <span class="streak-value">🔥{{ goal.reached }}</span>
+              <button class="delete-btn" onclick="deleteGoal(this)" data-goal-id="{{ goal.id }}">🗑️</button>
+            </div>
+          </div>
+          <div class="goal-progress">
+            <div class="goal-progress-fill" style="width: {{ goal.percent_completed }}%"></div>
           </div>
         </div>
-        <div class="goal-progress">
-          <div class="goal-progress-fill" style="width: 47%"></div>
-        </div>
-      </div>
-
-      <!-- Monthly Goal -->
-      <div class="goal-item">
-        <div class="goal-header">
-          <span class="goal-label">Monthly Goal</span>
-          <div class="goal-actions">
-            <span class="goal-value">153 / 600</span>
-            <button class="edit-btn" onclick="editGoal(this)">✏️</button>
-            <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
-          </div>
-        </div>
-        <div class="goal-progress">
-          <div class="goal-progress-fill" style="width: 26%"></div>
-        </div>
-      </div>
+      {% endfor %}
 
       <!-- Add Client Goals -->
       <div class="add-goal">
@@ -147,6 +133,88 @@
     };
 
     console.log(chartData); // For debugging
+
+    function deleteGoal(button) {
+      if (!confirm('Are you sure you want to delete this goal?')) return;
+
+      const goalItem = button.closest('.goal-item');
+      const goalId = button.getAttribute('data-goal-id');
+
+      fetch('/api/delete_goal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ goal_id: goalId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.msg === 'Deleted') {
+          goalItem.style.animation = 'fadeOut 0.3s ease';
+          setTimeout(() => {
+            goalItem.remove();
+            showNotification('Goal deleted successfully!', 'success');
+          }, 300);
+        } else {
+          showNotification('Failed to delete goal.', 'error');
+        }
+      })
+      .catch(() => {
+        showNotification('Error contacting server.', 'error');
+      });
+    }
+
+    function addNewGoal() {
+      const validNames = ['daily', 'weekly', 'monthly'];
+      let goalName = prompt('Enter goal name (daily, weekly, or monthly):');
+      if (!goalName) return;
+
+      goalName = goalName.toLowerCase().trim();
+      if (!validNames.includes(goalName)) {
+        alert('Invalid goal name. Please enter "daily", "weekly", or "monthly".');
+        return;
+      }
+
+      const goalTarget = prompt('Enter target value:');
+      if (!goalTarget || isNaN(goalTarget) || Number(goalTarget) <= 0) {
+        alert('Target value must be a number greater than 0.');
+        return;
+      }
+
+      const pathParts = window.location.pathname.split('/');
+      const userId = pathParts[pathParts.length - 1];
+
+      fetch(`/api/submit-goal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, goalName, goalTarget })
+      })
+
+      // Create new goal element
+      const goalsPanel = document.querySelector('.client-goals-panel');
+      const addGoalElement = document.querySelector('.add-goal');
+
+      const newGoal = document.createElement('div');
+      newGoal.className = 'goal-item';
+      newGoal.style.animation = 'fadeIn 0.3s ease';
+
+      newGoal.innerHTML = `
+        <div class="goal-header">
+          <span class="goal-label">${goalName.charAt(0).toUpperCase() + goalName.slice(1)} Goal</span>
+          <div class="goal-actions">
+            <span class="goal-value">0 / ${goalTarget}</span>
+            <span class="streak-value">🔥0</span>
+            <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
+          </div>
+        </div>
+        <div class="goal-progress">
+          <div class="goal-progress-fill" style="width: 0%"></div>
+        </div>
+      `;
+
+      goalsPanel.insertBefore(newGoal, addGoalElement);
+      showNotification('Goal added successfully!', 'success');
+    }
   </script>
 
   

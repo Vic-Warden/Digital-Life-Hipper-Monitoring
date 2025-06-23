@@ -662,12 +662,12 @@ class Database:
             }
                 
         patient = dataset['patient_details']
-        data = dataset['data']
+        data = dataset['minutedata']
         goals = dataset['goals']
 
         df = pd.DataFrame(data, columns=[
             'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
-            'zone_1', 'zone_2', 'zone_3', 'patient_id'
+            'data_label', 'patient_id'
         ])
         
         patient_id = df['patient_id'].iloc[0]

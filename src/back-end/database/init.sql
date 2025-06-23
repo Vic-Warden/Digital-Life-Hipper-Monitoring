@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`User` (
   `fk_therapist_id` INT NULL,
   `dark_mode` INT NOT NULL DEFAULT 0,
   `large_font` INT NOT NULL DEFAULT 0,
-  `language` VARCHAR(3) NOT NULL DEFAULT 'NL',
+  `language` VARCHAR(3) NOT NULL DEFAULT 'nl',
   `is_superuser` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   INDEX `fk_therapist_id_idx` (`fk_therapist_id` ASC) VISIBLE,

@@ -1,0 +1,17 @@
+body.dark-mode {
+  background-color: #121212;
+  color: #fff;
+}
+
+body.light-mode {
+  background-color: #fff;
+  color: #222;
+}
+
+body.font-large {
+  font-size: 24px;
+}
+
+body.font-normal {
+  font-size: 18px;
+}

@@ -730,13 +730,25 @@ class Database:
 
             combined_completion = round(total_percent / count, 1) if count > 0 else None
 
+            hourly = hourly_avg.reset_index().to_dict(orient='records')
+            daily = daily_avg.reset_index().to_dict(orient='records')
+            weekly = weekly_avg.reset_index().to_dict(orient='records')
+            monthly = monthly_avg.reset_index().to_dict(orient='records')
+
+            weekly_therapist = sorted(daily, key=lambda x: x['timestamp'])
+            #daily_therapist = sorted(hourly, key=lambda x: x['timestamp'])
+
+            for entry in weekly_therapist:
+                entry['date_str'] = entry['timestamp'].strftime('%Y-%m-%d')
+
         return {
             'name': patient[0][1],
             'email': patient[0][2],
-            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
-            'daily': daily_avg.reset_index().to_dict(orient='records'),
-            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
-            'monthly': monthly_avg.reset_index().to_dict(orient='records'),
+            'hourly': hourly[-24:],
+            'daily': daily[-7:],
+            'weekly': weekly[-6:],
+            'weekly_therapist_sorted': weekly_therapist[-7:],
+            'monthly': monthly[-6:],
             'last_data_pull_ago': last_data_pull_ago,
             'total_steps_today': int(today_steps),
             'combined_goal_completion_percent': combined_completion,

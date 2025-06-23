@@ -165,28 +165,44 @@
     }
 
     function addNewGoal() {
-      const goalName = prompt('Enter goal name:');
+      const validNames = ['daily', 'weekly', 'monthly'];
+      let goalName = prompt('Enter goal name (daily, weekly, or monthly):');
       if (!goalName) return;
-      
+
+      goalName = goalName.toLowerCase().trim();
+      if (!validNames.includes(goalName)) {
+        alert('Invalid goal name. Please enter "daily", "weekly", or "monthly".');
+        return;
+      }
+
       const goalTarget = prompt('Enter target value:');
-      if (!goalTarget) return;
-      
-      const goalCurrent = prompt('Enter current value:', '0');
-      if (goalCurrent === null) return;
-      
+      if (!goalTarget || isNaN(goalTarget) || Number(goalTarget) <= 0) {
+        alert('Target value must be a number greater than 0.');
+        return;
+      }
+
+      const pathParts = window.location.pathname.split('/');
+      const userId = pathParts[pathParts.length - 1];
+
+      fetch(`/api/submit-goal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, goalName, goalTarget })
+      })
+
       // Create new goal element
       const goalsPanel = document.querySelector('.client-goals-panel');
       const addGoalElement = document.querySelector('.add-goal');
-      
+
       const newGoal = document.createElement('div');
       newGoal.className = 'goal-item';
       newGoal.style.animation = 'fadeIn 0.3s ease';
-      
+
       const percentage = (parseInt(goalCurrent) / parseInt(goalTarget)) * 100;
-      
+
       newGoal.innerHTML = `
         <div class="goal-header">
-          <span class="goal-label">${goalName}</span>
+          <span class="goal-label">${goalName.charAt(0).toUpperCase() + goalName.slice(1)} Goal</span>
           <div class="goal-actions">
             <span class="goal-value">${goalCurrent} / ${goalTarget}</span>
             <span class="streak-value">🔥0</span>
@@ -197,7 +213,7 @@
           <div class="goal-progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
         </div>
       `;
-      
+
       goalsPanel.insertBefore(newGoal, addGoalElement);
       showNotification('Goal added successfully!', 'success');
     }

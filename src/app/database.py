@@ -1004,13 +1004,13 @@ class Database:
         Returns a list of dictionaries containing device details or None if not found.
         """
         query = """
-            SELECT patient_id_device, device_label, device_id
+            SELECT patient_id_device, device_label, device_id, device_mac_addr
             FROM Device;
         """
         result = self.do_query(query, fetch=True)
 
         if result:
-            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2], "device_mac_addr": row[3]} for row in result]
         return None
 
     def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:

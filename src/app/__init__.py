@@ -894,6 +894,30 @@ def change_patient_password():
 
     return redirect('/admin/patients')
 
+# Delete a goal
+@app.route('/api/delete_goal', methods=['POST'])
+def delete_goal():
+    data = request.get_json()
+    goal_id = data.get('goal_id')
+
+    if not goal_id:
+        return jsonify({"error": "no goal id found"}), 401
+
+    success = db.remove_goal_by_id(goal_id)
+
+    return (jsonify({"msg": "Deleted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
+
+@app.route('/api/submit-goal', methods=['POST'])
+def submit_goal():
+    data = request.get_json()
+    user_id = data.get('userId')
+    goal_name = data.get('goalName')
+    goal_target = data.get('goalTarget')
+
+    success = db.submit_goal_by_id(user_id, goal_name, goal_target)
+
+    return (jsonify({"msg": "Goal submitted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
+
 @app.route('/admin/delete_pam_device', methods=['POST'])
 def delete_pam_device():
     device_label = request.form.get('device_label')

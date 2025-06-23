@@ -75,7 +75,10 @@
                         data-occupied="{{ 'true' if device.patient_id else 'false' }}">
                         <div class="patient-card-box">
                             <strong>Device ID: {{ device.device_id }}</strong><br>
+<!--                            #TODO add a button to delete a pam device
+                                # do that here-->
                             Device Label: {{ device.device_label }}<br>
+                            Device address: {{ device.device_mac_addr }}<br>
                             </a>
                         </div>
                     </div>
@@ -85,6 +88,11 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="empty-box"></div>
+
+            <div class="patient-card">
+                <h3>Add pam devices</h3>
+                </div>
         </div>
     </div>
 

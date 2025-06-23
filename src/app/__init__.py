@@ -65,37 +65,39 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
-        # Retrieve email password & the therapist
+        # Retrieve email and password from form
         email = request.form.get('email')
         password = request.form.get('password')
 
         if db.check_credentials(email, password):
-            # Create secure cookie
+            # Get user info to check role
+            user = db.get_user_by_email(email)
+
+            # ❌ Prevent therapists from using patient login
+            if user and user.get('is_therapist'):
+                return render_template('login.html', error="Therapists must log in through the admin login.")
+
+            # ✅ Continue login for patients
             success, cookie_value = db.create_cookie(email)
-
-            print(f"Cookie created: {cookie_value}")
-
             if not success:
                 return "Failed to create cookie", 500
 
-            # Create response and set cookie
             response = make_response(redirect('/home'))
             response.set_cookie(
-                'auth_cookie',            # Cookie name
-                cookie_value,             # Cookie value
-                max_age=60*60*24*7,       # 1 week
-                httponly=True,            # Prevent JS access (XSS)
-                secure=True,              # Only over HTTPS
-                samesite='Lax'            # Protect from CSRF somewhat
+                'auth_cookie',
+                cookie_value,
+                max_age=60*60*24*7,
+                httponly=True,
+                secure=True,
+                samesite='Lax'
             )
 
-            # Redirect to home after form submission
             return response
+
         return render_template('login.html', error="Invalid credentials. Please try again.")
-    else:
-        # Render the login.html
-        return render_template('login.html')
+    
+    return render_template('login.html')
+
 
 # Logout's route with POST methods
 

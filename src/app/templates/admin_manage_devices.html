@@ -74,9 +74,22 @@
                     <div class="device-card-item" data-name="{{ device.device_label | lower }}"
                         data-occupied="{{ 'true' if device.patient_id else 'false' }}">
                         <div class="patient-card-box">
-                            <strong>Device ID: {{ device.device_id }}</strong><br>
+                            <strong>Device ID: {{ device.device_id }}</strong>
 <!--                            #TODO add a button to delete a pam device
                                 # do that here-->
+                                <form
+                                  action="/admin/delete-pam-device"
+                                  method="POST"
+                                  onsubmit="return confirm('Are you sure you want to delete this device?');"
+                                  style="display: inline;"
+                                >
+                                  <input type="hidden" name="device_label" value="{{ device.device_label }}" />
+                                  <button type="submit" class="delete-button">
+                                    Delete Pam device
+                                  </button>
+                                </form>
+
+                            <br>
                             Device Label: {{ device.device_label }}<br>
                             Device address: {{ device.device_mac_addr }}<br>
                             </a>

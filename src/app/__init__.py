@@ -883,7 +883,23 @@ def change_patient_password():
 
     return redirect('/admin/patients')
 
+@app.route('/admin/delete_pam_device', methods=['POST'])
+def delete_pam_device():
+    device_label = request.form.get('device_label')
 
+    if not device_label:
+        return "Missing device address", 400
+
+    query = "DELETE FROM hipperdb.Device WHERE device_label = %s"
+    params = (device_label,)
+
+    try:
+        db.do_query(query, params)
+    except Exception as e:
+        print(f"SQL error: {e}")
+        return "Database error", 500
+
+    return redirect('/admin/manage_pam_devices')
 
 # Start the Flask application
 if __name__ == "__main__":

@@ -4,6 +4,14 @@
   box-sizing: border-box;
 }
 
+body.font-large {
+  font-size: 24px;
+}
+
+body.font-normal {
+  font-size: 18px;
+}
+
 html, body {
   height: 100%;
   min-height: 100vh;

@@ -301,7 +301,7 @@ class Database:
         patient_details = self.do_query(
             query_patient, (patient_id,), fetch=True)
 
-        # --- Get all data records for this patient ---
+        # --- Get all day data records for this patient ---
         query_data = """
             SELECT
                 Data.id AS data_id,
@@ -318,6 +318,22 @@ class Database:
             WHERE Device.patient_id_device = %s;
         """
         data = self.do_query(query_data, (patient_id,), fetch=True)
+
+        # --- Get all minute data records for this patient ---
+        query_minutedata = """
+            SELECT
+                MinuteData.id AS data_id,
+                MinuteData.device_id,
+                MinuteData.timestamp,
+                MinuteData.steps,
+                MinuteData.PAM_score,
+                MinuteData.data_label, 
+                MinuteData.patient_id
+            FROM MinuteData
+            INNER JOIN Device ON MinuteData.device_id = Device.device_id
+            WHERE Device.patient_id_device = %s;
+        """
+        minutedata = self.do_query(query_minutedata, (patient_id,), fetch=True)
 
         # --- Get all devices for this patient ---
         query_device = """
@@ -344,12 +360,13 @@ class Database:
         """
         goals = self.do_query(query_goal, (patient_id,), fetch=True)
 
-        if not data and not devices and not goals:
+        if not data and not devices and not goals and not minutedata:
             return None
 
         return {
             "patient_details": patient_details,
             "data": data,
+            "minutedata": minutedata,
             "devices": devices,
             "goals": goals
         }
@@ -645,12 +662,12 @@ class Database:
             }
                 
         patient = dataset['patient_details']
-        data = dataset['data']
+        data = dataset['minutedata']
         goals = dataset['goals']
 
         df = pd.DataFrame(data, columns=[
             'id', 'device_id', 'timestamp', 'steps', 'PAM_score',
-            'zone_1', 'zone_2', 'zone_3', 'patient_id'
+            'data_label', 'patient_id'
         ])
         
         patient_id = df['patient_id'].iloc[0]
@@ -730,13 +747,29 @@ class Database:
 
             combined_completion = round(total_percent / count, 1) if count > 0 else None
 
+            hourly = hourly_avg.reset_index().to_dict(orient='records')
+            daily = daily_avg.reset_index().to_dict(orient='records')
+            weekly = weekly_avg.reset_index().to_dict(orient='records')
+            monthly = monthly_avg.reset_index().to_dict(orient='records')
+
+            weekly_therapist = sorted(daily, key=lambda x: x['timestamp'])
+            daily_therapist = sorted(hourly, key=lambda x: x['timestamp'])
+
+            for entry in weekly_therapist:
+                entry['date_str'] = entry['timestamp'].strftime('%Y-%m-%d')
+
+            for entry in daily_therapist:
+                entry['hour_str'] = entry['timestamp'].strftime('%-H:00')
+
         return {
             'name': patient[0][1],
             'email': patient[0][2],
-            'hourly': hourly_avg.reset_index().to_dict(orient='records'),
-            'daily': daily_avg.reset_index().to_dict(orient='records'),
-            'weekly': weekly_avg.reset_index().to_dict(orient='records'),
-            'monthly': monthly_avg.reset_index().to_dict(orient='records'),
+            'hourly': hourly[-24:],
+            'daily': daily[-7:],
+            'daily_therapist_sorted': daily_therapist[-16:],
+            'weekly': weekly[-6:],
+            'weekly_therapist_sorted': weekly_therapist[-7:],
+            'monthly': monthly[-6:],
             'last_data_pull_ago': last_data_pull_ago,
             'total_steps_today': int(today_steps),
             'combined_goal_completion_percent': combined_completion,

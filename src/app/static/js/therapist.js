@@ -1,22 +1,3 @@
-// Chart data based on the screenshot
-const chartData = window.chartData;
-//const chartData = {
-//  // Weekly data
-//  weekly: {
-//    dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
-//    steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
-//    pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
-//    inactiveDays: [0, 1, 6] // indices of inactive days (red background)
-//  },
-//  // Daily data (hourly breakdown for today - 2025-05-23)
-//  daily: {
-//    hours: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
-//    steps: [5, 2, 0, 0, 0, 8, 120, 450, 680, 820, 950, 1100, 1350, 1580, 1750, 1920, 2100, 2350, 2580, 2750, 2900, 3100, 15, 3],
-//    pamScores: [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.5, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.3, 2.1, 1.8, 0.1, 0.0],
-//    inactiveHours: [0, 1, 2, 3, 4, 5, 22, 23] // indices of sleeping/inactive hours
-//  }
-//};
-
 // Current view mode
 let currentView = 'daily';
 
@@ -43,10 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // Initialize Chart.js chart
 function initializeChart() {
   const ctx = document.getElementById('activityChart').getContext('2d');
-  
+
   // Start with daily view and set the daily button as active
   updateChart('daily');
-  
+
   // Set the daily button as active on load
   const dailyButton = Array.from(document.querySelectorAll('.time-btn')).find(btn => 
     btn.textContent.toLowerCase().trim() === 'daily'
@@ -60,9 +41,9 @@ function initializeChart() {
 // Update chart based on view mode
 function updateChart(viewMode) {
   const ctx = document.getElementById('activityChart').getContext('2d');
-  
+
   let labels, stepsData, pamData, inactiveIndices;
-  
+
   if (viewMode === 'weekly') {
     labels = chartData.weekly.dates.map(date => {
       const d = new Date(date);
@@ -77,6 +58,10 @@ function updateChart(viewMode) {
     pamData = chartData.daily.pamScores;
     inactiveIndices = chartData.daily.inactiveHours;
   }
+
+  // Sanitize data to avoid null/undefined issues
+  stepsData = stepsData.map(v => v ?? 0);
+  pamData = pamData.map(v => v ?? 0);
 
   // Destroy existing chart if it exists
   if (activityChart) {
@@ -136,13 +121,13 @@ function updateChart(viewMode) {
           borderWidth: 1,
           callbacks: {
             title: function(context) {
-              if (viewMode === 'daily') {
-                return `Hour: ${context[0].label}`;
-              } else {
-                return `Date: ${context[0].label}`;
-              }
+              if (!context || context.length === 0 || !context[0].label) return '';
+              return viewMode === 'daily'
+                ? `Hour: ${context[0].label}`
+                : `Date: ${context[0].label}`;
             },
             label: function(context) {
+              if (!context || typeof context.parsed?.y !== 'number') return '';
               if (context.datasetIndex === 0) {
                 return `Steps: ${context.parsed.y.toLocaleString()}`;
               } else {
@@ -457,5 +442,3 @@ if (!document.querySelector('#dynamic-animations')) {
   `;
   document.head.appendChild(style);
 }
-
-document.addEventListener('DOMContentLoaded', updateCircularProgress);

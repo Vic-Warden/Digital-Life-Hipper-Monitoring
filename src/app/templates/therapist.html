@@ -114,6 +114,26 @@
 
   <script src="{{ url_for('static', filename='js/admin_navbar.js') }}"></script>
   <script src="{{ url_for('static', filename='js/therapist.js') }}"></script>
+  <script>
+    const chartData = {
+      // Weekly data
+      weekly: {
+        dates: {{ calculated.weekly_therapist_sorted | map(attribute='date_str') | list | tojson }},
+        steps: {{ calculated.weekly_therapist_sorted | map(attribute='steps') | list | tojson }},
+        pamScores: {{ calculated.weekly_therapist_sorted | map(attribute='PAM_score') | list | tojson }},
+        inactiveDays: [] // indices of inactive days (red background)
+      },
+      // Daily data (hourly breakdown for today)
+      daily: {
+        hours: {{ calculated.daily_therapist_sorted | map(attribute='hour_str') | list | tojson }},
+        steps: {{ calculated.daily_therapist_sorted | map(attribute='steps') | list | tojson }},
+        pamScores: {{ calculated.daily_therapist_sorted | map(attribute='PAM_score') | list | tojson }},
+        inactiveHours: []
+      }
+    };
+
+    console.log(chartData); // For debugging
+  </script>
 
   
 </body>

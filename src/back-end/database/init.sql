@@ -249,6 +249,14 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`, `data_label`, `patient_id`) VALUES (1, 1, '2025-06-02 14:30:00', 10, 1.3, 'test', 1);
+INSERT INTO `hipperdb`.`MinuteData` (`id`, `device_id`, `timestamp`, `steps`, `pam_score`, `data_label`, `patient_id`) 
+VALUES 
+(1, 1, '2025-06-17 14:30:00', 10, 1.3, 'test', 1),
+(2, 1, '2025-06-18 14:30:00', 27, 5, 'test', 1),
+(3, 1, '2025-06-18 16:30:00', 47, 4, 'test', 1),
+(4, 1, '2025-06-19 18:30:00', 65, 4.8, 'test', 1),
+(5, 1, '2025-06-20 16:30:00', 40, 3.6, 'test', 1),
+(6, 1, '2025-06-21 14:30:00', 50, 2.9, 'test', 1);
+
 
 COMMIT;

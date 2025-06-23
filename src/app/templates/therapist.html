@@ -147,14 +147,21 @@
         },
         body: JSON.stringify({ goal_id: goalId })
       })
-      if (confirm('Are you sure you want to delete this goal?')) {
-        const goalItem = button.closest('.goal-item');
-        goalItem.style.animation = 'fadeOut 0.3s ease';
-        setTimeout(() => {
-          goalItem.remove();
-          showNotification('Goal deleted successfully!', 'success');
-        }, 300);
-      }
+      .then(response => response.json())
+      .then(data => {
+        if (data.msg === 'Deleted') {
+          goalItem.style.animation = 'fadeOut 0.3s ease';
+          setTimeout(() => {
+            goalItem.remove();
+            showNotification('Goal deleted successfully!', 'success');
+          }, 300);
+        } else {
+          showNotification('Failed to delete goal.', 'error');
+        }
+      })
+      .catch(() => {
+        showNotification('Error contacting server.', 'error');
+      });
     }
 
     function addNewGoal() {

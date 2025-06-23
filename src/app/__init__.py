@@ -883,6 +883,18 @@ def change_patient_password():
 
     return redirect('/admin/patients')
 
+# Delete a goal
+@app.route('/api/delete_goal', methods=['POST'])
+def delete_goal():
+    data = request.get_json()
+    goal_id = data.get('goal_id')
+
+    if not goal_id:
+        return jsonify({"error": "no goal id found"}), 401
+
+    success = db.remove_goal_by_id(goal_id)
+
+    return (jsonify({"msg": "Deleted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
 
 
 # Start the Flask application

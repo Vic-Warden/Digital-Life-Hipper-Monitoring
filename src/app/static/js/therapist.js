@@ -1,21 +1,21 @@
 // Chart data based on the screenshot
-const chartData = window.chartData;
-//const chartData = {
-//  // Weekly data
-//  weekly: {
-//    dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
-//    steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
-//    pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
-//    inactiveDays: [0, 1, 6] // indices of inactive days (red background)
-//  },
-//  // Daily data (hourly breakdown for today - 2025-05-23)
-//  daily: {
-//    hours: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
-//    steps: [5, 2, 0, 0, 0, 8, 120, 450, 680, 820, 950, 1100, 1350, 1580, 1750, 1920, 2100, 2350, 2580, 2750, 2900, 3100, 15, 3],
-//    pamScores: [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.5, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.3, 2.1, 1.8, 0.1, 0.0],
-//    inactiveHours: [0, 1, 2, 3, 4, 5, 22, 23] // indices of sleeping/inactive hours
-//  }
-//};
+//const chartData = window.chartData;
+const chartData = {
+  // Weekly data
+  weekly: {
+    dates: ['2025-05-19', '2025-05-20', '2025-05-21', '2025-05-22', '2025-05-23', '2025-05-24', '2025-05-25'],
+    steps: [1000, 3000, 5000, 5800, 7200, 4000, 2000],
+    pamScores: [0.25, 1.0, 1.5, 2.0, 2.5, 1.75, 0.5],
+    inactiveDays: [0, 1, 6] // indices of inactive days (red background)
+  },
+  // Daily data (hourly breakdown for today - 2025-05-23)
+  daily: {
+    hours: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+    steps: [5, 2, 0, 0, 0, 8, 120, 450, 680, 820, 950, 1100, 1350, 1580, 1750, 1920, 2100, 2350, 2580, 2750, 2900, 3100, 15, 3],
+    pamScores: [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.5, 0.7, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.3, 2.1, 1.8, 0.1, 0.0],
+    inactiveHours: [0, 1, 2, 3, 4, 5, 22, 23] // indices of sleeping/inactive hours
+  }
+};
 
 // Current view mode
 let currentView = 'daily';
@@ -478,5 +478,3 @@ if (!document.querySelector('#dynamic-animations')) {
   `;
   document.head.appendChild(style);
 }
-
-document.addEventListener('DOMContentLoaded', updateCircularProgress);

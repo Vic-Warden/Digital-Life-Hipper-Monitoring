@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
   `device_id` INT NOT NULL,
   `timestamp` DATETIME NOT NULL,
   `steps` INT NOT NULL,
-  `pam_score` DECIMAL(1) NOT NULL,
+  `pam_score` DECIMAL(7,4) NOT NULL,
   `data_label` VARCHAR(45) NOT NULL,
   `patient_id` INT NOT NULL,
   PRIMARY KEY (`id`),

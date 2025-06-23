@@ -75,7 +75,7 @@
                         data-occupied="{{ 'true' if device.patient_id else 'false' }}">
                         <div class="patient-card-box">
                             <strong>Device ID: {{ device.device_id }}</strong>
-<!--                            #TODO add a button to delete a pam device
+<!--                            #  add a button to delete a pam device
                                 # do that here-->
                                 <form
                                   action="/admin/delete-pam-device"
@@ -102,10 +102,27 @@
                 </div>
             </div>
             <div class="empty-box"></div>
+                <!--
+                TODO
 
-            <div class="patient-card">
-                <h3>Add pam devices</h3>
+                make a text box to enter a pam label
+                make a text box to enter a mac address
+                make a button to confirm these 2 settings and make a new pam device inside of the database
+
+                TODO
+                -->
+                <div class="patient-card">
+                    <h3>Add pam devices</h3>
+                    <label for="new_pam_label">PAM Device Label</label>
+                    <input class="input-text" type="text" id="new_pam_label" name="pam_label" required />
+
+                    <label for="new_pam_mac">MAC Address</label>
+                    <input class="input-text" type="text" id="new_pam_mac" name="mac_address" required />
+
+                    <button type="button" class="patient-button" onclick="addPamDevice()">Add PAM Device</button>
                 </div>
+
+            </div>
         </div>
     </div>
 

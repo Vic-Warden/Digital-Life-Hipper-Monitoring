@@ -736,16 +736,20 @@ class Database:
             monthly = monthly_avg.reset_index().to_dict(orient='records')
 
             weekly_therapist = sorted(daily, key=lambda x: x['timestamp'])
-            #daily_therapist = sorted(hourly, key=lambda x: x['timestamp'])
+            daily_therapist = sorted(hourly, key=lambda x: x['timestamp'])
 
             for entry in weekly_therapist:
                 entry['date_str'] = entry['timestamp'].strftime('%Y-%m-%d')
+
+            for entry in daily_therapist:
+                entry['hour_str'] = entry['timestamp'].strftime('%-H:00')
 
         return {
             'name': patient[0][1],
             'email': patient[0][2],
             'hourly': hourly[-24:],
             'daily': daily[-7:],
+            'daily_therapist_sorted': daily_therapist[-16:],
             'weekly': weekly[-6:],
             'weekly_therapist_sorted': weekly_therapist[-7:],
             'monthly': monthly[-6:],

@@ -13,18 +13,27 @@ from PAM_2102 import get_detailed_request
 base_uuid = "99DBXXXX-AC2D-11E3-A5E2-0800200C9A66"
 
 # checks the PAM_devices.json and returns the desired mac addres if asked for
-def get_address_by_label(label_id = None, filename="PAM_devices.json"):
+def get_address_by_label(label_id=None, filename="PAM_devices.json"):
     if label_id is None:
         return None
-    label_id = "label_" + str(label_id)
+
+    label_id = str(label_id)
+
     try:
         with open(filename, "r") as f:
             labels = json.load(f)
-        return labels.get(label_id, "Label ID not found.")
     except FileNotFoundError:
-        return "File not found."
+        print(f"❌ Error: {filename} not found.")
+        return None
     except json.JSONDecodeError:
-        return "Error decoding JSON."
+        print(f"❌ Error: Could not decode JSON from {filename}.")
+        return None
+
+    address = labels.get(label_id)
+    if address is None:
+        print(f"⚠️ Label ID '{label_id}' not found in {filename}.")
+    return address  # returns None if not found
+
 
 class TimeDate:
     def __init__(self, label_id=None):

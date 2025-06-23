@@ -2,20 +2,47 @@
 
 For this project, a "base station" is needed. This base station will be used to make a connection to the Hipper monitors, and then pull data from these monitors. It should then get this data online so that it can be used and visualized in the application for users and therapists. This base station will consist of a Raspberry Pi. This could be any Pi that has Wi-Fi and Bluetooth compatibility. In this case, a Raspberry Pi 4 Model B is used.
 
+## Startup of basestation
+To start the base station, you first need to ensure you have a raspberry pi flashed. In this project, a raspberry pi 4 was used. For this you should use a legacy OS like Raspberry Pi OS (Legacy) — 32-bit. Make sure that when you flash the pi, The hostname and the username are both set to: `hippy`. In the example below they are named hal9000 and wintermute, but those should be hippy. You can configure a network if you would like. If not you can always do that later like [`this`](https://www.raspberrypi.com/documentation/computers/configuration.html). If you need any more information on how to flash a raspberry pi, you can find an example of how to do so [`here`](https://youtu.be/g2e9RTcXKwg?si=FU__6Y2PP1cM7qNU)
+
+![pi setup](../assets/pi_flash.png)
+
+ Then turn on the pi and connect to it using a computer. In a terminal, ensure git is installed by doing:
+```cmd
+sudo apt update
+sudo apt install git -y
+```
+Then, in the user directory, pull the gitlab repository using: 
+```cmd 
+git clone https://gitlab.fdmci.hva.nl/IoT/2024-2025-semester-2/group-project/duuseedeewuu36.git
+```
+And navigate in to the folder:
+```cmd
+cd duuseedeewuu36
+```
+After you cloned the git repository and are in the folder, you can run the setup file for the raspberry pi. You can do this by running the following commands:
+```cmd
+chmod +x pi_setup.sh
+./pi_setup.sh
+```
+
+This will start up the service to run the code of the base station. All of the base station code is found under `src/back-end/pam` and the main file is in that folder. This file is called `main.py`. Make sure that when running this code, the `BACKEND_URL` is set to the correct link to where the back-end is running, otherwise this code will not function correctly. 
+
 ## Main Code
 
 The main code used for this base station makes use of the already existing [BLE commands](bleCommands.md) to pull the data of a full day, and of intervals of 1 hour. 
 
-The main code can be run using Python. It scans for any devices in the region at an interval of 10 seconds using low-powered Bluetooth, that correspond with a Hipper monitor. If it finds one that it does not recognize, it adds the MAC address with a generated label to `PAM_devices.json`:
+The main code can be run using Python. It scans for any devices in the region at an interval of 10 seconds using low-powered Bluetooth, that correspond with a Hipper monitor. It does this by checking the devices table in the database. If a pam device is found but is not in the database, it skips this device. If it is in the database it checks the local log: `PAM_devices.json`
 
 ```json
 {
-  "label_90243": "C1:08:00:01:12:33",
-  "label_90248": "C1:08:00:01:36:3A",
-  "label_90245": "C1:08:00:01:0E:9C",
-  "label_90242": "C1:08:00:01:23:B0"
+  "90243": "C1:08:00:01:12:33",
+  "90248": "C1:08:00:01:36:3A",
+  "90245": "C1:08:00:01:0E:9C",
+  "90242": "C1:08:00:01:23:B0"
 }
 ```
+It also updates this file if a label corresponding to a mac adress has changed or was not in the database yet. 
 
 After doing this, or if the device is already known, the code checks the log file to determine whether it needs to pull any data. If it has not pulled any data in the last hour, or has not pulled the day data file for that day, it uses the services from [BLE Commands](bleCommands.md) to pull the data. This then saves the data under the `output` folder as either `activity_macAddress` or `day_data_macAddress`. If the data has already been pulled, it skips this device.
 

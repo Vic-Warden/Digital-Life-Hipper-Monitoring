@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `hipperdb`.`MinuteData` (
   `device_id` INT NOT NULL,
   `timestamp` DATETIME NOT NULL,
   `steps` INT NOT NULL,
-  `pam_score` DECIMAL(1) NOT NULL,
+  `pam_score` DECIMAL(7,4) NOT NULL,
   `data_label` VARCHAR(45) NOT NULL,
   `patient_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -213,7 +213,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hipperdb`;
-INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_activity_pull`, `last_day_data_pull`, `device_mac_addr`) VALUES (1, 1, '09234', 1, '1234567890', NOW(), NOW(), 'C1:08:00:01:23:B0');
+INSERT INTO `hipperdb`.`Device` (`id`, `patient_id_device`, `device_label`, `device_id`, `auth_token`, `last_activity_pull`, `last_day_data_pull`, `device_mac_addr`) VALUES (1, 1, '90242', 1, '1234567890', NOW(), NOW(), 'C1:08:00:01:23:B0');
 
 COMMIT;
 

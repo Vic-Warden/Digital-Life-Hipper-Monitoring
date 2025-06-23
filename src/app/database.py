@@ -1028,13 +1028,13 @@ class Database:
         Returns a list of dictionaries containing device details or None if not found.
         """
         query = """
-            SELECT patient_id_device, device_label, device_id
+            SELECT patient_id_device, device_label, device_id, device_mac_addr
             FROM Device;
         """
         result = self.do_query(query, fetch=True)
 
         if result:
-            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2]} for row in result]
+            return [{"patient_id": row[0], "device_label": row[1], "device_id": row[2], "device_mac_addr": row[3]} for row in result]
         return None
 
     def bind_device_to_patient(self, device_id: int, patient_id: int) -> bool:
@@ -1138,3 +1138,10 @@ class Database:
             print("reset_therapist_password error:", e)
             return False
 
+    def get_device_label_by_mac(self, mac_address):
+        query = "SELECT device_label FROM Device WHERE device_mac_addr=%s"
+        params = (mac_address.upper(),)
+        result = self.do_query(query, params, fetch=True)
+        if result and len(result) > 0:
+            return result[0][0]  # device_label is the first column
+        return None

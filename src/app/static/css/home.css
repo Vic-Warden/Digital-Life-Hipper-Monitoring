@@ -22,7 +22,7 @@ body {
 }
 
 .logo {
-    font-size: 14px;
+    font-size: 0.875em;
     font-weight: 300;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -125,7 +125,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 1.875em;
     animation: bounce 2s infinite;
 }
 
@@ -171,7 +171,7 @@ body {
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1.25em;
 }
 
 .steps-icon {
@@ -187,14 +187,14 @@ body {
 }
 
 .activity-number {
-    font-size: 24px;
+    font-size: 1.5em;
     font-weight: bold;
     color: #333;
 }
 
 .activity-label {
     color: #666;
-    font-size: 14px;
+    font-size: 0.875em;
 }
 
 .score-section {
@@ -202,7 +202,7 @@ body {
 }
 
 .score-title {
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: 600;
     margin-bottom: 20px;
     color: #333;
@@ -245,14 +245,14 @@ body {
 }
 
 .score-number {
-    font-size: 36px;
+    font-size: 2.25em;
     font-weight: bold;
     color: #333;
 }
 
 .score-total {
     color: #666;
-    font-size: 18px;
+    font-size: 1.125em;
 }
 
 @keyframes fillProgress {
@@ -266,7 +266,7 @@ body {
 }
 
 .goals-section h3 {
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: 600;
     margin-bottom: 20px;
     color: #333;
@@ -284,19 +284,19 @@ body {
 }
 
 .goal-name {
-    font-size: 14px;
+    font-size: 0.875em;
     color: #666;
     flex: 1;
 }
 
 .goal-streak {
     color: #ff6b6b;
-    font-size: 12px;
+    font-size: 0.75em;
     font-weight: bold;
 }
 
 .goal-progress {
-    font-size: 12px;
+    font-size: 0.75em;
     color: #666;
     margin-left: 10px;
 }
@@ -330,7 +330,7 @@ body {
 }
 
 .chart-title {
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: 600;
     color: #333;
 }
@@ -348,7 +348,7 @@ body {
     border: none;
     background: transparent;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75em;
     font-weight: 500;
     transition: all 0.3s ease;
 }
@@ -404,7 +404,7 @@ body {
 }
 
 .day-label {
-    font-size: 12px;
+    font-size: 0.75em;
     color: #666;
     font-weight: 500;
 }
@@ -420,7 +420,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 12px;
+    font-size: 0.75em;
     color: #666;
 }
 
@@ -443,7 +443,7 @@ body {
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 10px;
+    font-size: 0.625em;
     color: #666;
     font-weight: bold;
     opacity: 0.7;

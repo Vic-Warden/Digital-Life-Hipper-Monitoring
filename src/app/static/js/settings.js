@@ -10,8 +10,21 @@ function setupToggleBar(toggleId) {
       const selectedValue = half.dataset.value;
       console.log(`${toggleId} selected:`, selectedValue);
 
+      if (toggleId === 'font-toggle') {
+        document.body.classList.toggle('font-large', selectedValue === '1');
+        document.body.classList.toggle('font-normal', selectedValue === '0');
+      }
     });
   });
+
+    // ✅ Apply font-size class on page load
+  if (toggleId === 'font-toggle') {
+    const selected = toggleBar.querySelector('.selected')?.dataset.value;
+    if (selected) {
+      document.body.classList.toggle('font-large', selected === '1');
+      document.body.classList.toggle('font-normal', selected === '0');
+    }
+  }
 }
 
 function getProfile() {

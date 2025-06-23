@@ -343,54 +343,6 @@ function showNotification(message, type = 'info') {
   }, 3000);
 }
 
-function deleteGoal(button) {
-  if (confirm('Are you sure you want to delete this goal?')) {
-    const goalItem = button.closest('.goal-item');
-    goalItem.style.animation = 'fadeOut 0.3s ease';
-    setTimeout(() => {
-      goalItem.remove();
-      showNotification('Goal deleted successfully!', 'success');
-    }, 300);
-  }
-}
-
-function addNewGoal() {
-  const goalName = prompt('Enter goal name:');
-  if (!goalName) return;
-  
-  const goalTarget = prompt('Enter target value:');
-  if (!goalTarget) return;
-  
-  const goalCurrent = prompt('Enter current value:', '0');
-  if (goalCurrent === null) return;
-  
-  // Create new goal element
-  const goalsPanel = document.querySelector('.client-goals-panel');
-  const addGoalElement = document.querySelector('.add-goal');
-  
-  const newGoal = document.createElement('div');
-  newGoal.className = 'goal-item';
-  newGoal.style.animation = 'fadeIn 0.3s ease';
-  
-  const percentage = (parseInt(goalCurrent) / parseInt(goalTarget)) * 100;
-  
-  newGoal.innerHTML = `
-    <div class="goal-header">
-      <span class="goal-label">${goalName}</span>
-      <div class="goal-actions">
-        <span class="goal-value">${goalCurrent} / ${goalTarget}</span>
-        <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
-      </div>
-    </div>
-    <div class="goal-progress">
-      <div class="goal-progress-fill" style="width: ${Math.min(percentage, 100)}%"></div>
-    </div>
-  `;
-  
-  goalsPanel.insertBefore(newGoal, addGoalElement);
-  showNotification('Goal added successfully!', 'success');
-}
-
 // Add CSS animations if not already present
 if (!document.querySelector('#dynamic-animations')) {
   const style = document.createElement('style');

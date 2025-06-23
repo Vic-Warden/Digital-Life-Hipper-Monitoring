@@ -10,7 +10,7 @@ from bleak import BleakScanner
 from bleak.exc import BleakError
 from services import ActivityDownload, DayDataDownload, get_detailed_request
 
-BACKEND_URL = "http://192.168.43.149:5000"
+BACKEND_URL = "http://145.109.185.134:5000"
 
 LOG_FILE = "log.json"
 PAM_DEVICES_FILE = "PAM_devices.json"
@@ -65,6 +65,8 @@ async def update_log(mac_address, activity=False, day_data=False):
                 # print(f"[update_log] HTTP POST {BACKEND_URL}/log/{mac_address} -> Status: {resp.status}")
                 if resp.status != 200:
                     print(f"[update_log] Failed to update log for {mac_address}: HTTP {resp.status}")
+                elif resp.status == 200: 
+                    print(f"✅ Updated log")
     except Exception as e:
         print(f"[update_log] Error updating log for {mac_address}: {e}")
 
@@ -134,16 +136,6 @@ def select_request_name(hours):
     else:
         return "LAST_1_DAY"  # fallback to max daily
 
-def generate_new_label():
-    """Generate a new label string for a PAM device."""
-    existing_label_numbers = [
-        int(label.split('_')[1])
-        for label in pam_devices_data.keys()
-        if label.startswith("label_") and label.split('_')[1].isdigit()
-    ]
-    next_label_number = max(existing_label_numbers) + 1 if existing_label_numbers else DEVICE_LABEL_START
-    return f"label_{next_label_number}"
-
 def send_minute_data_to_backend(api_url, auth_token, mac_address, pam_data):
     """
     Sends minute PAM data to the Flask backend.
@@ -181,10 +173,34 @@ def send_day_data_to_backend(api_url, auth_token, mac_address, pam_data):
     except Exception as e:
         print("❌ Error sending day-level data to backend:", e)
         return False
+    
+def get_device_label_from_backend(api_url, auth_token, mac_address):
+    """
+    Sends a POST request to backend to get the label of a device by MAC address.
+    Returns the device label if successful, or None otherwise.
+    """
+    payload = {
+        "auth_token": auth_token,
+        "mac_address": mac_address
+    }
+
+    try:
+        response = requests.get(api_url, data=payload)
+        print(f"📤 Status Code: {response.status_code}")
+        resp_json = response.json()
+        print("🧾 Response:", resp_json)
+
+        if response.status_code == 200 and "device_label" in resp_json:
+            return resp_json["device_label"]
+        else:
+            print("⚠️ Unexpected response content or status code")
+            return None
+    except Exception as e:
+        print("❌ Error getting device label from backend:", e)
+        return None
 
 
 async def main_loop():
-    """Main async loop to scan and process PAM devices."""
     while True:
         print("\n🔍 Scanning for devices...")
         devices = await BleakScanner.discover(timeout=5)
@@ -194,17 +210,37 @@ async def main_loop():
                 mac_address = device.address.upper()
                 print(f"✅ Found PAM device: {device.name} [{mac_address}]")
 
-                label_id = mac_to_label_id.get(mac_address)
-                if label_id is None:
-                    # New device detected: assign new label and update mappings
-                    new_label = generate_new_label()
-                    print(f"🆕 New PAM device detected! Assigning new label {new_label} for MAC {mac_address}")
-                    pam_devices_data[new_label] = mac_address
-                    mac_to_label_id[mac_address] = int(new_label.replace("label_", ""))
+                # Step 1: Check backend if device exists and get label
+                backend_label = get_device_label_from_backend(
+                    api_url=BACKEND_URL + "/log/device_label/" + mac_address,
+                    auth_token=1234567890,
+                    mac_address=mac_address)
+                if backend_label is None:
+                    print(f"⏩ Skipping device {mac_address} as it does not exist in backend.")
+                    continue  # skip this device entirely
+
+                # Step 2: Check if local label matches backend label
+                local_label = None
+                # Find local label for this MAC (reverse mapping)
+                for label, mac in pam_devices_data.items():
+                    if mac.upper() == mac_address:
+                        local_label = label
+                        break
+
+                if local_label != backend_label:
+                    # Update local file to match backend label
+                    print(f"🔄 Updating local PAM_devices.json for MAC {mac_address} to label {backend_label}")
+                    # Remove old label if it exists
+                    if local_label:
+                        pam_devices_data.pop(local_label)
+                    # Add new label mapping
+                    pam_devices_data[backend_label] = mac_address
                     save_pam_devices_data()
-                    label_id = mac_to_label_id[mac_address]
+
+                label_id = int(backend_label.replace("label_", ""))
 
                 pulled_data = False
+                # ... Continue with your day data and activity data pulling logic as before ...
 
                 # Pull day data dynamically
                 days_to_pull = await get_days_since_last_day_pull(mac_address)
@@ -218,24 +254,24 @@ async def main_loop():
                                 label_id=label_id,
                             )
                             await day_data_downloader.run()
-                            await update_log(mac_address, day_data=True)
-                            
+
                             filepath = os.path.join(OUTPUT_DIR, f"day_data_{mac_address.replace(':', '')}.csv")
                             pam_data = day_csv_to_json(filepath, label_id)
                             if pam_data:
                                 success = send_day_data_to_backend(
-                                    api_url= BACKEND_URL + "/api/upload-day-data",
+                                    api_url=BACKEND_URL + "/api/upload-day-data",
                                     auth_token="1234567890",
                                     mac_address=mac_address,
                                     pam_data=pam_data
                                 )
                                 if success:
-                                    print("✅ Day Data successfully uploaded to backend.")
+                                    print("✅ Day Data successfully uploaded to backend. Updating log...")
+                                    await update_log(mac_address, day_data=True)
                                 else:
                                     print("❌ Failed to upload Day data.")
                             else:
                                 print("⚠️ No Day data to send.")
-                            
+
                             pulled_data = True
                             break
                         except (asyncio.TimeoutError, BleakError, Exception) as error:
@@ -249,7 +285,6 @@ async def main_loop():
                 # Pull activity data dynamically based on hours since last pull
                 hours_since = await get_hours_since_last_activity(mac_address)
                 if hours_since >= 1:
-                    # Cap max hours to max supported request (12 hours)
                     capped_hours = min(int(hours_since), MAX_PULL_HOURS)
                     request_name = select_request_name(capped_hours)
                     print(f"📥 Pulling activity data for {mac_address} (label {label_id}) for {request_name}...")
@@ -261,24 +296,24 @@ async def main_loop():
                                 label_id=label_id,
                             )
                             await activity_downloader.run()
-                            await update_log(mac_address, activity=True)
-                            
+
                             filepath = os.path.join(OUTPUT_DIR, f"activity_{mac_address.replace(':', '')}.csv")
                             pam_data = minute_csv_to_json(filepath, label_id)
                             if pam_data:
                                 success = send_minute_data_to_backend(
-                                    api_url= BACKEND_URL + "/api/upload-minute-data",
+                                    api_url=BACKEND_URL + "/api/upload-minute-data",
                                     auth_token="1234567890",
                                     mac_address=mac_address,
                                     pam_data=pam_data
                                 )
                                 if success:
-                                    print("✅ Minute Data successfully uploaded to backend.")
+                                    print("✅ Minute Data successfully uploaded to backend. Updating log...")
+                                    await update_log(mac_address, activity=True)
                                 else:
                                     print("❌ Failed to upload Minute data.")
                             else:
                                 print("⚠️ No Minute data to send.")
-    
+
                             pulled_data = True
                             break
                         except (asyncio.TimeoutError, BleakError, Exception) as error:

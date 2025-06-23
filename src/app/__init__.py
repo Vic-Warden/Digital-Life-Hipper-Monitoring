@@ -896,6 +896,17 @@ def delete_goal():
 
     return (jsonify({"msg": "Deleted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
 
+@app.route('/api/submit-goal', methods=['POST'])
+def submit_goal():
+    data = request.get_json()
+    user_id = data.get('userId')
+    goal_name = data.get('goalName')
+    goal_target = data.get('goalTarget')
+
+    # Process or store the data here...
+
+    return jsonify({'message': f'Successfully received goal "{goal_name}" with target {goal_target} for user {user_id}'})
+
 
 # Start the Flask application
 if __name__ == "__main__":

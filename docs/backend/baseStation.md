@@ -2,6 +2,28 @@
 
 For this project, a "base station" is needed. This base station will be used to make a connection to the Hipper monitors, and then pull data from these monitors. It should then get this data online so that it can be used and visualized in the application for users and therapists. This base station will consist of a Raspberry Pi. This could be any Pi that has Wi-Fi and Bluetooth compatibility. In this case, a Raspberry Pi 4 Model B is used.
 
+## Startup of basestation
+To start the base station, you first need to ensure you have a raspberry pi flashed. For this you should use a legacy OS (NOT A LITE LEGACY OS). Make sure that when you flash the pi, the user name and name of the pi are both set to 'hippy'. Then turn on the pi and connect to it using a computer. In a terminal, ensure git is installed by doing:
+```cmd
+sudo apt update
+sudo apt install git -y
+```
+Then, in the user directory, pull the gitlab repository using: 
+```cmd 
+git clone https://gitlab.fdmci.hva.nl/IoT/2024-2025-semester-2/group-project/duuseedeewuu36.git
+```
+And navigate in to the folder:
+```cmd
+cd duuseedeewuu36
+```
+After you cloned the git repository and are in the folder, you can run the setup file for the raspberry pi. You can do this by running the following commands:
+```cmd
+chmod +x pi_setup.sh
+./pi_setup.sh
+```
+
+This will start up the service to run the code of the base station. All of the base station code is found under `src/back-end/pam` and the main file is in that folder. This file is called `main.py`. Make sure that when running this code, the `BACKEND_URL` is set to the correct link to where the back-end is running, otherwise this code will not function correctly. 
+
 ## Main Code
 
 The main code used for this base station makes use of the already existing [BLE commands](bleCommands.md) to pull the data of a full day, and of intervals of 1 hour. 

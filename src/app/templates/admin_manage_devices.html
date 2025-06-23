@@ -101,26 +101,19 @@
                     {% endif %}
                 </div>
             </div>
+
             <div class="empty-box"></div>
-                <!--
-                TODO
 
-                make a text box to enter a pam label
-                make a text box to enter a mac address
-                make a button to confirm these 2 settings and make a new pam device inside of the database
+            <div class="patient-card">
+                <h3>Add pam devices</h3>
+                <label for="new_pam_label">PAM Device Label</label>
+                <input class="input-text" type="text" id="new_pam_label" name="pam_label" required />
 
-                TODO
-                -->
-                <div class="patient-card">
-                    <h3>Add pam devices</h3>
-                    <label for="new_pam_label">PAM Device Label</label>
-                    <input class="input-text" type="text" id="new_pam_label" name="pam_label" required />
+                <label for="new_pam_mac">MAC Address</label>
+                <input class="input-text" type="text" id="new_pam_mac" name="mac_address" required />
 
-                    <label for="new_pam_mac">MAC Address</label>
-                    <input class="input-text" type="text" id="new_pam_mac" name="mac_address" required />
-
-                    <button type="button" class="patient-button" onclick="addPamDevice()">Add PAM Device</button>
-                </div>
+                <button type="button" class="patient-button" onclick="addPamDevice()">Add PAM Device</button>
+            </div>
 
             </div>
         </div>

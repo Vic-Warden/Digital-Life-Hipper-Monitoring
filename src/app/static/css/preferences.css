@@ -23,9 +23,12 @@ body.dark-mode .day-label,
 body.dark-mode .bar-value,
 body.dark-mode .legend-item,
 body.dark-mode .score-title,
-body.dark-mode .score-number,
 body.dark-mode .score-total {
   color: #fff;
+}
+
+body.dark-mode .score-number {
+    color: black;
 }
 
 body.dark-mode .display-box {

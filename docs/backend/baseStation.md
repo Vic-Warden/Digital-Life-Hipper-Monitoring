@@ -3,7 +3,10 @@
 For this project, a "base station" is needed. This base station will be used to make a connection to the Hipper monitors, and then pull data from these monitors. It should then get this data online so that it can be used and visualized in the application for users and therapists. This base station will consist of a Raspberry Pi. This could be any Pi that has Wi-Fi and Bluetooth compatibility. In this case, a Raspberry Pi 4 Model B is used.
 
 ## Startup of basestation
-To start the base station, you first need to ensure you have a raspberry pi flashed. For this you should use a legacy OS like Raspberry Pi OS (Legacy) — 32-bit. Make sure that when you flash the pi, the user name and name of the pi are both set to 'hippy'. Then turn on the pi and connect to it using a computer. In a terminal, ensure git is installed by doing:
+To start the base station, you first need to ensure you have a raspberry pi flashed. For this you should use a legacy OS like Raspberry Pi OS (Legacy) — 32-bit. Make sure that when you flash the pi, The hostname and the username are both set to: `hippy`. In the example below they are named hal9000 and wintermute, but those should be hippy. You can configure a network if you would like. If not you can always do that later like [this](https://www.raspberrypi.com/documentation/computers/configuration.html)
+![pi setup](../assets/pi_flash.png)
+
+ Then turn on the pi and connect to it using a computer. In a terminal, ensure git is installed by doing:
 ```cmd
 sudo apt update
 sudo apt install git -y

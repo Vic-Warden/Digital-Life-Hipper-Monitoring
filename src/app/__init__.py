@@ -903,9 +903,10 @@ def submit_goal():
     goal_name = data.get('goalName')
     goal_target = data.get('goalTarget')
 
-    # Process or store the data here...
+    success = db.submit_goal_by_id(user_id, goal_name, goal_target)
 
-    return jsonify({'message': f'Successfully received goal "{goal_name}" with target {goal_target} for user {user_id}'})
+    return (jsonify({"msg": "Goal submitted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
+
 
 
 # Start the Flask application

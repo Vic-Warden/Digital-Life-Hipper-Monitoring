@@ -846,6 +846,21 @@ class Database:
         # fetch=False returns [("Query executed successfully",)] on success
         return result is not None
 
+    def submit_goal_by_id(self, user_id, goal_name, goal_target) -> bool:
+        """
+        ### Submit a goal for the current patient that is being viewed.
+        Returns True if the goal was added successfully, False otherwise.
+        """
+        query = """
+            INSERT INTO `hipperdb`.`Goal` (`patient_id_goal`, `patient_goal`, `type`, `reached`) 
+            VALUES 
+            (%s, %s, %s, 0);
+        """
+        params = (user_id, goal_target, goal_name)
+        result = self.do_query(query, params, fetch=False)
+
+        return result is not None
+
     def therapist_id_from_cookie(self, cookie: str) -> int | bool:
         """
 

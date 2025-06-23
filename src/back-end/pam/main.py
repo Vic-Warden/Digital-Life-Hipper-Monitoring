@@ -134,16 +134,6 @@ def select_request_name(hours):
     else:
         return "LAST_1_DAY"  # fallback to max daily
 
-def generate_new_label():
-    """Generate a new label string for a PAM device."""
-    existing_label_numbers = [
-        int(label.split('_')[1])
-        for label in pam_devices_data.keys()
-        if label.startswith("label_") and label.split('_')[1].isdigit()
-    ]
-    next_label_number = max(existing_label_numbers) + 1 if existing_label_numbers else DEVICE_LABEL_START
-    return f"label_{next_label_number}"
-
 def send_minute_data_to_backend(api_url, auth_token, mac_address, pam_data):
     """
     Sends minute PAM data to the Flask backend.

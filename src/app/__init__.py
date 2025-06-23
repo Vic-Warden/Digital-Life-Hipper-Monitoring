@@ -885,6 +885,73 @@ def change_patient_password():
 
     return redirect('/admin/patients')
 
+@app.route('/admin/delete_pam_device', methods=['POST'])
+def delete_pam_device():
+    device_label = request.form.get('device_label')
+
+    if not device_label:
+        return "Missing device address", 400
+
+    query = "DELETE FROM hipperdb.Device WHERE device_label = %s"
+    params = (device_label,)
+
+    try:
+        db.do_query(query, params)
+    except Exception as e:
+        print(f"SQL error: {e}")
+        return "Database error", 500
+
+    return redirect('/admin/manage_pam_devices')
+import secrets
+import mysql.connector  # or your DB driver's error classes
+
+@app.route('/admin/add_pam_device', methods=['POST'])
+def add_pam_device():
+    data = request.get_json()
+    device_label = data.get('device_label')
+    device_mac_addr = data.get('device_mac_addr')
+
+    if not device_label or not device_mac_addr:
+        return "Missing device label or MAC address", 400
+
+    try:
+        # Check if MAC address already exists
+        check_query = "SELECT COUNT(*) FROM hipperdb.Device WHERE device_mac_addr = %s"
+        existing = db.do_query(check_query, (device_mac_addr,))
+        if existing[0][0] > 0:
+            return "Device with this MAC address already exists", 409
+
+        # Generate a unique token
+        auth_token = secrets.token_hex(16)
+
+        # Get max device_id
+        result = db.do_query("SELECT IFNULL(MAX(device_id), 0) FROM hipperdb.Device")
+        max_id = result[0][0] if result else 0
+        new_device_id = max_id + 1
+
+        # Insert new device
+        insert_query = """
+            INSERT INTO hipperdb.Device
+            (patient_id_device, device_label, device_id, auth_token, last_activity_pull, last_day_data_pull, device_mac_addr)
+            VALUES (NULL, %s, %s, %s, NOW(), NOW(), %s)
+        """
+        params = (device_label, new_device_id, auth_token, device_mac_addr)
+        db.do_query(insert_query, params)
+
+    except mysql.connector.errors.IntegrityError as e:
+        if e.errno == 1062:
+            return "Duplicate entry error (auth_token or MAC)", 409
+        return f"Database integrity error: {e}", 500
+
+    except Exception as e:
+        print(f"SQL error: {e}")
+        return f"Database error, {e}", 500
+
+    return jsonify({"message": "PAM device added successfully"}), 201
+
+
+
+
 
 
 # Start the Flask application

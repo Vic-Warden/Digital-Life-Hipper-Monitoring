@@ -301,7 +301,7 @@ class Database:
         patient_details = self.do_query(
             query_patient, (patient_id,), fetch=True)
 
-        # --- Get all data records for this patient ---
+        # --- Get all day data records for this patient ---
         query_data = """
             SELECT
                 Data.id AS data_id,
@@ -318,6 +318,22 @@ class Database:
             WHERE Device.patient_id_device = %s;
         """
         data = self.do_query(query_data, (patient_id,), fetch=True)
+
+        # --- Get all minute data records for this patient ---
+        query_minutedata = """
+            SELECT
+                MinuteData.id AS data_id,
+                MinuteData.device_id,
+                MinuteData.timestamp,
+                MinuteData.steps,
+                MinuteData.PAM_score,
+                MinuteData.data_label, 
+                MinuteData.patient_id
+            FROM Data
+            INNER JOIN Device ON MinuteData.device_id = Device.device_id
+            WHERE Device.patient_id_device = %s;
+        """
+        minutedata = self.do_query(query_minutedata, (patient_id,), fetch=True)
 
         # --- Get all devices for this patient ---
         query_device = """
@@ -344,12 +360,13 @@ class Database:
         """
         goals = self.do_query(query_goal, (patient_id,), fetch=True)
 
-        if not data and not devices and not goals:
+        if not data and not devices and not goals and not minutedata:
             return None
 
         return {
             "patient_details": patient_details,
             "data": data,
+            "minutedata": minutedata,
             "devices": devices,
             "goals": goals
         }

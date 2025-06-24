@@ -672,7 +672,7 @@ class Database:
             'data_label', 'patient_id'
         ])
         
-        patient_id = df['patient_id'].iloc[0]
+        patient_id = int(patient[0][0])
 
         df['timestamp'] = pd.to_datetime(df['timestamp']).dt.tz_localize('Europe/Amsterdam')
         df.set_index('timestamp', inplace=True)
@@ -713,7 +713,7 @@ class Database:
         combined_completion = None
         goal_completion_details = []
 
-        patient_goals = [g for g in goals if g[1] == patient_id]
+        patient_goals = [g for g in goals if int(g[1]) == patient_id]
 
         if patient_goals:
             total_percent = 0

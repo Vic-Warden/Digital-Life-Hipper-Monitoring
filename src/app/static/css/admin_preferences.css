@@ -161,6 +161,157 @@ body.dark-mode .dropdown-content a.active-link {
   color: white;
 }
 
+body.dark-mode .client-data-panel {
+  background: #1f1f1f;
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark-mode .client-data-panel h2 {
+  color: white;
+}
+
+body.dark-mode .metric-card {
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+}
+
+body.dark-mode .metric-value {
+  color: #fff;
+}
+
+body.dark-mode .metric-label {
+  color: #ccc;
+}
+
+body.dark-mode .steps-icon {
+  background: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode .inactive-icon {
+  background: #555;
+  color: white;
+}
+
+body.dark-mode .score-card h3 {
+  color: white;
+}
+
+body.dark-mode .circular-progress .progress-ring-background {
+  stroke: #444;
+}
+
+body.dark-mode .circular-progress .progress-ring-fill {
+  stroke: #4CAF50; /* optional override */
+}
+
+body.dark-mode .score-current {
+  color: white;
+}
+
+body.dark-mode .score-total {
+  color: #ccc;
+}
+
+/* Historic Activity Panel */
+body.dark-mode .historic-activity-panel {
+  background: #1f1f1f;
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark-mode .activity-header h2 {
+  color: white;
+}
+
+body.dark-mode .time-selector {
+  background: #2a2a2a;
+}
+
+body.dark-mode .time-btn {
+  background: transparent;
+  color: #ccc;
+}
+
+body.dark-mode .time-btn.active {
+  background: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode .chart-description {
+  color: #aaa;
+}
+
+/* Client Goals Panel */
+body.dark-mode .client-goals-panel {
+  background: #1f1f1f;
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark-mode .client-goals-panel h2 {
+  color: white;
+}
+
+body.dark-mode .goal-item {
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+body.dark-mode .goal-label {
+  color: white;
+}
+
+body.dark-mode .goal-value,
+body.dark-mode .streak-value {
+  color: #ccc;
+}
+
+body.dark-mode .goal-progress {
+  background: #444;
+}
+
+body.dark-mode .goal-progress-fill {
+  background: #4CAF50; /* green bar fill */
+}
+
+body.dark-mode .edit-btn,
+body.dark-mode .delete-btn {
+  color: #ccc;
+}
+
+body.dark-mode .edit-btn:hover,
+body.dark-mode .delete-btn:hover {
+  color: white;
+}
+
+body.dark-mode .add-goal {
+  border: 2px dashed #555;
+  color: #ccc;
+}
+
+body.dark-mode .add-goal span {
+  color: #ccc;
+}
+
+body.dark-mode .add-btn {
+  background: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode .add-btn:hover {
+  background: #2a64b2;
+}
+
+
 body.font-large {
   font-size: 24px;
 }

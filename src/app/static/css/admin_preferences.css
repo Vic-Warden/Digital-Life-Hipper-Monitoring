@@ -47,6 +47,7 @@ body.dark-mode .score-number {
 }
 
 body.dark-mode #search,
+body.dark-mode #search-device,
 body.dark-mode input[type="text"],
 body.dark-mode input[type="email"],
 body.dark-mode input[type="password"] {
@@ -55,13 +56,17 @@ body.dark-mode input[type="password"] {
   color: white;
 }
 
-body.dark-mode .patient-button {
+body.dark-mode .patient-button,
+body.dark-mode .occupied-button,
+body.dark-mode .delete-button {
   background-color: #2a2a2a;
   border: 2px solid #777777;
   color: white;
 }
 
-body.dark-mode .patient-button:hover {
+body.dark-mode .patient-button:hover,
+body.dark-mode .occupied-button:hover,
+body.dark-mode .delete-button:hover {
   background-color: #3a7bd5;
   color: white;
 }

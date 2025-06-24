@@ -157,7 +157,7 @@ body.dark-mode .dropdown-content a:hover {
 }
 
 body.dark-mode .dropdown-content a.active-link {
-  background-color: #3a7bd5;
+  background-color: #afafaf;
   color: white;
 }
 

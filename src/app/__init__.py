@@ -346,36 +346,37 @@ def admin_patient_details(patient_id):
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login_page():
     if request.method == 'POST':
-        # Retrieve email password & the therapist
         email = request.form.get('email')
         password = request.form.get('password')
 
         if db.check_credentials(email, password):
+            # Make sure the user is a therapist
+            user = db.get_user_by_email(email)
+            if not user or not user.get('is_therapist'):
+                return render_template('admin_login.html', error="Access denied: Only therapists can log in here.")
+
             # Create secure cookie
             success, cookie_value = db.create_cookie(email)
-
             print(f"Cookie created: {cookie_value}")
 
             if not success:
                 return "Failed to create cookie", 500
 
-            # Create response and set cookie
             response = make_response(redirect('/admin/patients'))
             response.set_cookie(
-                'auth_cookie',            # Cookie name
-                cookie_value,             # Cookie value
-                max_age=60*60*24*7,       # 1 week
-                httponly=True,            # Prevent JS access (XSS)
-                secure=True,              # Only over HTTPS
-                samesite='Lax'            # Protect from CSRF somewhat
+                'auth_cookie',
+                cookie_value,
+                max_age=60*60*24*7,
+                httponly=True,
+                secure=True,
+                samesite='Lax'
             )
-
-            # Redirect to home after form submission
             return response
+
         return render_template('admin_login.html', error="Invalid credentials. Please try again.")
-    else:
-        # Render the admin_login.html
-        return render_template('admin_login.html')
+    
+    return render_template('admin_login.html')
+
 
 
 @app.route('/admin/manage-devices', methods=['GET', 'POST'])

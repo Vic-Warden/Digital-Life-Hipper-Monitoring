@@ -8,9 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../static/css/admin_settings.css" />
   <link rel="stylesheet" href="../static/css/admin_navbar.css" />
+  <link rel="stylesheet" href="../static/css/admin_preferences.css" />
 </head>
 
 <body>
+
+  <body class="
+  {% if preferences.dark_mode %}dark-mode{% else %}light-mode{% endif %}
+  {% if preferences.large_font %}font-large{% else %}font-normal{% endif %}
+  lang-{{ preferences.language }}
+  ">
 
   <!-- Content goes here -->
   <div id="admin-navbar"></div>

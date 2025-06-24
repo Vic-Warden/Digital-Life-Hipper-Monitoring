@@ -10,9 +10,36 @@ function setupToggleBar(toggleId) {
       const selectedValue = half.dataset.value;
       console.log(`${toggleId} selected:`, selectedValue);
 
+      if (toggleId === 'font-toggle') {
+        document.body.classList.toggle('font-large', selectedValue === '1');
+        document.body.classList.toggle('font-normal', selectedValue === '0');
+      }
+
+      if (toggleId === 'theme-toggle') {
+        document.body.classList.toggle('dark-mode', selectedValue === '1');
+        document.body.classList.toggle('light-mode', selectedValue === '0');
+      }
     });
   });
+
+  // ✅ Apply class on load (font + theme)
+  if (toggleId === 'font-toggle') {
+    const selected = toggleBar.querySelector('.selected')?.dataset.value;
+    if (selected) {
+      document.body.classList.toggle('font-large', selected === '1');
+      document.body.classList.toggle('font-normal', selected === '0');
+    }
+  }
+
+  if (toggleId === 'theme-toggle') {
+    const selected = toggleBar.querySelector('.selected')?.dataset.value;
+    if (selected) {
+      document.body.classList.toggle('dark-mode', selected === '1');
+      document.body.classList.toggle('light-mode', selected === '0');
+    }
+  }
 }
+
 
 function getProfile() {
   fetch("/settings", {

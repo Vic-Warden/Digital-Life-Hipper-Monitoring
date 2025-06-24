@@ -7,10 +7,18 @@
     <title>Hipper Therapeutics - Fitness Dashboard</title>
     <link rel="stylesheet" href="../static/css/navbar.css" />
     <link rel="stylesheet" href="../static/css/home.css" />
+    <link rel="stylesheet" href="../static/css/preferences.css" />
     <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
 </head>
 
 <body>
+
+    <body class="
+        {% if preferences.dark_mode %}dark-mode{% else %}light-mode{% endif %}
+        {% if preferences.large_font %}font-large{% else %}font-normal{% endif %}
+         lang-{{ preferences.language }}
+        ">
+
 
     <div id="navbar"></div>
 

@@ -1,0 +1,321 @@
+/* ===== DARK MODE OVERRIDES ===== */
+body.dark-mode {
+  background: linear-gradient(135deg, #111 0%, #1c1c1c 100%);
+  color: white;
+}
+
+body.dark-mode .card {
+  background-color: #222;
+  border-color: #444;
+  color: #eee;
+}
+
+body.dark-mode .patient-card,
+body.dark-mode .addPatient-card {
+  background-color: #1f1f1f;
+  border-color: #555;
+  color: white;
+}
+
+body.dark-mode .patient-card-box {
+  background-color: #1f1f1f;
+  border: 1px solid #555;
+  color: white;
+  box-shadow: none;        /* Ensure no shadow is applied */
+  margin: 0;               /* Prevent external margin that causes separation */
+}
+
+body.dark-mode h3,
+body.dark-mode .card,
+body.dark-mode label,
+body.dark-mode .activity-label,
+body.dark-mode .activity-number,
+body.dark-mode .goal-name,
+body.dark-mode .goal-streak,
+body.dark-mode .goal-progress,
+body.dark-mode .chart-title,
+body.dark-mode .day-label,
+body.dark-mode .bar-value,
+body.dark-mode .legend-item,
+body.dark-mode .score-title,
+body.dark-mode .score-total {
+  color: #fff;
+}
+
+body.dark-mode .score-number {
+    color: black;
+}
+
+body.dark-mode #search,
+body.dark-mode #search-device,
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"] {
+  background-color: #2a2a2a;
+  border: 1px solid #555;
+  color: white;
+}
+
+body.dark-mode .patient-button,
+body.dark-mode .occupied-button,
+body.dark-mode .delete-button {
+  background-color: #2a2a2a;
+  border: 2px solid #777777;
+  color: white;
+}
+
+body.dark-mode .patient-button:hover,
+body.dark-mode .occupied-button:hover,
+body.dark-mode .delete-button:hover {
+  background-color: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode form label {
+  color: #eee;
+}
+
+body.dark-mode .display-box {
+  background-color: #333;
+  color: white;
+  border-color: #555;
+  background-color: transparent; /* In case it's wrapping the box visually */
+}
+
+body.dark-mode label {
+  color: #faf8f8;
+}
+
+body.dark-mode .half.selected {
+  background-color: gray;
+  color: white;
+}
+
+body.dark-mode .toggle-bar {
+  border-color: #979797;
+}
+
+body.dark-mode .half {
+  background-color: black;
+  color: #ccc;
+}
+
+body.dark-mode .save-button {
+  background-color: #444;
+  border-color: #666;
+  color: #eee;
+}
+
+body.dark-mode .save-button:hover {
+  background-color: #3a7bd5;
+  color: #fff;
+}
+
+body.dark-mode .return-message {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #555;
+}
+
+body.dark-mode .admin-navbar {
+  background-color: #1a1a1a;
+  border-bottom: 2px solid #333;
+}
+
+body.dark-mode .nav-center,
+body.dark-mode .logo-text {
+  color: #f0f0f0;
+}
+
+body.dark-mode .logo-line {
+  background-color: #555;
+}
+
+body.dark-mode .hippertext {
+  color: white;
+}
+
+body.dark-mode .dropbtn {
+  background-color: transparent;
+}
+
+body.dark-mode .bar {
+  background-color: white;
+}
+
+body.dark-mode .dropdown-content {
+  background-color: #222;
+  border-color: #444;
+}
+
+body.dark-mode .dropdown-content a {
+  color: #eee;
+}
+
+body.dark-mode .dropdown-content a:hover {
+  background-color: #333;
+}
+
+body.dark-mode .dropdown-content a.active-link {
+  background-color: #afafaf;
+  color: white;
+}
+
+body.dark-mode .client-data-panel {
+  background: #1f1f1f;
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark-mode .client-data-panel h2 {
+  color: white;
+}
+
+body.dark-mode .metric-card {
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+}
+
+body.dark-mode .metric-value {
+  color: #fff;
+}
+
+body.dark-mode .metric-label {
+  color: #ccc;
+}
+
+body.dark-mode .steps-icon {
+  background: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode .inactive-icon {
+  background: #555;
+  color: white;
+}
+
+body.dark-mode .score-card h3 {
+  color: white;
+}
+
+body.dark-mode .circular-progress .progress-ring-background {
+  stroke: #444;
+}
+
+body.dark-mode .circular-progress .progress-ring-fill {
+  stroke: #4CAF50; /* optional override */
+}
+
+body.dark-mode .score-current {
+  color: white;
+}
+
+body.dark-mode .score-total {
+  color: #ccc;
+}
+
+/* Historic Activity Panel */
+body.dark-mode .historic-activity-panel {
+  background: #1f1f1f;
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark-mode .activity-header h2 {
+  color: white;
+}
+
+body.dark-mode .time-selector {
+  background: #2a2a2a;
+}
+
+body.dark-mode .time-btn {
+  background: transparent;
+  color: #ccc;
+}
+
+body.dark-mode .time-btn.active {
+  background: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode .chart-description {
+  color: #aaa;
+}
+
+/* Client Goals Panel */
+body.dark-mode .client-goals-panel {
+  background: #1f1f1f;
+  border-radius: 20px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: none;
+}
+
+body.dark-mode .client-goals-panel h2 {
+  color: white;
+}
+
+body.dark-mode .goal-item {
+  background: #2a2a2a;
+  border: 1px solid #444;
+}
+
+body.dark-mode .goal-label {
+  color: white;
+}
+
+body.dark-mode .goal-value,
+body.dark-mode .streak-value {
+  color: #ccc;
+}
+
+body.dark-mode .goal-progress {
+  background: #444;
+}
+
+body.dark-mode .goal-progress-fill {
+  background: #4CAF50; /* green bar fill */
+}
+
+body.dark-mode .edit-btn,
+body.dark-mode .delete-btn {
+  color: #ccc;
+}
+
+body.dark-mode .edit-btn:hover,
+body.dark-mode .delete-btn:hover {
+  color: white;
+}
+
+body.dark-mode .add-goal {
+  border: 2px dashed #555;
+  color: #ccc;
+}
+
+body.dark-mode .add-goal span {
+  color: #ccc;
+}
+
+body.dark-mode .add-btn {
+  background: #3a7bd5;
+  color: white;
+}
+
+body.dark-mode .add-btn:hover {
+  background: #2a64b2;
+}
+
+
+body.font-large {
+  font-size: 24px;
+}
+
+body.font-normal {
+  font-size: 18px;
+}

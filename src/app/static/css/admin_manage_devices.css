@@ -191,6 +191,10 @@ form label {
     transition: background-color 0.3s ease;
 }
 
+.delete-button {
+    cursor: pointer;
+}
+
 button:hover {
     background-color: #74a6d4;
 }

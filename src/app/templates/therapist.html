@@ -94,7 +94,9 @@
             <span class="goal-label">{{ goal.goal_type.capitalize() }} Goal</span>
             <div class="goal-actions">
               <span class="goal-value">{{ goal.steps }} / {{ goal.target }}</span>
-              <span class="streak-value">🔥{{ goal.reached }}</span>
+              {% if goal.reached >= 1 %}
+                <span class="streak-value">🔥{{ goal.reached }}</span>
+              {% endif %}
               <button class="delete-btn" onclick="deleteGoal(this)" data-goal-id="{{ goal.id }}">🗑️</button>
             </div>
           </div>
@@ -203,7 +205,6 @@
           <span class="goal-label">${goalName.charAt(0).toUpperCase() + goalName.slice(1)} Goal</span>
           <div class="goal-actions">
             <span class="goal-value">0 / ${goalTarget}</span>
-            <span class="streak-value">🔥0</span>
             <button class="delete-btn" onclick="deleteGoal(this)">🗑️</button>
           </div>
         </div>

@@ -608,3 +608,140 @@ body {
     flex-direction: column;
   }
 }
+
+/* Activity Controls Container */
+.activity-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Threshold Selector */
+.threshold-selector {
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.threshold-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  font-weight: 500;
+  color: #666;
+  min-width: 45px;
+}
+
+.threshold-btn:hover {
+  background: rgba(255, 154, 86, 0.1);
+  color: #ff9a56;
+}
+
+.threshold-btn.active {
+  background: #ff9a56;
+  color: white;
+  font-weight: 600;
+}
+
+/* Threshold Description */
+.threshold-description {
+  color: #ff6b6b;
+  font-weight: 500;
+  margin-left: 0.5rem;
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .activity-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .activity-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .threshold-selector {
+    justify-content: center;
+  }
+  
+  .threshold-btn {
+    flex: 1;
+    min-width: auto;
+  }
+}
+
+/* Threshold Label Styling */
+.threshold-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dark-mode .threshold-label {
+  color: #e0e0e0;
+}
+
+.threshold-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Control Labels Styling */
+.control-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-right: 6px;
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.dark-mode .control-label {
+  color: #b0b0b0;
+}
+
+.threshold-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dark-mode .threshold-label {
+  color: #e0e0e0;
+}
+
+.threshold-selector,
+.time-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.activity-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}

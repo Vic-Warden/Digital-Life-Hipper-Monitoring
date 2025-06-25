@@ -1,8 +1,9 @@
 body.dark-mode {
-  background: linear-gradient(135deg, #111, #1c1c1c);
+  background: #1f1f1f;
   color: #f0f0f0;
 }
 
+body.dark-mode .parent-container,
 body.dark-mode .card,
 body.dark-mode .card_admin_user,
 body.dark-mode .card_superuser,

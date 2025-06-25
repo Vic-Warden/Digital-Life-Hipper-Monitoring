@@ -78,14 +78,25 @@
     <section class="historic-activity-panel">
       <div class="activity-header">
         <h2>Historic Activity</h2>
-        <div class="time-selector">
-          <button class="time-btn active">Daily</button>
-          <button class="time-btn">Weekly</button>
+        <div class="activity-controls">
+          <div class="time-selector">
+            <button class="time-btn active">Daily</button>
+            <button class="time-btn">Weekly</button>
+          </div>
+          <div class="threshold-selector">
+            <span class="control-label">Threshold</span>
+            <button class="threshold-btn" data-threshold="1000">1K</button>
+            <button class="threshold-btn" data-threshold="2000">2K</button>
+            <button class="threshold-btn" data-threshold="5000">5K</button>
+            <button class="threshold-btn" data-threshold="10000">10K</button>
+            <button class="threshold-btn active" data-threshold="none">None</button>
+          </div>
         </div>
       </div>
       
       <div class="chart-description">
-        Weekly Activity: Steps (Blue Bars), PAM Score (Green Line), Inactive Days (Red Highlight)
+        Weekly Activity: Steps (Blue/Red Bars), PAM Score (Green Line), Inactive Days (Red Highlight)
+        <span id="threshold-description" class="threshold-description"></span>
       </div>
       
       <div class="chart-container">

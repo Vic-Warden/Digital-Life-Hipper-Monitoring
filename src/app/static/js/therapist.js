@@ -1,6 +1,9 @@
 // Current view mode
 let currentView = 'daily';
 
+// Current activity threshold
+let currentThreshold = null;
+
 // Inactive period management
 let inactivePeriod = {
   startTime: null,
@@ -38,7 +41,7 @@ function initializeChart() {
   }
 }
 
-// Update chart based on view mode
+// Update chart based on view mode and threshold
 function updateChart(viewMode) {
   const ctx = document.getElementById('activityChart').getContext('2d');
 
@@ -63,6 +66,39 @@ function updateChart(viewMode) {
   stepsData = stepsData.map(v => v ?? 0);
   pamData = pamData.map(v => v ?? 0);
 
+  // Determine bar colors based on threshold
+  const barColors = labels.map((_, index) => {
+    // First check if it's an inactive day/hour (red highlight takes priority)
+    if (inactiveIndices.includes(index)) {
+      return '#ffcccb';
+    }
+    
+    // If threshold is set, check if steps meet threshold
+    if (currentThreshold !== null && currentThreshold !== 'none') {
+      const steps = stepsData[index] || 0;
+      return steps < currentThreshold ? '#ff6b6b' : '#4a90e2';
+    }
+    
+    // Default blue color
+    return '#4a90e2';
+  });
+
+  const borderColors = labels.map((_, index) => {
+    // First check if it's an inactive day/hour
+    if (inactiveIndices.includes(index)) {
+      return '#ff6b6b';
+    }
+    
+    // If threshold is set, check if steps meet threshold
+    if (currentThreshold !== null && currentThreshold !== 'none') {
+      const steps = stepsData[index] || 0;
+      return steps < currentThreshold ? '#d32f2f' : '#357abd';
+    }
+    
+    // Default border color
+    return '#357abd';
+  });
+
   // Destroy existing chart if it exists
   if (activityChart) {
     activityChart.destroy();
@@ -76,12 +112,8 @@ function updateChart(viewMode) {
         {
           label: 'Steps',
           data: stepsData,
-          backgroundColor: labels.map((_, index) => 
-            inactiveIndices.includes(index) ? '#ffcccb' : '#4a90e2'
-          ),
-          borderColor: labels.map((_, index) => 
-            inactiveIndices.includes(index) ? '#ff6b6b' : '#357abd'
-          ),
+          backgroundColor: barColors,
+          borderColor: borderColors,
           borderWidth: 1,
           yAxisID: 'y'
         },
@@ -129,7 +161,16 @@ function updateChart(viewMode) {
             label: function(context) {
               if (!context || typeof context.parsed?.y !== 'number') return '';
               if (context.datasetIndex === 0) {
-                return `Steps: ${context.parsed.y.toLocaleString()}`;
+                const steps = context.parsed.y;
+                let label = `Steps: ${steps.toLocaleString()}`;
+                
+                // Add threshold info if applicable
+                if (currentThreshold !== null && currentThreshold !== 'none') {
+                  const status = steps >= currentThreshold ? '✓ Met' : '✗ Below';
+                  label += ` (${status} threshold: ${currentThreshold.toLocaleString()})`;
+                }
+                
+                return label;
               } else {
                 return `PAM Score: ${context.parsed.y.toFixed(1)}`;
               }
@@ -187,6 +228,17 @@ function updateChart(viewMode) {
   });
 }
 
+// Update threshold description
+function updateThresholdDescription() {
+  const descElement = document.getElementById('threshold-description');
+  if (currentThreshold !== null && currentThreshold !== 'none') {
+    descElement.textContent = `• Red bars indicate steps below ${currentThreshold.toLocaleString()} threshold`;
+    descElement.style.display = 'inline';
+  } else {
+    descElement.style.display = 'none';
+  }
+}
+
 // Initialize event handlers
 function initializeEventHandlers() {
   // Time selector buttons
@@ -204,6 +256,30 @@ function initializeEventHandlers() {
         updateChart(currentView);
         console.log('Time period selected:', viewMode);
       }
+    });
+  });
+
+  // Threshold selector buttons
+  const thresholdButtons = document.querySelectorAll('.threshold-btn');
+  thresholdButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      thresholdButtons.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Get threshold value from data attribute
+      const threshold = this.getAttribute('data-threshold');
+      
+      if (threshold === 'none') {
+        currentThreshold = null;
+      } else {
+        currentThreshold = parseInt(threshold);
+      }
+      
+      // Update chart with new threshold
+      updateChart(currentView);
+      updateThresholdDescription();
+      
+      console.log('Threshold selected:', currentThreshold);
     });
   });
 

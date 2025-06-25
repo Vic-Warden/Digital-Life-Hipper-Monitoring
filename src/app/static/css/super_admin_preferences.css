@@ -59,7 +59,8 @@ body.dark-mode #btn-reset-password {
 
 body.dark-mode .promote-superuser-form button:hover,
 body.dark-mode .btn-delete:hover,
-body.dark-mode #btn-add-therapist:hover {
+body.dark-mode #btn-add-therapist:hover,
+body.dark-mode #btn-reset-password:hover {
   background-color: #3a7bd5;
 }
 

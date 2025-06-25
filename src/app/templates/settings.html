@@ -20,57 +20,57 @@
   ">
 
 
-  <!-- Content goes here -->
-  <div id="navbar"></div>
+    <!-- Content goes here -->
+    <div id="navbar"></div>
 
-  <div class="parent-container">
-    {% if message %}
-    <div class="return-message">
-      <p>{{ message }}</p>
-    </div>
-    {% endif %}
-    <div class="container">
-      <div class="card">
-        <h3>Profile</h3>
-        <label>Name:</label>
-        <div id="display-name" class="display-box">Hans</div>
-
-        <label>Email:</label>
-        <div id="display-email" class="display-box">Hans@gmail.com</div>
-
-        <label>Therapist:</label>
-        <div id="display-therapist" class="display-box">Johan van Schaap</div>
+    <div class="parent-container">
+      {% if message %}
+      <div class="return-message">
+        <p>{{ message }}</p>
       </div>
-      <div class="card">
-        <h3>Settings</h3>
-        <div class="setting">
-          <label>Light/Dark mode</label>
-          <div class="toggle-bar" id="theme-toggle">
-            <div class="half light {% if not preferences.dark_mode %}selected{% endif %}" data-value="0">Light</div>
-            <div class="half dark {% if preferences.dark_mode %}selected{% endif %}" data-value="1">Dark</div>
-          </div>
+      {% endif %}
+      <div class="container">
+        <div class="card">
+          <h3>Profile</h3>
+          <label>Name:</label>
+          <div id="display-name" class="display-box">Hans</div>
+
+          <label>Email:</label>
+          <div id="display-email" class="display-box">Hans@gmail.com</div>
+
+          <label>Therapist:</label>
+          <div id="display-therapist" class="display-box">Johan van Schaap</div>
         </div>
-        <div class="setting">
-          <label>Font-Size</label>
-          <div class="toggle-bar" id="font-toggle">
-            <div class="half light {% if not preferences.large_font %}selected{% endif %}" data-value="0">Normal</div>
-            <div class="half dark {% if preferences.large_font %}selected{% endif %}" data-value="1">Big</div>
+        <div class="card">
+          <h3>Settings</h3>
+          <div class="setting">
+            <label>Light/Dark mode</label>
+            <div class="toggle-bar" id="theme-toggle">
+              <div class="half light {% if not preferences.dark_mode %}selected{% endif %}" data-value="0">Light</div>
+              <div class="half dark {% if preferences.dark_mode %}selected{% endif %}" data-value="1">Dark</div>
+            </div>
           </div>
-        </div>
-        <div class="setting">
-          <label>Change language</label>
-          <div class="toggle-bar" id="language-toggle">
-            <div class="half light {% if preferences.language == 'en' %}selected{% endif %}" data-value="en">EN</div>
-            <div class="half dark {% if preferences.language == 'nl' %}selected{% endif %}" data-value="nl">NL</div>
+          <div class="setting">
+            <label>Font-Size</label>
+            <div class="toggle-bar" id="font-toggle">
+              <div class="half light {% if not preferences.large_font %}selected{% endif %}" data-value="0">Normal</div>
+              <div class="half dark {% if preferences.large_font %}selected{% endif %}" data-value="1">Big</div>
+            </div>
           </div>
+          <!-- <div class="setting"> -->
+          <!-- <label>Change language</label> -->
+          <!-- <div class="toggle-bar" id="language-toggle"> -->
+          <!-- <div class="half light {% if preferences.language == 'en' %}selected{% endif %}" data-value="en">EN</div> -->
+          <!-- <div class="half dark {% if preferences.language == 'nl' %}selected{% endif %}" data-value="nl">NL</div> -->
+          <!-- </div> -->
+          <!-- </div> -->
         </div>
       </div>
+      <button class="save-button" onclick="saveSettings()">Save Changes</button>
     </div>
-    <button class="save-button" onclick="saveSettings()">Save Changes</button>
-  </div>
 
-  <script src="../static/js/settings.js"></script>
-  <script src="../static/js/navbar.js"></script>
-</body>
+    <script src="../static/js/settings.js"></script>
+    <script src="../static/js/navbar.js"></script>
+  </body>
 
 </html>

@@ -230,7 +230,8 @@ body.dark-mode .activity-header h2 {
   color: white;
 }
 
-body.dark-mode .time-selector {
+body.dark-mode .time-selector,
+body.dark-mode .threshold-selector {
   background: #2a2a2a;
 }
 
@@ -239,7 +240,8 @@ body.dark-mode .time-btn {
   color: #ccc;
 }
 
-body.dark-mode .time-btn.active {
+body.dark-mode .time-btn.active,
+body.dark-mode .threshold-btn.active {
   background: #3a7bd5;
   color: white;
 }

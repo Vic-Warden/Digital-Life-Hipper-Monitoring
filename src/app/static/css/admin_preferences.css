@@ -235,7 +235,8 @@ body.dark-mode .threshold-selector {
   background: #2a2a2a;
 }
 
-body.dark-mode .time-btn {
+body.dark-mode .time-btn,
+body.dark-mode .threshold-btn {
   background: transparent;
   color: #ccc;
 }

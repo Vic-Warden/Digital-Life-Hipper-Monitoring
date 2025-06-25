@@ -117,6 +117,29 @@ const mac = document.getElementById('new_pam_mac').value.trim();
     .catch(err => alert('Request failed: ' + err));
 }
 
+/**
+ * Delete a PAM device by label.
+ */
+function deletePamDevice(deviceLabel) {
+    if (!confirm(`Really delete device "${deviceLabel}"?`)) return;
+
+    fetch('/api/delete-pam-device', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_label: deviceLabel })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        alert(data.msg || 'Deleted!');
+        window.location.reload();
+    })
+    .catch(err => alert('Error deleting device: ' + err));
+}
+
+
 document.getElementById('toggle-unoccupied-devices').addEventListener('click', function () {
     const items = document.querySelectorAll('.device-card-item');
     const showOnlyUnoccupied = this.dataset.filter !== 'on';

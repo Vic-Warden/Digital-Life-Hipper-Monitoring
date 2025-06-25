@@ -29,6 +29,34 @@ body.dark-mode .therapist-item {
   border-bottom: 1px solid #444;
 }
 
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #aaa;
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus,
+body.dark-mode select:focus {
+  outline: none;
+  border-color: #888;
+  background-color: #333;
+  color: white;
+}
+
+body.dark-mode #btn-reset-password {
+  background-color: #2a2a2a;
+  border: 2px solid #777777;
+  color: white;
+}
+
 body.dark-mode .promote-superuser-form button:hover,
 body.dark-mode .btn-delete:hover,
 body.dark-mode #btn-add-therapist:hover {

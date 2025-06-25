@@ -984,6 +984,45 @@ def add_pam_device():
     return jsonify({"message": "PAM device added successfully"}), 201
 
 
+import mysql.connector  # near the top if not already imported
+
+@app.route('/api/delete-pam-device', methods=['POST'])
+def api_delete_pam_device():
+    """
+    Deletes a PAM device by its label.
+    Expects JSON: { "device_label": "<label>" }
+    """
+    cookie = request.cookies.get('auth_cookie')
+    # Only therapists may delete devices
+    if not db.verify_cookie(cookie)[0] or not db.is_therapist(cookie):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json() or {}
+    label = data.get('device_label', '').strip()
+    if not label:
+        return jsonify({"error": "Missing device_label"}), 400
+
+    try:
+        conn = db._connection
+        cursor = conn.cursor()
+        # Add LIMIT 1 so MySQL safe‐update mode allows it
+        cursor.execute(
+            "DELETE FROM hipperdb.Device WHERE device_label = %s LIMIT 1",
+            (label,)
+        )
+        deleted = cursor.rowcount
+        conn.commit()
+        cursor.close()
+
+        if deleted == 0:
+            return jsonify({"error": f"No device with label '{label}' found"}), 404
+
+    except mysql.connector.Error as e:
+        return jsonify({"error": f"Database error: {e.msg}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {e}"}), 500
+
+    return jsonify({"msg": f"Device '{label}' deleted"}), 200
 
 
 

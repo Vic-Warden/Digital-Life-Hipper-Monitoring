@@ -70,20 +70,20 @@ window.addEventListener("DOMContentLoaded", () => {
   getProfile();
   setupToggleBar('theme-toggle');
   setupToggleBar('font-toggle');
-  setupToggleBar('language-toggle');
+  // setupToggleBar('language-toggle');
 });
 
 function saveSettings() {
   // Get the selected values from the toggle bars
   const dark_mode = document.querySelector('#theme-toggle .selected').dataset.value;
   const large_font = document.querySelector('#font-toggle .selected').dataset.value;
-  const language = document.querySelector('#language-toggle .selected').dataset.value;
+  // const language = document.querySelector('#language-toggle .selected').dataset.value;
 
   // Create the settings object to send to the server
   const settings = {
     dark_mode: parseInt(dark_mode),
-    large_font: parseInt(large_font),
-    language: language
+    large_font: parseInt(large_font)
+    // language: language
   };
 
   // Send the settings to the server

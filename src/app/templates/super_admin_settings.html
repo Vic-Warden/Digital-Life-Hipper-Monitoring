@@ -8,9 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../static/css/super_admin_settings.css" />
   <link rel="stylesheet" href="../static/css/admin_navbar.css" />
+  <link rel="stylesheet" href="../static/css/super_admin_preferences.css" />
 </head>
 
 <body>
+
+  <body class="
+  {% if preferences.dark_mode %}dark-mode{% else %}light-mode{% endif %}
+  {% if preferences.large_font %}font-large{% else %}font-normal{% endif %}
+  lang-{{ preferences.language }}
+  ">
 
   <!-- Content goes here -->
   <div id="admin-navbar"></div>
@@ -147,13 +154,13 @@
             <div class="half dark {% if preferences.large_font %}selected{% endif %}" data-value="1">Big</div>
           </div>
         </div>
-        <div class="setting">
-          <label>Change language</label>
-          <div class="toggle-bar" id="language-toggle">
-            <div class="half light {% if preferences.language == 'en' %}selected{% endif %}" data-value="en">EN</div>
-            <div class="half dark {% if preferences.language == 'nl' %}selected{% endif %}" data-value="nl">NL</div>
-          </div>
-        </div>
+<!--        <div class="setting">-->
+<!--          <label>Change language</label>-->
+<!--          <div class="toggle-bar" id="language-toggle">-->
+<!--            <div class="half light {% if preferences.language == 'en' %}selected{% endif %}" data-value="en">EN</div>-->
+<!--            <div class="half dark {% if preferences.language == 'nl' %}selected{% endif %}" data-value="nl">NL</div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
     <button class="save-button" onclick="saveSettings()">Save Changes</button>

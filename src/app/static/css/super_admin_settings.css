@@ -249,12 +249,17 @@ label {
   font-size: 1em;
 }
 
-.light {
+/* .light {
   background: white;
 }
 
 .dark {
   background: #87BAE8;
+  color: white;
+} */
+
+.selected {
+  background: #74a6d4;
   color: white;
 }
 

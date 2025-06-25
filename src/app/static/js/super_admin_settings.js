@@ -1,17 +1,43 @@
 function setupToggleBar(toggleId) {
-    const toggleBar = document.getElementById(toggleId);
-    const halves = toggleBar.querySelectorAll('.half');
+  const toggleBar = document.getElementById(toggleId);
+  const halves = toggleBar.querySelectorAll('.half');
 
-    halves.forEach(half => {
-        half.addEventListener('click', () => {
-            halves.forEach(h => h.classList.remove('selected'));
-            half.classList.add('selected');
+  halves.forEach(half => {
+    half.addEventListener('click', () => {
+      halves.forEach(h => h.classList.remove('selected'));
+      half.classList.add('selected');
 
-            const selectedValue = half.dataset.value;
-            console.log(`${toggleId} selected:`, selectedValue);
+      const selectedValue = half.dataset.value;
+      console.log(`${toggleId} selected:`, selectedValue);
 
-        });
+      if (toggleId === 'font-toggle') {
+        document.body.classList.toggle('font-large', selectedValue === '1');
+        document.body.classList.toggle('font-normal', selectedValue === '0');
+      }
+
+      if (toggleId === 'theme-toggle') {
+        document.body.classList.toggle('dark-mode', selectedValue === '1');
+        document.body.classList.toggle('light-mode', selectedValue === '0');
+      }
     });
+  });
+
+  // ✅ Apply class on load (font + theme)
+  if (toggleId === 'font-toggle') {
+    const selected = toggleBar.querySelector('.selected')?.dataset.value;
+    if (selected) {
+      document.body.classList.toggle('font-large', selected === '1');
+      document.body.classList.toggle('font-normal', selected === '0');
+    }
+  }
+
+  if (toggleId === 'theme-toggle') {
+    const selected = toggleBar.querySelector('.selected')?.dataset.value;
+    if (selected) {
+      document.body.classList.toggle('dark-mode', selected === '1');
+      document.body.classList.toggle('light-mode', selected === '0');
+    }
+  }
 }
 
 

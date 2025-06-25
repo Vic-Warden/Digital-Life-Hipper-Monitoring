@@ -1,0 +1,102 @@
+body.dark-mode {
+  background: linear-gradient(135deg, #111, #1c1c1c);
+  color: #f0f0f0;
+}
+
+body.dark-mode .card,
+body.dark-mode .card_admin_user,
+body.dark-mode .card_superuser,
+body.dark-mode .display-box,
+body.dark-mode .display-box-add-admin-user,
+body.dark-mode .display-box-superusers,
+body.dark-mode .password-reset-form,
+body.dark-mode .superuser-item,
+body.dark-mode .promote-superuser-form input,
+body.dark-mode .promote-superuser-form button {
+  background-color: #1f1f1f;
+  color: white;
+  border-color: #555;
+}
+
+body.dark-mode .super-user-box {
+    background-color: #1f1f1f;
+    border-color: #777;
+        color: white;
+}
+
+body.dark-mode .therapist-item {
+  border-bottom: 1px solid #444;
+}
+
+body.dark-mode .promote-superuser-form button:hover,
+body.dark-mode .btn-delete:hover,
+body.dark-mode #btn-add-therapist:hover {
+  background-color: #3a7bd5;
+}
+
+body.dark-mode .toggle-bar {
+  border-color: #777;
+}
+
+body.dark-mode .half {
+  background-color: #222;
+  color: #ccc;
+}
+
+body.dark-mode .half.selected {
+  background-color: gray;
+  color: white;
+}
+
+body.dark-mode .admin-navbar {
+  background-color: #1a1a1a;
+  border-bottom: 2px solid #333;
+}
+
+body.dark-mode .nav-center,
+body.dark-mode .logo-text {
+  color: #f0f0f0;
+}
+
+body.dark-mode .logo-line {
+  background-color: #555;
+}
+
+body.dark-mode .hippertext {
+  color: white;
+}
+
+body.dark-mode .dropbtn {
+  background-color: transparent;
+}
+
+body.dark-mode .bar {
+  background-color: white;
+}
+
+body.dark-mode .dropdown-content {
+  background-color: #222;
+  border-color: #444;
+}
+
+body.dark-mode .dropdown-content a {
+  color: #eee;
+}
+
+body.dark-mode .dropdown-content a:hover {
+  background-color: #333;
+}
+
+body.dark-mode .dropdown-content a.active-link {
+  background-color: #afafaf;
+  color: white;
+}
+
+
+body.font-large {
+  font-size: 24px;
+}
+
+body.font-normal {
+  font-size: 18px;
+}

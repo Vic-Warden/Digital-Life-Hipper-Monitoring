@@ -417,6 +417,7 @@ body {
   font-size: 1.3rem;
   font-weight: 600;
   color: #333;
+  white-space: nowrap;
 }
 
 .time-selector {
@@ -614,15 +615,19 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
+  justify-content: flex-end; /* Added to align content to the right */
+  flex-wrap: wrap;
 }
 
 /* Threshold Selector */
 .threshold-selector {
   display: flex;
+  align-items: center;
   background: #f0f0f0;
   border-radius: 8px;
   padding: 4px;
-  gap: 2px;
+  gap: 4px; /* Consolidated gap definition */
+  margin-left: auto; /* Ensures it aligns right when in a flex row */
 }
 
 .threshold-btn {
@@ -664,6 +669,10 @@ body {
     align-items: flex-start;
     gap: 0.75rem;
   }
+
+  .threshold-selector {
+    margin-left: 0; /* Reset margin for mobile layout */
+  }
 }
 
 @media (max-width: 768px) {
@@ -672,11 +681,11 @@ body {
     align-items: stretch;
     gap: 1rem;
   }
-  
+
   .threshold-selector {
     justify-content: center;
   }
-  
+
   .threshold-btn {
     flex: 1;
     min-width: auto;
@@ -697,12 +706,6 @@ body {
   color: #e0e0e0;
 }
 
-.threshold-selector {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 /* Control Labels Styling */
 .control-label {
   font-size: 12px;
@@ -718,30 +721,11 @@ body {
   color: #b0b0b0;
 }
 
-.threshold-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-right: 8px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.dark-mode .threshold-label {
-  color: #e0e0e0;
-}
-
+/* Shared selector styles */
 .threshold-selector,
 .time-selector {
   display: flex;
   align-items: center;
   gap: 4px;
   flex-wrap: nowrap;
-}
-
-.activity-controls {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
 }

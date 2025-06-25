@@ -228,12 +228,11 @@ function updateChart(viewMode) {
   });
 }
 
-// Update threshold description
 function updateThresholdDescription() {
   const descElement = document.getElementById('threshold-description');
   if (currentThreshold !== null && currentThreshold !== 'none') {
     descElement.textContent = `• Red bars indicate steps below ${currentThreshold.toLocaleString()} threshold`;
-    descElement.style.display = 'inline';
+    descElement.style.display = 'block'; // ⬅️ this makes it appear on a new line
   } else {
     descElement.style.display = 'none';
   }

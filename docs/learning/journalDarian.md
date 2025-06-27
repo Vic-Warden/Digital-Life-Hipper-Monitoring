@@ -368,7 +368,7 @@ backgroundColor: labels.map((_, i) =>
 
 ---
 
-## 🎯 Result
+##  Result
 
 - You can set any number as the “step threshold”.
 - The chart shows red bars on days that didn’t meet it.

@@ -20,7 +20,7 @@ nav:
         - UX testing: design/uxTesting
         - Figma: design/figma
     - Frontend:
-        - PowerBI: frontend/powerBI
+        - PowerBI: frontend/powerbi/powerBI
         - Web Page: frontend/web_page/template
     - Learning story's: 
         - Bryan: learning/journalBryan

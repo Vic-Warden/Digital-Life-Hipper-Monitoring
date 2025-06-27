@@ -4,6 +4,9 @@ Use the bar to the left to navigate
 
 ### User Documentation
 
+<a href="docs/Hipper%20-%20Therapist%20Documentation.pdf" download> User Guide</a>
+<a href="docs/Hipper%20-%20User%20Documentation.pdf" download> Therapist Guide</a>
+
 **Here a link to the documentation for the Therapist**
 
 [Click Here](/docs/Hipper%20-%20Therapist%20Documentation.pdf)

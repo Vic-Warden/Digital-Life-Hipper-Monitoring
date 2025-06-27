@@ -9,15 +9,19 @@ nav:
         - Label Datasets: backend/label_datasets
         - Website: backend/website
         - Base Station: backend/baseStation
+        - Docker: backend/docker
+        - Machine Learning: backend/machine_learning
     - Data:
         - Datasets: data/datasets
         - AI: data/ai
+        - Approach: data/approach
+        - Research: data/research
     - Design: 
         - UX testing: design/uxTesting
         - Figma: design/figma
     - Frontend:
-        - PowerBI: frontend/powerBI
-        - Web Page: web_page/template
+        - PowerBI: frontend/powerbi/powerBI
+        - Web Page: frontend/web_page/template
     - Learning story's: 
         - Bryan: learning/journalBryan
         - Darian: learning/journalDarian

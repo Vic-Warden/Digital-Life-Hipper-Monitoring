@@ -346,7 +346,7 @@ When the form is submitted, it sends a POST request to the backend route '/api/a
 ```html
     <div class="addPatient-card">
       <h3>Add Patient</h3>
-      <form action="{{ url_for('admin_add_patient') }}" method="POST">
+      <!-- <form action="{{ url_for('admin_add_patient') }}" method="POST"> -->
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required />
 

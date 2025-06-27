@@ -329,7 +329,7 @@ The patient data is fetched from the backend before the page is rendered, using 
         {% for patient in patients %}
           <div class="patient-card-item" data-name="{{ patient.name | lower }}">
             <div class="patient-card-box">
-              <!-- <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}" style="text-decoration: none; color: inherit;"> -->
+              <a href="/{/{ url_for('admin_patient_details', patient_id=patient.id) /}/}" style="text-decoration: none; color: inherit;">
               <strong>{{ patient.name }}</strong><br>
               Email: {{ patient.email }}
               </a>
@@ -346,7 +346,7 @@ When the form is submitted, it sends a POST request to the backend route '/api/a
 ```html
     <div class="addPatient-card">
       <h3>Add Patient</h3>
-      <!-- <form action="{{ url_for('admin_add_patient') }}" method="POST"> -->
+      <form action="\{\{ url_for('admin_add_patient') \}\}" method="POST">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" required />
 

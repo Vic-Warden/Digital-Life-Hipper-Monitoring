@@ -1,3 +1,33 @@
-# Index
+# Welcome to the official Hipper Therapeutics documentation page! 
 
-Home page here
+Use the bar to the left to navigate
+
+    - 🏚️ Home: index.md
+    - Backend:
+        - Database: backend/database
+        - Database Python: backend/database.py
+        - BLE Commands: backend/bleCommands
+        - Pipeline: backend/pipeline
+        - Generate Datasets: backend/generate_datasets
+        - Label Datasets: backend/label_datasets
+        - Website: backend/website
+        - Base Station: backend/baseStation
+    - Data:
+        - Datasets: data/datasets
+        - AI: data/ai
+    - Design: 
+        - UX testing: design/uxTesting
+        - Figma: design/figma
+    - Frontend:
+        - PowerBI: frontend/powerBI
+        - Web Page: web_page/template
+    - Learning story's: 
+        - Bryan: learning/journalBryan
+        - Darian: learning/journalDarian
+        - Indigo: learning/journalIndigo
+        - Jan: learning/journalJan
+        - Mike: learning/journalMike
+        - Richard: learning/journalRichard
+        - Victor: learning/journalVictor
+    - Research: 
+        - Old Research Redo: Research/Research_redo

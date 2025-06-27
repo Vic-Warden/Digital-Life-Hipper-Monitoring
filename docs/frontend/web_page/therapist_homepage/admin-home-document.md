@@ -1,4 +1,4 @@
-# Therapist Dashboard - Setup Guide
+# Therapist Dashboard - Guide
 
 ##  Project Overview
 This is a modern therapist dashboard that displays client data, activity charts, and goal management. The dashboard includes:
@@ -159,12 +159,12 @@ const chartData = {
 
 # Implementing Night-Time Inactivity Filter on the User Homepage
 
-##  What I Built
+##  What is Built
 I developed a dashboard feature that allows users to set a custom night-time inactive period on their homepage. This range is used to exclude those hours from inactivity metrics. If the user doesn’t set a time range, default tracking is used. I also integrated Chart.js to visualize activity and inactivity data.
 
 ---
 
-###  Step-by-Step: How I Did It
+###  Step-by-Step: How it is done
 
 ### 1. Set Up Project Structure
 ```

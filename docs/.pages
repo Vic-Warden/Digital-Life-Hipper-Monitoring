@@ -27,3 +27,5 @@ nav:
         - Victor: learning/journalVictor
     - Research: 
         - Old Research Redo: Research/Research_redo
+    - Reccomendations:
+        - Reccomendations: recommendations.md

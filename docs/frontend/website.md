@@ -329,7 +329,7 @@ The patient data is fetched from the backend before the page is rendered, using 
         {% for patient in patients %}
           <div class="patient-card-item" data-name="{{ patient.name | lower }}">
             <div class="patient-card-box">
-              <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}" style="text-decoration: none; color: inherit;">
+              <!-- <a href="{{ url_for('admin_patient_details', patient_id=patient.id) }}" style="text-decoration: none; color: inherit;"> -->
               <strong>{{ patient.name }}</strong><br>
               Email: {{ patient.email }}
               </a>

@@ -274,9 +274,7 @@ async function addTherapist() {
     feedback.style.color = "red";
     console.error('Add therapist error:', err);
   }
-  location.reload();
 }
-
 
 // Delete therapist
 async function removeTherapist(id, btn) {

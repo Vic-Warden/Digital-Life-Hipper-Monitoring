@@ -2,11 +2,11 @@
 
 **Below is a link to download the documentation for the Therapist**
 
-<a href="Hipper%20-%20User%20Documentation.pdf" download> Therapist Guide</a>
+<a href="Hipper%20-%20Therapist%20Documentation.pdf" download> Therapist Guide</a>
 
 **Below is a link to download the documentation for the Patients**
 
-<a href="Hipper%20-%20Therapist%20Documentation.pdf" download> Patient Guide</a>
+<a href="Hipper%20-%20User%20Documentation.pdf" download> Patient Guide</a>
 
 ### Developer Documentation
 

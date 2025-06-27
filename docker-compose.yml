@@ -32,4 +32,3 @@ services:
       - FLASK_APP=__init__.py
     volumes:
       - ./src/app:/app
-      

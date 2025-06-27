@@ -462,8 +462,8 @@ In the code snippet you will see I used jinja2 to call a flask backend route and
 
 ```html
       <div id="patient-list" class="display-box">
-        \{\% if patients %\}\
-        \{\% for patient in patients %\}\
+        /{/% if patients %/}/
+        /{/% for patient in patients %/}/
         <div class="patient-card-item" data-name="\{\{ patient.name | lower \}\}">
           <div class="patient-card-box">
             <a href="/{/{ url_for('admin_patient_details', patient_id=patient.id) /}/}"

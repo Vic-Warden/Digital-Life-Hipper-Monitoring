@@ -23,8 +23,15 @@ get_log_for_mac()       # Get the last time data was pulled from a specific sens
 update_log_timestamps() # Update the last time data was pulled from a specific sensor, by looking at the mac address
 therapist_id_from_cookie() # Retrieves the therapist's ID associated with a given session cookie.
 connect_patient_to_therapist() # Creates an association between a patient and a therapist in the database.
+calculate_patient_data() # Calculates data averages for historical graph
 upload_day_data()       # Uploads day data from the basestation to the database
 upload_minute_data()    # Uploads minute, or activity data to the databse
+get_user_preferences()  # Get all the user preferences using the cookie.
+set_user_preferences()  # Sets the user preferences using the cookie (active session) of the player.
+is_therapist()          # Checks if someone is a therapist
+get_devices()           # Get all devices registered
+bind_device_to_patient() # Bind a device to a patient
+unbind_device_from_patient() # Unbind a device form a patient
 get_all_patients()      # Gets all patients registered
 ```
 

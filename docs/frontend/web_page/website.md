@@ -387,3 +387,465 @@ The JavaScript file for the admin patients page contains the function that enabl
 - A youtube video that helped with understand jinja2 was used [Link to video on jinja2](https://www.youtube.com/watch?v=4yaG-jFfePc&t=113s)
 
 **Chatgpt was used to clean up the written code**
+
+# Therapist Dashboard - Guide
+
+##  Project Overview
+This is a modern therapist dashboard that displays client data, activity charts, and goal management. The dashboard includes:
+- Client metrics (Weekly PAM, Inactive Minutes)
+- Interactive activity chart with steps and PAM scores
+- Goal management system (add, edit, delete goals)
+- Responsive design with glassmorphism effects
+
+---
+
+##  File Structure Setup
+
+### Step 1: Create Your Project Folder
+Create a new folder on your computer for the project:
+```
+therapist-dashboard/
+├── index.html
+└── static/
+    ├── css/
+    │   └── therapist.css
+    └── js/
+        └── therapist.js
+```
+
+### Step 2: Create the Folders
+1. Create a main folder called `therapist-dashboard`
+2. Inside it, create a folder called `static`
+3. Inside `static`, create two folders: `css` and `js`
+
+---
+
+##  HTML File (admin_home.html)
+
+### Purpose
+The HTML file creates the structure and layout of the dashboard with three main sections:
+- **Left Panel**: Client data and metrics
+- **Center Panel**: Activity chart
+- **Right Panel**: Goal management
+
+### Key Components
+- **Header**: Logo and user profile
+- **Client Data Panel**: Shows weekly PAM (11/20), inactive minutes (180), and circular progress (370/600)
+- **Activity Chart**: Interactive chart showing steps, PAM scores, and inactive days
+- **Goals Panel**: Displays goals with progress bars and edit/delete buttons
+
+
+---
+
+##  CSS File (therapist.css)
+
+### Purpose
+The CSS file styles the dashboard with a modern, professional look using:
+- **Glassmorphism effects**: Blurred backgrounds with transparency
+- **Responsive design**: Works on desktop, tablet, and mobile
+- **Color scheme**: Blue gradient background with green accents
+
+### Key Design Features
+- **Blue gradient background** (#a8d8f0 to #e6f3ff): Calm and professional
+- **Green accents** (#4CAF50): Indicate progress and positivity
+- **Red highlights** (rgba(255, 182, 193, 0.3)): Signal inactive periods
+- **White/gray tones**: Ensure clarity and medical aesthetic
+- **Layout**: CSS Grid
+- **Fonts**: Modern sans-serif for readability
+
+---
+
+##  JavaScript File (therapist.js)
+
+### Purpose
+Handles all interactive functionality and visualizations.
+
+### Main Functions
+- `initializeChart()`: Draws step bars, PAM line, and highlights inactive days
+- `addNewGoal()`: Adds new goals based on user input
+- `editGoal(button)`: Edits selected goal
+- `deleteGoal(button)`: Removes selected goal with confirmation
+- `updateCircularProgress()`: Animates progress ring
+- Event listeners for time toggles and button actions
+
+### Data Structure Example (hardcoded numbers for the prototype)
+```javascript
+const chartData = {
+  dates: ['2025-05-19', '2025-05-20', ...],
+  steps: [1000, 3000, 5000, ...],
+  pamScores: [0.25, 1.0, 1.5, ...],
+  inactiveDays: [0, 1, 4, 6]
+};
+```
+
+---
+
+##  How I Run the Dashboard to see what i'm working on
+
+### VS Code Live Server
+1. Install VS Code + Live Server extension
+2. Open project folder
+3. Right-click `admin_home.html` → "Open with Live Server"
+
+---
+
+##  Features & Functionality
+
+###  Features
+- Interactive chart with dynamic data
+- Add/edit/delete goals
+- Responsive and accessible layout
+- Modern glassmorphism style
+
+###  Customization
+- Edit `chartData` in JS
+- Update styles in CSS
+- Change goal structure in HTML
+
+---
+
+##  Troubleshooting
+
+1. **Chart Missing?** Check `<canvas id="activityChart">` and JS import path.
+2. **CSS Not Applying?** Ensure correct folder structure and relative paths.
+3. **Buttons Not Responding?** Look for JavaScript errors in console.
+4. **Goal Data Lost?** Page refresh resets in-memory data.
+
+---
+
+##  Technical Notes
+
+- No external data or persistent storage
+- Goals reset on page reload (it is currently only stored locally not in the database yet)
+
+---
+
+##  Future Enhancements
+
+- LocalStorage/database support
+- Chart export (PDF/PNG)
+- More time ranges (monthly/yearly)
+- Client switching and real-time data
+- Enhanced accessibility features
+
+---
+
+
+##  References
+
+###  Color Theory
+- [What is Color Theory? - Figma](https://www.figma.com/resource-library/what-is-color-theory/)
+
+### Design and readability
+- [Typography for Health Information](https://www.nngroup.com/articles/medical-usability/)
+
+###  Web Development
+- [MDN Web Docs - HTML Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+
+###  UX & Accessibility
+- [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/WCAG21/quickref/)
+
+
+
+# Implementing Night-Time Inactivity Filter on the User Homepage
+
+##  What is Built
+I developed a dashboard feature that allows users to set a custom night-time inactive period on their homepage. This range is used to exclude those hours from inactivity metrics. If the user doesn’t set a time range, default tracking is used. I also integrated Chart.js to visualize activity and inactivity data.
+
+---
+
+###  Step-by-Step: How it is done
+
+### 1. Set Up Project Structure
+```
+project/
+├── index.html
+├── static/
+│   ├── css/
+│   │   ├── therapist.css
+│   │   └── admin_navbar.css
+│   └── js/
+│       ├── therapist.js
+│       └── admin_navbar.js
+```
+
+### 2. Include Chart.js in HTML
+In `index.html`, I added the Chart.js CDN to the `<head>` so the dashboard can render charts:
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+```
+
+### 3. Build the Time Picker Feature in HTML
+- Created a modal with two `<input type="time">` fields.
+- Added a button for setting the inactive time period.
+
+### 4. Write JavaScript Logic (`therapist.js`)
+- Built a function to validate that the start and end time are not equal.
+- Supported overnight time ranges (e.g., 10 PM to 6 AM).
+- Saved the inactive range to `localStorage` (simulating back-end saving).
+- Filtered the inactivity data to exclude the selected period.
+- Fallback to default metrics if no range is set.
+
+### 5. Integrate Chart.js for Visual Display
+- Created a mixed chart:
+  - Bar chart for step counts.
+  - Line chart for PAM scores.
+- Highlighted inactive periods with a red background.
+- Configured dual y-axes for step data and PAM scores.
+
+### 6. Add UI Feedback
+- Displayed success and validation messages for user interactions.
+- Used CSS animations for modals and notifications.
+- Built progress bars and circular indicators to show goal completion.
+
+## Summary
+
+By completing this feature, I learned how to:
+- Use `<input type="time">` with JavaScript to capture and validate time ranges.
+- Handle 24-hour time logic in JavaScript (including cross-midnight ranges).
+- Store user settings locally with `localStorage`.
+- Exclude specific time ranges from metrics calculation.
+- Integrate and configure Chart.js in a multi-metric dashboard.
+- Improve user experience through feedback, validation, and visual indicators.
+
+This setup now provides a smooth and intuitive user experience for controlling night-time exclusion in activity data.
+
+---
+
+# HIPPER Therapeutics - Dashboard HTML Structure
+
+This document explains the structure and functionality of the HTML file used for the **HIPPER Therapeutics** dashboard/home page. The layout is composed of a header and a three-panel main content section that provides a quick overview of a user’s wellness data and goals.
+
+---
+
+##  File Overview
+
+**HTML file location:**  
+`home.html`
+
+**Linked assets:**  
+- CSS: `../static/css/home.css`
+- JS: `../static/js/home.js`
+- Images: `../static/images/` (are here at the moment just for placeholders)
+
+---
+
+##  HTML Structure Breakdown
+
+### `<head>`
+- Sets the character encoding (`UTF-8`)
+- Ensures responsive layout on mobile devices (`viewport`)
+- Loads external CSS for styling
+- Sets page title
+
+---
+
+##  Header Section (`<header class="header">`)
+
+Contains:
+- **Logo**: Title "HIPPER THERAPEUTICS"
+- **User Controls**:
+  - User profile area displaying:
+    - User name (e.g. Marianne Elsenbeek)
+    - Profile avatar image
+
+---
+
+
+## Main Dashboard (`<main class="dashboard">`)
+
+### 1. **Left Panel – Daily Stats** (`<section class="stats-panel">`)
+Displays three daily metrics:
+- **Mood indicator**: Emoji icon representing the user’s mood
+- **Steps counter**: Shows steps taken (e.g. XXXX amount of steps)
+- **Activity duration**: Time spent being active (e.g. XX minutes)
+
+Each stat is visually separated by a divider.
+
+---
+
+### 2. **Middle Panel – Weekly Score** (`<section class="score-panel">`)
+- Title: *Weekly Movement Score*
+- Circular progress chart (SVG-based)
+- Displays current weekly score (e.g. `XXX / XXX`)
+
+---
+
+### 3. **Right Panel – Personal Goals** (`<section class="goals-panel">`)
+Displays progress on 3 goal categories:
+- **Daily Goal**
+  - Example: 3-day streak
+  - Progress: `40 / 85` (47% complete)
+- **Weekly Goal**
+  - Progress: `153 / 600` (25% complete)
+- **Monthly Goal**
+  - Progress: `153 / 2400` (6% complete)
+
+Each goal includes:
+- Title and streak (if applicable)
+- Visual progress bar
+- Numeric progress display
+
+---
+
+### 4. **Bottom panel – Historical graph** (`<class="card chart-section">`)
+The section allows users to visualize their historical activity data (steps and PAM score) across different time scales:
+- Hourly (past 12 hours)
+- Daily (past 7 days)
+- Weekly (past 7 weeks)
+- Monthly (past 6 months)
+
+Each view displays bar charts for two metrics:
+- steps: Number of steps taken
+- PAM_score: A physical activity measure
+
+---
+
+## Script Reference
+
+The following JS script is included at the bottom of the HTML:
+```html
+<script src="../static/js/home.js"></script>
+
+
+# CSS Code Documentation
+
+This documentation explains the purpose and design of each section in the CSS code for our Homepage, with references to color theory principles from Figma's guide.
+
+---
+
+##  Global Styles
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+```
+
+**Purpose:** Ensures consistent box sizing and removes default spacing for all elements.
+
+```
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #a8d8ff 0%, #b3e5fc 100%);
+  min-height: 100vh;
+  color: #333;
+}
+```
+
+**Notes:**
+- Uses a **cool gradient** (light blues) to evoke calm and clarity, inspired by analogous hues in the color wheel.
+- Text color `#333` provides good contrast without being harsh black.
+
+---
+
+##  Header Layout
+
+```
+.header { ... }
+.logo { ... }
+.user-info { ... }
+.settings-icon { ... }
+```
+
+**Purpose:** Creates a **frosted-glass header** using `backdrop-filter` and semi-transparent backgrounds. This gives a modern, airy aesthetic.
+
+- `.settings-icon` includes a **hover animation** (rotation).
+- `.user-profile` highlights interaction with hover movement.
+
+---
+
+##  Main Container and Card Layout
+
+```
+.container { ... }
+.card { ... }
+```
+
+**Purpose:** Uses a **CSS Grid** layout to organize content into 3 columns (1 column on smaller screens).
+
+- Cards have soft shadows, rounded corners, and blur effects to give a clean, elevated feel.
+- Colors like `rgba(255, 255, 255, 0.95)` are used for semi-transparency while maintaining readability.
+
+---
+
+##  Mood + Activity Section
+
+```
+.mood-section { ... }
+.mood-emoji { ... }
+.activity-item { ... }
+.activity-icon { ... }
+```
+
+**Color Theory Notes:**
+- `.mood-emoji` uses **#ffd93d**, a **warm yellow** to express positivity and energy.
+- Icons like `.steps-icon` (`#4caf50`, green) and `.time-icon` (`#2196f3`, blue) follow **analogous harmony** (green-blue palette) for cohesion.
+
+- Includes subtle animations (`@keyframes bounce`) and transitions for interactivity.
+
+---
+
+##  Score Circle Section
+
+```
+.score-section { ... }
+.score-fill { ... }
+@keyframes fillProgress { ... }
+```
+
+**Functionality:**
+- Displays a circular progress chart using a **conic gradient**.
+- Green (`#4caf50`) indicates success, with soft background gray for contrast.
+- Animation creates a **filling effect** to visually emphasize progress.
+
+---
+
+##  Goals Section
+
+```
+.goals-section { ... }
+.goal-item { ... }
+.progress-bar { ... }
+.progress-fill { ... }
+```
+
+- Progress bars use a **green gradient** (`#4caf50` → `#8bc34a`) to represent growth and achievement.
+- Streaks are marked with **red** (`#ff6b6b`) for attention and urgency.
+
+---
+
+##  Chart Section
+
+```
+.chart-section { ... }
+.chart-container { ... }
+.bar { ... }
+.steps-bar, .pam-bar { ... }
+```
+
+- Uses bar charts to display metrics like steps and PAM.
+- Color-coded bars:
+  - **Blue** (`#2196f3`) for steps = trust, calm
+  - **Green** (`#4caf50`) for PAM = balance, wellness
+- Smooth transitions and value tooltips enhance usability.
+
+---
+
+##  Responsive Design
+
+```
+@media (max-width: 768px) { ... }
+```
+
+- Adjusts grid layout, header padding, and chart sizing for mobile screens.
+- Ensures usability across devices with consistent visual quality.
+
+---
+
+
+## Reference link
+
+[Colour Theory](https://www.figma.com/resource-library/what-is-color-theory/)

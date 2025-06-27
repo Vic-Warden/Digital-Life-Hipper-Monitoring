@@ -8,6 +8,10 @@
 
 <a href="Hipper%20-%20User%20Documentation.pdf" download> Patient Guide</a>
 
+**Below is a link to download the technical documentation**
+
+<a href="Hipper%20-%20Technical%20Documentation.pdf" download> Technical Documentation</a>
+
 ### Developer Documentation
 
 Use the bar to the left to navigate

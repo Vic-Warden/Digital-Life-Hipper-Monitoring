@@ -1,3 +1,8 @@
+import secrets
+import mysql.connector  # near the top if not already imported
+import mysql.connector  # or your DB driver's error classes
+from anomaly_detection import calculate_median, detect_anomalies
+from werkzeug.security import generate_password_hash
 import os  # Import os for .env centralized settings
 # Import Flask
 from flask import Flask, render_template, redirect, request, session, make_response, jsonify
@@ -8,9 +13,7 @@ import re
 EMAIL_REGEX = r"^[^@]+@[^@]+\.[^@]+$"
 
 # Import Werkzeug for have the possibility to hash a password
-from werkzeug.security import generate_password_hash
 
-from anomaly_detection import calculate_median, detect_anomalies
 
 # Create the app Flask
 app = Flask(__name__)
@@ -51,7 +54,7 @@ def home():
             patient_data = db.get_patient_details(result[0][0])
             calculated_data = db.calculate_patient_data(patient_data)
 
-            return render_template('home.html', 
+            return render_template('home.html',
                                    calculated=calculated_data,
                                    preferences=db.get_user_preferences(cookie))
         else:
@@ -95,7 +98,7 @@ def login():
             return response
 
         return render_template('login.html', error="Invalid credentials. Please try again.")
-    
+
     return render_template('login.html')
 
 
@@ -217,31 +220,6 @@ def admin_settings():
     return redirect("/admin/login")
 
 
-# Handle the admin login page
-
-#@app.route('/admin/home/<patient_id>', methods=['GET', 'POST'])
-#def admin_home(patient_id):
-#    # Verify the cookie
-#    cookie = request.cookies.get('auth_cookie')
-#    valid = db.is_therapist(cookie)
-#
-#    if not valid:
-#        return redirect('/admin/login')
-#    
-#    print(patient_id)
-#    
-#    device_id = db.device_id_from_patient_id(patient_id)  # result is a list of tuples
-#    patient_data = db.get_patient_details(device_id)
-#    calculated_data = db.calculate_patient_data(patient_data) 
-#
-#    print(calculated_data)  
-#
-#     # Render the home.html
-#    return render_template('admin_home.html', 
-#                           calculated=calculated_data,
-#                           preferences=db.get_user_preferences(cookie))
-
-
 @app.route('/admin/patients', methods=['GET'])
 def admin_patient_list():
     cookie = request.cookies.get('auth_cookie')
@@ -281,7 +259,6 @@ def admin_patient_list():
     )
 
 
-
 @app.route('/api/add-patient', methods=['POST'])
 def admin_add_patient():
     # Get data from form
@@ -308,7 +285,6 @@ def admin_add_patient():
     if not db.check_email(email):
         return "Email already exists", 400
 
-
     # Call DB logic to insert the patient
     success = db.add_patient(name, email, password, cookie)
 
@@ -333,12 +309,13 @@ def admin_patient_details(patient_id):
     if not patient_details:
         return "Patient not found", 404
 
-    device_id = db.device_id_from_patient_id(patient_id)  # result is a list of tuples
-    calculated_data = db.calculate_patient_data(patient_details) 
+    device_id = db.device_id_from_patient_id(
+        patient_id)  # result is a list of tuples
+    calculated_data = db.calculate_patient_data(patient_details)
 
     # Render the home.html
-    return render_template('therapist.html', 
-                           calculated=calculated_data, 
+    return render_template('therapist.html',
+                           calculated=calculated_data,
                            device_id=device_id,
                            preferences=db.get_user_preferences(cookie))
 
@@ -374,9 +351,8 @@ def admin_login_page():
             return response
 
         return render_template('admin_login.html', error="Invalid credentials. Please try again.")
-    
-    return render_template('admin_login.html')
 
+    return render_template('admin_login.html')
 
 
 @app.route('/admin/manage-devices', methods=['GET', 'POST'])
@@ -749,6 +725,8 @@ def api_add_superuser():
     }), 200
 
 # Get all therapists
+
+
 @app.route('/api/therapists', methods=['GET'])
 def api_list_therapists():
 
@@ -756,13 +734,15 @@ def api_list_therapists():
     valid, _ = db.verify_cookie(cookie)
 
     if not valid or not db.is_super_user(cookie):
-        return jsonify({"error":"Unauthorized"}), 401
+        return jsonify({"error": "Unauthorized"}), 401
 
     therapists = db.get_therapists()
 
     return jsonify({"therapists": therapists}), 200
 
 # Add a therapist
+
+
 @app.route('/api/therapists', methods=['POST'])
 def api_add_therapist():
 
@@ -770,22 +750,24 @@ def api_add_therapist():
     valid, _ = db.verify_cookie(cookie)
 
     if not valid or not db.is_super_user(cookie):
-        return jsonify({"error":"Unauthorized"}), 401
+        return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json() or {}
-    name = data.get('name','').strip()
-    email = data.get('email','').strip().lower()
-    password = data.get('password','').strip()
+    name = data.get('name', '').strip()
+    email = data.get('email', '').strip().lower()
+    password = data.get('password', '').strip()
 
-    if not all([name,email,password]):
-        return jsonify({"error":"Missing fields"}), 400
+    if not all([name, email, password]):
+        return jsonify({"error": "Missing fields"}), 400
     if not db.check_email(email):
-        return jsonify({"error":"Email already exists"}), 400
-    success = db.add_therapist(name,email,password)
+        return jsonify({"error": "Email already exists"}), 400
+    success = db.add_therapist(name, email, password)
 
-    return (jsonify({"msg":"Therapist added"}),200) if success else (jsonify({"error":"DB error"}),500)
+    return (jsonify({"msg": "Therapist added"}), 200) if success else (jsonify({"error": "DB error"}), 500)
 
 # Delete a therapist
+
+
 @app.route('/api/therapists/<int:therapist_id>', methods=['DELETE'])
 def api_delete_therapist(therapist_id):
 
@@ -793,13 +775,15 @@ def api_delete_therapist(therapist_id):
     valid, _ = db.verify_cookie(cookie)
 
     if not valid or not db.is_super_user(cookie):
-        return jsonify({"error":"Unauthorized"}), 401
+        return jsonify({"error": "Unauthorized"}), 401
 
     success = db.remove_therapist_by_id(therapist_id)
 
-    return (jsonify({"msg":"Deleted"}),200) if success else (jsonify({"error":"Not found"}),404)
+    return (jsonify({"msg": "Deleted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
 
 # Reset a therapist’s password
+
+
 @app.route('/api/reset-therapist-password', methods=['POST'])
 def api_reset_therapist_password():
 
@@ -808,26 +792,26 @@ def api_reset_therapist_password():
 
     # only super‑users can reset
     if not valid or not db.is_super_user(cookie):
-        return jsonify({ "error": "Unauthorized" }), 401
+        return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json() or {}
     email = data.get('email', '').strip().lower()
     new_password = data.get('new_password', '').strip()
 
     if not email or not new_password:
-        return jsonify({ "error": "Missing email or new_password" }), 400
+        return jsonify({"error": "Missing email or new_password"}), 400
 
     user = db.get_user_by_email(email)
     if not user:
-        return jsonify({ "error": "No such user" }), 404
+        return jsonify({"error": "No such user"}), 404
     if not user.get('is_therapist'):
-        return jsonify({ "error": "User is not a therapist" }), 400
+        return jsonify({"error": "User is not a therapist"}), 400
 
     success = db.reset_therapist_password(email, new_password)
     if not success:
-        return jsonify({ "error": "Database update failed" }), 500
+        return jsonify({"error": "Database update failed"}), 500
 
-    return jsonify({ "msg": "Password reset successfully." }), 200
+    return jsonify({"msg": "Password reset successfully."}), 200
 
 
 @app.route('/api/bind_device_to_patient', methods=['POST'])
@@ -881,6 +865,7 @@ def remove_device_to_patient():
 
     return jsonify({"message": "Successfully removed device to patient"}), 200
 
+
 @app.route('/admin/change-patient-password', methods=['POST'])
 def change_patient_password():
     email = request.form.get('email')
@@ -896,6 +881,8 @@ def change_patient_password():
     return redirect('/admin/patients')
 
 # Delete a goal
+
+
 @app.route('/api/delete_goal', methods=['POST'])
 def delete_goal():
     data = request.get_json()
@@ -908,6 +895,7 @@ def delete_goal():
 
     return (jsonify({"msg": "Deleted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
 
+
 @app.route('/api/submit-goal', methods=['POST'])
 def submit_goal():
     data = request.get_json()
@@ -918,6 +906,7 @@ def submit_goal():
     success = db.submit_goal_by_id(user_id, goal_name, goal_target)
 
     return (jsonify({"msg": "Goal submitted"}), 200) if success else (jsonify({"error": "Not found"}), 404)
+
 
 @app.route('/admin/delete_pam_device', methods=['POST'])
 def delete_pam_device():
@@ -936,8 +925,7 @@ def delete_pam_device():
         return "Database error", 500
 
     return redirect('/admin/manage_pam_devices')
-import secrets
-import mysql.connector  # or your DB driver's error classes
+
 
 @app.route('/admin/add_pam_device', methods=['POST'])
 def add_pam_device():
@@ -959,7 +947,8 @@ def add_pam_device():
         auth_token = secrets.token_hex(16)
 
         # Get max device_id
-        result = db.do_query("SELECT IFNULL(MAX(device_id), 0) FROM hipperdb.Device")
+        result = db.do_query(
+            "SELECT IFNULL(MAX(device_id), 0) FROM hipperdb.Device")
         max_id = result[0][0] if result else 0
         new_device_id = max_id + 1
 
@@ -983,8 +972,6 @@ def add_pam_device():
 
     return jsonify({"message": "PAM device added successfully"}), 201
 
-
-import mysql.connector  # near the top if not already imported
 
 @app.route('/api/delete-pam-device', methods=['POST'])
 def api_delete_pam_device():
@@ -1023,8 +1010,6 @@ def api_delete_pam_device():
         return jsonify({"error": f"Unexpected error: {e}"}), 500
 
     return jsonify({"msg": f"Device '{label}' deleted"}), 200
-
-
 
 
 # Start the Flask application
